@@ -1,6 +1,6 @@
 {
   "name": "digital-du",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Digital assets discovery layer",
   "main": "digital-du.js",
   "scripts": {
@@ -8,9 +8,9 @@
   },
   "keywords": [
     "library",
-    "art history",
-    "images",
-    "archivision"
+    "repository",
+    "discovery",
+    "digital"
   ],
   "author": "jeff.rynhart@du.edu",
   "license": "MIT",
