@@ -1,13 +1,12 @@
 'use strict';
 
+var Discovery = require('./controller');
+
 module.exports = function (app) {
 	// app.route('/')
  //        .get();
-	app.get("/repository", function(req, res) {  
-	    res.json({
-	        status: "Hello World"
-	    });
-	});
+	app.route('/repository')
+        .get(Discovery.renderCollectionsView);
 };
 
 
