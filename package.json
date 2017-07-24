@@ -1,8 +1,8 @@
 {
-  "name": "image-commons-app",
-  "version": "0.5.0",
-  "description": "Application used to allow patrons to view purchased art history images",
-  "main": "image-commons.js",
+  "name": "digital-du",
+  "version": "0.0.0",
+  "description": "Digital assets discovery layer",
+  "main": "digital-du.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -12,7 +12,7 @@
     "images",
     "archivision"
   ],
-  "author": "",
+  "author": "jeff.rynhart@du.edu",
   "license": "MIT",
   "dependencies": {
     "async": "^1.5.2",
