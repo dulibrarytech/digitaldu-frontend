@@ -1,7 +1,7 @@
 {
   "name": "digital-du",
   "version": "1.0.0",
-  "description": "Digital assets discovery layer",
+  "description": "Digital assets discovery application",
   "main": "digital-du.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
