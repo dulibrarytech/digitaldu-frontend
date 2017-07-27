@@ -1,0 +1,14 @@
+body {
+
+}
+
+div#search {
+	min-height: 50px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #373737;
+}
+
+div#collections {
+	display: grid;
+}
