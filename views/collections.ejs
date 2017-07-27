@@ -6,7 +6,11 @@
 	<h3>Collections</h3>
 
 	<div id="collections">
-		<img src="<%= collections[0].tn %>" width="195" height="294"/>
+
+		<% for (var i = 0; i < collections.length; i++) { %>
+			<img src="<%= collections[i].tn %>" width="150" height="250" />
+		<% } %>
+
 	</div>
 </div>
 
