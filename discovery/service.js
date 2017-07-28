@@ -24,6 +24,21 @@ exports.getCollections = function(pid) {
 
 	// Query ES for all objects with rels-ext/isMemberOfCollection == pid
 	// Build collection object, push to array
+	client.search({
+        index: config.elasticsearchIndex,
+        type: "data",
+  		q: "rels-ext_isMemberOfCollection:" + pid
+    }).then(function (body) {
+    	console.log("Body: ", body.hits.hits);
+        var id = body.hits.hits._id;
+        console.log("ID:", id);
+
+       
+
+
+    }, function (error) {
+        console.log("ERROR: ", error);
+    });
 
 	return collections;
 }
