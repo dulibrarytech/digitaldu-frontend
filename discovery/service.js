@@ -7,38 +7,25 @@ var client = new es.Client({
     host: config.elasticsearchHost + ':' + config.elasticsearchPort
 });
 
-exports.getCollections = function(pid) {
+exports.getCollections = function(pid, callback) {
 	var collections = [];
 
-	// DEV test
-	var tn = config.fedoraPath + "/fedora/objects/codu:70104/datastreams/TN/content";
-	collections.push({
-		pid: "codu:70104",
-		tn: tn
-	});
-	tn = config.fedoraPath + "/fedora/objects/codu:59239/datastreams/TN/content";
-	collections.push({
-		pid: "codu:59239",
-		tn: tn
-	});
-
 	// Query ES for all objects with rels-ext/isMemberOfCollection == pid
-	// Build collection object, push to array
 	client.search({
         index: config.elasticsearchIndex,
         type: "data",
   		q: "rels-ext_isMemberOfCollection:" + pid
     }).then(function (body) {
-    	console.log("Body: ", body.hits.hits);
-        var id = body.hits.hits._id;
-        console.log("ID:", id);
 
-       
-
+    	for(var i=0; i<body.hits.total; i++) {
+			collections.push({
+		    	pid: body.hits.hits[i]._source.pid
+		    });
+    	}
+	    callback({status: true, data: collections});
 
     }, function (error) {
-        console.log("ERROR: ", error);
+        console.log("Error: ", error);
+        callback({status: false, data: null});
     });
-
-	return collections;
 }
