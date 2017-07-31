@@ -7,7 +7,7 @@ module.exports = function (app) {
 	app.route('/repository')
         .get(Discovery.renderCollectionsView);
 
-    app.route('/repository/object/*')
+    app.route('/object/*')
         .get(Discovery.renderObjectView);
 };
 
