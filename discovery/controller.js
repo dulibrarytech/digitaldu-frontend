@@ -35,13 +35,7 @@ exports.renderCollectionsView = function(req, res) {
 
 exports.renderObjectView = function(req, res) {
 
-	// Extract pid from request url
-	var pid = Helper.extractPidFromUrl(req.originalUrl);
-
-	console.log("Render object view function:", pid);
-	//return res.render('collections', data);
-
-
-
-
+	var data = {};
+	data['pid'] = Helper.extractPidFromUrl(req.originalUrl);
+	return res.render('object', data);
 };
