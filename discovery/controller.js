@@ -2,6 +2,7 @@
 
 var async = require('async'),
     config = require('../config/config'),
+    Helper = require('../discovery/helper'),
     Service = require('../discovery/service'),
     Facets = require('../libs/facets');
 
@@ -34,6 +35,13 @@ exports.renderCollectionsView = function(req, res) {
 
 exports.renderObjectView = function(req, res) {
 
-	console.log("Render object view function:");
-	return res.render('collections', data);
+	// Extract pid from request url
+	var pid = Helper.extractPidFromUrl(req.originalUrl);
+
+	console.log("Render object view function:", pid);
+	//return res.render('collections', data);
+
+
+
+
 };
