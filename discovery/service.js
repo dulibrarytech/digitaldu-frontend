@@ -9,13 +9,13 @@ var client = new es.Client({
 
 // Compose links to backend repository
 var createCollectionList= function(pidArray) {
-	var updatedArray = [];
+	var updatedArray = [], fedoraPid;
 
 	for(var index of pidArray) {
-		index = index.replace('_', ':');
+		fedoraPid = index.replace('_', ':');
 		updatedArray.push({
 			pid: index,
-	    	tn: config.fedoraPath + "/fedora/objects/" + index + "/datastreams/TN/content"
+	    	tn: config.fedoraPath + "/fedora/objects/" + fedoraPid + "/datastreams/TN/content"
 	    });
 	}
 	return updatedArray;

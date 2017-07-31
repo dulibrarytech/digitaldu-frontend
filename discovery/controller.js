@@ -19,17 +19,21 @@ exports.renderCollectionsView = function(req, res) {
 	var data = {};
 	// Get list from discovery service
 	Service.getCollections(config.topLevelCollectionPID, function(response) {
-		console.log("Controller receives:", response);
 
 		if(response.status) {
 			data['collections'] = response.data;
+			data['base_url'] = config.baseUrl;
 		}
 		else {
 			data['collections'] = [];
 			data['error'] = "Could not retrieve collections";
-
 		}
-		console.log("Rendering:", data);
 		return res.render('collections', data);
 	});
+};
+
+exports.renderObjectView = function(req, res) {
+
+	console.log("Render object view function:");
+	return res.render('collections', data);
 };
