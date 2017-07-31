@@ -7,8 +7,22 @@ var client = new es.Client({
     host: config.elasticsearchHost + ':' + config.elasticsearchPort
 });
 
+// Compose links to backend repository
+var createCollectionList= function(pidArray) {
+	var updatedArray = [];
+
+	for(var index of pidArray) {
+		index = index.replace('_', ':');
+		updatedArray.push({
+			pid: index,
+	    	tn: config.fedoraPath + "/fedora/objects/" + index + "/datastreams/TN/content"
+	    });
+	}
+	return updatedArray;
+}
+
 exports.getCollections = function(pid, callback) {
-	var collections = [];
+	var collections = [], collectionList = [];
 
 	// Query ES for all objects with rels-ext/isMemberOfCollection == pid
 	client.search({
@@ -18,11 +32,11 @@ exports.getCollections = function(pid, callback) {
     }).then(function (body) {
 
     	for(var i=0; i<body.hits.total; i++) {
-			collections.push({
-		    	pid: body.hits.hits[i]._source.pid
-		    });
+    		collections.push(body.hits.hits[i]._source.pid);
     	}
-	    callback({status: true, data: collections});
+
+    	collectionList = createCollectionList(collections);
+	    callback({status: true, data: collectionList});
 
     }, function (error) {
         console.log("Error: ", error);

@@ -29,6 +29,7 @@ exports.renderCollectionsView = function(req, res) {
 			data['error'] = "Could not retrieve collections";
 
 		}
+		console.log("Rendering:", data);
 		return res.render('collections', data);
 	});
 };
