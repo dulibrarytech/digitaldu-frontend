@@ -1,14 +1,99 @@
 body {
+	background-color: #e5e3e1;
+}
 
+/* Header styles */
+
+header#du-header {
+	width: 100%;
+	background-color: #8b2332;
+}
+
+div#du-red-header-inner {
+	background-color: #8b2332;
+	height: 50px;
+	margin: auto;
+	width: 99.5%;
+}
+
+span#du-logo {
+	margin-top: 5px;
+}
+
+span#du-logo a img {
+	height: 38px;
+	width: 133px;
+	margin-top: 5px;
+	margin-left: 5px;
+}
+
+header#du-header {
+	width: 100%;
+	background-color: #8b2332;
+}
+
+div#banner {
+	min-height: 120px;
+	background-color: #171717;
+}
+
+/* Main body styles */
+
+div#content {
+	width: 70%;
+    background-color: white;
+    margin: 0 auto;
 }
 
 div#search {
 	min-height: 50px;
-	border-style: solid;
+	background-color: darkgrey;
+	padding: 0.5em 0;
+/*	border-style: solid;
 	border-width: 1px;
-	border-color: #373737;
+	border-color: #373737;*/
+}
+
+form#search-form {
+	width: 35%;
+    margin: 0 auto;
+}
+
+form#search-form > div.form-group {
+	margin-top: 15px;
+	display:flex;
+}
+
+input#search-input {
+
+}
+
+button#search-button {
+	background-color: #8b2332;
+	border-color: #383838;
+	border-width: 2px;
+	border-radius: 2px;
+	width: 80px;
+}
+
+input#search-input {
+	height: 50px;
+}
+
+button#search-button {
+	height: 48px;
+	margin-top: 1px;
 }
 
 div#collections {
-	display: grid;
+	display: inline-flex;
+}
+
+div#collections a {
+	padding: 1em;
+}
+
+div#collections a img {
+	width: 200px;
+	height: 250px;
 }
