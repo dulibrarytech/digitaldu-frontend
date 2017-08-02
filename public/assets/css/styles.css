@@ -40,7 +40,7 @@ div#banner {
 /* Main body styles */
 
 div#content {
-	width: 70%;
+	width: 60%;
     background-color: white;
     margin: 0 auto;
 }
@@ -64,8 +64,18 @@ form#search-form > div.form-group {
 	display:flex;
 }
 
-input#search-input {
+select#search-type {
+	height: 50px;
+	width: 80px;
+	background-color: #e5e3e1;
+}
 
+select#search-type:hover {
+	cursor: pointer;
+}
+
+input#search-input {
+	height: 50px;
 }
 
 button#search-button {
@@ -74,13 +84,6 @@ button#search-button {
 	border-width: 2px;
 	border-radius: 2px;
 	width: 80px;
-}
-
-input#search-input {
-	height: 50px;
-}
-
-button#search-button {
 	height: 48px;
 	margin-top: 1px;
 }
@@ -91,6 +94,7 @@ div#collections {
 
 div#collections a {
 	padding: 1em;
+	width: 300px;
 }
 
 div#collections a img {

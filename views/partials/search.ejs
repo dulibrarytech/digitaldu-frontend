@@ -1,7 +1,13 @@
 <div id="search">
-	<form id="search-form">
+	<form id="search-form" method="post" action="/search">
 		<div class="form-group">
-	    	<input type="text" class="form-control" id="search-input" aria-describedby="searchHelp" placeholder="Search">
+		    <select class="form-control" id="search-type">
+		    	<option>All</option>
+				<option>Title</option>
+				<option>Creator</option>
+				<option>Subject</option>
+		    </select>
+	    	<input type="text" class="form-control" id="search-input" name="q" aria-describedby="searchHelp" placeholder="Search">
 	    	<button type="submit" class="btn btn-primary" id="search-button"></button>
 	  	</div>
 	</form>

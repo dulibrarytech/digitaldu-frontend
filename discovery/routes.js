@@ -9,6 +9,9 @@ module.exports = function (app) {
 
     app.route('/object/*')
         .get(Discovery.renderObjectView);
+
+    app.route('/search')
+    	.post(Discovery.search);
 };
 
 

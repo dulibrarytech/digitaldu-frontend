@@ -47,3 +47,8 @@ exports.renderObjectView = function(req, res) {
 
 	return res.render('object', data);
 };
+
+exports.search = function(req, res) {
+	console.log("Search req:", req.body);
+	return res.sendStatus(200);
+};

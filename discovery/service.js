@@ -19,7 +19,7 @@ var createCollectionList= function(pidArray) {
 	    });
 	}
 	return updatedArray;
-}
+};
 
 exports.getCollections = function(pid, callback) {
 	var collections = [], collectionList = [];
@@ -42,4 +42,8 @@ exports.getCollections = function(pid, callback) {
         console.log("Error: ", error);
         callback({status: false, data: null});
     });
-}
+};
+
+exports.searchIndex = function(query, type, callback) {
+
+};
