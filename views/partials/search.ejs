@@ -1,14 +1,17 @@
 <div id="search">
 	<form id="search-form" method="post" action="/search">
 		<div class="form-group">
-		    <select class="form-control" id="search-type">
+		    <select class="form-control" name="type" id="search-type">
 		    	<option>All</option>
 				<option>Title</option>
 				<option>Creator</option>
 				<option>Subject</option>
 		    </select>
-	    	<input type="text" class="form-control" id="search-input" name="q" aria-describedby="searchHelp" placeholder="Search">
+	    	<input type="text" class="form-control" id="search-input" name="q" aria-describedby="searchHelp" placeholder="Search" required>
 	    	<button type="submit" class="btn btn-primary" id="search-button"></button>
 	  	</div>
 	</form>
+	<script>
+		$("#search-form").validate();
+	</script>
 </div>
