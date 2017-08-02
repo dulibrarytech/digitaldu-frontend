@@ -45,5 +45,8 @@ exports.getCollections = function(pid, callback) {
 };
 
 exports.searchIndex = function(query, type, callback) {
-
+	var results = [];
+	results.push({pid: "test", title: "Test", description: "test"});
+	console.log("Service sends", results);
+	callback({status:1, message:null, data: results});
 };

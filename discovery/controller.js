@@ -49,6 +49,23 @@ exports.renderObjectView = function(req, res) {
 };
 
 exports.search = function(req, res) {
-	console.log("Search req:", req.body);
-	return res.sendStatus(200);
+
+	console.log("Hello", req.body);
+
+	// Verify / sanitize
+	var query = req.body.q;
+	var type = req.body.type;
+
+	Service.searchIndex(query, type, function(response) {
+		var data = {};
+		if(response.status) {
+			data['results'] = response.data;
+		}
+		else {
+			console.log("Error: ", response.message);
+			data['results'] = null;
+			data['error'] = response.message;
+		}
+		return res.render('results', data);
+	});
 };
