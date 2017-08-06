@@ -50,11 +50,11 @@ exports.renderObjectView = function(req, res) {
 
 exports.search = function(req, res) {
 
-	console.log("Hello", req.body);
+	console.log("Search receives params:", req.body);
 
 	// Verify / sanitize
 	var query = req.body.q;
-	var type = req.body.type;
+	var type = req.body.type.toLowerCase();
 
 	Service.searchIndex(query, type, function(response) {
 		var data = {};

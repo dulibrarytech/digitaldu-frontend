@@ -1,11 +1,7 @@
 'use strict';
 
-const es = require('elasticsearch'),
-      config = require('../config/config');
-
-var client = new es.Client({
-    host: config.elasticsearchHost + ':' + config.elasticsearchPort
-});
+const es = require('../config/index'),
+    config = require('../config/config');
 
 // Compose links to backend repository
 var createCollectionList= function(pidArray) {
@@ -25,7 +21,7 @@ exports.getCollections = function(pid, callback) {
 	var collections = [], collectionList = [];
 
 	// Query ES for all objects with rels-ext/isMemberOfCollection == pid
-	client.search({
+	es.search({
         index: config.elasticsearchIndex,
         type: "data",
   		q: "rels-ext_isMemberOfCollection:" + pid
@@ -40,13 +36,68 @@ exports.getCollections = function(pid, callback) {
 
     }, function (error) {
         console.log("Error: ", error);
-        callback({status: false, data: null});
+        callback({status: false, message: error, data: null});
     });
 };
 
 exports.searchIndex = function(query, type, callback) {
-	var results = [];
-	results.push({pid: "test", title: "Test", description: "test"});
-	console.log("Service sends", results);
-	callback({status:1, message:null, data: results});
+
+    var field = { match: "" };
+    var matchFields = [], results = [];
+    if(type == 'all') {
+
+        // TODO: Add fields dynamically based on config settings (loop config object)
+        var q = {};
+         q['title'] = query;
+        matchFields.push({
+            "match": q
+        });
+        var q = {};
+         q['namePersonal'] = query;
+        matchFields.push({
+            "match": q
+        });
+        var q = {};
+         q['subjectTopic'] = query;
+        matchFields.push({
+            "match": q
+        });
+    }
+    else {
+        var q = {};
+        q[type] = query;
+        field.match = q;
+        matchFields.push(field);
+    }
+
+    var tObj = {  
+      index: config.elasticsearchIndex,
+      type: 'mods',
+      body: {
+        query: {
+            "bool": {
+              "should": matchFields
+            }
+          },
+      }
+    }
+
+    console.log("Query:", tObj.body.query.bool.should);
+
+
+    es.search(tObj,function (error, response, status) {
+        if (error){
+          console.log("search error: " + error);
+          callback({status: false, message: error, data: null});
+        }
+        else {
+          console.log("--- Response ---");
+          console.log(response);
+          console.log("--- Hits ---");
+          response.hits.hits.forEach(function(hit){
+            console.log(hit);
+          })
+          callback({status: true, data: response});
+        }
+    });
 };
