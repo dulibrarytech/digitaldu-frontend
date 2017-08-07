@@ -1,17 +1,20 @@
 'use strict';
 
-const es = require('../config/index'),
-    config = require('../config/config');
+const es = require('../config/index');
+const config = require('../config/config');
+const fedora = require('../libs/fedora');
 
-// Compose links to backend repository
+// Compose links to Fedora repository
 var createCollectionList= function(pidArray) {
-	var updatedArray = [], fedoraPid;
+	var updatedArray = [], pid;
+	for(var pid of pidArray) {
 
-	for(var index of pidArray) {
-		fedoraPid = index.replace('_', ':');
+		// DEV Use Fedora TN datastream
+		var tn = fedora.getTNUrl(pid.replace('_', ':'))
+
 		updatedArray.push({
-			pid: index,
-	    	tn: config.fedoraPath + "/fedora/objects/" + fedoraPid + "/datastreams/TN/content"
+			pid: pid,
+	    	tn: tn
 	    });
 	}
 	return updatedArray;
@@ -19,18 +22,15 @@ var createCollectionList= function(pidArray) {
 
 exports.getCollections = function(pid, callback) {
 	var collections = [], collectionList = [];
-
 	// Query ES for all objects with rels-ext/isMemberOfCollection == pid
 	es.search({
         index: config.elasticsearchIndex,
         type: "data",
   		q: "rels-ext_isMemberOfCollection:" + pid
     }).then(function (body) {
-
     	for(var i=0; i<body.hits.total; i++) {
     		collections.push(body.hits.hits[i]._source.pid);
     	}
-
     	collectionList = createCollectionList(collections);
 	    callback({status: true, data: collectionList});
 

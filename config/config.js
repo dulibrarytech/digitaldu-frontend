@@ -8,7 +8,6 @@ module.exports = {
     elasticsearchIndex: process.env.ELASTICSEARCH_INDEX,
 
     // Repository settings
-    fedoraPath: "http://librepo01-vlp.du.edu:8080",
     institutionPrefix: "codu",
     topLevelCollectionPID: "codu_root",
 
