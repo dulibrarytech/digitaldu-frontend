@@ -1,1 +1,17 @@
 <h3>Results template</h3>
+
+<% if (results && results.length > 0) { %>
+
+<% results.forEach(function(result) { %>
+	<%- result._source.title %>
+	<br />
+	<%= result._source.namePersonal %>
+	<br />
+	<p>
+		<%- result._source.abstract %>
+	</p>
+<% }); %>
+
+<% } else { %>
+	<h3>No results found</h3>
+<% } %>

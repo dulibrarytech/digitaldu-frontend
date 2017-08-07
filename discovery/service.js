@@ -47,30 +47,33 @@ exports.searchIndex = function(query, type, callback) {
     if(type == 'all') {
 
         // TODO: Add fields dynamically based on config settings (loop config object)
+        query = "*" + query + "*";
         var q = {};
          q['title'] = query;
         matchFields.push({
-            "match": q
+            "wildcard": q
         });
         var q = {};
          q['namePersonal'] = query;
         matchFields.push({
-            "match": q
+            "wildcard": q
         });
         var q = {};
          q['subjectTopic'] = query;
         matchFields.push({
-            "match": q
+            "wildcard": q
         });
     }
     else {
+
         var q = {};
-        q[type] = query;
-        field.match = q;
-        matchFields.push(field);
+        q[type] = "*" + query + "*";
+        matchFields.push({
+        	"wildcard": q
+        });
     }
 
-    var tObj = {  
+    var data = {  
       index: config.elasticsearchIndex,
       type: 'mods',
       body: {
@@ -78,14 +81,11 @@ exports.searchIndex = function(query, type, callback) {
             "bool": {
               "should": matchFields
             }
-          },
+          }
       }
     }
 
-    console.log("Query:", tObj.body.query.bool.should);
-
-
-    es.search(tObj,function (error, response, status) {
+    es.search(data,function (error, response, status) {
         if (error){
           console.log("search error: " + error);
           callback({status: false, message: error, data: null});
@@ -97,7 +97,7 @@ exports.searchIndex = function(query, type, callback) {
           response.hits.hits.forEach(function(hit){
             console.log(hit);
           })
-          callback({status: true, data: response});
+          callback({status: true, data: response.hits.hits});
         }
     });
 };

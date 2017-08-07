@@ -10,5 +10,13 @@ module.exports = {
     // Repository settings
     fedoraPath: "http://librepo01-vlp.du.edu:8080",
     institutionPrefix: "codu",
-    topLevelCollectionPID: "codu_root"
+    topLevelCollectionPID: "codu_root",
+
+    // Search settings
+    // {display field : index field}
+    searchFields: [
+    	{"Title": "title"},
+    	{"Creator": "namePersonal"},
+    	{"Subject": "subjectTopic"}
+    ]
 };
