@@ -35,7 +35,7 @@ exports.getCollections = function(pid, callback) {
 	    callback({status: true, data: collectionList});
 
     }, function (error) {
-        console.log("Error: ", error);
+        	console.log("Error: ", error);
         callback({status: false, message: error, data: null});
     });
 };
@@ -91,13 +91,16 @@ exports.searchIndex = function(query, type, callback) {
           callback({status: false, message: error, data: null});
         }
         else {
+          // DEV
           console.log("--- Response ---");
           console.log(response);
           console.log("--- Hits ---");
-          response.hits.hits.forEach(function(hit){
-            console.log(hit);
+
+          var results = [];
+          response.hits.hits.forEach(function(result){
+            results.push(result._source);
           })
-          callback({status: true, data: response.hits.hits});
+          callback({status: true, data: results});
         }
     });
 };

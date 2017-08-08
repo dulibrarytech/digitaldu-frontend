@@ -58,6 +58,7 @@ exports.search = function(req, res) {
 		var data = {};
 		if(response.status) {
 			data['results'] = response.data;
+			console.log("Sending results:", data['results'] );
 		}
 		else {
 			console.log("Error: ", response.message);

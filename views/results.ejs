@@ -1,17 +1,36 @@
-<h3>Results template</h3>
+<% include partials/header %>
 
-<% if (results && results.length > 0) { %>
+<% include partials/search %>
 
-<% results.forEach(function(result) { %>
-	<%- result._source.title %>
-	<br />
-	<%= result._source.namePersonal %>
-	<br />
-	<p>
-		<%- result._source.abstract %>
-	</p>
-<% }); %>
+<div id="content">
 
-<% } else { %>
-	<h3>No results found</h3>
-<% } %>
+	<div id="search-results">
+
+		<% if (results && results.length > 0) { %>
+
+			<dl id="search-results-list" class="">
+			<% results.forEach(function(result) { %>
+				<dt>Title</dt>
+				<dd><%- result.title %></dd>
+				<br />
+
+				<% if (result.namePersonal) { %>
+					<dt>Creator</dt>
+					<dd><%- result.namePersonal %></dd>
+					<br />
+				<% } %>
+
+				<dt>Description</dt>
+				<dd><%- result.abstract %></dd>
+				<br />
+			<% }); %>
+			</dl>
+
+		<% } else { %>
+			<h3>No results found</h3>
+		<% } %>
+
+	</div>
+</div>
+
+<% include partials/footer %>

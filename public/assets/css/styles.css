@@ -101,3 +101,13 @@ div#collections a img {
 	width: 200px;
 	height: 250px;
 }
+
+dl#search-results-list > dt {
+	display: inline-block;
+}
+
+dl#search-results-list > dd {
+	display: inline-block;
+	border-top: 1px solid #ddd;
+
+}
