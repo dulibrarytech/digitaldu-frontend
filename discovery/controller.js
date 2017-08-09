@@ -27,7 +27,7 @@ exports.renderCollectionsView = function(req, res) {
 			data['collections'] = [];
 			data['error'] = "Could not retrieve collections";
 		}
-		return res.render('discovery', data);
+		return res.render('collections', data);
 	});
 };
 
