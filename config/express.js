@@ -25,6 +25,7 @@ module.exports = function () {
     app.set('view engine', 'ejs');
 
     require('../discovery/routes.js')(app);
+    require('../display/routes.js')(app);
     require('express-template-cache');
 
     return server;

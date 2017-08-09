@@ -1,8 +1,10 @@
 'use strict';
 
-var Discovery = require('./controller');
+var Discovery = require('../discovery/controller');
 
 module.exports = function (app) {
+
+	console.log("HERE1");
 
 	app.route('/')
         .get(function(req, res) {
@@ -11,9 +13,6 @@ module.exports = function (app) {
 
 	app.route('/repository')
         .get(Discovery.renderCollectionsView);
-
-    app.route('/object/*')
-        .get(Discovery.renderObjectView);
 
     app.route('/search')
     	.post(Discovery.search);

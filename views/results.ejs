@@ -12,17 +12,17 @@
 			<% results.forEach(function(result) { %>
 				<dt>Title</dt>
 				<dd><%- result.title %></dd>
-				<br />
+				
 
 				<% if (result.namePersonal) { %>
 					<dt>Creator</dt>
 					<dd><%- result.namePersonal %></dd>
-					<br />
+					
 				<% } %>
 
 				<dt>Description</dt>
 				<dd><%- result.abstract %></dd>
-				<br />
+				
 			<% }); %>
 			</dl>
 

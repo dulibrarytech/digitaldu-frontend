@@ -31,24 +31,7 @@ exports.renderCollectionsView = function(req, res) {
 	});
 };
 
-exports.renderObjectView = function(req, res) {
-
-	var data = {};
-	data['pid'] = Helper.extractPidFromUrl(req.originalUrl);
-
-	// Get content model
-
-	// Get viewer content
-
-	// Get mods data
-
-
-	return res.render('object', data);
-};
-
 exports.search = function(req, res) {
-
-	console.log("Search receives params:", req.body);
 
 	// Verify / sanitize
 	var query = req.body.q;
