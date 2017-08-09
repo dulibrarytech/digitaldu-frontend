@@ -104,6 +104,10 @@ div#collections a img {
 	height: 250px;
 }
 
+div#pagination {
+	height: 75px;
+}
+
 div#search-results {
 	padding: 2em 3em;
 }
@@ -112,6 +116,31 @@ div#search-results > h3 {
 	margin-bottom: 2em;
 }
 
+div#search-result {
+	margin-bottom: 2em;
+}
+
+dl.search-result-data {
+	float: right;
+	width: 75%;
+}
+
+dl.search-result-tn {
+	float: left;
+	width: 25%;
+}
+
+dl.search-result-data > dt {
+	float: left;
+  	width: 25%;
+}
+
+dl.search-result-data > dd {
+	float: left;
+  	width: 75%;
+}
+
+
 dl#search-results-list > dt {
 	float: left;
   	width: 25%;
@@ -119,7 +148,7 @@ dl#search-results-list > dt {
 
 dl#search-results-list > dt,
 dl#search-results-list > dd {
-	/*display: inline-block;*/
+	display: inline-block;
 }
 
 dl#search-results-list > dd {

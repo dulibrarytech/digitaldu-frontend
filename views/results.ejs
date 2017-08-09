@@ -4,28 +4,49 @@
 
 <div id="content">
 
+	<div id="pagination">
+
+	</div>
+
 	<div id="search-results">
 
 		<% if (results && results.length > 0) { %>
 
-			<dl id="search-results-list" class="">
-			<% results.forEach(function(result) { %>
-				<dt>Title:</dt>
-				<dd><%- result.title %></dd>
+
+				<% results.forEach(function(result) { %>
+
+					<div id="search-result">
+
+						<dl class="search-result-tn">
+							<a href="" title="">
+								<img src="./img.img" alt="Img">
+							</a>
+						</dl>
+
+						<dl class="search-result-data">
+							<dt>Title:</dt>
+							<dd><%- result.title %></dd>
+
+							<% if (result.namePersonal) { %>
+								<dt>Creator:</dt>
+								<dd><%- result.namePersonal %></dd>
+							<% } %>
+
+							<% if (result.abstract) { %>
+								<dt>Description:</dt>
+								<dd><%- result.abstract %></dd>
+							<% } %>
+						</dl>
+
+					</div>
+
+
+
+
+				<% }); %>
 				
 
-				<% if (result.namePersonal) { %>
-					<dt>Creator:</dt>
-					<dd><%- result.namePersonal %></dd>
-				<% } %>
 
-				<% if (result.abstract) { %>
-					<dt>Description:</dt>
-					<dd><%- result.abstract %></dd>
-				<% } %>
-
-			<% }); %>
-			</dl>
 
 		<% } else { %>
 			<h3>No results found</h3>
