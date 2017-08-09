@@ -27,7 +27,7 @@ exports.renderCollectionsView = function(req, res) {
 			data['collections'] = [];
 			data['error'] = "Could not retrieve collections";
 		}
-		return res.render('collections', data);
+		return res.render('discovery', data);
 	});
 };
 
@@ -37,14 +37,23 @@ exports.search = function(req, res) {
 	var query = req.body.q;
 	var type = req.body.type.toLowerCase();
 
+	// Get page value from search query
+	// Update with ES pagination 
+
 	Service.searchIndex(query, type, function(response) {
 		var data = {};
 		if(response.status) {
-			data['results'] = response.data;
-			console.log("Sending results:", data['results'] );
+			data['results'] = response.data;	// DEMO
+
+
+
+
+
+			//data['results'] = Helper.paginateResults(response.data.length, 1);
+			// console.error("Test error!");
 		}
 		else {
-			console.log("Error: ", response.message);
+			console.error("Error: ", response.message);
 			data['results'] = null;
 			data['error'] = response.message;
 		}

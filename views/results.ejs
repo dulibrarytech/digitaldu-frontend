@@ -10,19 +10,20 @@
 
 			<dl id="search-results-list" class="">
 			<% results.forEach(function(result) { %>
-				<dt>Title</dt>
+				<dt>Title:</dt>
 				<dd><%- result.title %></dd>
 				
 
 				<% if (result.namePersonal) { %>
-					<dt>Creator</dt>
+					<dt>Creator:</dt>
 					<dd><%- result.namePersonal %></dd>
-					
 				<% } %>
 
-				<dt>Description</dt>
-				<dd><%- result.abstract %></dd>
-				
+				<% if (result.abstract) { %>
+					<dt>Description:</dt>
+					<dd><%- result.abstract %></dd>
+				<% } %>
+
 			<% }); %>
 			</dl>
 

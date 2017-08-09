@@ -4,8 +4,6 @@ var Discovery = require('../discovery/controller');
 
 module.exports = function (app) {
 
-	console.log("HERE1");
-
 	app.route('/')
         .get(function(req, res) {
         	res.redirect('/repository');

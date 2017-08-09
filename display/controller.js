@@ -1,8 +1,12 @@
 'use strict'
 
-exports.renderObjectView = function(req, res) {
+var async = require('async'),
+    config = require('../config/config'),
+    Helper = require('../display/helper'),
+    Service = require('../display/service'),
+    Facets = require('../libs/facets');
 
-	console.log("here");
+exports.renderObjectView = function(req, res) {
 
 	var data = {};
 	data['pid'] = Helper.extractPidFromUrl(req.originalUrl);

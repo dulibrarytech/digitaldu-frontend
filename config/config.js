@@ -17,5 +17,6 @@ module.exports = {
     	{"Title": "title"},
     	{"Creator": "namePersonal"},
     	{"Subject": "subjectTopic"}
-    ]
+    ],
+    maxDisplayResults: 10
 };
