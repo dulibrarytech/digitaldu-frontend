@@ -20,6 +20,13 @@ var createCollectionList= function(pidArray) {
 	return updatedArray;
 };
 
+var addTNData = function(resultArray) {
+  // Foreach in array, add new prop 'tn'
+  var tn = "";
+
+  //tn = fedora.getTNUrl(pid.replace('_', ':'))
+}
+
 exports.getCollections = function(pid, callback) {
 	var collections = [], collectionList = [];
 	// Query ES for all objects with rels-ext/isMemberOfCollection == pid
@@ -100,6 +107,9 @@ exports.searchIndex = function(query, type, callback) {
           response.hits.hits.forEach(function(result){
             results.push(result._source);
           })
+
+          results = addTNData(results);
+
           callback({status: true, data: results});
         }
     });
