@@ -1,17 +1,26 @@
 <% include partials/header %>
 
-<% include partials/search %>
 
-<div id="content">
-	<h3></h3>
+<div id="main">
 
-	<div id="collections">
-
-		<% for (var i = 0; i < collections.length; i++) { %>
-			<a href="/object/<%= collections[i].pid %>"><img src="<%= collections[i].tn %>" width="150" height="250" /></a>
-		<% } %>
+	<div id="banner">
 
 	</div>
+
+	<% include partials/search %>
+
+	<div id="content">
+		<h3></h3>
+
+		<div id="collections">
+
+			<% for (var i = 0; i < collections.length; i++) { %>
+				<a href="/object/<%= collections[i].pid %>"><img src="<%= collections[i].tn %>" width="150" height="250" /></a>
+			<% } %>
+
+		</div>
+	</div>
+
 </div>
 
 <% include partials/footer %>

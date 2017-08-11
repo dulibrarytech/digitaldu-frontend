@@ -80,6 +80,8 @@ exports.searchIndex = function(query, type, callback) {
         });
     }
 
+      console.log("Search test: query: ", q, "Type:", type);
+
     var data = {  
       index: config.elasticsearchIndex,
       type: 'mods',
@@ -92,6 +94,8 @@ exports.searchIndex = function(query, type, callback) {
       }
     }
 
+      console.log("Search test: qobj:", data.body.query.bool.should);
+
     es.search(data,function (error, response, status) {
         if (error){
           console.log("search error: " + error);
@@ -103,12 +107,17 @@ exports.searchIndex = function(query, type, callback) {
           console.log(response);
           console.log("--- Hits ---");
 
+          
+          // Check below ***
+
           var results = [];
           response.hits.hits.forEach(function(result){
             results.push(result._source);
           })
 
           results = addTNData(results);
+
+          console.log("Results:", results);
 
           callback({status: true, data: results});
         }
