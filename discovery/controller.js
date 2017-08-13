@@ -38,7 +38,7 @@ exports.search = function(req, res) {
 	var type;
 
 	// If search all, build array of types from config settings.  If type search, 'type'is passed into search function as a string.
-	if(type == 'All') {
+	if(req.body.type == 'All') {
 		type = [];
 		config.searchFields.forEach(function(field) {
 			for(var key in field) {
@@ -47,14 +47,13 @@ exports.search = function(req, res) {
 		});
 	}
 	else {
-
 		config.searchFields.forEach(function(field) {
 			for(var key in field) {
 				if(key == req.body.type) {
 					type = field[key];
 				}
 			}
-		})
+		});
 	}
 
 	// TODO: Get page value from search query
