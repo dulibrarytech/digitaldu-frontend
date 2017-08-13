@@ -52,36 +52,24 @@ exports.searchIndex = function(query, type, callback) {
 
     var field = { match: "" };
     var matchFields = [], results = [];
-    if(type == 'all') {
+    if(Array.isArray(type)) {
 
-        // TODO: Add fields dynamically based on config settings (loop config object)
         query = "*" + query + "*";
-        var q = {};
-         q['title'] = query;
-        matchFields.push({
-            "wildcard": q
-        });
-        var q = {};
-         q['namePersonal'] = query;
-        matchFields.push({
-            "wildcard": q
-        });
-        var q = {};
-         q['subjectTopic'] = query;
-        matchFields.push({
-            "wildcard": q
-        });
-          console.log("Matchfields: ", matchFields);
+        type.forEach(function(type) {
+          var q = {};
+          q[type] = query;
+          matchFields.push({
+              "wildcard": q
+          });
+        })
     }
     else {
 
-          console.log("Type search: ", type);
         var q = {};
         q[type] = "*" + query + "*";
         matchFields.push({
         	"wildcard": q
         });
-          console.log("Matchfields: ", matchFields);
     }
 
     var data = {  

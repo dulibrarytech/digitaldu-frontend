@@ -35,10 +35,29 @@ exports.search = function(req, res) {
 
 	// Verify / sanitize
 	var query = req.body.q;
-	var type = req.body.type.toLowerCase();
-	if(req.body.type == config.searchFields)
+	var type;
 
-	// Get page value from search query
+	// If search all, build array of types from config settings.  If type search, 'type'is passed into search function as a string.
+	if(type == 'All') {
+		type = [];
+		config.searchFields.forEach(function(field) {
+			for(var key in field) {
+				type.push(field[key]);
+			}
+		});
+	}
+	else {
+
+		config.searchFields.forEach(function(field) {
+			for(var key in field) {
+				if(key == req.body.type) {
+					type = field[key];
+				}
+			}
+		})
+	}
+
+	// TODO: Get page value from search query
 	// Update with ES pagination 
 
 	Service.searchIndex(query, type, function(response) {
