@@ -1,57 +1,64 @@
 <% include partials/header %>
 
-<% include partials/search %>
+<div id="main">
 
-<div id="content">
-
-	<div id="pagination">
+	<div id="banner">
 
 	</div>
 
-	<div id="search-results">
+	<% include partials/search %>
 
-		<% if (results && results.length > 0) { %>
+	<div id="content">
 
+		<div id="pagination">
 
-				<% results.forEach(function(result) { %>
+		</div>
 
-					<div id="search-result">
+		<div id="search-results">
 
-						<dl class="search-result-tn">
-							<a href="" title="">
-								<img src="assets/img/image-unavailable-2.png" alt="Img">
-							</a>
-						</dl>
-
-						<dl class="search-result-data">
-							<dt>Title:</dt>
-							<dd><a href=""><%- result.title %></a></dd>
-
-							<% if (result.namePersonal) { %>
-								<dt>Creator:</dt>
-								<dd><%- result.namePersonal %></dd>
-							<% } %>
-
-							<% if (result.abstract) { %>
-								<dt>Description:</dt>
-								<dd id="result-description"><%- result.abstract %></dd>
-							<% } %>
-						</dl>
-
-					</div>
+			<% if (results && results.length > 0) { %>
 
 
+					<% results.forEach(function(result) { %>
+
+						<div id="search-result">
+
+							<dl class="search-result-tn">
+								<a href="" title="">
+									<img src="assets/img/image-unavailable-2.png" alt="Img">
+								</a>
+							</dl>
+
+							<dl class="search-result-data">
+								<dt>Title:</dt>
+								<dd><a href=""><%- result.title %></a></dd>
+
+								<% if (result.namePersonal) { %>
+									<dt>Creator:</dt>
+									<dd><%- result.namePersonal %></dd>
+								<% } %>
+
+								<% if (result.abstract) { %>
+									<dt>Description:</dt>
+									<dd id="result-description"><%- result.abstract %></dd>
+								<% } %>
+							</dl>
+
+						</div>
 
 
-				<% }); %>
-				
+
+
+					<% }); %>
+					
 
 
 
-		<% } else { %>
-			<h3>No results found</h3>
-		<% } %>
+			<% } else { %>
+				<h3>No results found</h3>
+			<% } %>
 
+		</div>
 	</div>
 </div>
 
