@@ -23,8 +23,9 @@ var createCollectionList= function(pidArray) {
 var addTNData = function(resultArray) {
   // Foreach in array, add new prop 'tn'
   var tn = "";
-
-  //tn = fedora.getTNUrl(pid.replace('_', ':'))
+  resultArray.forEach(function(result) {
+    console.log("Result:",result);
+  });
 }
 
 exports.getCollections = function(pid, callback) {
@@ -70,17 +71,18 @@ exports.searchIndex = function(query, type, callback) {
         matchFields.push({
             "wildcard": q
         });
+          console.log("Matchfields: ", matchFields);
     }
     else {
 
+          console.log("Type search: ", type);
         var q = {};
         q[type] = "*" + query + "*";
         matchFields.push({
         	"wildcard": q
         });
+          console.log("Matchfields: ", matchFields);
     }
-
-      console.log("Search test: query: ", q, "Type:", type);
 
     var data = {  
       index: config.elasticsearchIndex,
@@ -94,9 +96,7 @@ exports.searchIndex = function(query, type, callback) {
       }
     }
 
-      console.log("Search test: qobj:", data.body.query.bool.should);
-
-    es.search(data,function (error, response, status) {
+    es.search(data, function (error, response, status) {
         if (error){
           console.log("search error: " + error);
           callback({status: false, message: error, data: null});
@@ -107,18 +107,23 @@ exports.searchIndex = function(query, type, callback) {
           console.log(response);
           console.log("--- Hits ---");
 
-          
-          // Check below ***
+      
 
-          var results = [];
+          var results = [], tn;
           response.hits.hits.forEach(function(result){
-            results.push(result._source);
-          })
+            //tn = fedora.getTNUrl(pid.replace('_', ':'));
+            tn = "assets/img/image-unavailable-2.png";
+            results.push({
+              title: result._source.title,
+              namePersonal: result._source.namePersonal,
+              abstract: result._source.abstract,
+              tn: tn
+            });
+          });
 
-          results = addTNData(results);
+          console.log("Result arr:", results);
 
-          console.log("Results:", results);
-
+          //results = addTNData(results);
           callback({status: true, data: results});
         }
     });

@@ -36,6 +36,7 @@ exports.search = function(req, res) {
 	// Verify / sanitize
 	var query = req.body.q;
 	var type = req.body.type.toLowerCase();
+	if(req.body.type == config.searchFields)
 
 	// Get page value from search query
 	// Update with ES pagination 
