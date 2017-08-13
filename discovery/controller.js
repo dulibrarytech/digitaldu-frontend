@@ -64,10 +64,6 @@ exports.search = function(req, res) {
 		if(response.status) {
 			data['results'] = response.data;	// DEMO
 
-
-
-
-
 			//data['results'] = Helper.paginateResults(response.data.length, 1);
 			// console.error("Test error!");
 		}

@@ -90,12 +90,11 @@ exports.searchIndex = function(query, type, callback) {
           callback({status: false, message: error, data: null});
         }
         else {
-          // DEV
-          console.log("--- Response ---");
-          console.log(response);
-          console.log("--- Hits ---");
-
-      
+          
+            // DEV
+            console.log("--- Response ---");
+            console.log(response);
+            console.log("--- Hits ---");
 
           var results = [], tn;
           response.hits.hits.forEach(function(result){
@@ -108,8 +107,6 @@ exports.searchIndex = function(query, type, callback) {
               tn: tn
             });
           });
-
-          console.log("Result arr:", results);
 
           //results = addTNData(results);
           callback({status: true, data: results});
