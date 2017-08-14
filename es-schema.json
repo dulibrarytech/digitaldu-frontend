@@ -1,0 +1,54 @@
+{
+    "settings" : {
+        "number_of_shards" : 1
+    },
+    "mappings" : {
+	"data" : {
+	    "properties" : {	
+		"pid" : { "type" : "keyword" },
+		"createdDate" : { "type" : "keyword" },
+		"lastModifiedDate" : { "type" : "keyword" },
+		"datastreams" : { "type" : "keyword" },
+        "hasModel" : { "type" : "keyword" },
+		"rels-ext_isMemberOfCollection" : { "type" : "keyword" },
+		"rels-ext_isConstituentOf" : { "type" : "keyword" },
+		"rels-ext_isSequenceNumberOf" : { "type" : "keyword" },
+		"rels-ext_isManageableByUser" : { "type" : "keyword" },
+		"rels-ext_isManageableByRole" : { "type" : "keyword" }
+	    }
+	},
+        "mods" : {
+        "properties" : {
+		"title" : { "type" : "keyword" },
+		"subTitle" : { "type" : "keyword" },
+		"namePersonal" : { "type" : "keyword" },
+		"rolePersonal" : { "type" : "text" },
+		"nameCorporate" : { "type" : "keyword" },
+		"roleCorporate" : { "type" : "text" },
+        "typeOfResource" : { "type" : "keyword" },
+		"genre" : { "type" : "text" },
+		"dateIssued" : { "type" : "text" },
+		"publisher" : { "type" : "text" },
+		"country" : { "type" : "text" },
+		"place" : { "type" : "text" },
+		"language" : { "type" : "text" },
+        "abstract" : { "type" : "keyword" },
+        "identifier" : { "type" : "text" },
+		"form" : { "type" : "text" },
+		"extent" : { "type" : "text" },
+		"note" : { "type" : "text" },
+		"subjectTopic" : { "type" : "keyword" },
+		"subjectGeographic" : { "type" : "text" },
+		"subjectTemporal" : { "type" : "text" },
+		"subjectContinent" : { "type" : "text" },
+		"subjectCountry" : { "type" : "text" },
+		"subjectProvince" : { "type" : "text" },
+		"subjectRegion" : { "type" : "text" },
+		"subjectCounty" : { "type" : "text" },
+		"subjectCity" : { "type" : "text" },
+		"subjectCitySection" : { "type" : "text" },
+		"subjectCoordinates" : { "type" : "text" }
+            }
+        }
+    }
+}
