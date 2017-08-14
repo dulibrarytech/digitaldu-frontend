@@ -71,6 +71,7 @@ exports.search = function(req, res) {
 		if(response.status) {
 				console.log("Response:", response);
 			data['results'] = response.data.results;	// DEMO
+			data['base_url'] = config.baseUrl;
 			//data['facets'] = response.data.facets;
 			data['facetData'] = {
 				"Creator": [{name: "University of Denver", hits: "3"},{name: "John Smith", hits: "1"}],
@@ -85,7 +86,7 @@ exports.search = function(req, res) {
 			data['results'] = null;
 			data['error'] = response.message;
 		}
-			console.log("Rendering with data:", data);
+
 		return res.render('results', data);
 	});
 };
