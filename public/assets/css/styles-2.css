@@ -51,6 +51,7 @@ div#content {
     background-color: white;
     min-height: 600px;
     overflow: auto;
+    padding-bottom: 7em;
     /*margin: 1em auto;
     max-width: 1200px;*/
 }
@@ -258,6 +259,44 @@ div#facet-data > ul {
 
 div#facet-data > h4 {
 	font-weight: bold;
+}
+
+div#viewer-section {
+	width: 80%;
+    margin: 0 auto;
+}
+
+div#viewer {
+	width: inherit;
+    height: 100%;
+    margin: 3em auto;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 5px;
+    border-color: #58001B;
+    background-color: #EAE9E5;
+    padding: 1.5em;
+}
+
+div#viewer > img {
+	display: block;
+    margin: auto;
+}
+
+div#object-data {
+	width: 80%;
+	margin: 3em auto 1em auto;
+}
+
+div#object-controls {
+	margin-top: 2em;
+	margin: 3em auto 1em auto;
+	width: 85%;
+}
+
+div#object-data > p {
+	margin-left: 1em;
+	margin-top: 20px;
 }
 
 

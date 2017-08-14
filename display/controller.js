@@ -6,6 +6,10 @@ var async = require('async'),
     Service = require('../display/service'),
     Facets = require('../libs/facets');
 
+var getViewer = function(pid) {
+	return "<div id='viewer'><img src='/assets/img/mockup/sample-basic-image.jpg'></div>";
+} 
+
 exports.renderObjectView = function(req, res) {
 
 	var data = {};
@@ -19,6 +23,7 @@ exports.renderObjectView = function(req, res) {
 	// Get content model
 
 	// Get viewer content
+	data['viewer'] = getViewer(req.params.pid);
 
 	// Get mods data
 
