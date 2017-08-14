@@ -74,7 +74,7 @@ exports.search = function(req, res) {
 			//data['facets'] = response.data.facets;
 			data['facetData'] = {
 				"Creator": [{name: "University of Denver", hits: "3"},{name: "John Smith", hits: "1"}],
-				"Subject": [{name: "Athletics", hits: "5"}]
+				"Subject": [{name: "Athletics", hits: "2"}]
 			}
 
 			//data['results'] = Helper.paginateResults(response.data.length, 1);
