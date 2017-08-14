@@ -71,6 +71,11 @@ ul.menu a {
 	font-size: 18px;
 }
 
+ul.menu li i.fa {
+	color: white;
+	padding-right: 4px;
+}
+
 div#search {
 	min-height: 50px;
 	background-color: #EAE9E5;
@@ -297,6 +302,14 @@ div#object-controls {
 	margin-top: 2em;
 	margin: 3em auto 1em auto;
 	width: 85%;
+}
+
+div#object-controls span a {
+	cursor: pointer;
+}
+
+div#object-controls ul li {
+	margin-bottom: 10px;
 }
 
 div#object-data > p {
