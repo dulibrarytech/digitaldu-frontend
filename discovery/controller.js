@@ -69,7 +69,9 @@ exports.search = function(req, res) {
 	Service.searchIndex(query, type, facets, page, function(response) {
 		var data = {};
 		if(response.status) {
-			data['results'] = response.data;	// DEMO
+				console.log("Response:", response);
+			data['results'] = response.data.results;	// DEMO
+			data['facets'] = response.data.facets;
 
 			//data['results'] = Helper.paginateResults(response.data.length, 1);
 			// console.error("Test error!");
@@ -79,6 +81,7 @@ exports.search = function(req, res) {
 			data['results'] = null;
 			data['error'] = response.message;
 		}
+			console.log("Rendering with data:", data);
 		return res.render('results', data);
 	});
 };

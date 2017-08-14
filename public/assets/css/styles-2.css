@@ -43,13 +43,14 @@ div#banner {
 /* Main body styles */
 div#main {
 	margin: 1em auto;
-    max-width: 65%;
+    max-width: 80%;
 }
 
 div#content {
 /*	width: 60%;*/
     background-color: white;
     min-height: 600px;
+    overflow: auto;
     /*margin: 1em auto;
     max-width: 1200px;*/
 }
@@ -121,6 +122,8 @@ div#pagination {
 
 div#search-results {
 	padding: 2em 3em;
+	width: 75%;
+	float: right;
 }
 
 div#search-results > h3 {
@@ -145,9 +148,10 @@ dl.search-result-tn {
 	width: 25%;
 }
 
-dl.search-result-tn > img {
+dl.search-result-tn a img {
 	min-width: 100px;
 	min-height: 150px;
+	margin-bottom: 11%;
 }
 
 dl.search-result-data > dt {
@@ -190,4 +194,9 @@ dl#search-results-list > dd {
   	width: 75%;
 	border-top: 1px solid #ddd;
 
+}
+
+div#facets {
+	float: left;
+	width: 20%;
 }

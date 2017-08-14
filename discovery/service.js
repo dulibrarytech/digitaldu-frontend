@@ -102,9 +102,15 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
               "should": matchFields
             }
         },
+        // TODO: retrieve from helper
+        // foreach facet of facetList
+        // aggr[facet] = {"field": facet}
         aggregations: {
           "namePersonal": {
              "terms": {"field": "namePersonal"}
+          },
+          "typeOfResource": {
+             "terms": {"field": "typeOfResource"}
           },
           "subjectTopic": {
              "terms": {"field": "subjectTopic"}
@@ -114,6 +120,7 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
     }
 
     es.search(data, function (error, response, status) {
+        var responseData = {};
         if (error){
           console.log("search error: " + error);
           callback({status: false, message: error, data: null});
@@ -126,7 +133,14 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
             console.log("--- Hits ---", response.hits.hits);
             console.log("---Facets---");
             console.log(response.aggregations.namePersonal.buckets);
-            console.log(response.aggregations.subjectTopic.buckets)
+            console.log(response.aggregations.subjectTopic.buckets);
+            console.log(response.aggregations.typeOfResource.buckets);
+
+          // TODO: build facets object
+          // foreach facet in config.facetlist
+          // facets[facet] = [][
+          // for var index in esponse.aggregations[facet].buckets
+          // facets.facet.push({index.key: index.doc_count})
 
           var results = [], tn;
           response.hits.hits.forEach(function(result){
@@ -140,8 +154,11 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
             });
           });
 
+          responseData['results'] = results;
+          //responseData['facets'] = 
+
           //results = addTNData(results);
-          callback({status: true, data: results});
+          callback({status: true, data: responseData});
         }
     });
 };
