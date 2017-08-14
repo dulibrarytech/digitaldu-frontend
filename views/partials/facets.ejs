@@ -1,0 +1,15 @@
+<div id="facets">
+	<div class="section-label">
+		<h4>Refine your search</h4>
+	</div>
+	<div id="facet-data">
+		<% for(var key in facetData) { %>
+			<h4>By <%- key %>:</h4>
+			<ul>
+				<% for(var index of facetData[key]) { %>
+					<li><%- index.name %> (<%- index.hits %>)</li>
+				<% }; %>
+			</ul>
+		<% }; %>
+	</div>
+</div>
