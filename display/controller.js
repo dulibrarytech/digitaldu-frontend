@@ -7,7 +7,7 @@ var async = require('async'),
     Facets = require('../libs/facets');
 
 var getViewer = function(pid) {
-	return "<div id='viewer'><img src='/assets/img/mockup/sample-basic-image.jpg'></div>";
+	return "<div id='viewer'><img src='/assets/img/mockup/sample-basic-image2.jpg'></div>";
 } 
 
 exports.renderObjectView = function(req, res) {

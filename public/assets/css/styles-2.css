@@ -261,6 +261,11 @@ div#facet-data > h4 {
 	font-weight: bold;
 }
 
+div#object-title {
+	text-align: center;
+	margin-top: 2em;
+}
+
 div#viewer-section {
 	width: 80%;
     margin: 0 auto;
@@ -269,7 +274,7 @@ div#viewer-section {
 div#viewer {
 	width: inherit;
     height: 100%;
-    margin: 3em auto;
+    margin: 2.5em auto;
     border-style: solid;
     border-width: 1px;
     border-radius: 5px;
