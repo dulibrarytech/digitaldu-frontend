@@ -72,15 +72,44 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
         });
     }
 
+    // If facet data is present, add it to the search
+    if(facets) {
+
+      // for(var key in facets) {
+      //   for(var index of facets[key]) {
+      //     var q = {};
+      //     q[key] = index;
+      //     matchFields.push({
+      //       "match": q
+      //     });
+      //   }
+      // }
+
+      // TODO: Add filter object ***
+    }
+
+      console.log("Page:", page);
+      console.log("Matchfields obj:", matchFields);
+
     var data = {  
       index: config.elasticsearchIndex,
       type: 'mods',
       body: {
+        from : page, 
+        size : config.maxDisplayResults,
         query: {
             "bool": {
               "should": matchFields
             }
+        },
+        aggregations: {
+          "namePersonal": {
+             "terms": {"field": "namePersonal"}
+          },
+          "subjectTopic": {
+             "terms": {"field": "subjectTopic"}
           }
+        }
       }
     }
 
@@ -94,7 +123,10 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
             // DEV
             console.log("--- Response ---");
             console.log(response);
-            console.log("--- Hits ---");
+            console.log("--- Hits ---", response.hits.hits);
+            console.log("---Facets---");
+            console.log(response.aggregations.namePersonal.buckets);
+            console.log(response.aggregations.subjectTopic.buckets)
 
           var results = [], tn;
           response.hits.hits.forEach(function(result){

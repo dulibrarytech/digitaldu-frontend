@@ -36,10 +36,10 @@ exports.search = function(req, res) {
 	// Verify / sanitize
 	var query = req.body.q;
 	var typeVal = req.body.type, type;
-	var page = req.body.page || 1;
+	var page = req.body.page || 0;
 	var facets = req.body.facets || null;
 
-	console.log("Req Facets in:", req.body.facetTerms);
+		console.log("Req Facets in:", req.body.facetTerms);
 
 	// If search all, build array of types from config settings.  If type search, 'type'is passed into search function as a string.
 	if(typeVal == 'All') {
