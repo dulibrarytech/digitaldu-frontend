@@ -1,8 +1,12 @@
 'use strict';
 
+var protocol = "http";
+
 module.exports = {
+    
+
     // Appliation settings
-    baseUrl: process.env.APP_HOST + ":" + process.env.APP_PORT,
+    baseUrl: protocol + "://" + process.env.APP_HOST + ":" + process.env.APP_PORT,
     elasticsearchHost: process.env.ELASTICSEARCH_HOST,
     elasticsearchPort: process.env.ELASTICSEARCH_PORT,
     elasticsearchIndex: process.env.ELASTICSEARCH_INDEX,

@@ -9,7 +9,12 @@ var async = require('async'),
 exports.renderObjectView = function(req, res) {
 
 	var data = {};
-	data['pid'] = Helper.extractPidFromUrl(req.originalUrl);
+
+	data['base_url'] = config.baseUrl;
+
+	// data['pid'] = Helper.extractPidFromUrl(req.originalUrl);
+	data['pid'] = req.params.pid;
+		console.log("Object view receives pid:", data.pid);
 
 	// Get content model
 
