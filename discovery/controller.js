@@ -35,10 +35,14 @@ exports.search = function(req, res) {
 
 	// Verify / sanitize
 	var query = req.body.q;
-	var type;
+	var typeVal = req.body.type, type;
+	var page = req.body.page || 1;
+	var facets = req.body.facets || null;
+
+	console.log("Req Facets in:", req.body.facetTerms);
 
 	// If search all, build array of types from config settings.  If type search, 'type'is passed into search function as a string.
-	if(req.body.type == 'All') {
+	if(typeVal == 'All') {
 		type = [];
 		config.searchFields.forEach(function(field) {
 			for(var key in field) {
@@ -49,7 +53,7 @@ exports.search = function(req, res) {
 	else {
 		config.searchFields.forEach(function(field) {
 			for(var key in field) {
-				if(key == req.body.type) {
+				if(key == typeVal) {
 					type = field[key];
 				}
 			}
@@ -58,8 +62,11 @@ exports.search = function(req, res) {
 
 	// TODO: Get page value from search query
 	// Update with ES pagination 
+	facets = {
+		namePersonal: ["Creator 1"]
+	};
 
-	Service.searchIndex(query, type, function(response) {
+	Service.searchIndex(query, type, facets, page, function(response) {
 		var data = {};
 		if(response.status) {
 			data['results'] = response.data;	// DEMO

@@ -48,7 +48,7 @@ exports.getCollections = function(pid, callback) {
     });
 };
 
-exports.searchIndex = function(query, type, callback) {
+exports.searchIndex = function(query, type, facets=null, page=null, callback) {
 
     var field = { match: "" };
     var matchFields = [], results = [];
