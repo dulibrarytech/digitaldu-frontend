@@ -55,6 +55,21 @@ div#content {
     max-width: 1200px;*/
 }
 
+ul.menu {
+	list-style: none;
+    padding-top: 1.16em;
+    padding-left: 1.5em;
+    margin-bottom: 0px;
+}
+
+ul.menu a {
+	color: white;
+	font-weight: bold;
+	cursor: pointer;
+	text-decoration: none;
+	font-size: 18px;
+}
+
 div#search {
 	min-height: 50px;
 	background-color: #EAE9E5;
