@@ -40,6 +40,7 @@ exports.getCollections = function(pid, callback) {
     		collections.push(body.hits.hits[i]._source.pid);
     	}
     	collectionList = createCollectionList(collections);
+      console.log("?collectionList is", collectionList);
 	    callback({status: true, data: collectionList});
 
     }, function (error) {
@@ -149,7 +150,7 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
             results.push({
               title: result._source.title,
               namePersonal: result._source.namePersonal,
-              abstract: result._source.abstract,
+              abstract: result._source.abstract.substring(0,400),
               tn: tn
             });
           });

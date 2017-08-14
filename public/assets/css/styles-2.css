@@ -90,7 +90,7 @@ form#search-form > div.form-group {
 }
 
 select#search-type {
-	height: 50px;
+
 	width: 120px;
 	background-color: #e5e3e1;
 }
@@ -99,6 +99,7 @@ select#search-type:hover {
 	cursor: pointer;
 }
 
+select#search-type,
 input#search-input {
 	height: 50px;
 }
@@ -116,7 +117,8 @@ button#search-button {
 div#collections {
 	display: block;
 	padding: 3em 0;
-	margin-top: -1em;
+	margin: 2em auto;
+    width: 90%;
 }
 
 div#collections a {
@@ -168,11 +170,11 @@ dl.search-result-tn {
 dl.search-result-tn a img {
 	min-width: 100px;
 	min-height: 150px;
-	margin-bottom: 11%;
+	margin-bottom: 13%;
 }
 
 dl.search-result-data {
-    max-height: 230px;
+   /* max-height: 230px;*/
     overflow: hidden;
 }
 
@@ -252,4 +254,42 @@ div#facet-data > ul {
 
 div#facet-data > h4 {
 	font-weight: bold;
+}
+
+
+
+
+
+@media only screen and (min-width: 1400px) and (max-width: 1780px) {
+
+	div#banner {
+		min-height: 50px;
+	}
+
+	ul.menu {
+		padding-top: 1em;
+	}
+
+	ul.menu a {
+		font-size: 16px;
+	}
+
+	div#collections {
+		width: 92%;
+	}
+
+	div#collections a img {
+	    width: 130px;
+	    height: 163px;
+	}
+
+	select#search-type,
+	input#search-input {
+		height: 45px;
+	}
+
+	button#search-button {
+		height: 43px;
+	}
+
 }
