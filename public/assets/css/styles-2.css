@@ -151,6 +151,8 @@ div#search-results > h3 {
 
 div#search-result {
 	margin-bottom: 2em;
+    height: 230px;
+    max-height: 230px;
 }
 
 dl.search-result-data {
@@ -165,12 +167,14 @@ dl.search-result-data {
 dl.search-result-tn {
 	float: left;
 	width: 25%;
+	border-radius: 5px;
 }
 
 dl.search-result-tn a img {
 	min-width: 100px;
 	min-height: 150px;
 	margin-bottom: 13%;
+	border-radius: 7px;
 }
 
 dl.search-result-data {

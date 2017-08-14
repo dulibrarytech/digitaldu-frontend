@@ -150,8 +150,8 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
           var results = [], tn;
           response.hits.hits.forEach(function(result){
 
-            //tn = fedora.getTNUrl(pid.replace('_', ':'));
-            tn = "assets/img/image-unavailable-2.png";
+            tn = fedora.getTNUrl(result._source.pid.replace('_', ':'));
+            //tn = "assets/img/image-unavailable-2.png";
             results.push({
               title: result._source.title,
               namePersonal: result._source.namePersonal,
