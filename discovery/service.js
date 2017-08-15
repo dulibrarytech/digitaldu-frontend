@@ -40,7 +40,6 @@ exports.getCollections = function(pid, callback) {
     		collections.push(body.hits.hits[i]._source.pid);
     	}
     	collectionList = createCollectionList(collections);
-      console.log("?collectionList is", collectionList);
 	    callback({status: true, data: collectionList});
 
     }, function (error) {

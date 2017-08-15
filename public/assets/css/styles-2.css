@@ -137,6 +137,7 @@ div#collections a img {
 	width: 200px;
 	height: 250px;
 	margin-bottom: 3em;
+	border-radius: 6px;
 }
 
 div#pagination {
@@ -319,7 +320,19 @@ div#object-data > p {
 
 
 
+@media only screen and (min-width: 2000px) {
+	div#main {
+		width: 60%;
+	}
 
+	div#collections a {
+		margin-left: 2.7em;
+	}
+
+	div#collections a img {
+		margin-bottom: 4em;
+	}
+}
 
 @media only screen and (min-width: 1400px) and (max-width: 1780px) {
 
