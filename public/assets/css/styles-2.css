@@ -42,7 +42,7 @@ div#banner {
 
 /* Main body styles */
 div#main {
-	margin: 1em auto;
+	margin: 1em auto 4em auto;
     max-width: 70%;
 }
 
@@ -52,6 +52,7 @@ div#content {
     min-height: 600px;
     overflow: auto;
     padding-bottom: 7em;
+    padding-top: 3em;
     /*margin: 1em auto;
     max-width: 1200px;*/
 }
@@ -287,6 +288,7 @@ div#viewer {
     border-color: #58001B;
     background-color: #EAE9E5;
     padding: 1.5em;
+    box-shadow: 0px 0px 6px 1px #e5e3e1;
 }
 
 div#viewer > img {
@@ -302,7 +304,7 @@ div#object-data {
 div#object-controls {
 	margin-top: 2em;
 	margin: 3em auto 1em auto;
-	width: 85%;
+	width: 80%;
 }
 
 div#object-controls span a {
@@ -313,9 +315,31 @@ div#object-controls ul li {
 	margin-bottom: 10px;
 }
 
+div#metadata-display {
+    padding: 2em;
+    border-style: solid;
+    border-radius: 3px;
+    border-width: 1px;
+    border-color: #58001B;
+    box-shadow: 0px 0px 6px 1px #e5e3e1;
+}
+
+div#metadata-display table tr td:first-child {
+	font-weight: bold;
+}
+
+div#object-controls > button {
+	font-size: 19px;
+}
+
 div#object-data > p {
 	margin-left: 1em;
 	margin-top: 20px;
+}
+
+footer {
+	height: 150px;
+    background-color: #8b2332;
 }
 
 
