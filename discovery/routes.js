@@ -12,8 +12,8 @@ module.exports = function (app) {
 	app.route('/repository')
         .get(Discovery.renderCollectionsView);
 
-    app.route('/search')
-    	.post(Discovery.search);
+    app.route('/repository/search')
+    	.get(Discovery.search);
 };
 
 
