@@ -52,7 +52,7 @@ div#content {
     min-height: 600px;
     overflow: auto;
     padding-bottom: 7em;
-    padding-top: 3em;
+    /*padding-top: 3em;*/
     /*margin: 1em auto;
     max-width: 1200px;*/
 }
@@ -62,6 +62,7 @@ ul.menu {
     padding-top: 1.16em;
     padding-left: 1.5em;
     margin-bottom: 0px;
+    display: inline-flex;
 }
 
 ul.menu a {
@@ -71,6 +72,7 @@ ul.menu a {
 	text-decoration: none;
 	font-size: 18px;
 }
+
 
 ul.menu li i.fa {
 	color: white;
@@ -123,18 +125,26 @@ button#search-button {
 
 div#collections {
 	display: block;
-	padding: 3em 0;
-	margin: 2em auto;
+	padding: 0 0 3em 0;
+	margin: 5em auto;
     width: 90%;
 }
 
-div#collections a {
+div#collections-inner {
+	background-color: #fafafa;
+    padding: 3em 0 1em 0;
+    /* width: 100%; */
+    border-radius: 10px;
+    box-shadow: 0px 0px 4px 1px #B5B3B1;
+}
+
+div#collections-inner a {
 	padding: 2em;
     width: 300px;
     margin-left: 1.7em;
 }
 
-div#collections a img {
+div#collections-inner a img {
 	width: 200px;
 	height: 250px;
 	margin-bottom: 3em;

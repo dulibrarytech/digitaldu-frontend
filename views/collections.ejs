@@ -8,14 +8,14 @@
 	<% include partials/search %>
 
 	<div id="content">
-		<h3></h3>
 
+		
 		<div id="collections">
-
-			<% for (var i = 0; i < collections.length; i++) { %>
-				<a href="/repository/object/<%= collections[i].pid %>"><img src="<%= collections[i].tn %>" width="150" height="250" /></a>
-			<% } %>
-
+			<div id="collections-inner">
+				<% for (var i = 0; i < collections.length; i++) { %>
+					<a href="/repository/object/<%= collections[i].pid %>"><img src="<%= collections[i].tn %>" width="150" height="250" /></a>
+				<% } %>
+			</div>
 		</div>
 	</div>
 
