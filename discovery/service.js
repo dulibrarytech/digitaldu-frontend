@@ -3,6 +3,7 @@
 const es = require('../config/index');
 const config = require('../config/config');
 const fedora = require('../libs/fedora');
+const display = require('../libs/display');
 
 // Compose links to Fedora repository
 var createCollectionList= function(pidArray) {
@@ -166,4 +167,15 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
           callback({status: true, data: responseData});
         }
     });
+
+    exports.getObjectData = function(pid) {
+
+      client.get({
+          index: config.elasticsearchIndex,
+          type: 'object',
+          id: pid
+      }, function (error, response) {
+          // ...
+      });
+    };
 };
