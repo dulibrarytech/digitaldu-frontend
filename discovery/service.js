@@ -34,7 +34,7 @@ exports.getCollections = function(pid, callback) {
 	// Query ES for all objects with rels-ext/isMemberOfCollection == pid
 	es.search({
         index: config.elasticsearchIndex,
-        type: "data",
+        type: "object",
   		q: "rels-ext_isMemberOfCollection:" + pid
     }).then(function (body) {
     	for(var i=0; i<body.hits.total; i++) {
@@ -94,7 +94,7 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
 
     var data = {  
       index: config.elasticsearchIndex,
-      type: 'mods',
+      type: 'object',
       body: {
         from : page, 
         size : config.maxDisplayResults,
@@ -168,14 +168,17 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
         }
     });
 
-    exports.getObjectData = function(pid) {
-
-      client.get({
-          index: config.elasticsearchIndex,
-          type: 'object',
-          id: pid
-      }, function (error, response) {
-          // ...
-      });
+    exports.fetchObjectByPid = function(pid, callback) {
+      var objectData = {};
+        console.log("Get object data for:", pid);
+      
+      // client.get({
+      //     index: config.elasticsearchIndex,
+      //     type: 'object',
+      //     id: pid
+      // }, function (error, response) {
+      //     // ...
+      // });
+      callback({status: true, data: objectData})
     };
 };

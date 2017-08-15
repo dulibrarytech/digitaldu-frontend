@@ -16,7 +16,7 @@ module.exports = function (app) {
     	.get(Discovery.search);
 
     app.route('/repository/object/:pid')
-    	.get(Discovery.search);
+    	.get(Discovery.getObjectData);
 };
 
 

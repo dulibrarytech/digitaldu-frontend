@@ -90,3 +90,9 @@ exports.search = function(req, res) {
 		return res.render('results', data);
 	});
 };
+
+exports.getObjectData = function(req, res) {
+	Service.fetchObjectByPid(req.params.pid, function(response) {
+
+	});
+};
