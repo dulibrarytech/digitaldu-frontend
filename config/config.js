@@ -3,7 +3,6 @@
 var protocol = "http";
 
 module.exports = {
-    
 
     // Appliation settings
     baseUrl: protocol + "://" + process.env.APP_HOST + ":" + process.env.APP_PORT,
@@ -15,12 +14,25 @@ module.exports = {
     institutionPrefix: "codu",
     topLevelCollectionPID: "codu_root",
 
-    // Search settings
-    // {display field : index field}
+    // Search results list size
+    maxDisplayResults: 10,
+
+    /*
+     * List of fields to search.  These will appear in 'Search Type' dropdown list
+     * "Search type name": Index field to search"
+     */
     searchFields: [
     	{"Title": "title"},
     	{"Creator": "namePersonal"},
     	{"Subject": "subjectTopic"}
     ],
-    maxDisplayResults: 10
+    /*
+     * Facets to display
+     * "Facet name": "index field"
+     */
+    facets: {
+        "Creator": "namePersonal",
+        "Subject": "subjectTopic",
+        "Type": "typeOfResource"
+    }
 };
