@@ -2,6 +2,13 @@
 	<div class="section-label">
 		<h4>Refine your search</h4>
 	</div>
+
+	<!-- Retrieved from Facets lib? Controller sets variable facetContent and stores, pre render.
+	<div id="facet-data">
+		<%- facets %>
+	</div> -->
+
+
 	<div id="facet-data">
 		<% for(var key in facetData) { %>
 			<h4>By <%- key %>:</h4>
@@ -12,4 +19,6 @@
 			</ul>
 		<% }; %>
 	</div>
+
+
 </div>

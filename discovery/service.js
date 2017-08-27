@@ -104,16 +104,16 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
             }
         },
         // TODO: retrieve from helper
-        // foreach facet of facetList
+        // foreach facet of config.facets
         // aggr[facet] = {"field": facet}
         aggregations: {
-          "namePersonal": {
+          "Creator": {
              "terms": {"field": "namePersonal"}
           },
-          "typeOfResource": {
+          "Type": {
              "terms": {"field": "typeOfResource"}
           },
-          "subjectTopic": {
+          "Subject": {
              "terms": {"field": "subjectTopic"}
           }
         }
@@ -135,17 +135,14 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
             console.log("--- Hits ---", response.hits.hits);
 
             // TODO get facets object from response aggregations
-            console.log("---Facets---");
-            console.log(response.aggregations.namePersonal.buckets);
-            console.log(response.aggregations.subjectTopic.buckets);
-            console.log(response.aggregations.typeOfResource.buckets);
-            //responseData['facets'] = 
+              console.log("---Facets---");
+              console.log(response.aggregations);
+              console.log(response.aggregations.Creator.buckets);
+              console.log(response.aggregations.Subject.buckets);
+              console.log(response.aggregations.Type.buckets);
 
-          // TODO: build facets object
-          // foreach facet in config.facetlist
-          // facets[facet] = [][
-          // for var index in esponse.aggregations[facet].buckets
-          // facets.facet.push({index.key: index.doc_count})
+
+          responseData['facets'] = response.aggregations;
 
           var results = [], tn;
           response.hits.hits.forEach(function(result){
