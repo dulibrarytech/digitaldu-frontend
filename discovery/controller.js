@@ -33,11 +33,13 @@ exports.renderCollectionsView = function(req, res) {
 
 exports.search = function(req, res) {
 
+		console.log("Q:", req.query.q);
+
 	// Verify / sanitize
-	var query = req.body.q;
-	var typeVal = req.body.type, type;
-	var page = req.body.page || 0;
-	var facets = req.body.facets || null;
+	var query = req.query.q;
+	var typeVal = req.query.type, type;
+	var page = req.query.page || 0;
+	var facets = req.query.facets || null;
 
 		console.log("Req Facets in:", req.body.facetTerms);
 
