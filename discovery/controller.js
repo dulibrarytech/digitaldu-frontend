@@ -67,14 +67,19 @@ exports.search = function(req, res) {
 		var data = {};
 		if(response.status) {
 				console.log("Search Response:", response);
-			data['results'] = response.data.results;	// DEMO
+
+			// Get breadcrumb object array
+			var breadcrumbs = Helper.getFacetBreadcrumbObject(facets);
+
+			// Get data for the view
+			data['results'] = response.data.results;
 			data['base_url'] = config.baseUrl;
 			data['facets'] = Facets.create(response.data.facets);
-			data['facet_breadcrumbs'] = Helper.getFacetBreadcrumbObject(facets);
-				console.log("BC test:", data.facet_breadcrumbs);
+			data['facet_breadcrumb_trail'] = Facets.createBreadcrumbTrail(breadcrumbs);
+				console.log("BC test:", data.facet_breadcrumb_trail);
 
 			//data['results'] = Helper.paginateResults(response.data.length, 1);
-			// console.error("Test error!");
+			// console.error("Test error!");  createBreadcrumbTrail
 		}
 		else {
 			console.error("Error: ", response.message);

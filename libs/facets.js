@@ -1,9 +1,5 @@
 'use strict';
 
-exports.testFacetSelect = function() {
-    console.log("here..");
-}
-
 exports.create = function (facets) {
 
     var facetObj = {};
@@ -24,5 +20,16 @@ function createList(facet, data) {
     }
 
     return html;
-}
+};
+
+exports.createBreadcrumbTrail = function(data) {
+    var i;
+    var html = '';
+    for (i = 0; i < data.length; i++) {
+
+        html += '<span><a  href="javascript:document.location.href=removeFacet(\'' + data[i].type + '\', \'' + data[i].name + '\');"><strong id="facet-breadcrumb-remove-link">X</strong></a>' + data[i].type + '&nbsp&nbsp<strong id="facet-breadcrumb-sidearrow"> > </strong>&nbsp&nbsp' + data[i].name + '</span>';   // good
+    }
+
+    return html;
+};
 

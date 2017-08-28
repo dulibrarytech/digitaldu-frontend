@@ -11,11 +11,10 @@
 	</div>
 
 	<script type="text/javascript">
+
 		function selectFacet(facetType, facet) {
 
-		var url, relativeUrl;
-
-			  console.log("Select facet type:", facetType, "facet:", facet);
+			var url, relativeUrl;
 
 			// Convert spaces to '+' for querystring
 			facet = facet.replace(' ', '+');
@@ -28,7 +27,11 @@
 			relativeUrl += "&f[" + facetType + "][]=" + facet;
 
 			return relativeUrl;
-		}
+		};
+
+		function removeFacet() {
+
+		};
 
 	</script>
 

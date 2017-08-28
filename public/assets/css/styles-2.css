@@ -4,6 +4,10 @@ body {
 	font-family: Futura, "Trebuchet MS", Arial, sans-serif;
 }
 
+a:hover {
+	cursor: pointer;
+}
+
 /* Header styles */
 
 header#du-header {
@@ -165,13 +169,44 @@ div#collections-inner a img {
 	border-radius: 6px;
 }
 
-div#pagination {
+div#facet-breadcrumbs span {
+	height: 30px;
+    background-color: #9AA86E;
+    color: white;
+    padding: 0.5em;
+    margin-left: 1em;
+    border-radius: 4px;
+}
+
+div#facet-breadcrumbs {
+	margin-top: 2em;
+	margin: 2em auto 0 auto;
+    width: 80%;
+}
+
+div#facet-breadcrumbs span a {
+	color: red;
+    text-decoration: none;
+    padding-right: 0.5em;
+    font-size: 17px;
+}
+
+div#facet-breadcrumbs span a strong.facet-breadcrumb-sidearrow {
+	color: #9AA86E;
+}
+
+div#facet-breadcrumbs span a strong.facet-breadcrumb-remove-link {
+	color: red;
+}
+
+div#pagination-header {
 	height: 75px;
-	padding: 2em 40%;
+	/*padding: 2em 40%;*/
+	padding: 1em 40% 2em 40%;
 	font-size: 20px;
 }
 
-div#pagination a {
+div#pagination-header a {
 	margin-left: 1em;
 	color: #575757;
 }
