@@ -10,6 +10,22 @@ exports.create = function (facets) {
     return facetObj;
 };
 
+exports.getFacetBreadcrumbObject = function(selectedFacets) {
+
+    var breadcrumbs = [];
+    for(var key in selectedFacets) {
+
+        for(var index of selectedFacets[key]) {
+            breadcrumbs.push({
+                type: key,
+                name: index
+            });
+        }
+    }
+
+    return createBreadcrumbTrail(breadcrumbs);
+};
+
 function createList(facet, data) {
 
     var i;
@@ -22,7 +38,7 @@ function createList(facet, data) {
     return html;
 };
 
-exports.createBreadcrumbTrail = function(data) {
+function createBreadcrumbTrail(data) {
     var i;
     var html = '';
     for (i = 0; i < data.length; i++) {
