@@ -22,27 +22,30 @@
 
 			// Add selected facet to current search url:
 			url = window.location.href;
-			relativeUrl = url.substring(url.indexOf("search"), url.length);
+			relativeUrl = "/" + url.substring(url.indexOf("repository"), url.length);
 			//console.log("Url: ", relativeUrl);
 
 			relativeUrl += "&f[" + facetType + "][]=" + facet;
-			url += "&f[" + facetType + "][]=" + facet;
-			console.log("Url: ", url);
+			//url += "&f[" + facetType + "][]=" + facet;
+			//console.log("Url: ", relativeUrl);
 
 			//return "search?type=All&q=Men's" + url;
 			//return relativeUrl;
 			//document.location.reload(relativeUrl);
 			console.log("Loading...", url);
 
-			window.location.href = url;
-			self.location = url;
+			//window.location.href = url;
+			//self.location = url;
 			//loadUrl(relativeUrl);
 			//$.load(relativeUrl);
 
 
+			console.log("relUrl: ", relativeUrl);
+			return relativeUrl;
+			//return "/repository/search?type=All&q=Men%27s&f[Type][]=Still+Image";
 
 
-			return "/repository/search?type=All&q=Men%27sy#&f[Type][]=Still+Image";
+
 		}
 
 	</script>
