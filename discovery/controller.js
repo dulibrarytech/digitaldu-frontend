@@ -33,27 +33,25 @@ exports.renderCollectionsView = function(req, res) {
 
 exports.search = function(req, res) {
 
-		console.log("Q:", req.query.q);
-
 	// Verify / sanitize
 	var query = req.query.q;
 	var typeVal = req.query.type, type;
 	var page = req.query.page || 0;
 	var facets = req.query.facets || null;
 
-		console.log("Req Facets in:", req.body.facetTerms);
+		console.log("Req Facets in:", req.query);
 
 	// If search all, build array of types from config settings.  If type search, 'type'is passed into search function as a string.
 	if(typeVal == 'All') {
 		type = [];
-		config.searchFields.forEach(function(field) {
+		config.searchFields.forEach(function(field) {	// TODO: Convert to for loop
 			for(var key in field) {
 				type.push(field[key]);
 			}
 		});
 	}
 	else {
-		config.searchFields.forEach(function(field) {
+		config.searchFields.forEach(function(field) {	// TODO: Convert to for loop
 			for(var key in field) {
 				if(key == typeVal) {
 					type = field[key];
@@ -77,6 +75,8 @@ exports.search = function(req, res) {
 			data['results'] = response.data.results;	// DEMO
 			data['base_url'] = config.baseUrl;
 			data['facets'] = Facets.create(response.data.facets);
+
+				
 
 			//data['results'] = Helper.paginateResults(response.data.length, 1);
 			// console.error("Test error!");

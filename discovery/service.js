@@ -115,7 +115,6 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
               "should": matchFields
             }
         },
-
         aggregations: facetAggregations
       }
     }
@@ -131,9 +130,9 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
         else {
           
             // DEV
-            console.log("--- Response ---");
-            console.log(response);
-            console.log("--- Hits ---", response.hits.hits);
+            // console.log("--- Response ---");
+            // console.log(response);
+            // console.log("--- Hits ---", response.hits.hits);
 
           responseData['facets'] = response.aggregations;
 
