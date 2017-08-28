@@ -134,21 +134,12 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
             console.log(response);
             console.log("--- Hits ---", response.hits.hits);
 
-            // TODO get facets object from response aggregations
-              console.log("---Facets---");
-              console.log(response.aggregations);
-              console.log(response.aggregations.Creator.buckets);
-              console.log(response.aggregations.Subject.buckets);
-              console.log(response.aggregations.Type.buckets);
-
-
           responseData['facets'] = response.aggregations;
 
+          // Build the search results object
           var results = [], tn;
-          response.hits.hits.forEach(function(result){
-
+          for(var result of response.hits.hits) {
             tn = fedora.getTNUrl(result._source.pid.replace('_', ':'));
-            //tn = "assets/img/image-unavailable-2.png";
             results.push({
               title: result._source.title,
               namePersonal: result._source.namePersonal,
@@ -156,11 +147,9 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
               tn: tn,
               pid: result._source.pid
             });
-          });
-
+          }
           responseData['results'] = results;
 
-          //results = addTNData(results);
           callback({status: true, data: responseData});
         }
     });

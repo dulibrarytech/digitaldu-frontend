@@ -64,6 +64,8 @@ exports.search = function(req, res) {
 
 	// TODO: Get page value from search query
 	// Update with ES pagination 
+
+	// This is what narrows the search results.  Test below is not in use
 	facets = {
 		namePersonal: ["Creator 1"]
 	};
@@ -71,16 +73,10 @@ exports.search = function(req, res) {
 	Service.searchIndex(query, type, facets, page, function(response) {
 		var data = {};
 		if(response.status) {
-				console.log("Response:", response);
+				console.log("Search Response:", response);
 			data['results'] = response.data.results;	// DEMO
 			data['base_url'] = config.baseUrl;
-			//data['facets'] = Facets.create(response.facets);  // Will be html.
-
-
-			data['facetData'] = {
-				"Creator": [{name: "University of Denver", hits: "3"},{name: "John Smith", hits: "1"}],
-				"Subject": [{name: "Athletics", hits: "2"}]
-			}
+			data['facets'] = Facets.create(response.data.facets);
 
 			//data['results'] = Helper.paginateResults(response.data.length, 1);
 			// console.error("Test error!");
