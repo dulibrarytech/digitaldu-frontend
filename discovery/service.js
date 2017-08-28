@@ -51,6 +51,7 @@ exports.getCollections = function(pid, callback) {
 
 exports.searchIndex = function(query, type, facets=null, page=null, callback) {
 
+    // Build elasticsearch matchfields object for query
     var field = { match: "" };
     var matchFields = [], results = [];
     if(Array.isArray(type)) {
@@ -92,6 +93,17 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
       console.log("Page:", page);
       console.log("Matchfields obj:", matchFields);
 
+    // Build elasticsearch aggregations object from config facet list
+    var facetAggregations = {}, field;
+    for(var key in config.facets) {
+      field = {};
+      field['field'] = config.facets[key];
+      facetAggregations[key] = {
+        terms: field
+      };
+    }
+
+    // Elasticsearch query object
     var data = {  
       index: config.elasticsearchIndex,
       type: 'object',
@@ -103,24 +115,13 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
               "should": matchFields
             }
         },
-        // TODO: retrieve from helper
-        // foreach facet of config.facets
-        // aggr[facet] = {"field": facet}
-        aggregations: {
-          "Creator": {
-             "terms": {"field": "namePersonal"}
-          },
-          "Type": {
-             "terms": {"field": "typeOfResource"}
-          },
-          "Subject": {
-             "terms": {"field": "subjectTopic"}
-          }
-        }
+
+        aggregations: facetAggregations
       }
     }
       console.log("Data obj:", data);
 
+    // Query the index
     es.search(data, function (error, response, status) {
         var responseData = {};
         if (error){
