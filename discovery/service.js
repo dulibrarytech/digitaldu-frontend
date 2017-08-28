@@ -51,6 +51,8 @@ exports.getCollections = function(pid, callback) {
 
 exports.searchIndex = function(query, type, facets=null, page=null, callback) {
 
+      console.log("Search: facets in:", facets);
+
     // Build elasticsearch matchfields object for query
     var field = { match: "" };
     var matchFields = [], results = [];
@@ -90,7 +92,6 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
       // TODO: Add filter object ***
     }
 
-      console.log("Page:", page);
       console.log("Matchfields obj:", matchFields);
 
     // Build elasticsearch aggregations object from config facet list
