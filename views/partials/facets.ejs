@@ -17,7 +17,7 @@
 			var url, relativeUrl;
 
 			// Convert spaces to '+' for querystring
-			facet = facet.replace(' ', '+');
+			//facet = facet.replace(' ', '+');
 
 			// Get current search querystring
 			url = window.location.href;
@@ -29,8 +29,20 @@
 			return relativeUrl;
 		};
 
-		function removeFacet() {
+		function removeFacet(facetType, facet) {
 
+			// Get the facet param string to remove from the search querystring
+			var facetParam = "&f[" + facetType + "][]=" + facet;
+			facetParam = facetParam.replace(/\s/g, "%20");
+
+			// Get current search querystring
+			url = window.location.href;
+			relativeUrl = "/" + url.substring(url.indexOf("repository"), url.length);
+
+			// Remove the selected facet param from the search querystring
+			relativeUrl = relativeUrl.replace(facetParam, "");
+
+			return relativeUrl;
 		};
 
 	</script>

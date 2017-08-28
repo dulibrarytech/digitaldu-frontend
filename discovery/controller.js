@@ -73,7 +73,6 @@ exports.search = function(req, res) {
 			data['base_url'] = config.baseUrl;
 			data['facets'] = Facets.create(response.data.facets);
 			data['facet_breadcrumb_trail'] = Facets.getFacetBreadcrumbObject(facets);
-				console.log("BC test:", data.facet_breadcrumbs);
 
 			//data['results'] = Helper.paginateResults(response.data.length, 1);
 			// console.error("Test error!");  createBreadcrumbTrail
