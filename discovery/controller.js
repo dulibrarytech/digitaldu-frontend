@@ -35,9 +35,9 @@ exports.search = function(req, res) {
 
 	// Verify / sanitize
 	var query = req.query.q;
+	var facets = req.query.f || null;
 	var typeVal = req.query.type, type;
 	var page = req.query.page || 0;
-	var facets = req.query.f || null;
 
 		console.log("Req Facets in:", facets);
 

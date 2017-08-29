@@ -78,18 +78,21 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
 
     // If facet data is present, add it to the search
     if(facets) {
+      var matchFieldsTemp = [], indexKey;
+      for(var key in facets) {
+        for(var index of facets[key]) {
+          var q = {};
 
-      // for(var key in facets) {
-      //   for(var index of facets[key]) {
-      //     var q = {};
-      //     q[key] = index;
-      //     matchFields.push({
-      //       "match": q
-      //     });
-      //   }
-      // }
+          // Get the index key from the config facet list, using the facet name 
+          indexKey = config.facets[key];
 
-      // TODO: Add filter object ***
+          // Add to the main ES query object
+          q[indexKey] = index;
+          matchFields.push({
+            "match": q
+          });
+        }
+      }
     }
 
       console.log("Matchfields obj:", matchFields);
@@ -120,6 +123,10 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
       }
     }
       console.log("Data obj:", data);
+
+    if(facets) {
+      data.body.query.bool["minimum_should_match"] = 2;
+    }
 
     // Query the index
     es.search(data, function (error, response, status) {
