@@ -13,7 +13,8 @@ exports.create = function (facets) {
 exports.getFacetBreadcrumbObject = function(facets) {
 
     var breadcrumbs = [], buckets;
-    
+
+    // Create the object to populate the view elements
     for(var key in facets) {
         buckets = facets[key];
 
@@ -34,7 +35,7 @@ function createList(facet, data) {
     var html = '';
     for (i = 0; i < data.length; i++) {
 
-        html += '<span><a  href="javascript:document.location.href=selectFacet(\'' + facet + '\', \'' + data[i].key + '\');">' + data[i].key + '</a>&nbsp;&nbsp;(' + data[i].doc_count + ')</span><br>';   // good
+        html += '<span><a href="javascript:document.location.href=selectFacet(\'' + facet + '\', \'' + data[i].key + '\');">' + data[i].key + '</a>&nbsp;&nbsp;(' + data[i].doc_count + ')</span><br>';   // good
         //html += '<span><a  onclick="selectFacet(\'' + facet + '\', \'' + data[i].key + '\');">' + data[i].key + '</a>&nbsp;&nbsp;(' + data[i].doc_count + ')</span><br>';   // test
     }
 
@@ -46,9 +47,8 @@ function createBreadcrumbTrail(data) {
     var html = '';
     for (i = 0; i < data.length; i++) {
 
-        html += '<span><a  href="javascript:document.location.href=removeFacet(\'' + data[i].type + '\', \'' + data[i].name + '\');"><strong>X</strong></a>' + data[i].type + '&nbsp&nbsp<strong style="color: #333"> > </strong>&nbsp&nbsp' + data[i].name + '</span>';   // good
+        html += '<span><a href="javascript:document.location.href=removeFacet(\'' + data[i].type + '\', \'' + data[i].name + '\');"><strong>X</strong></a>' + data[i].type + '&nbsp&nbsp<strong style="color: #333"> > </strong>&nbsp&nbsp' + data[i].name + '</span>';   // good
         //html += '<span><a  onclick="removeFacet(\'' + data[i].type + '\', \'' + data[i].name + '\');"><strong id="facet-breadcrumb-remove-link">X</strong></a>' + data[i].type + '&nbsp&nbsp<strong id="facet-breadcrumb-sidearrow"> > </strong>&nbsp&nbsp' + data[i].name + '</span>';   // test
-
     }
 
     return html;
