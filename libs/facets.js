@@ -10,13 +10,13 @@ exports.create = function (facets) {
     return facetObj;
 };
 
-exports.getFacetBreadcrumbObject = function(facets) {
+exports.getFacetBreadcrumbObject = function(selectedFacets) {
 
     var breadcrumbs = [], buckets;
 
     // Create the object to populate the view elements
-    for(var key in facets) {
-        buckets = facets[key];
+    for(var key in selectedFacets) {
+        buckets = selectedFacets[key];
 
         for(var index of buckets) {
             breadcrumbs.push({

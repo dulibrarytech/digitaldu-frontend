@@ -39,8 +39,6 @@ exports.search = function(req, res) {
 	var typeVal = req.query.type, type;
 	var page = req.query.page || 0;
 
-		console.log("Req Facets in:", facets);
-
 	// If search all, build array of types from config settings.  If type search, 'type'is passed into search function as a string.
 	if(typeVal == 'All') {
 		type = [];
@@ -72,7 +70,7 @@ exports.search = function(req, res) {
 			data['results'] = response.data.results;
 			data['base_url'] = config.baseUrl;
 			data['facets'] = Facets.create(response.data.facets);
-			data['facet_breadcrumb_trail'] = Facets.getFacetBreadcrumbObject(facets);
+			data['facet_breadcrumb_trail'] = Facets.getFacetBreadcrumbObject(facets);  // Param: the facets from the search request params
 
 			//data['results'] = Helper.paginateResults(response.data.length, 1);
 			// console.error("Test error!");  createBreadcrumbTrail
