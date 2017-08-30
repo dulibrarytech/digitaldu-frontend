@@ -2,8 +2,7 @@
 
 const es = require('../config/index');
 const config = require('../config/config');
-const fedora = require('../libs/fedora');
-const display = require('../libs/display');
+const Fedora = require('../libs/fedora');
 
 // Compose links to Fedora repository
 var createCollectionList= function(pidArray) {
@@ -11,7 +10,7 @@ var createCollectionList= function(pidArray) {
 	for(var pid of pidArray) {
 
 		// DEV Use Fedora TN datastream
-		var tn = fedora.getTNUrl(pid.replace('_', ':'))
+		var tn = Fedora.getTNUrl(pid.replace('_', ':'))
 
 		updatedArray.push({
 			pid: pid,
@@ -51,11 +50,11 @@ exports.getCollections = function(pid, callback) {
 
 exports.searchIndex = function(query, type, facets=null, page=null, callback) {
 
-      console.log("Search: facets in:", facets);
-
     // Build elasticsearch matchfields object for query
     var field = { match: "" };
     var matchFields = [], results = [];
+
+    // Type specific search (if a searchfield is selected)
     if(Array.isArray(type)) {
 
         query = "*" + query + "*";
@@ -67,6 +66,8 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
           });
         })
     }
+
+    // Search all fields (searchfield == All)
     else {
 
         var q = {};
@@ -83,6 +84,7 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
         for(var index of facets[key]) {
           var q = {};
           count++;
+          
           // Get the index key from the config facet list, using the facet name 
           indexKey = config.facets[key];
 
@@ -94,8 +96,6 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
         }
       }
     }
-
-      console.log("Matchfields obj:", matchFields);
 
     // Build elasticsearch aggregations object from config facet list
     var facetAggregations = {}, field;
@@ -122,11 +122,9 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
         aggregations: facetAggregations
       }
     }
-      console.log("Data obj:", data);
 
     if(facets) {
       data.body.query.bool["minimum_should_match"] = count+1;
-        console.log("Facet count", count);
     }
 
     // Query the index
@@ -141,14 +139,15 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
             // DEV
             // console.log("--- Response ---");
             // console.log(response);
-            // console.log("--- Hits ---", response.hits.hits);
+            //console.log("--- Hits ---", response.hits.hits);
 
+          // Return the aggs for the facet display
           responseData['facets'] = response.aggregations;
 
           // Build the search results object
           var results = [], tn;
           for(var result of response.hits.hits) {
-            tn = fedora.getTNUrl(result._source.pid.replace('_', ':'));
+            tn = Fedora.getTNUrl(result._source.pid.replace('_', ':'));
             results.push({
               title: result._source.title,
               namePersonal: result._source.namePersonal,
@@ -163,6 +162,7 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
         }
     });
 
+    // Not in use due to index refactor
     exports.fetchObjectByPid = function(pid, callback) {
       var objectData = {};
         console.log("Get object data for:", pid);

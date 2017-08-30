@@ -14,8 +14,8 @@
 
 		function selectFacet(facetType, facet) {
 
-			// Convert spaces to '+' for querystring
-			//facet = facet.replace(' ', '+');
+			// Url encode spaces for querystring
+			facet = facet.replace(' ', '%20');
 
 			// Get current search querystring
 			var url = window.location.href;
@@ -23,7 +23,7 @@
 			var facetParam = "&f[" + facetType + "][]=" + facet;
 
 			// Add the selected facet param to the search querystring, if it has not been added yet
-			if(1) {
+			if(searchUrl.indexOf(facetParam) <= 0) {
 				searchUrl += facetParam;
 			}
 
