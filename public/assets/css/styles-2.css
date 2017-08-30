@@ -119,7 +119,7 @@ form#search-form > div.form-group {
 select#search-type {
 
 	width: 120px;
-	background-color: #e5e3e1;
+	background-color: #c8c8c8;
 }
 
 select#search-type:hover {
@@ -171,8 +171,8 @@ div#collections-inner a img {
 
 div#facet-breadcrumbs span {
 	height: 30px;
-    background-color: #9AA86E;
-    color: white;
+    background-color: #EAE9E5;
+    color: #333;
     padding: 0.5em;
     margin-left: 1em;
     border-radius: 4px;
@@ -204,6 +204,7 @@ div#pagination-header {
 	/*padding: 2em 40%;*/
 	padding: 1em 40% 2em 40%;
 	font-size: 20px;
+	margin-top: 1em;
 }
 
 div#pagination-header a {

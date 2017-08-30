@@ -14,19 +14,20 @@
 
 		function selectFacet(facetType, facet) {
 
-			var url, relativeUrl;
-
 			// Convert spaces to '+' for querystring
 			//facet = facet.replace(' ', '+');
 
 			// Get current search querystring
-			url = window.location.href;
-			relativeUrl = "/" + url.substring(url.indexOf("repository"), url.length);
+			var url = window.location.href;
+			var searchUrl = "/" + url.substring(url.indexOf("repository"), url.length);
+			var facetParam = "&f[" + facetType + "][]=" + facet;
 
-			// Add the selected facet param to the search querystring
-			relativeUrl += "&f[" + facetType + "][]=" + facet;
+			// Add the selected facet param to the search querystring, if it has not been added yet
+			if(1) {
+				searchUrl += facetParam;
+			}
 
-			return relativeUrl;
+			return searchUrl;
 		};
 
 		function removeFacet(facetType, facet) {
@@ -37,12 +38,12 @@
 
 			// Get current search querystring
 			url = window.location.href;
-			relativeUrl = "/" + url.substring(url.indexOf("repository"), url.length);
+			searchUrl = "/" + url.substring(url.indexOf("repository"), url.length);
 
 			// Remove the selected facet param from the search querystring
-			relativeUrl = relativeUrl.replace(facetParam, "");
+			searchUrl = searchUrl.replace(facetParam, "");
 
-			return relativeUrl;
+			return searchUrl;
 		};
 
 	</script>

@@ -78,11 +78,11 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
 
     // If facet data is present, add it to the search
     if(facets) {
-      var matchFieldsTemp = [], indexKey;
+      var matchFacetFields = [], indexKey, count=0;
       for(var key in facets) {
         for(var index of facets[key]) {
           var q = {};
-
+          count++;
           // Get the index key from the config facet list, using the facet name 
           indexKey = config.facets[key];
 
@@ -125,7 +125,8 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
       console.log("Data obj:", data);
 
     if(facets) {
-      data.body.query.bool["minimum_should_match"] = 2;
+      data.body.query.bool["minimum_should_match"] = count+1;
+        console.log("Facet count", count);
     }
 
     // Query the index
