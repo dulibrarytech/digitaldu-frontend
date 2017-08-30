@@ -50,7 +50,7 @@ exports.getCollections = function(pid, callback) {
 
 exports.searchIndex = function(query, type, facets=null, page=null, callback) {
 
-    // Build elasticsearch matchfields object for query
+    // Build elasticsearch matchfields object for query: this object enables field specific searching
     var field = { match: "" };
     var matchFields = [], results = [];
 
@@ -84,7 +84,7 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
         for(var index of facets[key]) {
           var q = {};
           count++;
-          
+
           // Get the index key from the config facet list, using the facet name 
           indexKey = config.facets[key];
 
