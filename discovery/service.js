@@ -130,50 +130,53 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
 
     // Query the index
     es.search(data, function (error, response, status) {
-        var responseData = {};
-        if (error){
-          console.log("search error: " + error);
-          callback({status: false, message: error, data: null});
+      var responseData = {};
+      if (error){
+        console.log("search error: " + error);
+        callback({status: false, message: error, data: null});
+      }
+      else {
+        
+          // DEV
+          // console.log("--- Response ---");
+          // console.log(response);
+          //console.log("--- Hits ---", response.hits.hits);
+
+        // Return the aggs for the facet display
+        responseData['facets'] = response.aggregations;
+
+        // Build the search results object
+        var results = [], tn;
+        for(var result of response.hits.hits) {
+          tn = Repository.getTNUrl(result._source.pid.replace('_', ':'));
+          results.push({
+            title: result._source.title,
+            namePersonal: result._source.namePersonal,
+            abstract: result._source.abstract.substring(0,400),
+            tn: tn,
+            pid: result._source.pid
+          });
         }
-        else {
-          
-            // DEV
-            // console.log("--- Response ---");
-            // console.log(response);
-            //console.log("--- Hits ---", response.hits.hits);
+        responseData['results'] = results;
 
-          // Return the aggs for the facet display
-          responseData['facets'] = response.aggregations;
-
-          // Build the search results object
-          var results = [], tn;
-          for(var result of response.hits.hits) {
-            tn = Repository.getTNUrl(result._source.pid.replace('_', ':'));
-            results.push({
-              title: result._source.title,
-              namePersonal: result._source.namePersonal,
-              abstract: result._source.abstract.substring(0,400),
-              tn: tn,
-              pid: result._source.pid
-            });
-          }
-          responseData['results'] = results;
-
-          callback({status: true, data: responseData});
-        }
-    });
+        callback({status: true, data: responseData});
+      }
+  });
 };
 
 exports.fetchObjectByPid = function(pid, callback) {
   var objectData = {};
-    console.log("Get object data for:", pid);
   
-  // client.get({
-  //     index: config.elasticsearchIndex,
-  //     type: 'object',
-  //     id: pid
-  // }, function (error, response) {
-  //     // ...
-  // });
+  es.get({
+      index: config.elasticsearchIndex,
+      type: 'object',
+      id: pid
+  }, function (error, response) {
+
+      if(response.found) {
+        objectData = response._source;
+      }
+  });
+
   callback({status: true, data: objectData})
 };

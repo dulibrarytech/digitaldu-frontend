@@ -4,6 +4,7 @@ var async = require('async'),
     config = require('../config/config'),
     Helper = require('./helper.js'),
     Service = require('./service.js'),
+    Viewer = require('../libs/viewer'),
     Facets = require('../libs/facets');
 
 function getFacets(data, callback) {
@@ -86,16 +87,26 @@ exports.search = function(req, res) {
 };
 
 exports.renderObjectView = function(req, res) {
-		console.log("SVC pointer:", Service);
-	Service.fetchObjectByPid(req.params.pid, function(response) {
-		var data = {};
+	var data = {};
 
-		// Determine content model type
+	// Get the object data
+	Service.fetchObjectByPid(req.params.pid, function(object) {
+		
+		if(typeof object.pid == "undefined") {
+			data['object'] = "Object not found";
+			data['viewer'] = null;
+		}	
+		else {
+			data['object'] = object;
 
-		// Get viewer
-		data['viewer'] = "<h4>Viewer</h4>";
+			// Determine content model type
 
-			console.log("DEV fetchObject() service response:", response);
+			// Get viewer
+			data['viewer'] = "<h4>Viewer</h4>";
+			//data['viewer'] = Viewer.getObjectViewer(contentModel);
+
+			console.log("DEV fetchObject() service response:", object);
+		}
 
 		data['base_url'] = config.baseUrl;
 		return res.render('object', data);
