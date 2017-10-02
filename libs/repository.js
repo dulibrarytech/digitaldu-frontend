@@ -1,7 +1,7 @@
 'use strict'
 
 /*
- * Fedora interface functions
+ * Repository interface functions
  */
 
 const fedoraPath = "http://librepo01-vlp.du.edu:8080";
