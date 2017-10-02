@@ -2,15 +2,16 @@
 
 const es = require('../config/index');
 const config = require('../config/config');
-const Fedora = require('../libs/fedora');
+const Repository = require('../libs/repository');
 
-// Compose links to Fedora repository
+
+// Create thumbnail links
 var createCollectionList= function(pidArray) {
 	var updatedArray = [], pid;
 	for(var pid of pidArray) {
 
-		// DEV Use Fedora TN datastream
-		var tn = Fedora.getTNUrl(pid.replace('_', ':'))
+    // Fetch the thumbnail
+		var tn = Repository.getTNUrl(pid.replace('_', ':'))
 
 		updatedArray.push({
 			pid: pid,
@@ -147,7 +148,7 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
           // Build the search results object
           var results = [], tn;
           for(var result of response.hits.hits) {
-            tn = Fedora.getTNUrl(result._source.pid.replace('_', ':'));
+            tn = Repository.getTNUrl(result._source.pid.replace('_', ':'));
             results.push({
               title: result._source.title,
               namePersonal: result._source.namePersonal,
@@ -161,19 +162,18 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
           callback({status: true, data: responseData});
         }
     });
+};
 
-    // Not in use due to index refactor
-    exports.fetchObjectByPid = function(pid, callback) {
-      var objectData = {};
-        console.log("Get object data for:", pid);
-      
-      // client.get({
-      //     index: config.elasticsearchIndex,
-      //     type: 'object',
-      //     id: pid
-      // }, function (error, response) {
-      //     // ...
-      // });
-      callback({status: true, data: objectData})
-    };
+exports.fetchObjectByPid = function(pid, callback) {
+  var objectData = {};
+    console.log("Get object data for:", pid);
+  
+  // client.get({
+  //     index: config.elasticsearchIndex,
+  //     type: 'object',
+  //     id: pid
+  // }, function (error, response) {
+  //     // ...
+  // });
+  callback({status: true, data: objectData})
 };
