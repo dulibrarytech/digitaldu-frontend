@@ -1,0 +1,1 @@
+"use strict";const config=require("../config/config");var getSmallImageViewer=function(){},getLargeImageViewer=function(){},getPDFViewer=function(){},getAudioObjectPlayer=function(){},getVideoObjectPlayer=function(){};exports.getObjectViewer=function(e){};
