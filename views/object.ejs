@@ -12,29 +12,25 @@
 			<%- viewer %>
 		</div>
 
-		
 		<div id="object-data">
-			<h3>Title</h3>
-			<p>1987 University of Denver Men's Baseball Team</p>
-			<h3>Description</h3>
-			<p>
-				The 1897 University of Denver (DU) men's baseball team poses for a group portrait in a field; the Colorado State Capitol building is visible in the distance. Top row, left to right: Leon Hills (left field), William G. Plested (right field), Percy Fonda (first base), Clyde Stevens (center field). Middle row, left to right: Charles Deardorff (second base), George Toomey (short stop), Vincent Daniels (third base). Bottom row, left to right: O.L. Orton (pitcher), K.S. Harb (catcher).
-			</p>
+			<% for (var key in mods) { %>
+				<h3><%= key %></h3>
+				<p><%= mods[key] %></p>
+			<% } %>
 		</div>
 
 		<div id="object-controls">
 			<button type="button" class="btn" data-toggle="collapse" data-target="#metadata-display">Details</button>
-			<div id="metadata-display" class="collapse">
+		</div>
 
-				<table class="table">
-					<tr><td>Title:</td><td>1987 University of Denver Men's Baseball Team</td></tr>
-					<tr><td>Creator:</td><td>University of Denver</td></tr>
-					<tr><td>Type of Resource:</td><td>Still Image</td></tr>
-					<tr><td>Topics:</td><td>Athletics</td></tr>
-					<tr><td>Handle:</td><td>http://hdl.handle.net/10176/codu:70104</td></tr>
-				</table>
-
-			</div>
+		<div id="metadata-display" class="collapse">
+			<table class="table">
+				<tr><td>Title:</td><td>1987 University of Denver Men's Baseball Team</td></tr>
+				<tr><td>Creator:</td><td>University of Denver</td></tr>
+				<tr><td>Type of Resource:</td><td>Still Image</td></tr>
+				<tr><td>Topics:</td><td>Athletics</td></tr>
+				<tr><td>Handle:</td><td>http://hdl.handle.net/10176/codu:70104</td></tr>
+			</table>
 		</div>
 
 	</div>

@@ -26,6 +26,7 @@ module.exports = {
     	{"Creator": "namePersonal"},
     	{"Subject": "subjectTopic"}
     ],
+
     /*
      * Facets to display
      * "Facet name": "index field"
@@ -34,5 +35,23 @@ module.exports = {
         "Creator": "namePersonal",
         "Subject": "subjectTopic",
         "Type": "typeOfResource"
+    },
+
+    /*
+     * Fields to display in the summary data section (above Details link)
+     * "Display field name": "index field"
+     */
+    summaryDisplay: {
+        "Title": "title",
+        "Description": "abstract"
+    }
+
+    /*
+     * MODS fields to display in the Details section
+     * "Display field name": "index field"
+     */
+    metadataDisplay: {
+        "Title": "title",
+        "Description": "abstract"
     }
 };

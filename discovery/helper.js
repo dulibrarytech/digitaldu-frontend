@@ -8,6 +8,16 @@ var config = require('../config/config');
 
 exports.createMetadataDisplayObject = function(result) {
 	var displayObj = {};
+	var displayFields = config.metadataDisplay;
+
+	var key, field;
+	for(key in displayFields) {
+		field = displayFields[key];
+		
+		if(typeof result[field] != 'undefined') {
+			displayObj[key] = result[field];
+		}
+	}
 
 	return displayObj;
 }

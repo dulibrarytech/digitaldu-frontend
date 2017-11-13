@@ -392,6 +392,12 @@ div#object-controls ul li {
 }
 
 div#metadata-display {
+	margin-top: 2em;
+	margin: 3em auto 1em auto;
+	width: 80%;
+}
+
+div#metadata-display {
     padding: 2em;
     border-style: solid;
     border-radius: 3px;
