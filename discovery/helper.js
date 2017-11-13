@@ -6,6 +6,12 @@
 
 var config = require('../config/config');
 
+exports.createMetadataDisplayObject = function(result) {
+	var displayObj = {};
+
+	return displayObj;
+}
+
 /*
  * Create an array of facet breadcrumb objects for the view
  */

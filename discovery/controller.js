@@ -89,7 +89,8 @@ exports.search = function(req, res) {
 exports.renderObjectView = function(req, res) {
 	var data = {
 		viewer: null,
-		object: null
+		object: null,
+		mods: null
 	};
 
 	// Get the object data
@@ -97,14 +98,14 @@ exports.renderObjectView = function(req, res) {
 
 		if(response.status) {
 
+			var object;
 			if(response.data.pid) {
-				data['object'] = response.data;
-
-				// Determine content model type
-				var contentModel = "videoCModel";
+				object = response.data;
+				data['object'] = object;
 
 				// Get viewer
-				data['viewer'] = Viewer.getObjectViewer(contentModel);
+				data['viewer'] = Viewer.getObjectViewer(object);
+				data['mods'] = Helper.createMetadataDisplayObject(object);
 			}	
 			else {
 				data['error'] = "Error rendering object, object not found";
