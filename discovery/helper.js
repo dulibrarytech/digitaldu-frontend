@@ -6,6 +6,22 @@
 
 var config = require('../config/config');
 
+exports.createSummaryDisplayObject = function(result) {
+	var displayObj = {};
+	var displayFields = config.summaryDisplay;
+
+	var key, field;
+	for(key in displayFields) {
+		field = displayFields[key];
+		
+		if(typeof result[field] != 'undefined' && result[field] != '') {
+			displayObj[key] = result[field];
+		}
+	}
+
+	return displayObj;
+}
+
 exports.createMetadataDisplayObject = function(result) {
 	var displayObj = {};
 	var displayFields = config.metadataDisplay;
@@ -14,7 +30,7 @@ exports.createMetadataDisplayObject = function(result) {
 	for(key in displayFields) {
 		field = displayFields[key];
 		
-		if(typeof result[field] != 'undefined') {
+		if(typeof result[field] != 'undefined' && result[field] != '') {
 			displayObj[key] = result[field];
 		}
 	}

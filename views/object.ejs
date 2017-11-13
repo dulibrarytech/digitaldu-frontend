@@ -13,9 +13,9 @@
 		</div>
 
 		<div id="object-data">
-			<% for (var key in mods) { %>
+			<% for (var key in summary) { %>
 				<h3><%= key %></h3>
-				<p><%= mods[key] %></p>
+				<p><%= summary[key] %></p>
 			<% } %>
 		</div>
 
@@ -25,11 +25,9 @@
 
 		<div id="metadata-display" class="collapse">
 			<table class="table">
-				<tr><td>Title:</td><td>1987 University of Denver Men's Baseball Team</td></tr>
-				<tr><td>Creator:</td><td>University of Denver</td></tr>
-				<tr><td>Type of Resource:</td><td>Still Image</td></tr>
-				<tr><td>Topics:</td><td>Athletics</td></tr>
-				<tr><td>Handle:</td><td>http://hdl.handle.net/10176/codu:70104</td></tr>
+				<% for (var key in mods) { %>
+					<tr><td><%= key %></td><td><%= mods[key] %></td></tr>
+				<% } %>
 			</table>
 		</div>
 

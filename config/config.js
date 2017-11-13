@@ -44,7 +44,7 @@ module.exports = {
     summaryDisplay: {
         "Title": "title",
         "Description": "abstract"
-    }
+    },
 
     /*
      * MODS fields to display in the Details section
@@ -52,6 +52,13 @@ module.exports = {
      */
     metadataDisplay: {
         "Title": "title",
+        "Subtitle": "subTitle",
+        "Creator": "namePersonal",
+        "Corporate Creator": "nameCorporate",
+        "Publisher": "publisher",
+        "Type": "typeOfResource",
+        "Topic": "subjectTopic",
+        "Identifier": "identifier",
         "Description": "abstract"
     }
 };

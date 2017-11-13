@@ -105,6 +105,7 @@ exports.renderObjectView = function(req, res) {
 
 				// Get viewer
 				data['viewer'] = Viewer.getObjectViewer(object);
+				data['summary'] = Helper.createSummaryDisplayObject(object);
 				data['mods'] = Helper.createMetadataDisplayObject(object);
 			}	
 			else {
