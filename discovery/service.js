@@ -136,11 +136,6 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
         callback({status: false, message: error, data: null});
       }
       else {
-        
-          // DEV
-          // console.log("--- Response ---");
-          // console.log(response);
-          //console.log("--- Hits ---", response.hits.hits);
 
         // Return the aggs for the facet display
         responseData['facets'] = response.aggregations;
@@ -165,7 +160,9 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
 };
 
 exports.fetchObjectByPid = function(pid, callback) {
-  var objectData = {};
+  var objectData = {
+    pid: null
+  };
   
   es.get({
       index: config.elasticsearchIndex,
@@ -173,10 +170,15 @@ exports.fetchObjectByPid = function(pid, callback) {
       id: pid
   }, function (error, response) {
 
-      if(response.found) {
+      if(error) {
+        callback({status: false, message: error, data: null});
+      }
+      else if(response.found) {
         objectData = response._source;
+        callback({status: true, data: objectData});
+      }
+      else {
+        callback({status: true, data: objectData});
       }
   });
-
-  callback({status: true, data: objectData})
 };

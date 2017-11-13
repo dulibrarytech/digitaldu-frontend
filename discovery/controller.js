@@ -87,27 +87,34 @@ exports.search = function(req, res) {
 };
 
 exports.renderObjectView = function(req, res) {
-	var data = {};
+	var data = {
+		viewer: null,
+		object: null
+	};
 
 	// Get the object data
-	Service.fetchObjectByPid(req.params.pid, function(object) {
-		
-		if(typeof object.pid == "undefined") {
-			data['object'] = "Object not found";
-			data['viewer'] = null;
-		}	
-		else {
-			data['object'] = object;
+	Service.fetchObjectByPid(req.params.pid, function(response) {
 
-			// Determine content model type
+		if(response.status) {
 
-			// Get viewer
-			data['viewer'] = "<h4>Viewer</h4>";
-			//data['viewer'] = Viewer.getObjectViewer(contentModel);
+			if(response.data.pid) {
+				data['object'] = response.data;
 
-			console.log("DEV fetchObject() service response:", object);
+				// Determine content model type
+				var contentModel = "videoCModel";
+
+				// Get viewer
+				data['viewer'] = Viewer.getObjectViewer(contentModel);
+			}	
+			else {
+				data['error'] = "Error rendering object, object not found";
+			}
 		}
-
+		else {
+			console.error("Index error: ", response.message);
+			data['error'] = "Error rendering object, object not found";
+		}
+		
 		data['base_url'] = config.baseUrl;
 		return res.render('object', data);
 	});
