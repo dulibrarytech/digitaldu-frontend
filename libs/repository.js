@@ -14,3 +14,8 @@ exports.getTNUrl = function(pid) {
 exports.getMP4Url = function(pid) {
 	return fedoraPath + "/fedora/objects/" + pid + "/datastreams/MP4/content";
 };
+
+exports.getMediumSizeImageUrl = function(pid) {
+	return fedoraPath + "/fedora/objects/" + pid + "/datastreams/MEDIUM_SIZE/content";
+};
+
