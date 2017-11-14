@@ -351,7 +351,7 @@ div#object-title {
 
 div#viewer-section {
 	width: 80%;
-    margin: 0 auto;
+    margin: 4em auto 0 auto;
 }
 
 div#viewer {
@@ -370,6 +370,19 @@ div#viewer {
 div#viewer > img {
 	display: block;
     margin: auto;
+}
+
+div#video-viewer {
+	background-color: #e5e3e1;
+    padding: 2em;
+    border-radius: 4px;
+}
+
+.my-video-dimensions {
+    width: 640px;
+    height: 264px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 div#object-data {
