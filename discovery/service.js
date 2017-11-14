@@ -38,7 +38,7 @@ exports.getCollections = function(pid, callback) {
   		q: "rels-ext_isMemberOfCollection:" + pid
     }).then(function (body) {
     	for(var i=0; i<body.hits.total; i++) {
-    		collections.push(body.hits.hits[i]._source.pid);
+    		collections.push(body.hits.hits[i]._source.pid);      // TODO push title; update param name of creataCollectionList
     	}
     	collectionList = createCollectionList(collections);
 	    callback({status: true, data: collectionList});
