@@ -18,6 +18,7 @@ function getFacets(data, callback) {
 
 exports.renderCollectionsView = function(req, res) {
 	var data = {};
+
 	// Get list from discovery service
 	Service.getCollections(config.topLevelCollectionPID, function(response) {
 		if(response.status) {

@@ -10,8 +10,7 @@ var config = require('../config/config'),
 exports.getObjectViewer = function(object) {
  	var viewer = "";
  	var contentModel = typeof object["rels-ext_hasModel"] != 'string' ? object["rels-ext_hasModel"][0] : object["rels-ext_hasModel"];
- 		console.log("TEST gv ", typeof object["rels-ext_hasModel"]);
- 		console.log("TEST cm ", contentModel);
+
  	switch(contentModel) {
  		case "videoCModel":
  			viewer = getVideoViewer(object);
@@ -37,8 +36,8 @@ function getVideoViewer(objectData) {
 	var poster = Repository.getTNUrl(objectData.pid.replace('_', ':'));
 	var stream = Repository.getMP4Url(objectData.pid.replace('_', ':'));
 
-	poster = 'http://localhost:9006/assets/img/dev/MY_VIDEO_POSTER.jpg';
-	stream = 'http://localhost:9006/assets/img/dev/small.mp4';
+	// poster = 'http://localhost:9006/assets/img/dev/MY_VIDEO_POSTER.jpg';
+	// stream = 'http://localhost:9006/assets/img/dev/small.mp4';
 
 	viewer += '<video id="my-video" class="video-js" controls preload="auto" width="640" height="264" poster="' + poster + '" data-setup="{}"><source src="' + stream + '" type="video/mp4"><p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that<a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p></video>';
 	viewer += '</div>';

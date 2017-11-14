@@ -8,19 +8,31 @@
 	<% include partials/search %>
 
 	<div id="content">
-	<div id="pagination-header">
+		<div id="pagination-header">
 			<span><a href="#">1</a><a href="#">2</a><a href="#">Next ></a><a href="#">Last >></a></span>
 		</div>
+
+
+
 		
-		<div id="collections">
-			<div id="collections-inner">
+		<div class="basic-collection-view">
+		  	<div class="basic-collection-grid clearfix">
+
 				<% for (var i = 0; i < collections.length; i++) { %>
-					<a href="/repository/object/<%= collections[i].pid %>"><img src="<%= collections[i].tn %>" width="150" height="250" /></a>
+				    <dl class="basic-collection-object collection">
+				        <dt class="basic-collection-thumb"><a href="/repository/object/<%= collections[i].pid %>"><img src="<%= collections[i].tn %>" /></a></dt>
+				        <dd class="basic-collection-caption">Title</dd>
+				    </dl>
 				<% } %>
+
 			</div>
 		</div>
-	</div>
 
+	</div> <!-- content -->
 </div>
 
 <% include partials/footer %>
+
+
+
+

@@ -14,7 +14,7 @@ var createCollectionList= function(pidArray) {
 		var tn = Repository.getTNUrl(pid.replace('_', ':'))
 
 		updatedArray.push({
-			pid: pid,
+			  pid: pid,
 	    	tn: tn
 	    });
 	}

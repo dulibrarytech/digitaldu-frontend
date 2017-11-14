@@ -146,6 +146,9 @@ div#collections {
 	padding: 0 0 3em 0;
 	margin: 2em auto;
     width: 90%;
+
+    text-align: center;
+    vertical-align: middle;
 }
 
 div#collections-inner {
@@ -157,16 +160,30 @@ div#collections-inner {
 }
 
 div#collections-inner a {
-	padding: 2em;
+	/*padding: 2em;*/
     width: 300px;
     margin-left: 1.7em;
 }
 
 div#collections-inner a img {
-	width: 200px;
-	height: 250px;
+	/*width: 200px;*/
+	/*width: 20%;*/
+	/*height: 250px;*/
+	height: auto;
+	width: auto;
 	margin-bottom: 3em;
 	border-radius: 6px;
+}
+
+div#collections-inner dl {
+    width: 20%;
+    min-width: 100px;
+    min-height: 180px;
+    display: inline-block;
+    vertical-align: top;
+    margin: 1.5em 1.84%;
+    zoom: 1;
+    height: 180px;
 }
 
 div#facet-breadcrumbs span {
@@ -202,8 +219,8 @@ div#facet-breadcrumbs span a strong.facet-breadcrumb-remove-link {
 div#pagination-header {
 	height: 75px;
 	/*padding: 2em 40%;*/
-	padding: 1em 40% 2em 40%;
-	font-size: 20px;
+	padding: 1em 25% 2em 40%;
+	font-size: 17px;
 	margin-top: 1em;
 }
 
@@ -437,6 +454,115 @@ footer {
     background-color: #8b2332;
 }
 
+/* Collection grid ******************************************************************************************************************************/
+
+.basic-collection-view {
+    overflow: hidden;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.basic-collection-grid {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.basic-collection-grid dl {
+    width: 20%;
+    min-width: 100px;
+    min-height: 180px;
+    display: -moz-inline-stack;
+    display: inline-block;
+    vertical-align: top;
+    margin: 1.5em 1.84%;
+    zoom: 1;
+    height: 180px;
+}
+
+dl {
+    display: block;
+    -webkit-margin-before: 1em;
+    -webkit-margin-after: 1em;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+}
+
+.clearfix:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+dl[class$=collection] dt.basic-collection-thumb {
+    border-style: solid;
+    border-width: 1px;
+    border-color: #a5a3a1;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+dl[class$=collection] dt.basic-collection-thumb {
+    width: 12.3542em;
+    height: 15.44275em;
+    background-color: #e5e3e1;
+}
+
+dl[class$=collection] dt.basic-collection-thumb, dl[class$=collection].basic-collection-object dt a img {
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+dt.basic-collection-thumb a img {
+    border-style: solid;
+    border-width: 1px;
+    border-color: #a5a3a1;
+
+    -ms-interpolation-mode:bicubic;
+    max-width:100%;
+    height:auto;
+    width:auto;
+}
+
+dl[class$=collection] dt.basic-collection-thumb a img {
+    border-style: none;
+}
+
+dl[class$=collection] dd.basic-collection-caption {
+    background-color: #bcbcbc;
+    border-style: solid;
+    border-top-style: none;
+    border-width: 1px;
+    border-color: #a5a3a1;
+}
+
+dl[class$=collection] dd.basic-collection-caption {
+    background-color: #757371;
+    height: auto;
+    min-height: 35px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    text-align: center;
+    width: 12.3542em;
+}
+
+.basic-collection-object dd {
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+.basic-collection-grid dd {
+    margin: 0;
+    padding: 0;
+}
+
+/* End collection grid **************************************************************************************************************************/
+
 
 
 @media only screen and (min-width: 2000px) {
@@ -448,9 +574,11 @@ footer {
 		margin-left: 2.7em;
 	}
 
-	div#collections a img {
+/*	div#collections a img {
 		margin-bottom: 4em;
-	}
+	}*/
+
+
 }
 
 @media only screen and (min-width: 1400px) and (max-width: 1780px) {
@@ -468,13 +596,13 @@ footer {
 	}
 
 	div#collections {
-		width: 92%;
+		width: 80%;
 	}
 
-	div#collections a img {
+/*	div#collections a img {
 	    width: 130px;
 	    height: 163px;
-	}
+	}*/
 
 	select#search-type,
 	input#search-input {
