@@ -60,7 +60,8 @@ div#banner {
 /* Main body styles */
 div#main {
 	margin: 1em auto 4em auto;
-    max-width: 70%;
+    /*max-width: 65%;*/
+    width: 1200px;
 }
 
 div#content {
@@ -460,6 +461,7 @@ footer {
     overflow: hidden;
     width: 100%;
     margin: 0 auto;
+    height: 1000px;
 }
 
 .basic-collection-grid {
@@ -476,7 +478,7 @@ footer {
     vertical-align: top;
     margin: 1.5em 1.84%;
     zoom: 1;
-    height: 180px;
+    /*height: 180px;*/
 }
 
 dl {
@@ -503,12 +505,12 @@ dl[class$=collection] dt.basic-collection-thumb {
     border-bottom-right-radius: 0px;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
+    background-color: #e5e3e1;
 }
 
-dl[class$=collection] dt.basic-collection-thumb {
-    width: 12.3542em;
+dt.basic-collection-thumb {
+	width: 12.3542em;
     height: 15.44275em;
-    background-color: #e5e3e1;
 }
 
 dl[class$=collection] dt.basic-collection-thumb, dl[class$=collection].basic-collection-object dt a img {
@@ -533,22 +535,39 @@ dl[class$=collection] dt.basic-collection-thumb a img {
     border-style: none;
 }
 
-dl[class$=collection] dd.basic-collection-caption {
-    background-color: #bcbcbc;
+/*dl[class$=collection] dd.basic-collection-caption {
     border-style: solid;
     border-top-style: none;
     border-width: 1px;
     border-color: #a5a3a1;
-}
+}*/
 
 dl[class$=collection] dd.basic-collection-caption {
-    background-color: #757371;
-    height: auto;
+    background-color: #58001B;
     min-height: 35px;
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
+    border-style: solid;
+    border-top-style: none;
+    border-width: 1px;
+    border-color: #a5a3a1;
     text-align: center;
+    padding-top: 1em;
+    padding-bottom: 1em;
+}
+
+dd.basic-collection-caption {
+	height: auto;
     width: 12.3542em;
+}
+
+dl[class$=collection] dd.basic-collection-caption a {
+	color: #e5e3e1;
+	font-weight: bold;
+}
+
+dl[class$=collection] dd.basic-collection-caption a:hover {
+	text-decoration: none;
 }
 
 .basic-collection-object dd {
@@ -613,4 +632,61 @@ dl[class$=collection] dd.basic-collection-caption {
 		height: 43px;
 	}
 
+}
+
+@media only screen and (min-width: 1200px) and (max-width: 1400px) {
+
+	div#main {
+		margin: 1em auto 4em auto;
+	    /*max-width: 65%;*/
+	    width: 1050px;
+	}
+
+	dt.basic-collection-thumb {
+	    width: 9.8542em;
+	    height: 12.31775em;
+	}
+
+	dd.basic-collection-caption {
+	    height: auto;
+	    width: 9.8542em;
+	}
+}
+
+@media only screen and (min-width: 1000px) and (max-width: 1200px) {
+
+	div#main {
+		margin: 1em auto 4em auto;
+	    /*max-width: 65%;*/
+	    width: 950px;
+	}
+
+	dt.basic-collection-thumb {
+	    width: 9.8542em;
+	    height: 12.31775em;
+	}
+
+	dd.basic-collection-caption {
+	    height: auto;
+	    width: 9.8542em;
+	}
+}
+
+@media only screen and (min-width: 800px) and (max-width: 1000px) {
+
+	div#main {
+		margin: 1em auto 4em auto;
+	    /*max-width: 65%;*/
+	    width: 750px;
+	}
+
+	dt.basic-collection-thumb {
+	    width: 7.8542em;
+	    height: 10.31775em;
+	}
+
+	dd.basic-collection-caption {
+	    height: auto;
+	    width: 7.8542em;
+	}
 }
