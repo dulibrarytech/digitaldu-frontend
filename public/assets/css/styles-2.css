@@ -403,6 +403,10 @@ div#video-viewer {
     margin-right: auto;
 }
 
+div#mediaplayer {
+	margin: 0 auto;
+}
+
 div#object-data {
 	width: 80%;
 	margin: 3em auto 1em auto;

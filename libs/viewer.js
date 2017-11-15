@@ -31,32 +31,36 @@ exports.getObjectViewer = function(object) {
 }
 
 function getVideoViewer(objectData) {
-	var viewer = '<div id="video-viewer">';
+	var viewer = '<div id="video-viewer">', tn, stream;
+	var extension = "mp4";
 
-	var poster = Repository.getTNUrl(objectData.pid.replace('_', ':'));
-	var stream = Repository.getMP4Url(objectData.pid.replace('_', ':'));
+	tn = Repository.getTNUrl(objectData.pid.replace('_', ':'));
+	stream = Repository.getMP4Url(objectData.pid.replace('_', ':'));
 
 	// Local test data
-	// poster = 'http://localhost:9006/assets/img/dev/MY_VIDEO_POSTER.jpg';
+	// tn = 'http://localhost:9006/assets/img/dev/MY_VIDEO_POSTER.jpg';
 	// stream = 'http://localhost:9006/assets/img/dev/small.mp4';
 
-	// Video.js Player
-	// viewer += '<video id="my-video" class="video-js" controls preload="auto" width="640" height="264" poster="' + poster + '" data-setup="{}"><source src="' + stream + '" type="video/mp4"><p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that<a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p></video>';
-	// viewer += '</div>';
+	if(config.videoViewer == "videojs") {
+		viewer += '<video id="my-video" class="video-js" controls preload="auto" width="640" height="264" poster="' + tn + '" data-setup="{}"><source src="' + stream + '" type="video/mp4"><p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that<a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p></video>';
+		viewer += '</div>';
+	}
+	else if(config.videoViewer == "jwplayer") {
+		// JWPlayer needs a filename in the path.  
+		stream += "/file_name_spoof." + extension;
 
-	// JW Player
-	viewer += '<div id=\"mediaplayer\">Loading JW Player...</div>';
-	viewer += '</div>';
-	viewer += '<script>jwplayer("mediaplayer").setup({'
-	viewer +=     'file: "' + stream + '",'
-	viewer +=     'image: "' +  poster + '",'
-	viewer +=     'width: 500,'
-	viewer +=     'height: 300,'
-	viewer +=     'aspectratio: "16:9",'
-	viewer +=     'primary: "flash",'
-	viewer +=     'androidhls: "true",'
-	viewer += '});</script>';
-
+		viewer += '<div id=\"mediaplayer\">Loading JW Player...</div>';
+		viewer += '</div>';
+		viewer += '<script>jwplayer("mediaplayer").setup({'
+		viewer +=     'file: "' + stream + '",'
+		viewer +=     'image: "' +  tn + '",'
+		viewer +=     'width: 500,'
+		viewer +=     'height: 300,'
+		viewer +=     'aspectratio: "16:9",'
+		viewer +=     'primary: "flash",'
+		viewer +=     'androidhls: "true"'
+		viewer += '});</script>';
+	}
 
 	return viewer;
 }

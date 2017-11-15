@@ -4,7 +4,7 @@ var protocol = "http";
 
 module.exports = {
 
-    // Appliation settings
+    // ENV settings
     baseUrl: protocol + "://" + process.env.APP_HOST + ":" + process.env.APP_PORT,
     elasticsearchHost: process.env.ELASTICSEARCH_HOST,
     elasticsearchPort: process.env.ELASTICSEARCH_PORT,
@@ -16,6 +16,12 @@ module.exports = {
 
     // Search results list size
     maxDisplayResults: 10,
+
+    /* 
+     * Viewer to display video files
+     * [videojs | jwplayer]
+     */
+    videoViewer: "jwplayer",
 
     /*
      * List of fields to search.  These will appear in 'Search Type' dropdown list
