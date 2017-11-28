@@ -18,6 +18,12 @@ module.exports = {
     maxDisplayResults: 10,
 
     /* 
+     * Viewer to play audio files
+     * [browser | [ext audio lib]]
+     */
+    audioPlayer: "jwplayer",
+
+    /* 
      * Viewer to display video files
      * [videojs | jwplayer]
      */
@@ -25,7 +31,7 @@ module.exports = {
 
     /* 
      * Viewer to display video files
-     * [browser | [viewer lib]]
+     * [browser | [ext viewer lib]]
      */
     pdfViewer: "browser",
 

@@ -416,6 +416,10 @@ div#viewer-content-wrapper {
 	width: 500px;
 }
 
+div#viewer-content-wrapper > audio {
+	width: 100%;
+}
+
 div#object-data {
 	width: 80%;
 	margin: 3em auto 1em auto;

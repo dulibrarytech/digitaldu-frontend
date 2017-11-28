@@ -12,6 +12,10 @@ exports.getObjectViewer = function(object) {
  	var contentModel = typeof object["rels-ext_hasModel"] != 'string' ? object["rels-ext_hasModel"][0] : object["rels-ext_hasModel"];
 
  	switch(contentModel) {
+ 		case "audioCModel":
+ 			viewer = getAudioPlayer(object);
+ 			break;
+
  		case "videoCModel":
  			viewer = getVideoViewer(object);
  			break;
@@ -35,7 +39,39 @@ exports.getObjectViewer = function(object) {
 }
 
 function getAudioPlayer(objectData) {
-	var player = '';
+	var player = '<div id="audio-player" class="viewer-section">', tn, stream;
+	var extension = "mp3";
+
+	tn = Repository.getDatastream("TN", objectData.pid.replace('_', ':'));
+	stream = Repository.getDatastream("PROXY_MP3", objectData.pid.replace('_', ':'));
+
+	// Local test data
+	// tn = 'http://localhost:9006/assets/img/dev/MY_VIDEO_POSTER.jpg';
+	// stream = 'http://localhost:9006/assets/img/dev/small.mp4';
+
+	if(config.audioPlayer == "browser") {
+		player += '<div id="viewer-content-wrapper"><audio controls><source src="' + stream + '" type="audio/mpeg"></audio></div>';
+		player += '</div>';
+	}
+	else if(config.audioPlayer == "jwplayer") {
+		// JWPlayer needs a filename in the path.  
+		stream += "/file_name_spoof." + extension;
+
+		player += '<div id="mediaplayer" class="viewer-content">Loading JW Player...</div>';
+		player += '</div>';
+		player += '<script>jwplayer("mediaplayer").setup({'
+		player +=     'file: "' + stream + '",'
+		player +=     'image: "' +  tn + '",'
+		player +=     'width: 500,'
+		player +=     'height: 300,'
+		player +=     'aspectratio: "16:9",'
+		player +=     'primary: "flash",'
+		player +=     'androidhls: "true"'
+		player += '});</script>';
+	}
+	else {
+		player += 'Viewer not available.  Please check configuration</div>';
+	}
 
 	return player;
 }
@@ -72,7 +108,7 @@ function getVideoViewer(objectData) {
 		viewer += '});</script>';
 	}
 	else {
-		viewer += '</div>';
+		viewer += 'Viewer not available.  Please check configuration/div>';
 	}
 
 	return viewer;
@@ -105,7 +141,7 @@ function getPDFViewer(objectData) {
 		viewer += '</div>';
 	}
 	else {
-		viewer += '</div>';
+		viewer += 'Viewer not available.  Please check configuration</div>';
 	}
 
 	return viewer;
