@@ -83,7 +83,7 @@ function getSmallImageViewer(objectData) {
 
 	var image = Repository.getDatastream("MEDIUM_SIZE", objectData.pid.replace('_', ':'));
 
-	viewer += '<div id="image-wrapper"><img class="viewer-content" src="' + image + '"/></div>';
+	viewer += '<div id="viewer-content-wrapper"><img class="viewer-content" src="' + image + '"/></div>';
 	viewer += '</div>';
 
 	return viewer;
@@ -96,20 +96,17 @@ function getLargeImageViewer(objectData) {
 }
 
 function getPDFViewer(objectData) {
-		console.log("TEST pdf view function");
 	var viewer = '<div id="pdf-viewer" class="viewer-section">';
 
 	var doc = Repository.getDatastream("OBJ", objectData.pid.replace('_', ':'));
 
 	if(config.pdfViewer == "browser") {
-		viewer += '<embed src="' + doc + '"/>';
+		viewer += '<embed class="viewer-content" src="' + doc + '" height="500px" />';
 		viewer += '</div>';
 	}
 	else {
 		viewer += '</div>';
 	}
-
-		console.log("TEST viewer", viewer);
 
 	return viewer;
 }	

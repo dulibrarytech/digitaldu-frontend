@@ -403,12 +403,16 @@ div.viewer-section {
     margin-right: auto;
 }
 
+.viewer-content {
+	width: 100%;
+}
+
 .viewer-content,
 .viewer-section > div {
 	margin: 0 auto;
 }
 
-div#image-wrapper {
+div#viewer-content-wrapper {
 	width: 500px;
 }
 
@@ -417,7 +421,7 @@ div#object-data {
 	margin: 3em auto 1em auto;
 }
 
-div#object-controls {
+div#object-controls { 
 	margin-top: 2em;
 	margin: 3em auto 1em auto;
 	width: 80%;
