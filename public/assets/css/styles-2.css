@@ -390,7 +390,7 @@ div#viewer > img {
     margin: auto;
 }
 
-div#video-viewer {
+div.viewer-section {
 	background-color: #e5e3e1;
     padding: 2em;
     border-radius: 4px;

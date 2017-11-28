@@ -11,7 +11,7 @@ var createCollectionList= function(pidArray) {
 	for(var pid of pidArray) {
 
     // Fetch the thumbnail
-		var tn = Repository.getTNUrl(pid.replace('_', ':'))
+		var tn = Repository.getDatastream("TN", pid.replace('_', ':'))
 
 		updatedArray.push({
 			  pid: pid,
@@ -143,7 +143,7 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
         // Build the search results object
         var results = [], tn;
         for(var result of response.hits.hits) {
-          tn = Repository.getTNUrl(result._source.pid.replace('_', ':'));
+          tn = Repository.getDatastream("TN", result._source.pid.replace('_', ':'));
           results.push({
             title: result._source.title,
             namePersonal: result._source.namePersonal,

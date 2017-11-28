@@ -21,8 +21,12 @@ exports.getObjectViewer = function(object) {
  			viewer = getSmallImageViewer(object);
  			break;
 
+ 		case "pdfCModel":
+ 			viewer = getPDFViewer(object);
+ 			break;
+
  		default:
- 			console.log("Display error: invalid content model");
+ 			console.log("Viewer error: invalid content model");
  			viewer = "";
  			break;
  	}
@@ -30,12 +34,18 @@ exports.getObjectViewer = function(object) {
  	return viewer;
 }
 
+function getAudioPlayer(objectData) {
+	var player = '';
+
+	return player;
+}
+
 function getVideoViewer(objectData) {
-	var viewer = '<div id="video-viewer">', tn, stream;
+	var viewer = '<div id="video-viewer" class="viewer-section">', tn, stream;
 	var extension = "mp4";
 
-	tn = Repository.getTNUrl(objectData.pid.replace('_', ':'));
-	stream = Repository.getMP4Url(objectData.pid.replace('_', ':'));
+	tn = Repository.getDatastream("TN", objectData.pid.replace('_', ':'));
+	stream = Repository.getDatastream("MP4", objectData.pid.replace('_', ':'));
 
 	// Local test data
 	// tn = 'http://localhost:9006/assets/img/dev/MY_VIDEO_POSTER.jpg';
@@ -61,17 +71,45 @@ function getVideoViewer(objectData) {
 		viewer +=     'androidhls: "true"'
 		viewer += '});</script>';
 	}
+	else {
+		viewer += '</div>';
+	}
 
 	return viewer;
 }
 
 function getSmallImageViewer(objectData) {
-	var viewer = '<div id="small-image-viewer">';
+	var viewer = '<div id="small-image-viewer" class="viewer-section">';
 
-	var image = Repository.getMediumSizeImageUrl(objectData.pid.replace('_', ':'))
+	var image = Repository.getDatastream("MEDIUM_IMAGE", objectData.pid.replace('_', ':'));
 
-	viewer += '<img src="' + image + '">';
+	viewer += '<img src="' + image + '"/>';
 	viewer += '</div>';
 
 	return viewer;
 }
+
+function getLargeImageViewer(objectData) {
+	var viewer = '';
+
+	return viewer;
+}
+
+function getPDFViewer(objectData) {
+		console.log("TEST pdf view function");
+	var viewer = '<div id="pdf-viewer" class="viewer-section">';
+
+	var doc = Repository.getDatastream("OBJ", objectData.pid.replace('_', ':'));
+
+	if(config.pdfViewer == "browser") {
+		viewer += '<embed src="' + doc + '"/>';
+		viewer += '</div>';
+	}
+	else {
+		viewer += '</div>';
+	}
+
+		console.log("TEST viewer", viewer);
+
+	return viewer;
+}	

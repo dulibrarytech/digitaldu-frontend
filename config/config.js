@@ -23,6 +23,12 @@ module.exports = {
      */
     videoViewer: "jwplayer",
 
+    /* 
+     * Viewer to display video files
+     * [browser | [viewer lib]]
+     */
+    pdfViewer: "browser",
+
     /*
      * List of fields to search.  These will appear in 'Search Type' dropdown list
      * "Search type name": Index field to search"

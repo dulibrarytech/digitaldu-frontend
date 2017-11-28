@@ -19,3 +19,7 @@ exports.getMediumSizeImageUrl = function(pid) {
 	return fedoraPath + "/fedora/objects/" + pid + "/datastreams/MEDIUM_SIZE/content";
 };
 
+exports.getDatastream = function(datastream, pid) {
+	return fedoraPath + "/fedora/objects/" + pid + "/datastreams/" + datastream + "/content";
+};
+
