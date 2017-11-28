@@ -59,7 +59,7 @@ function getVideoViewer(objectData) {
 		// JWPlayer needs a filename in the path.  
 		stream += "/file_name_spoof." + extension;
 
-		viewer += '<div id=\"mediaplayer\">Loading JW Player...</div>';
+		viewer += '<div id="mediaplayer" class="viewer-content">Loading JW Player...</div>';
 		viewer += '</div>';
 		viewer += '<script>jwplayer("mediaplayer").setup({'
 		viewer +=     'file: "' + stream + '",'
@@ -81,9 +81,9 @@ function getVideoViewer(objectData) {
 function getSmallImageViewer(objectData) {
 	var viewer = '<div id="small-image-viewer" class="viewer-section">';
 
-	var image = Repository.getDatastream("MEDIUM_IMAGE", objectData.pid.replace('_', ':'));
+	var image = Repository.getDatastream("MEDIUM_SIZE", objectData.pid.replace('_', ':'));
 
-	viewer += '<img src="' + image + '"/>';
+	viewer += '<div id="image-wrapper"><img class="viewer-content" src="' + image + '"/></div>';
 	viewer += '</div>';
 
 	return viewer;

@@ -403,8 +403,13 @@ div.viewer-section {
     margin-right: auto;
 }
 
-div#mediaplayer {
+.viewer-content,
+.viewer-section > div {
 	margin: 0 auto;
+}
+
+div#image-wrapper {
+	width: 500px;
 }
 
 div#object-data {
