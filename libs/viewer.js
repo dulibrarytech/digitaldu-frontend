@@ -134,6 +134,9 @@ function getLargeImageViewer(objectData) {
 
 	if(config.largeImageViewer == "openseadragon") {
 
+		// Copy image to the cantaloupe folder?
+
+
 		viewer += '<div id="viewer-content-wrapper"><div id="openseadragon1" class="viewer-content" style="width: 96%; height: 420px; margin: 0 auto"></div>';
 		viewer += '</div>';
 
@@ -142,7 +145,7 @@ function getLargeImageViewer(objectData) {
 		viewer +=     'prefixUrl: "/libs/openseadragon/images/",'
 		viewer +=     'immediateRender: true,'
 		viewer +=     'showNavigator: true,'
-		viewer +=     'tileSources: "http://localhost:8182/iiif/2/U300.01.0003.00046.tif.tiff"'
+		viewer +=     'tileSources: "http://localhost:8182/iiif/2/codu:16056"'
 		viewer += '});</script>';
 	}
 	else {
