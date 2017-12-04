@@ -25,6 +25,10 @@ exports.getObjectViewer = function(object) {
  			viewer = getSmallImageViewer(object);
  			break;
 
+ 		case "largeImageCModel":
+ 			viewer = getLargeImageViewer(object);
+ 			break;
+
  		case "pdfCModel":
  			viewer = getPDFViewer(object);
  			break;
@@ -126,7 +130,24 @@ function getSmallImageViewer(objectData) {
 }
 
 function getLargeImageViewer(objectData) {
-	var viewer = '';
+	var viewer = '<div id="large-image-viewer" class="viewer-section">';
+
+	if(config.largeImageViewer == "openseadragon") {
+
+		viewer += '<div id="viewer-content-wrapper"><div id="openseadragon1" class="viewer-content" style="width: 96%; height: 420px; margin: 0 auto"></div>';
+		viewer += '</div>';
+
+		viewer += '<script>var viewer = OpenSeadragon({'
+		viewer +=     'id: "openseadragon1",'
+		viewer +=     'prefixUrl: "images/",'
+		viewer +=     'immediateRender: true,'
+		viewer +=     'showNavigator: true,'
+		viewer +=     'tileSources: "http://localhost:8182/iiif/2/U300.01.0003.00046.tif.tiff"'
+		viewer += '});</script>';
+	}
+	else {
+		viewer += 'Viewer not available.  Please check configuration/div>';
+	}
 
 	return viewer;
 }

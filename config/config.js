@@ -35,6 +35,12 @@ module.exports = {
      */
     pdfViewer: "browser",
 
+    /* 
+     * Viewer to display large image files (tiff, jp2)
+     * [browser | [openseadragon]]
+     */
+    largeImageViewer: "openseadragon",
+
     /*
      * List of fields to search.  These will appear in 'Search Type' dropdown list
      * "Search type name": Index field to search"
