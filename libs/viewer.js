@@ -139,7 +139,7 @@ function getLargeImageViewer(objectData) {
 
 		viewer += '<script>var viewer = OpenSeadragon({'
 		viewer +=     'id: "openseadragon1",'
-		viewer +=     'prefixUrl: "images/",'
+		viewer +=     'prefixUrl: "/libs/openseadragon/images/",'
 		viewer +=     'immediateRender: true,'
 		viewer +=     'showNavigator: true,'
 		viewer +=     'tileSources: "http://localhost:8182/iiif/2/U300.01.0003.00046.tif.tiff"'
