@@ -13,7 +13,7 @@
 		</div>
 
 		<div id="pagination-header">
-			<span>Showing results <strong>1 - 4</strong> of <strong>4</strong></span>
+			<span>Showing results <strong><%- pageData.pageStart%> - <%-pageData.pageTotal%></strong> of <strong><%- pageData.total%></strong></span>
 		</div>
 		
 		<% include partials/facets %>

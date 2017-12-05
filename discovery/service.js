@@ -113,7 +113,7 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
       index: config.elasticsearchIndex,
       type: 'object',
       body: {
-        from : page, 
+        from : 0, 
         size : config.maxDisplayResults,
         query: {
             "bool": {

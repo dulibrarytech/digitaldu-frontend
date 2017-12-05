@@ -39,7 +39,7 @@ exports.search = function(req, res) {
 	var query = req.query.q;
 	var facets = req.query.f || null;
 	var typeVal = req.query.type, type;
-	var page = req.query.page || 0;
+	var page = req.query.page || 1;
 
 	// If search all, build array of types from config settings.  If type search, 'type'is passed into search function as a string.
 	if(typeVal == 'All') {
@@ -66,15 +66,18 @@ exports.search = function(req, res) {
 	Service.searchIndex(query, type, facets, page, function(response) {
 		var data = {};
 		if(response.status) {
-				console.log("Search Response:", response);
+				console.log("TEST Search Response:", response);
+				console.log("TEST responses:", response.data.results.length);
 
 			// Get data for the view
-			data['results'] = response.data.results;
+			var pagination = Helper.paginateResults(response.data.results, page);
+			//data['results'] = response.data.results;
 			data['base_url'] = config.baseUrl;
 			data['facets'] = Facets.create(response.data.facets);
 			data['facet_breadcrumb_trail'] = Facets.getFacetBreadcrumbObject(facets);  // Param: the facets from the search request params
 
-			//data['results'] = Helper.paginateResults(response.data.length, 1);
+			data['results'] = pagination.results;
+			data['pageData'] = pagination.data;
 			// console.error("Test error!");  createBreadcrumbTrail
 		}
 		else {

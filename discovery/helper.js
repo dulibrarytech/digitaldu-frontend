@@ -38,6 +38,36 @@ exports.createMetadataDisplayObject = function(result) {
 	return displayObj;
 }
 
+exports.paginateResults = function(results, page) {
+	var index = page < 1 ? 0 : page-1;
+	var response = {}, maxResults = config.maxDisplayResults;
+	var offset = index * maxResults;
+
+	response['results'] = [];
+	response['data'] = {};
+
+	for(var i=offset; i<(maxResults + offset); i++) {
+		if(typeof results[i] != 'undefined') {
+			response.results.push(results[i]);
+		}
+	}
+
+	if(response.results.length < 1) {
+		response.data['total'] = "";
+		response.data['pageTotal'] = "";
+		response.data['pageStart'] = "";
+	}
+	else {
+		response.data['total'] = results.length;
+		response.data['pageTotal'] = response.results.length + offset;
+		response.data['pageStart'] = offset + 1;
+	}
+
+	console.log("TEST Results out", response);
+
+	return response;
+}
+
 /*
  * Create an array of facet breadcrumb objects for the view
  */
