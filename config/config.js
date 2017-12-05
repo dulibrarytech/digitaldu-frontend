@@ -16,6 +16,7 @@ module.exports = {
 
     // Search results list size
     maxDisplayResults: 10,
+    resultMaxCharacters: 400,
 
     /* 
      * Viewer to play audio files

@@ -240,10 +240,12 @@ div#search-results > h3 {
 	margin-bottom: 2em;
 }
 
-div#search-result {
-	margin-bottom: 2em;
-    height: 230px;
-    max-height: 230px;
+div.search-result {
+	display: inline-block;
+	margin-bottom: 0;
+    /*height: 230px;*/
+    /*max-height: 230px;*/
+
 }
 
 dl.search-result-data {
@@ -253,6 +255,7 @@ dl.search-result-data {
     border-width: 2px;
     border-color: #c5c3c1;
     padding-top: 1em;
+    /*margin-top: 0;*/
 }
 
 dl.search-result-tn {

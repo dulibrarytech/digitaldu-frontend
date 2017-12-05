@@ -66,8 +66,6 @@ exports.search = function(req, res) {
 	Service.searchIndex(query, type, facets, page, function(response) {
 		var data = {};
 		if(response.status) {
-				console.log("TEST Search Response:", response);
-				console.log("TEST responses:", response.data.results.length);
 
 			// Get data for the view
 			var pagination = Helper.paginateResults(response.data.results, page);

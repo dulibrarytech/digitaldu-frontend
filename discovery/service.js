@@ -147,7 +147,7 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
           results.push({
             title: result._source.title,
             namePersonal: result._source.namePersonal,
-            abstract: result._source.abstract.substring(0,400),
+            abstract: result._source.abstract.substring(0,config.resultDescriptionMaxLength),
             tn: tn,
             pid: result._source.pid
           });
