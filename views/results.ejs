@@ -19,26 +19,24 @@
 		<% include partials/facets %>
 
 		<div id="search-results">
-
 			<% if (results && results.length > 0) { %>
-
-
 					<% results.forEach(function(result) { %>
 
 						<div id="search-result">
 
-						
-							<dl class="search-result-tn">
-								<a href="/repository/object/<%- result.pid%>" title="">
-									<img src="<%- result.tn %>" alt="Img">
-								</a>
-							</dl>
+							<!-- Thumbnail -->
+				            <dl class="search-result-tn">
+				            	<dt>
+				              		<a href="/repository/object/<%- result.pid%>" title="<%- result.title %>"><img typeof="foaf:Image" src="<%- result.tn %>" alt="Img" /></a>            
+				              	</dt>
+				            <dd></dd>
+				          	</dl>
 
-							<dl class="search-result-data">
-								<dt>Title:</dt>
-								<dd><a href="/repository/object/<%- result.pid%>"><%- result.title %></a></dd>
-
-								<% if (result.namePersonal) { %>
+				          	<!-- Metadata -->
+				          	<dl class="search-result-data">
+                          		<dt class="">Title:</dt>
+              					<dd class=""><a href="/repository/object/<%- result.pid%>"><%- result.title %></a></dd>
+                          		<% if (result.namePersonal) { %>
 									<dt>Creator:</dt>
 									<dd><%- result.namePersonal %></dd>
 								<% } %>
@@ -47,22 +45,14 @@
 									<dt>Description:</dt>
 									<dd id="result-description"><%- result.abstract %></dd>
 								<% } %>
-							</dl>
-
+                      		</dl>
 						</div>
-
-
-
 
 					<% }); %>
 					
-
-
-
 			<% } else { %>
 				<h3>No results found</h3>
 			<% } %>
-
 		</div>
 	</div>
 </div>

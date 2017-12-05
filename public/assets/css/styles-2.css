@@ -263,10 +263,13 @@ dl.search-result-tn {
 }
 
 dl.search-result-tn a img {
-	min-width: 100px;
-	min-height: 150px;
+	min-width: 11em;
+	/*min-height: 150px;*/
 	margin-bottom: 13%;
 	border-radius: 7px;
+
+	max-width: 100%;
+    max-height: 100%;
 }
 
 dl.search-result-data {
@@ -664,6 +667,10 @@ dl[class$=collection] dd.basic-collection-caption a:hover {
 	    height: 12.31775em;
 	}
 
+	dl.search-result-tn a img {
+		min-width: 9.75em;
+	}
+
 	dd.basic-collection-caption {
 	    height: auto;
 	    width: 9.8542em;
@@ -672,10 +679,18 @@ dl[class$=collection] dd.basic-collection-caption a:hover {
 
 @media only screen and (min-width: 1000px) and (max-width: 1200px) {
 
+	body {
+		font-size: 15px;
+	}
+
 	div#main {
 		margin: 1em auto 4em auto;
 	    /*max-width: 65%;*/
 	    width: 950px;
+	}
+
+	div#search-results {
+		width: 70%;
 	}
 
 	dt.basic-collection-thumb {
@@ -687,14 +702,26 @@ dl[class$=collection] dd.basic-collection-caption a:hover {
 	    height: auto;
 	    width: 9.8542em;
 	}
+
+	dl.search-result-tn a img {
+		min-width: 8em;
+	}
 }
 
 @media only screen and (min-width: 800px) and (max-width: 1000px) {
+
+	body {
+		font-size: 14px;
+	}
 
 	div#main {
 		margin: 1em auto 4em auto;
 	    /*max-width: 65%;*/
 	    width: 750px;
+	}
+
+	div#search-results {
+		width: 70%;
 	}
 
 	dt.basic-collection-thumb {
@@ -705,5 +732,9 @@ dl[class$=collection] dd.basic-collection-caption a:hover {
 	dd.basic-collection-caption {
 	    height: auto;
 	    width: 7.8542em;
+	}
+
+	dl.search-result-tn a img {
+		min-width: 7em;
 	}
 }
