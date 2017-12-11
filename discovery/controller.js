@@ -22,6 +22,7 @@ exports.renderCollectionsView = function(req, res) {
 	// Get list from discovery service
 	Service.getCollections(config.topLevelCollectionPID, function(response) {
 		if(response.status) {
+				console.log("TEST collections rx:", response.data);
 			data['collections'] = response.data;
 			data['base_url'] = config.baseUrl;
 		}

@@ -2,23 +2,26 @@
 
 const es = require('../config/index');
 const config = require('../config/config');
+const request  = require("request");
 const Repository = require('../libs/repository');
 
 
 // Create thumbnail links
-var createCollectionList= function(pidArray) {
-	var updatedArray = [], pid;
-	for(var pid of pidArray) {
-
+var createCollectionList= function(collections) {
+  var collectionList = [], tn;
+  console.log("SRVTEST collections", collections);
+  for(var collection of collections) {
+      //console.log("SRVTEST collection", collection);
     // Fetch the thumbnail
-		var tn = Repository.getDatastream("TN", pid.replace('_', ':'))
-
-		updatedArray.push({
-			  pid: pid,
-	    	tn: tn
-	    });
-	}
-	return updatedArray;
+    tn = Repository.getDatastreamUrl("tn", collection.pid);
+    collectionList.push({
+        pid: collection.pid,
+        tn: tn,
+        title: collection.title,
+        description: collection.description
+      });
+  }
+  return collectionList;
 };
 
 var addTNData = function(resultArray) {
@@ -30,23 +33,37 @@ var addTNData = function(resultArray) {
 }
 
 exports.getCollections = function(pid, callback) {
-	var collections = [], collectionList = [];
-	// Query ES for all objects with rels-ext/isMemberOfCollection == pid
-	es.search({
-        index: config.elasticsearchIndex,
-        type: "object",
-  		q: "rels-ext_isMemberOfCollection:" + pid
-    }).then(function (body) {
-    	for(var i=0; i<body.hits.total; i++) {
-    		collections.push(body.hits.hits[i]._source.pid);      // TODO push title; update param name of creataCollectionList
-    	}
-    	collectionList = createCollectionList(collections);
-	    callback({status: true, data: collectionList});
+  var collections = [], collectionList = [];
 
-    }, function (error) {
-        	console.log("Error: ", error);
-        callback({status: false, message: error, data: null});
-    });
+  // // DEV: Local index collection list
+  // // Query ES for all objects with rels-ext/isMemberOfCollection == pid
+  // es.search({
+  //       index: config.elasticsearchIndex,
+  //       type: "object",
+  //    q: "rels-ext_isMemberOfCollection:" + pid
+  //   }).then(function (body) {
+  //    for(var i=0; i<body.hits.total; i++) {
+  //      collections.push(body.hits.hits[i]._source.pid);      // TODO push title; update param name of creataCollectionList
+  //    }
+  //    collectionList = createCollectionList(collections);
+  //     callback({status: true, data: collectionList});
+
+  //   }, function (error) {
+  //        console.log("Error: ", error);
+  //       callback({status: false, message: error, data: null});
+  //   });
+
+    Repository.getRootCollections().then( response => {
+
+      // Check for error (add param)
+      var list = createCollectionList(JSON.parse(response));
+        console.log("TEST have collection list:", list);
+
+
+
+
+      callback({status: true, data: list});
+  });
 };
 
 exports.searchIndex = function(query, type, facets=null, page=null, callback) {
@@ -74,7 +91,7 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
         var q = {};
         q[type] = "*" + query + "*";
         matchFields.push({
-        	"wildcard": q
+          "wildcard": q
         });
     }
 

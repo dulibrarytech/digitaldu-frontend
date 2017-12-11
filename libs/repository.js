@@ -1,25 +1,23 @@
 'use strict'
 
 /*
- * Repository interface functions
+ * DU Repository interface functions
  */
+const protocol = "http://",
+	  domain = "libspec01-vlp.du.edu:8080";
 
-const fedoraPath = "http://librepo01-vlp.du.edu:8080";
+exports.getDatastreamUrl = function(datastream, pid) {
+	return protocol + domain + "/object?pid=" + pid + "&type=" + datastream;
+}
 
-// Compose links to Fedora repository
-// exports.getTNUrl = function(pid) {
-// 	return fedoraPath + "/fedora/objects/" + pid + "/datastreams/TN/content";
-// };
+exports.getRootCollections = function() {
+	return new Promise(function(resolve, reject) {
 
-// exports.getMP4Url = function(pid) {
-// 	return fedoraPath + "/fedora/objects/" + pid + "/datastreams/MP4/content";
-// };
+		var request = require('request'), url = protocol + domain + "/collections?type=root";
+		request(url, function (error, response, body) {
 
-// exports.getMediumSizeImageUrl = function(pid) {
-// 	return fedoraPath + "/fedora/objects/" + pid + "/datastreams/MEDIUM_SIZE/content";
-// };
-
-exports.getDatastream = function(datastream, pid) {
-	return fedoraPath + "/fedora/objects/" + pid + "/datastreams/" + datastream + "/content";
-};
+			resolve(body);
+		});
+	});
+}
 
