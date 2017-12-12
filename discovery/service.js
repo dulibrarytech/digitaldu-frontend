@@ -4,16 +4,17 @@ const es = require('../config/index');
 const config = require('../config/config');
 const request  = require("request");
 const Repository = require('../libs/repository');
+const FedoraRepository = require('../libs/repository.fedora');
 
 
 // Create thumbnail links
 var createCollectionList= function(collections) {
   var collectionList = [], tn;
-  console.log("SRVTEST collections", collections);
   for(var collection of collections) {
       //console.log("SRVTEST collection", collection);
     // Fetch the thumbnail
-    tn = Repository.getDatastreamUrl("tn", collection.pid);
+    tn = FedoraRepository.getDatastreamUrl("tn", collection.pid);
+      console.log("SRVTEST tn is", tn);
     collectionList.push({
         pid: collection.pid,
         tn: tn,
@@ -22,7 +23,7 @@ var createCollectionList= function(collections) {
       });
   }
   return collectionList;
-};
+}
 
 var addTNData = function(resultArray) {
   // Foreach in array, add new prop 'tn'
@@ -52,16 +53,16 @@ exports.getCollections = function(pid, callback) {
   //        console.log("Error: ", error);
   //       callback({status: false, message: error, data: null});
   //   });
+}
 
-    Repository.getRootCollections().then( response => {
+exports.getTopLevelCollections = function(callback) {
+  Repository.getRootCollections().then( response => {
 
       // Check for error (add param)
       var list = createCollectionList(JSON.parse(response));
-        console.log("TEST have collection list:", list);
-
       callback({status: true, data: list});
   });
-};
+}
 
 exports.searchIndex = function(query, type, facets=null, page=null, callback) {
 
@@ -171,7 +172,7 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
         callback({status: true, data: responseData});
       }
   });
-};
+}
 
 exports.fetchObjectByPid = function(pid, callback) {
   var objectData = {
@@ -198,4 +199,4 @@ exports.fetchObjectByPid = function(pid, callback) {
         callback({status: true, data: objectData});
       }
   });
-};
+}

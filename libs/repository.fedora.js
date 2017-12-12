@@ -1,25 +1,35 @@
 'use strict'
 
 /*
- * Repository interface functions
+ * DU Repository interface functions
  */
+const protocol = "http://",
+	  domain = "librepo01-vlp.du.edu:8080";
 
-const fedoraPath = "http://librepo01-vlp.du.edu:8080";
+exports.getDatastreamUrl = function(datastream, pid) {
+	var dsID = "";
+	switch(datastream) {
+		case "tn":
+			dsID = "TN";
+			break;
+		case "small_image":
+			dsID = "OBJ";
+			break;
+		case "large_image":
+			dsID = "OBJ";
+			break;
+		case "audio":
+			dsID = "PROXY_MP3";
+			break;
+		case "video":
+			dsID = "MP4";
+			break;
+		case "pdf":
+			dsID = "OBJ";
+			break;
+	}
 
-// Compose links to Fedora repository
-// exports.getTNUrl = function(pid) {
-// 	return fedoraPath + "/fedora/objects/" + pid + "/datastreams/TN/content";
-// };
+	return protocol + domain + "/fedora/objects/" + pid + "/datastreams/" + dsID + "/content";
+}
 
-// exports.getMP4Url = function(pid) {
-// 	return fedoraPath + "/fedora/objects/" + pid + "/datastreams/MP4/content";
-// };
-
-// exports.getMediumSizeImageUrl = function(pid) {
-// 	return fedoraPath + "/fedora/objects/" + pid + "/datastreams/MEDIUM_SIZE/content";
-// };
-
-exports.getDatastream = function(datastream, pid) {
-	return fedoraPath + "/fedora/objects/" + pid + "/datastreams/" + datastream + "/content";
-};
 
