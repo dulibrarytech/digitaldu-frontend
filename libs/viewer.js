@@ -46,8 +46,8 @@ function getAudioPlayer(objectData) {
 	var player = '<div id="audio-player" class="viewer-section">', tn, stream;
 	var extension = "mp3";
 
-	tn = Repository.getDatastream("TN", objectData.pid.replace('_', ':'));
-	stream = Repository.getDatastream("PROXY_MP3", objectData.pid.replace('_', ':'));
+	tn = Repository.getDatastreamUrl("tn", objectData.pid);
+	stream = Repository.getDatastreamUrl("audio", objectData.pid);
 
 	// Local test data
 	// tn = 'http://localhost:9006/assets/img/dev/MY_VIDEO_POSTER.jpg';
@@ -74,7 +74,7 @@ function getAudioPlayer(objectData) {
 		player += '});</script>';
 	}
 	else {
-		player += 'Viewer not available.  Please check configuration</div>';
+		player += 'Viewer is down temporarily.  Please check configuration</div>';
 	}
 
 	return player;
@@ -84,8 +84,8 @@ function getVideoViewer(objectData) {
 	var viewer = '<div id="video-viewer" class="viewer-section">', tn, stream;
 	var extension = "mp4";
 
-	tn = Repository.getDatastream("TN", objectData.pid.replace('_', ':'));
-	stream = Repository.getDatastream("MP4", objectData.pid.replace('_', ':'));
+	tn = Repository.getDatastreamUrl("tn", objectData.pid);
+	stream = Repository.getDatastreamUrl("video", objectData.pid);
 
 	// Local test data
 	// tn = 'http://localhost:9006/assets/img/dev/MY_VIDEO_POSTER.jpg';
@@ -112,7 +112,7 @@ function getVideoViewer(objectData) {
 		viewer += '});</script>';
 	}
 	else {
-		viewer += 'Viewer not available.  Please check configuration/div>';
+		viewer += 'Viewer is down temporarily.  Please check configuration/div>';
 	}
 
 	return viewer;
@@ -121,7 +121,7 @@ function getVideoViewer(objectData) {
 function getSmallImageViewer(objectData) {
 	var viewer = '<div id="small-image-viewer" class="viewer-section">';
 
-	var image = Repository.getDatastream("MEDIUM_SIZE", objectData.pid.replace('_', ':'));
+	var image = Repository.getDatastreamUrl("small_image", objectData.pid);
 
 	viewer += '<div id="viewer-content-wrapper"><img class="viewer-content" src="' + image + '"/></div>';
 	viewer += '</div>';
@@ -134,9 +134,6 @@ function getLargeImageViewer(objectData) {
 
 	if(config.largeImageViewer == "openseadragon") {
 
-		// Copy image to the cantaloupe folder?
-
-
 		viewer += '<div id="viewer-content-wrapper"><div id="openseadragon1" class="viewer-content" style="width: 96%; height: 420px; margin: 0 auto"></div>';
 		viewer += '</div>';
 
@@ -145,11 +142,11 @@ function getLargeImageViewer(objectData) {
 		viewer +=     'prefixUrl: "/libs/openseadragon/images/",'
 		viewer +=     'immediateRender: true,'
 		viewer +=     'showNavigator: true,'
-		viewer +=     'tileSources: "http://localhost:8182/iiif/2/codu:16056"'
+		viewer +=     'tileSources: "http://localhost:8182/iiif/2/' + objectData.pid + '"'
 		viewer += '});</script>';
 	}
 	else {
-		viewer += 'Viewer not available.  Please check configuration/div>';
+		viewer += 'Viewer is down temporarily.  Please check configuration/div>';
 	}
 
 	return viewer;
@@ -158,14 +155,14 @@ function getLargeImageViewer(objectData) {
 function getPDFViewer(objectData) {
 	var viewer = '<div id="pdf-viewer" class="viewer-section">';
 
-	var doc = Repository.getDatastream("OBJ", objectData.pid.replace('_', ':'));
+	var doc = Repository.getDatastreamUrl("pdf", objectData.pid);
 
 	if(config.pdfViewer == "browser") {
 		viewer += '<embed class="viewer-content" src="' + doc + '" height="500px" />';
 		viewer += '</div>';
 	}
 	else {
-		viewer += 'Viewer not available.  Please check configuration</div>';
+		viewer += 'Viewer is down temporarily.  Please check configuration</div>';
 	}
 
 	return viewer;

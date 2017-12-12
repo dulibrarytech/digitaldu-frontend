@@ -59,9 +59,6 @@ exports.getCollections = function(pid, callback) {
       var list = createCollectionList(JSON.parse(response));
         console.log("TEST have collection list:", list);
 
-
-
-
       callback({status: true, data: list});
   });
 };
@@ -160,7 +157,7 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
         // Build the search results object
         var results = [], tn;
         for(var result of response.hits.hits) {
-          tn = Repository.getDatastream("TN", result._source.pid.replace('_', ':'));
+          tn = Repository.getDatastreamUrl("tn", result._source.pid.replace('_', ':'));
           results.push({
             title: result._source.title,
             namePersonal: result._source.namePersonal,
