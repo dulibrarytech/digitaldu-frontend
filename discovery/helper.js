@@ -26,12 +26,15 @@ exports.createMetadataDisplayObject = function(result) {
 	var displayObj = {};
 	var displayFields = config.metadataDisplay;
 
+	// Get metadata object from result display record json
+	var displayRecord = JSON.parse(result.display_record)
+
 	var key, field;
 	for(key in displayFields) {
 		field = displayFields[key];
 		
-		if(typeof result[field] != 'undefined' && result[field] != '') {
-			displayObj[key] = result[field];
+		if(typeof displayRecord[field] != 'undefined' && result[field] != '') {
+			displayObj[key] = displayRecord[field];
 		}
 	}
 

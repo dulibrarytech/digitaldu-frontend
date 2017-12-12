@@ -183,7 +183,7 @@ exports.fetchObjectByPid = function(pid, callback) {
   pid = pid.replace(config.institutionPrefix + ":", "");
   es.get({
       index: config.elasticsearchIndex,
-      type: config.elasticsearchIndexType,
+      type: "data",
       id: pid
   }, function (error, response) {
 

@@ -9,7 +9,6 @@ module.exports = {
     elasticsearchHost: process.env.ELASTICSEARCH_HOST,
     elasticsearchPort: process.env.ELASTICSEARCH_PORT,
     elasticsearchIndex: process.env.ELASTICSEARCH_INDEX,
-    elasticsearchIndexType: process.env.ELASTICSEARCH_TYPE,
 
     // Repository settings
     institutionPrefix: "codu",
@@ -65,11 +64,11 @@ module.exports = {
 
     /*
      * Fields to display in the summary data section (above Details link)
-     * "Display field name": "index field"
+     * "Display field name": "index field key to match"
      */
     summaryDisplay: {
         "Title": "title",
-        "Description": "abstract"
+        "Description": "description"
     },
 
     /*
