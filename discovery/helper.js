@@ -9,7 +9,7 @@ var config = require('../config/config');
 exports.createSummaryDisplayObject = function(result) {
 	var displayObj = {};
 	var displayFields = config.summaryDisplay;
-
+		console.log("TEST create summary function gets result:", result);
 	var key, field;
 	for(key in displayFields) {
 		field = displayFields[key];
@@ -27,7 +27,7 @@ exports.createMetadataDisplayObject = function(result) {
 	var displayFields = config.metadataDisplay;
 
 	// Get metadata object from result display record json
-	var displayRecord = JSON.parse(result.display_record)
+	var displayRecord = JSON.parse(result.display_record);
 
 	var key, field;
 	for(key in displayFields) {

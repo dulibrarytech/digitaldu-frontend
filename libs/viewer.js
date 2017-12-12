@@ -65,7 +65,7 @@ function getAudioPlayer(objectData) {
 	}
 	else if(config.audioPlayer == "jwplayer") {
 		// JWPlayer needs a filename in the path.  
-		stream += "/file_name_spoof." + extension;
+		//stream += "/file_name_spoof." + extension;
 
 		player += '<div id="mediaplayer" class="viewer-content">Loading JW Player...</div>';
 		player += '</div>';
@@ -103,7 +103,7 @@ function getVideoViewer(objectData) {
 	}
 	else if(config.videoViewer == "jwplayer") {
 		// JWPlayer needs a filename in the path.  
-		stream += "/file_name_spoof." + extension;
+		//stream += "/file_name_spoof." + extension;
 
 		viewer += '<div id="mediaplayer" class="viewer-content">Loading JW Player...</div>';
 		viewer += '</div>';
@@ -148,7 +148,7 @@ function getLargeImageViewer(objectData) {
 		viewer +=     'prefixUrl: "/libs/openseadragon/images/",'
 		viewer +=     'immediateRender: true,'
 		viewer +=     'showNavigator: true,'
-		viewer +=     'tileSources: "http://localhost:8182/iiif/2/' + objectData.pid + '"'
+		viewer +=     'tileSources: "http://localhost:' + config.cantaloupePort + '/iiif/2/' + objectData.pid + '"'
 		viewer += '});</script>';
 	}
 	else {
