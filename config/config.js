@@ -9,6 +9,7 @@ module.exports = {
     elasticsearchHost: process.env.ELASTICSEARCH_HOST,
     elasticsearchPort: process.env.ELASTICSEARCH_PORT,
     elasticsearchIndex: process.env.ELASTICSEARCH_INDEX,
+    elasticsearchIndexType: process.env.ELASTICSEARCH_TYPE,
 
     // Repository settings
     institutionPrefix: "codu",

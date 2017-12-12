@@ -178,9 +178,12 @@ exports.fetchObjectByPid = function(pid, callback) {
     pid: null
   };
   
+  // Remove prefix for index id
+  pid = pid.replace(config.institutionPrefix + "_", "");
+  pid = pid.replace(config.institutionPrefix + ":", "");
   es.get({
       index: config.elasticsearchIndex,
-      type: 'object',
+      type: config.elasticsearchIndexType,
       id: pid
   }, function (error, response) {
 

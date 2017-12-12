@@ -9,27 +9,33 @@ var config = require('../config/config'),
 
 exports.getObjectViewer = function(object) {
  	var viewer = "";
- 	var contentModel = typeof object["rels-ext_hasModel"] != 'string' ? object["rels-ext_hasModel"][0] : object["rels-ext_hasModel"];
+ 	//var contentModel = typeof object["rels-ext_hasModel"] != 'string' ? object["rels-ext_hasModel"][0] : object["rels-ext_hasModel"];
 
- 	switch(contentModel) {
- 		case "audioCModel":
+ 	var mimeType = "";
+ 	if(typeof object.mime_type != 'undefined') {
+ 		mimeType = object.mime_type;
+ 	}
+
+ 	switch(mimeType) {
+ 		case "audio/mpeg":
  			viewer = getAudioPlayer(object);
  			break;
 
- 		case "videoCModel":
+ 		case "video/mp4":
  			viewer = getVideoViewer(object);
  			break;
 
- 		case "basicImageCModel":
- 		case "smallImageCModel":
+ 		case "image/png":
+ 		case "image/jpeg":
  			viewer = getSmallImageViewer(object);
  			break;
 
- 		case "largeImageCModel":
+ 		case "image/tiff":
+ 		case "image/jp2":
  			viewer = getLargeImageViewer(object);
  			break;
 
- 		case "pdfCModel":
+ 		case "application/pdf":
  			viewer = getPDFViewer(object);
  			break;
 
