@@ -142,7 +142,7 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
     if(facets) {
       data.body.query.bool["minimum_should_match"] = count+1;
     }
-
+      console.log("TEST es search data object:", data.body.query.bool.should);
     // Query the index
     es.search(data, function (error, response, status) {
       var responseData = {};
@@ -158,6 +158,8 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
         // Build the search results object
         var results = [], tn;
         for(var result of response.hits.hits) {
+          // Convert metadata json to object
+
           tn = Repository.getDatastreamUrl("tn", result._source.pid.replace('_', ':'));
           results.push({
             title: result._source.title,

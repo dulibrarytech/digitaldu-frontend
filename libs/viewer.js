@@ -2,6 +2,7 @@
 
 var config = require('../config/config'),
 	Repository = require('./repository');
+var FedoraRepository = require('./repository.fedora');
 
 /*
  * Viewer module
@@ -65,7 +66,7 @@ function getAudioPlayer(objectData) {
 	}
 	else if(config.audioPlayer == "jwplayer") {
 		// JWPlayer needs a filename in the path.  
-		//stream += "/file_name_spoof." + extension;
+		stream += "/file_name_spoof." + extension;
 
 		player += '<div id="mediaplayer" class="viewer-content">Loading JW Player...</div>';
 		player += '</div>';
@@ -92,7 +93,7 @@ function getVideoViewer(objectData) {
 
 	tn = Repository.getDatastreamUrl("tn", objectData.pid);
 	stream = Repository.getDatastreamUrl("video", objectData.pid);
-
+		console.log("TEST video stream", stream);
 	// Local test data
 	// tn = 'http://localhost:9006/assets/img/dev/MY_VIDEO_POSTER.jpg';
 	// stream = 'http://localhost:9006/assets/img/dev/small.mp4';
@@ -103,7 +104,7 @@ function getVideoViewer(objectData) {
 	}
 	else if(config.videoViewer == "jwplayer") {
 		// JWPlayer needs a filename in the path.  
-		//stream += "/file_name_spoof." + extension;
+		stream += "/file_name_spoof." + extension;
 
 		viewer += '<div id="mediaplayer" class="viewer-content">Loading JW Player...</div>';
 		viewer += '</div>';
