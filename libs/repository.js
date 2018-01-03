@@ -4,7 +4,7 @@
  * DU Repository interface functions
  */
 const protocol = "http://",
-	  domain = "libspec01-vlp.du.edu:8080";
+	  domain = "libspecc01-vlp.du.edu:8080";
 
 exports.getDatastreamUrl = function(datastream, pid) {
 	var dsID = "";

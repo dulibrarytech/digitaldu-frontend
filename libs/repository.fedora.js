@@ -32,4 +32,8 @@ exports.getDatastreamUrl = function(datastream, pid) {
 	return protocol + domain + "/fedora/objects/" + pid + "/datastreams/" + dsID + "/content";
 }
 
+exports.getRootCollections = function() {
+  	return [];
+}
+
 

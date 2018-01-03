@@ -33,36 +33,16 @@ var addTNData = function(resultArray) {
   });
 }
 
-exports.getCollections = function(pid, callback) {
-  var collections = [], collectionList = [];
-
-  // // DEV: Local index collection list
-  // // Query ES for all objects with rels-ext/isMemberOfCollection == pid
-  // es.search({
-  //       index: config.elasticsearchIndex,
-  //       type: "object",
-  //    q: "rels-ext_isMemberOfCollection:" + pid
-  //   }).then(function (body) {
-  //    for(var i=0; i<body.hits.total; i++) {
-  //      collections.push(body.hits.hits[i]._source.pid);      // TODO push title; update param name of creataCollectionList
-  //    }
-  //    collectionList = createCollectionList(collections);
-  //     callback({status: true, data: collectionList});
-
-  //   }, function (error) {
-  //        console.log("Error: ", error);
-  //       callback({status: false, message: error, data: null});
-  //   });
-}
-
 exports.getTopLevelCollections = function(callback) {
   Repository.getRootCollections().catch(error => {
     console.log("Could not retrieve collections. \nError: ", error);
     callback({status: false, message: error, data: null});
   })
   .then( response => {
-      var list = createCollectionList(JSON.parse(response));
-      callback({status: true, data: list});
+      if(response) {
+        var list = createCollectionList(JSON.parse(response));
+        callback({status: true, data: list});
+      }
   });
 }
 
