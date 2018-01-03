@@ -33,12 +33,16 @@ exports.getDatastreamUrl = function(datastream, pid) {
 }
 
 exports.getRootCollections = function() {
-	return new Promise(function(resolve, reject) {
+	return new Promise(function(fulfill, reject) {
 
 		var request = require('request'), url = protocol + domain + "/collections?type=root";
 		request(url, function (error, response, body) {
-
-			resolve(body);
+			if(error) {
+				reject(error);
+			}
+			else {
+				fulfill(body);
+			}
 		});
 	});
 }

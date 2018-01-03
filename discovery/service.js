@@ -56,9 +56,11 @@ exports.getCollections = function(pid, callback) {
 }
 
 exports.getTopLevelCollections = function(callback) {
-  Repository.getRootCollections().then( response => {
-
-      // Check for error (add param)
+  Repository.getRootCollections().catch(error => {
+    console.log("Could not retrieve collections. \nError: ", error);
+    callback({status: false, message: error, data: null});
+  })
+  .then( response => {
       var list = createCollectionList(JSON.parse(response));
       callback({status: true, data: list});
   });

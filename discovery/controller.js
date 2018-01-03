@@ -21,10 +21,10 @@ exports.renderCollectionsView = function(req, res) {
 
 	// Get list from discovery service
 	Service.getTopLevelCollections(function(response) {
+		data['base_url'] = config.baseUrl;
+
 		if(response.status) {
-				console.log("TEST collections rx:", response.data);
 			data['collections'] = response.data;
-			data['base_url'] = config.baseUrl;
 		}
 		else {
 			data['collections'] = [];

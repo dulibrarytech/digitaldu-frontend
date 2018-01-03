@@ -46,11 +46,13 @@ module.exports = {
     /*
      * List of fields to search.  These will appear in 'Search Type' dropdown list
      * "Search type name": Index field to search"
-     */
+     */ 
     searchFields: [
     	{"Title": "title"},
-    	{"Creator": "namePersonal"},
-    	{"Subject": "subjectTopic"}
+    	{"Creator": "creator"},
+    	{"Subject": "subject"},
+        {"Type": "type"},
+        {"Description": "modsDescription"}
     ],
 
     /*
