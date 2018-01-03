@@ -28,7 +28,7 @@ exports.renderCollectionsView = function(req, res) {
 		}
 		else {
 			data['collections'] = [];
-			data['error'] = "Could not retrieve collections";
+			data['error'] = "Could not retrieve collections.  Please contact Systems support";
 		}
 		return res.render('collections', data);
 	});
