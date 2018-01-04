@@ -70,7 +70,7 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
     else {
 
         var q = {};
-        q[type] = "*" + query + "*";
+        q[type] = query;
         matchFields.push({
           "match": q
         });
