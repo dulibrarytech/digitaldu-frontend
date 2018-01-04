@@ -55,7 +55,7 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
     // Type specific search (if a searchfield is selected)
     if(Array.isArray(type)) {
 
-        query = "*" + query + "*";
+        //query = "*" + query + "*";
         type.forEach(function(type) {
           var q = {};
           q[type] = query;
@@ -106,15 +106,29 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
     }
 
     // Elasticsearch query object
+    // var data = {  
+    //   index: config.elasticsearchIndex,
+    //   type: 'data',
+    //   body: {
+    //     from : 0, 
+    //     size : config.maxDisplayResults,
+    //     query: {
+    //         "bool": {
+    //           "should": matchFields
+    //         }
+    //     },
+    //     aggregations: facetAggregations
+    //   }
+    // }
     var data = {  
       index: config.elasticsearchIndex,
-      type: 'object',
+      type: 'data',
       body: {
         from : 0, 
         size : config.maxDisplayResults,
         query: {
-            "bool": {
-              "should": matchFields
+            "match": {
+              "creator": "Haessler"
             }
         },
         aggregations: facetAggregations
@@ -124,36 +138,40 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
     if(facets) {
       data.body.query.bool["minimum_should_match"] = count+1;
     }
-      console.log("TEST es search data object:", data.body.query.bool.should);
+
     // Query the index
     es.search(data, function (error, response, status) {
       var responseData = {};
       if (error){
-        console.log("search error: " + error);
         callback({status: false, message: error, data: null});
       }
       else {
-
+        console.log("Have result:", response.hits.hits[0]);
         // Return the aggs for the facet display
         responseData['facets'] = response.aggregations;
 
-        // Build the search results object
-        var results = [], tn;
-        for(var result of response.hits.hits) {
-          // Convert metadata json to object
+        try {
+          // Build the search results object
+          var results = [], tn;
+          for(var result of response.hits.hits) {
+            // Convert metadata json to object
 
-          tn = Repository.getDatastreamUrl("tn", result._source.pid.replace('_', ':'));
-          results.push({
-            title: result._source.title,
-            namePersonal: result._source.namePersonal,
-            abstract: result._source.abstract.substring(0,config.resultDescriptionMaxLength),
-            tn: tn,
-            pid: result._source.pid
-          });
+            tn = Repository.getDatastreamUrl("tn", result._source.pid.replace('_', ':'));
+            results.push({
+              title: result._source.title,
+              namePersonal: result._source.namePersonal,
+              abstract: result._source.modsDescription.substring(0,config.resultDescriptionMaxLength),
+              tn: tn,
+              pid: result._source.pid
+            });
+          }
+          responseData['results'] = results;
+
+          callback({status: true, data: responseData});
         }
-        responseData['results'] = results;
-
-        callback({status: true, data: responseData});
+        catch (e) {
+          callback({status: false, message: e, data: responseData});
+        }
       }
   });
 }

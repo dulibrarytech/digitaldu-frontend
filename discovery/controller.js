@@ -65,13 +65,18 @@ exports.search = function(req, res) {
 	// Update with ES pagination 
 
 	Service.searchIndex(query, type, facets, page, function(response) {
-		var data = {};
-		if(response.status) {
+		var data = {
+			facets: null,
+			facet_breadcrumb_trail: null,
+			results: null,
+			pageData: null
+		};
 
+		data['base_url'] = config.baseUrl;
+		if(response.status) {
 			// Get data for the view
 			var pagination = Helper.paginateResults(response.data.results, page);
 			//data['results'] = response.data.results;
-			data['base_url'] = config.baseUrl;
 			data['facets'] = Facets.create(response.data.facets);
 			data['facet_breadcrumb_trail'] = Facets.getFacetBreadcrumbObject(facets);  // Param: the facets from the search request params
 
@@ -80,7 +85,7 @@ exports.search = function(req, res) {
 			// console.error("Test error!");  createBreadcrumbTrail
 		}
 		else {
-			console.error("Error: ", response.message);
+			console.error("Search Error: ", response.message);
 			data['results'] = null;
 			data['error'] = response.message;
 		}

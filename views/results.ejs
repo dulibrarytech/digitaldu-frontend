@@ -13,7 +13,9 @@
 		</div>
 
 		<div id="pagination-header">
-			<span>Showing results <strong><%- pageData.pageStart%> - <%-pageData.pageTotal%></strong> of <strong><%- pageData.total%></strong></span>
+			<% if (results && results.length > 0) { %>
+				<span>Showing results <strong><%- pageData.pageStart%> - <%-pageData.pageTotal%></strong> of <strong><%- pageData.total%></strong></span>
+			<% } %>
 		</div>
 		
 		<% include partials/facets %>
