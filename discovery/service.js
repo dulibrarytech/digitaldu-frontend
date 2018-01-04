@@ -53,6 +53,7 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
     var matchFields = [], results = [];
 
     // Type specific search (if a searchfield is selected)
+
     if(Array.isArray(type)) {
 
         //query = "*" + query + "*";
@@ -60,7 +61,7 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
           var q = {};
           q[type] = query;
           matchFields.push({
-              "wildcard": q
+              "match": q
           });
         })
     }
@@ -71,12 +72,13 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
         var q = {};
         q[type] = "*" + query + "*";
         matchFields.push({
-          "wildcard": q
+          "match": q
         });
     }
 
     // If facet data is present, add it to the search
     if(facets) {
+        console.log("TEST have FACETS");
       var matchFacetFields = [], indexKey, count=0;
       for(var key in facets) {
         for(var index of facets[key]) {
@@ -97,29 +99,15 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
 
     // Build elasticsearch aggregations object from config facet list
     var facetAggregations = {}, field;
-    for(var key in config.facets) {
-      field = {};
-      field['field'] = config.facets[key];
-      facetAggregations[key] = {
-        terms: field
-      };
-    }
+    // for(var key in config.facets) {
+    //   field = {};
+    //   field['field'] = config.facets[key];
+    //   facetAggregations[key] = {
+    //     terms: field
+    //   };
+    // }
 
     // Elasticsearch query object
-    // var data = {  
-    //   index: config.elasticsearchIndex,
-    //   type: 'data',
-    //   body: {
-    //     from : 0, 
-    //     size : config.maxDisplayResults,
-    //     query: {
-    //         "bool": {
-    //           "should": matchFields
-    //         }
-    //     },
-    //     aggregations: facetAggregations
-    //   }
-    // }
     var data = {  
       index: config.elasticsearchIndex,
       type: 'data',
@@ -127,8 +115,8 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
         from : 0, 
         size : config.maxDisplayResults,
         query: {
-            "match": {
-              "creator": "Haessler"
+            "bool": {
+              "should": matchFields
             }
         },
         aggregations: facetAggregations
@@ -146,6 +134,7 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
         callback({status: false, message: error, data: null});
       }
       else {
+        console.log("Have response", response);
         console.log("Have result:", response.hits.hits[0]);
         // Return the aggs for the facet display
         responseData['facets'] = response.aggregations;

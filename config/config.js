@@ -60,9 +60,9 @@ module.exports = {
      * "Facet name": "index field"
      */
     facets: {
-        "Creator": "namePersonal",
-        "Subject": "subjectTopic",
-        "Type": "typeOfResource"
+        "Creator": "creator",
+        "Subject": "subject",
+        "Type": "type"
     },
 
     /*
