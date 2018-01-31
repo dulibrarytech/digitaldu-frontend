@@ -45,6 +45,14 @@ exports.getTopLevelCollections = function(callback) {
   });
 }
 
+exports.getCollectionsInCommunity = function(communityID, callback) {
+  
+}
+
+exports.getObjectsInCollection = function(objectID, callback) {
+
+}
+
 exports.searchIndex = function(query, type, facets=null, page=null, callback) {
 
     // Build elasticsearch matchfields object for query: this object enables field specific searching

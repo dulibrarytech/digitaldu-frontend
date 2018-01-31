@@ -16,7 +16,7 @@ function getFacets(data, callback) {
     });
 }
 
-exports.renderCollectionsView = function(req, res) {
+exports.renderCommunitiesView = function(req, res) {
 	var data = {};
 
 	// Get list from discovery service
@@ -26,6 +26,7 @@ exports.renderCollectionsView = function(req, res) {
 
 		if(response.status) {
 			data['collections'] = response.data;
+			data['objectPath'] = "/repository/community";
 		}
 		else {
 			data['collections'] = [];
@@ -33,7 +34,11 @@ exports.renderCollectionsView = function(req, res) {
 		}
 		return res.render('collections', data);
 	});
-};
+}
+
+exports.renderCommunity = function(req, res) {
+
+}
 
 exports.search = function(req, res) {
 
