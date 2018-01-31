@@ -14,9 +14,13 @@ module.exports = function (app) {
     app.route('/repository')
         .get(Discovery.renderCommunitiesView);
 
-    // Render collection object view, with all collections in the community [:id]
+    // Render collection view, with all collections in the community [:id]
     app.route('/repository/community/:id')
         .get(Discovery.renderCommunity);
+
+    // Render collection view, with all objects in the collection [:id]
+    app.route('/repository/collection/:pid')
+        .get(Discovery.renderCollection);
 
     // Render all object views (by content model or type)
     app.route('/repository/object/:pid')

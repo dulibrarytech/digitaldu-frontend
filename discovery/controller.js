@@ -37,7 +37,17 @@ exports.renderCommunitiesView = function(req, res) {
 }
 
 exports.renderCommunity = function(req, res) {
+	var data = {},
+		id = req.params.id;
 
+	console.log("TEST cid", id);
+}
+
+exports.renderCollection = function(req, res) {
+	var data = {},
+		id = req.params.pid;
+
+	console.log("TEST pid", id);
 }
 
 exports.search = function(req, res) {
