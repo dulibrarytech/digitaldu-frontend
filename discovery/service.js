@@ -9,13 +9,21 @@ const FedoraRepository = require('../libs/repository.fedora');
 
 // Create thumbnail links
 var createCollectionList= function(collections) {
-  var collectionList = [], tn;
+  var collectionList = [], tn, pid;
   for(var collection of collections) {
 
     // Fetch the thumbnail
-    tn = Repository.getCommunityTN(collection.id);
+    if(collection.pid) {
+      tn = Repository.getCollectionTN(collection.pid);
+      pid = collection.pid
+    }
+    else {
+      tn = Repository.getCommunityTN(collection.id);
+      pid = collection.id
+    }
+
     collectionList.push({
-        pid: collection.id,
+        pid: pid,
         tn: tn,
         title: collection.title,
         description: collection.description

@@ -44,7 +44,7 @@ exports.renderCommunity = function(req, res) {
 	Service.getCollectionsInCommunity(id, function(response) {
 		data['base_url'] = config.baseUrl;
 		data['error'] = null;
-
+			console.log("RESP", response);
 		if(response.status) {
 			data['collections'] = response.data;
 			data['objectPath'] = "/repository/collection";
