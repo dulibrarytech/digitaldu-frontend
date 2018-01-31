@@ -11,12 +11,11 @@ const FedoraRepository = require('../libs/repository.fedora');
 var createCollectionList= function(collections) {
   var collectionList = [], tn;
   for(var collection of collections) {
-      //console.log("SRVTEST collection", collection);
+
     // Fetch the thumbnail
-    tn = FedoraRepository.getDatastreamUrl("tn", collection.pid);
-      console.log("SRVTEST tn is", tn);
+    tn = Repository.getCommunityTN(collection.id);
     collectionList.push({
-        pid: collection.pid,
+        pid: collection.id,
         tn: tn,
         title: collection.title,
         description: collection.description
@@ -34,8 +33,8 @@ var addTNData = function(resultArray) {
 }
 
 exports.getTopLevelCollections = function(callback) {
-  Repository.getRootCollections().catch(error => {
-    console.log("Could not retrieve collections. \nError: ", error);
+  Repository.getCommunities().catch(error => {
+    console.log("Could not retrieve communities. \nError: ", error);
     callback({status: false, message: error, data: null});
   })
   .then( response => {
@@ -99,13 +98,13 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
 
     // Build elasticsearch aggregations object from config facet list
     var facetAggregations = {}, field;
-    // for(var key in config.facets) {
-    //   field = {};
-    //   field['field'] = config.facets[key];
-    //   facetAggregations[key] = {
-    //     terms: field
-    //   };
-    // }
+    for(var key in config.facets) {
+      field = {};
+      field['field'] = config.facets[key];
+      facetAggregations[key] = {
+        terms: field
+      };
+    }
 
     // Elasticsearch query object
     var data = {  
@@ -119,7 +118,7 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
               "should": matchFields
             }
         },
-        aggregations: facetAggregations
+        aggs: {}
       }
     }
 
