@@ -67,7 +67,7 @@ exports.getCommunityTN = function(communityID) {
 	return protocol + domain + "/api/community/tn?community_id=" + communityID;
 }
 
-exports.getCollections = function() {
+exports.getAllCollections = function() {
 	return new Promise(function(fulfill, reject) {
 		var url = protocol + domain + "/api/collections";
 		request(url, function (error, response, body) {
@@ -81,7 +81,7 @@ exports.getCollections = function() {
 	});
 }
 
-exports.getCollectionsOfCommunity = function(communityID) {
+exports.getCollections = function(communityID) {
 	return new Promise(function(fulfill, reject) {
 		var url = protocol + domain + "/api/collections?community_id=" + communityID;
 		request(url, function (error, response, body) {

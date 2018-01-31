@@ -19,7 +19,7 @@ function getFacets(data, callback) {
 exports.renderCommunitiesView = function(req, res) {
 	var data = {};
 
-	// Get list from discovery service
+	// Get all communities
 	Service.getTopLevelCollections(function(response) {
 		data['base_url'] = config.baseUrl;
 		data['error'] = null;
@@ -30,7 +30,7 @@ exports.renderCommunitiesView = function(req, res) {
 		}
 		else {
 			data['collections'] = [];
-			data['error'] = "Could not retrieve collections.  Please contact Systems support";
+			data['error'] = "Could not retrieve communities.  Please contact Systems support";
 		}
 		return res.render('collections', data);
 	});
@@ -40,7 +40,21 @@ exports.renderCommunity = function(req, res) {
 	var data = {},
 		id = req.params.id;
 
-	console.log("TEST cid", id);
+	// Get all collections in this community
+	Service.getCollectionsInCommunity(id, function(response) {
+		data['base_url'] = config.baseUrl;
+		data['error'] = null;
+
+		if(response.status) {
+			data['collections'] = response.data;
+			data['objectPath'] = "/repository/collection";
+		}
+		else {
+			data['collections'] = [];
+			data['error'] = "Could not retrieve collections.  Please contact Systems support";
+		}
+		return res.render('collections', data);
+	});
 }
 
 exports.renderCollection = function(req, res) {

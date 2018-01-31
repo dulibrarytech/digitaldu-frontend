@@ -34,7 +34,6 @@ var addTNData = function(resultArray) {
 
 exports.getTopLevelCollections = function(callback) {
   Repository.getCommunities().catch(error => {
-    console.log("Could not retrieve communities. \nError: ", error);
     callback({status: false, message: error, data: null});
   })
   .then( response => {
@@ -46,11 +45,27 @@ exports.getTopLevelCollections = function(callback) {
 }
 
 exports.getCollectionsInCommunity = function(communityID, callback) {
-  
+  Repository.getCollections(communityID).catch(error => {
+    callback({status: false, message: error, data: null});
+  })
+  .then( response => {
+      if(response) {
+        var list = createCollectionList(JSON.parse(response));
+        callback({status: true, data: list});
+      }
+  });
 }
 
-exports.getObjectsInCollection = function(objectID, callback) {
-
+exports.getObjectsInCollection = function(collectionID, callback) {
+  Repository.getCollectionObjects(collectionID).catch(error => {
+    callback({status: false, message: error, data: null});
+  })
+  .then( response => {
+      if(response) {
+        var list = createCollectionList(JSON.parse(response));
+        callback({status: true, data: list});
+      }
+  });
 }
 
 exports.searchIndex = function(query, type, facets=null, page=null, callback) {
