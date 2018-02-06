@@ -63,7 +63,6 @@ exports.renderCollection = function(req, res) {
 
 	// Get all collections in this community
 	Service.getObjectsInCollection(pid, function(response) {
-			console.log("TEST collection objects: ", response);
 		data['base_url'] = config.baseUrl;
 		data['error'] = null;
 			console.log("RESP", response);
@@ -75,7 +74,7 @@ exports.renderCollection = function(req, res) {
 			data['collections'] = [];
 			data['error'] = "Could not retrieve collections.  Please contact Systems support";
 		}
-		return res.render('collections', data);
+		return res.render('objects', data);
 	});
 }
 

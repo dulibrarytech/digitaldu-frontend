@@ -504,6 +504,14 @@ footer {
     /*height: 180px;*/
 }
 
+dd.object-tn-title {
+	margin-top: 1em;
+}
+
+dd.object-tn-title > a {
+	color: #181818;
+}
+
 dl {
     display: block;
     -webkit-margin-before: 1em;
@@ -599,7 +607,7 @@ dl[class$=collection] dd.basic-collection-caption a:hover {
 }
 
 .basic-collection-grid dd {
-    margin: 0;
+    margin: 1em 0 2em 0;
     padding: 0;
 }
 
