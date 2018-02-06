@@ -60,9 +60,10 @@ exports.renderCommunity = function(req, res) {
 exports.renderCollection = function(req, res) {
 	var data = {},
 		pid = req.params.pid;
-		
+
 	// Get all collections in this community
 	Service.getObjectsInCollection(pid, function(response) {
+			console.log("TEST collection objects: ", response);
 		data['base_url'] = config.baseUrl;
 		data['error'] = null;
 			console.log("RESP", response);

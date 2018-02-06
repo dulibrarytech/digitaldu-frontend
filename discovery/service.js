@@ -36,7 +36,8 @@ var createItemList= function(items) {
       
     // This is a list of communities
     if(item.pid) {
-      tn = Repository.getCollectionTN(item.pid);
+      // tn = Repository.getCollectionTN(item.pid);
+      tn = Repository.getObjectTN(item.pid);
       pid = item.pid
     }
     // This is a list of objects
