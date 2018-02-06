@@ -1,0 +1,35 @@
+<% include partials/header %>
+
+<div id="main">
+	<span id="site-title">Special Collections @ DU</span>
+
+	<% include partials/banner %>
+
+	<% include partials/search %>
+
+	<div id="content">
+		<div id="pagination-header">
+			<span><a href="#">1</a><a href="#">2</a><a href="#">Next ></a><a href="#">Last >></a></span>
+		</div>
+		
+		<div class="basic-collection-view">
+		  	<div class="basic-collection-grid clearfix">
+
+		  		<% if(error) { %>
+		  			<h4><%- error %></h4>
+		  		<% } %>
+
+				<% for (var i = 0; i < collections.length; i++) { %>
+				    <dl class="">
+				        <dt class=""><a href="<%= objectPath %>/<%= collections[i].pid %>"><img src="<%= collections[i].tn %>" /></a></dt>
+				        <dd class="object-tn-title"><a href=<%= objectPath %>/<%= collections[i].pid %>"><%- collections[i].title %></a></dd>
+				    </dl>
+				<% } %>
+
+			</div>
+		</div>
+
+	</div> <!-- content -->
+</div>
+
+<% include partials/footer %>
