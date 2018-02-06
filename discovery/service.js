@@ -204,7 +204,8 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
           for(var result of response.hits.hits) {
             // Convert metadata json to object
 
-            tn = Repository.getDatastreamUrl("tn", result._source.pid.replace('_', ':'));
+            tn = FedoraRepository.getDatastreamUrl("tn", result._source.pid.replace('_', ':'));
+            //tn = Repository.getDatastreamUrl("tn", result._source.pid.replace('_', ':'));
             results.push({
               title: result._source.title,
               namePersonal: result._source.namePersonal,

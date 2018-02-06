@@ -43,6 +43,8 @@ module.exports = {
      */
     largeImageViewer: "openseadragon",
 
+    openseadragonImagePath: "libs/openseadragon/images/",
+
     /*
      * List of fields to search.  These will appear in 'Search Type' dropdown list
      * "Search type name": Index field to search"

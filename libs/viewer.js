@@ -54,8 +54,9 @@ function getAudioPlayer(objectData) {
 	var player = '<div id="audio-player" class="viewer-section">', tn, stream;
 	var extension = "mp3";
 
-	tn = Repository.getObjectTN(objectData.pid);
-	stream = FedoraRepository.getDatastreamUrl("audio", objectData.pid);
+	tn = FedoraRepository.getDatastreamUrl("tn", objectData.pid);
+	//tn = Repository.getObjectTN(objectData.pid);
+	stream = Repository.getDatastreamUrl("mp3", objectData.pid, "audio");
 
 	// Local test data
 	// tn = 'http://localhost:9006/assets/img/dev/MY_VIDEO_POSTER.jpg';
@@ -92,7 +93,8 @@ function getVideoViewer(objectData) {
 	var viewer = '<div id="video-viewer" class="viewer-section">', tn, stream;
 	var extension = "mp4";
 
-	tn = Repository.getDatastreamUrl("tn", objectData.pid);
+	tn = FedoraRepository.getDatastreamUrl("tn", objectData.pid);
+	//tn = Repository.getDatastreamUrl("tn", objectData.pid);
 		console.log("TEST tn", tn);
 		console.log("TEST object data", objectData);
 
@@ -139,7 +141,7 @@ function getVideoViewer(objectData) {
 function getSmallImageViewer(objectData) {
 	var viewer = '<div id="small-image-viewer" class="viewer-section">';
 
-	var image = Repository.getDatastreamUrl("small_image", objectData.pid);
+	var image = Repository.getDatastreamUrl("jpg", objectData.pid, "image");
 
 	viewer += '<div id="viewer-content-wrapper"><img class="viewer-content" src="' + image + '"/></div>';
 	viewer += '</div>';
@@ -148,7 +150,8 @@ function getSmallImageViewer(objectData) {
 }
 
 function getLargeImageViewer(objectData) {
-	var viewer = '<div id="large-image-viewer" class="viewer-section">';
+	var viewer = '<div id="large-image-viewer" class="viewer-section">',
+		viewerImages = config.openseadragonImagePath;
 
 	if(config.largeImageViewer == "openseadragon") {
 
@@ -173,7 +176,7 @@ function getLargeImageViewer(objectData) {
 function getPDFViewer(objectData) {
 	var viewer = '<div id="pdf-viewer" class="viewer-section">';
 
-	var doc = FedoraRepository.getDatastreamUrl("pdf", objectData.pid);
+	var doc = Repository.getDatastreamUrl("pdf", objectData.pid);
 
 	if(config.pdfViewer == "browser") {
 		viewer += '<embed class="viewer-content" src="' + doc + '" height="500px" />';
