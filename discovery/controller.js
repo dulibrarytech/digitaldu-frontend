@@ -44,7 +44,7 @@ exports.renderCommunity = function(req, res) {
 	Service.getCollectionsInCommunity(id, function(response) {
 		data['base_url'] = config.baseUrl;
 		data['error'] = null;
-			console.log("RESP", response);
+
 		if(response.status) {
 			data['collections'] = response.data;
 			data['objectPath'] = "/repository/collection";
@@ -59,9 +59,23 @@ exports.renderCommunity = function(req, res) {
 
 exports.renderCollection = function(req, res) {
 	var data = {},
-		id = req.params.pid;
-
-	console.log("TEST pid", id);
+		pid = req.params.pid;
+		
+	// Get all collections in this community
+	Service.getObjectsInCollection(pid, function(response) {
+		data['base_url'] = config.baseUrl;
+		data['error'] = null;
+			console.log("RESP", response);
+		if(response.status) {
+			data['collections'] = response.data;
+			data['objectPath'] = "/repository/object";
+		}
+		else {
+			data['collections'] = [];
+			data['error'] = "Could not retrieve collections.  Please contact Systems support";
+		}
+		return res.render('collections', data);
+	});
 }
 
 exports.search = function(req, res) {

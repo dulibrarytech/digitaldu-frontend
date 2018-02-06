@@ -53,8 +53,8 @@ function getAudioPlayer(objectData) {
 	var player = '<div id="audio-player" class="viewer-section">', tn, stream;
 	var extension = "mp3";
 
-	tn = Repository.getDatastreamUrl("tn", objectData.pid);
-	stream = Repository.getDatastreamUrl("audio", objectData.pid);
+	tn = Repository.getObjectTN(objectData.pid);
+	stream = FedoraRepository.getDatastreamUrl("audio", objectData.pid);
 
 	// Local test data
 	// tn = 'http://localhost:9006/assets/img/dev/MY_VIDEO_POSTER.jpg';
@@ -91,8 +91,8 @@ function getVideoViewer(objectData) {
 	var viewer = '<div id="video-viewer" class="viewer-section">', tn, stream;
 	var extension = "mp4";
 
-	tn = Repository.getDatastreamUrl("tn", objectData.pid);
-	stream = Repository.getDatastreamUrl("video", objectData.pid);
+	tn = Repository.getObjectTN(objectData.pid);
+	stream = FedoraRepository.getDatastreamUrl("video", objectData.pid);
 		console.log("TEST video stream", stream);
 	// Local test data
 	// tn = 'http://localhost:9006/assets/img/dev/MY_VIDEO_POSTER.jpg';
@@ -162,7 +162,7 @@ function getLargeImageViewer(objectData) {
 function getPDFViewer(objectData) {
 	var viewer = '<div id="pdf-viewer" class="viewer-section">';
 
-	var doc = Repository.getDatastreamUrl("pdf", objectData.pid);
+	var doc = FedoraRepository.getDatastreamUrl("pdf", objectData.pid);
 
 	if(config.pdfViewer == "browser") {
 		viewer += '<embed class="viewer-content" src="' + doc + '" height="500px" />';

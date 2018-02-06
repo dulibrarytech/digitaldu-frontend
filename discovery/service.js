@@ -8,28 +8,47 @@ const FedoraRepository = require('../libs/repository.fedora');
 
 
 // Create thumbnail links
-var createCollectionList= function(collections) {
-  var collectionList = [], tn, pid;
-  for(var collection of collections) {
+var createItemList= function(items) {
+  var itemList = [], tn, pid, title, description, display;
+  for(var item of items) {
+      
+    if(item.display_record && typeof item.display_record == 'string') {
+        try {
+          display = JSON.parse(item.display_record);
+        }
+        catch(e) {
+          console.log("Error: invalid display record JSON on object: " + item.pid);
+          continue;
+        }
 
-    // Fetch the thumbnail
-    if(collection.pid) {
-      tn = Repository.getCollectionTN(collection.pid);
-      pid = collection.pid
+        title = display.title;
+        description = display.description || display.abstract;
     }
+      
+    // This is a list of communities
+    if(item.pid) {
+      tn = Repository.getCollectionTN(item.pid);
+      pid = item.pid
+    }
+    // This is a list of objects
+    else if(item.mime_type) {
+      tn = Repository.getObjectTN(item.pid);
+      pid = item.pid
+    }
+    // This is a list of collections
     else {
-      tn = Repository.getCommunityTN(collection.id);
-      pid = collection.id
+      tn = Repository.getCommunityTN(item.id);
+      pid = item.id
     }
 
-    collectionList.push({
+    itemList.push({
         pid: pid,
         tn: tn,
-        title: collection.title,
-        description: collection.description
+        title: title,
+        description: description
       });
   }
-  return collectionList;
+  return itemList;
 }
 
 var addTNData = function(resultArray) {
@@ -46,7 +65,7 @@ exports.getTopLevelCollections = function(callback) {
   })
   .then( response => {
       if(response) {
-        var list = createCollectionList(JSON.parse(response));
+        var list = createItemList(JSON.parse(response));
         callback({status: true, data: list});
       }
   });
@@ -58,7 +77,7 @@ exports.getCollectionsInCommunity = function(communityID, callback) {
   })
   .then( response => {
       if(response) {
-        var list = createCollectionList(JSON.parse(response));
+        var list = createItemList(JSON.parse(response));
         callback({status: true, data: list});
       }
   });
@@ -70,7 +89,7 @@ exports.getObjectsInCollection = function(collectionID, callback) {
   })
   .then( response => {
       if(response) {
-        var list = createCollectionList(JSON.parse(response));
+        var list = createItemList(JSON.parse(response));
         callback({status: true, data: list});
       }
   });

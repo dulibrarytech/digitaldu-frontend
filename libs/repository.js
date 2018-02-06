@@ -63,10 +63,6 @@ exports.getCommunity = function(communityID) {
 	});
 }
 
-exports.getCommunityTN = function(communityID) {
-	return protocol + domain + "/api/community/tn?community_id=" + communityID;
-}
-
 exports.getAllCollections = function() {
 	return new Promise(function(fulfill, reject) {
 		var url = protocol + domain + "/api/collections";
@@ -95,7 +91,30 @@ exports.getCollections = function(communityID) {
 	});
 }
 
+exports.getCollectionObjects = function(collectionID) {
+	return new Promise(function(fulfill, reject) {
+		var url = protocol + domain + "/api/objects?pid=" + collectionID;
+		request(url, function (error, response, body) {
+			if(error) {
+				reject(error);
+			}
+			else {
+				fulfill(body);
+			}
+		});
+	});
+}
+
 exports.getCollectionTN = function(collectionID) {
 	return protocol + domain + "/api/collection/tn?collection_id=" + collectionID;
 }
+
+exports.getCommunityTN = function(communityID) {
+	return protocol + domain + "/api/community/tn?community_id=" + communityID;
+}
+
+exports.getObjectTN = function(objectID) {
+	return protocol + domain + "/api/object/tn?pid=" + objectID;
+}
+
 
