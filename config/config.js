@@ -73,7 +73,7 @@ module.exports = {
      */
     summaryDisplay: {
         "Title": "title",
-        "Description": "description"
+        "Description": "abstract"
     },
 
     /*

@@ -8,15 +8,35 @@ var config = require('../config/config');
 
 exports.createSummaryDisplayObject = function(result) {
 	var displayObj = {};
-	var displayFields = config.summaryDisplay;
-		console.log("TEST create summary function gets result:", result);
-	var key, field;
+	var displayFields = config.summaryDisplay,
+		displayRecord = {};
+
+	if(result.display_record) {
+		try {
+			displayRecord = JSON.parse(result.display_record);
+		}
+		catch(e) {
+			console.log("Error: invalid object display record for object: " + result.pid);
+		}
+	}
+
+	var key, field, value;
 	for(key in displayFields) {
 		field = displayFields[key];
-		
-		if(typeof result[field] != 'undefined' && result[field] != '') {
-			displayObj[key] = result[field];
+
+		// If object field is null or empty, look for the field in the display record
+		if(!result[field] || result[field] == "") {
+			value = displayRecord[field];
 		}
+		else {
+			value = result[field];
+		}
+		
+
+
+		//if(typeof value != 'undefined' && value != '') {
+			displayObj[key] = value;
+		//}
 	}
 
 	return displayObj;
@@ -24,10 +44,18 @@ exports.createSummaryDisplayObject = function(result) {
 
 exports.createMetadataDisplayObject = function(result) {
 	var displayObj = {};
-	var displayFields = config.metadataDisplay;
+	var displayFields = config.metadataDisplay,
+		displayRecord = {};
 
 	// Get metadata object from result display record json
-	var displayRecord = JSON.parse(result.display_record);
+	if(result.display_record) {
+		try {
+			displayRecord = JSON.parse(result.display_record);
+		}
+		catch(e) {
+			console.log("Error: invalid object display record for object: " + result.pid);
+		}
+	}
 
 	var key, field;
 	for(key in displayFields) {
