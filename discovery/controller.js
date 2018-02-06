@@ -118,6 +118,7 @@ exports.search = function(req, res) {
 
 		data['base_url'] = config.baseUrl;
 		if(response.status) {
+				console.log("TEST search results: ", response.data.results);
 			// Get data for the view
 			var pagination = Helper.paginateResults(response.data.results, page);
 			//data['results'] = response.data.results;

@@ -505,7 +505,7 @@ footer {
 }
 
 dd.object-tn-title {
-	margin-top: 1em;
+	margin-top: 1em !important;
 }
 
 dd.object-tn-title > a {
@@ -607,7 +607,7 @@ dl[class$=collection] dd.basic-collection-caption a:hover {
 }
 
 .basic-collection-grid dd {
-    margin: 1em 0 2em 0;
+    margin: 0;
     padding: 0;
 }
 

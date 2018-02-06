@@ -115,7 +115,6 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
     // Type specific search (if a searchfield is selected)
 
     if(Array.isArray(type)) {
-
         //query = "*" + query + "*";
         type.forEach(function(type) {
           var q = {};
@@ -194,8 +193,10 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
         callback({status: false, message: error, data: null});
       }
       else {
-        console.log("Have response", response);
-        console.log("Have result:", response.hits.hits[0]);
+       // console.log("Have response", response);
+        //console.log("Have result:", response.hits.hits[0]);
+        var displayRecord = {}, title = "", description = "";
+
         // Return the aggs for the facet display
         responseData['facets'] = response.aggregations;
 
@@ -203,14 +204,36 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
           // Build the search results object
           var results = [], tn;
           for(var result of response.hits.hits) {
-            // Convert metadata json to object
 
             tn = FedoraRepository.getDatastreamUrl("tn", result._source.pid.replace('_', ':'));
             //tn = Repository.getDatastreamUrl("tn", result._source.pid.replace('_', ':'));
+
+            // Get Display Record data
+            if(result._source.display_record && typeof result._source.display_record == 'string') {
+              displayRecord = JSON.parse(result._source.display_record);
+            }
+
+            // Find the title
+            if(result._source.title && result._source.title != "") {
+              title = result._source.title;
+            }
+            else if(displayRecord.title &&  displayRecord.title != "") {
+              title = displayRecord.title;
+            }
+
+            // Find the description
+            if(result._source.modsDescription && result._source.modsDescription != "") {
+              description = result._source.modsDescription;
+            }
+            else if(displayRecord.abstract && displayRecord.abstract != "") {
+              description = displayRecord.abstract;
+            }
+
+            // Push a new result object to the results array
             results.push({
-              title: result._source.title,
+              title: title,
               namePersonal: result._source.namePersonal,
-              abstract: result._source.modsDescription.substring(0,config.resultDescriptionMaxLength),
+              abstract: description,
               tn: tn,
               pid: result._source.pid
             });
