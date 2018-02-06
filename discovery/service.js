@@ -12,7 +12,12 @@ var createItemList= function(items) {
   var itemList = [], tn, pid, title, description, display;
   for(var item of items) {
       
-    if(item.display_record && typeof item.display_record == 'string') {
+    // 
+    if(item.title && item.title != "") {
+      title = item.title;
+      description = item.description || "";
+    }
+    else if(item.display_record && typeof item.display_record == 'string') {
         try {
           display = JSON.parse(item.display_record);
         }
@@ -21,8 +26,12 @@ var createItemList= function(items) {
           continue;
         }
 
-        title = display.title;
-        description = display.description || display.abstract;
+        title = display.title || "";
+        description = display.description || display.abstract || "";
+    }
+    else {
+      title = "";
+      description = "";
     }
       
     // This is a list of communities
@@ -64,6 +73,7 @@ exports.getTopLevelCollections = function(callback) {
     callback({status: false, message: error, data: null});
   })
   .then( response => {
+        console.log("TEST community objects: ", response);
       if(response) {
         var list = createItemList(JSON.parse(response));
         callback({status: true, data: list});

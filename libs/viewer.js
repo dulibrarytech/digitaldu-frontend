@@ -23,6 +23,7 @@ exports.getObjectViewer = function(object) {
  			break;
 
  		case "video/mp4":
+ 		case "video/quicktime":
  			viewer = getVideoViewer(object);
  			break;
 
@@ -91,12 +92,21 @@ function getVideoViewer(objectData) {
 	var viewer = '<div id="video-viewer" class="viewer-section">', tn, stream;
 	var extension = "mp4";
 
-	tn = Repository.getObjectTN(objectData.pid);
-	stream = FedoraRepository.getDatastreamUrl("video", objectData.pid);
+	tn = Repository.getDatastreamUrl("tn", objectData.pid);
+		console.log("TEST tn", tn);
+		console.log("TEST object data", objectData);
+
+	if(objectData.mime_type == "video/mp4") {
+		stream = Repository.getDatastreamUrl("mp4", objectData.pid, "video");
+	}
+	else if(objectData.mime_type == "video/quicktime") {
+		stream = Repository.getDatastreamUrl("mov", objectData.pid, "video");
+	}
+	else {
+		console.log("Error: Incorrect object mime type for object: " + objectData.pid);
+	}
+	//stream = FedoraRepository.getDatastreamUrl("video", objectData.pid);
 		console.log("TEST video stream", stream);
-	// Local test data
-	// tn = 'http://localhost:9006/assets/img/dev/MY_VIDEO_POSTER.jpg';
-	// stream = 'http://localhost:9006/assets/img/dev/small.mp4';
 
 	if(config.videoViewer == "videojs") {
 		viewer += '<video id="my-video" class="video-js" controls preload="auto" width="640" height="264" poster="' + tn + '" data-setup="{}"><source src="' + stream + '" type="video/mp4"><p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that<a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p></video>';
@@ -119,8 +129,9 @@ function getVideoViewer(objectData) {
 		viewer += '});</script>';
 	}
 	else {
-		viewer += 'Viewer is down temporarily.  Please check configuration/div>';
+		viewer += 'No video viewer is enabled.  Please check configuration</div>';
 	}
+		console.log("TEST viewer: ", viewer);
 
 	return viewer;
 }

@@ -9,30 +9,35 @@ const protocol = "http://",
 	  domain = process.env.REPOSITORY_HOST || "libspec01-vlp.du.edu:8080";
 
 
-exports.getDatastreamUrl = function(objectType, datastream, pid) {
+exports.getDatastreamUrl = function(datastream, pid, objectType = "") {
+
 	var dsID = "";
 	switch(datastream) {
 		case "tn":
 			dsID = "tn";
 			break;
-		case "small_image":
-			dsID = "small_image";
+		case "jpg":
+			dsID = "jpg";
 			break;
-		case "large_image":
-			dsID = "large_image";
+		case "jp2":
+			dsID = "jp2";
 			break;
-		case "audio":
-			dsID = "audio";
-			break;
-		case "video":
-			dsID = "video";
+		case "tiff":
+			dsID = "tiff";
 			break;
 		case "pdf":
 			dsID = "pdf";
 			break;
+		case "mp4":
+			dsID = "mp4";
+			break;
+		case "mov":
+			dsID = "mov";
+			break;
 	}
+	objectType = objectType == "" ? "" : objectType + "/";
 
-	return protocol + domain + "/" + objectType + "?pid=" + pid + "&type=" + datastream;
+	return protocol + domain + "/api/object/" + objectType + dsID + "?pid=" + pid;
 }
 
 exports.getCommunities = function() {
