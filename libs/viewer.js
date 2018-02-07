@@ -56,7 +56,7 @@ function getAudioPlayer(objectData) {
 
 	tn = FedoraRepository.getDatastreamUrl("tn", objectData.pid);
 	//tn = Repository.getObjectTN(objectData.pid);
-	stream = Repository.getDatastreamUrl("mp3", objectData.pid, "audio");
+	stream = Repository.getDatastreamUrl("mp3", objectData.pid);
 
 	// Local test data
 	// tn = 'http://localhost:9006/assets/img/dev/MY_VIDEO_POSTER.jpg';
@@ -95,21 +95,17 @@ function getVideoViewer(objectData) {
 
 	tn = FedoraRepository.getDatastreamUrl("tn", objectData.pid);
 	//tn = Repository.getDatastreamUrl("tn", objectData.pid);
-		console.log("TEST tn", tn);
-		console.log("TEST object data", objectData);
 
 	if(objectData.mime_type == "video/mp4") {
-		stream = Repository.getDatastreamUrl("mp4", objectData.pid, "video");
+		stream = Repository.getDatastreamUrl("mp4", objectData.pid);
 		//stream = FedoraRepository.getDatastreamUrl("video", objectData.pid);
 	}
-	
 	else if(objectData.mime_type == "video/quicktime") {
-		stream = Repository.getDatastreamUrl("mov", objectData.pid, "video");
+		stream = Repository.getDatastreamUrl("mov", objectData.pid);
 	}
 	else {
 		console.log("Error: Incorrect object mime type for object: " + objectData.pid);
 	}
-	//stream = FedoraRepository.getDatastreamUrl("video", objectData.pid);
 		console.log("TEST video stream", stream);
 
 	if(config.videoViewer == "videojs") {
@@ -143,7 +139,7 @@ function getVideoViewer(objectData) {
 function getSmallImageViewer(objectData) {
 	var viewer = '<div id="small-image-viewer" class="viewer-section">';
 
-	var image = Repository.getDatastreamUrl("jpg", objectData.pid, "image");
+	var image = Repository.getDatastreamUrl("jpg", objectData.pid);
 
 	viewer += '<div id="viewer-content-wrapper"><img class="viewer-content" src="' + image + '"/></div>';
 	viewer += '</div>';

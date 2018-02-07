@@ -9,30 +9,39 @@ const protocol = "http://",
 	  domain = process.env.REPOSITORY_HOST || "libspec01-vlp.du.edu:8080";
 
 
-exports.getDatastreamUrl = function(datastream, pid, objectType = "") {
+exports.getDatastreamUrl = function(datastream, pid) {
 
-	var dsID = "";
+	var dsID = "", objectType = "";
 	switch(datastream) {
 		case "tn":
 			dsID = "tn";
 			break;
+		case "mp3":
+			dsID = "mp3";
+			objectType = "audio";
+			break;
 		case "jpg":
 			dsID = "jpg";
+			objectType = "image";
 			break;
 		case "jp2":
 			dsID = "jp2";
+			objectType = "image";
 			break;
 		case "tiff":
 			dsID = "tiff";
+			objectType = "image";
 			break;
 		case "pdf":
 			dsID = "pdf";
 			break;
 		case "mp4":
 			dsID = "mp4";
+			objectType = "video";
 			break;
 		case "mov":
 			dsID = "mov";
+			objectType = "video";
 			break;
 	}
 	objectType = objectType == "" ? "" : objectType + "/";
