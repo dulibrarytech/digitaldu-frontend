@@ -21,15 +21,15 @@ module.exports = {
 
     /* 
      * Viewer to play audio files
-     * [browser | [ext audio lib]]
+     * [browser | jwplayer | [ext audio lib]]
      */
-    audioPlayer: "jwplayer",
+    audioPlayer: "browser",
 
     /* 
      * Viewer to display video files
      * [videojs | jwplayer]
      */
-    videoViewer: "jwplayer",
+    videoViewer: "videojs",
 
     /* 
      * Viewer to display video files

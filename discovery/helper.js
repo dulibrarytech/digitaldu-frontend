@@ -93,7 +93,7 @@ exports.paginateResults = function(results, page) {
 		response.data['pageStart'] = offset + 1;
 	}
 
-	console.log("TEST Results out", response);
+		//console.log("TEST paginator: Results out", response);
 
 	return response;
 }

@@ -162,9 +162,10 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
       field = {};
       field['field'] = config.facets[key];
       facetAggregations[key] = {
-        terms: field
+        "terms": field
       };
     }
+      console.log("TEST facet aggs:", facetAggregations);
 
     // Elasticsearch query object
     var data = {  
@@ -178,9 +179,11 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
               "should": matchFields
             }
         },
-        aggs: {}
+        aggregations: {}
       }
     }
+
+      console.log("TEST SVC search data in:", data);
 
     if(facets) {
       data.body.query.bool["minimum_should_match"] = count+1;
@@ -199,6 +202,7 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
 
         // Return the aggs for the facet display
         responseData['facets'] = response.aggregations;
+          //console.log("TEST SVC search results response returned:", response);
 
         try {
           // Build the search results object
@@ -275,3 +279,43 @@ exports.fetchObjectByPid = function(pid, callback) {
       }
   });
 }
+
+exports.getFacets = function (callback) {
+
+    // Build elasticsearch aggregations object from config facet list
+    var aggs = {}, field;
+    for(var key in config.facets) {
+      field = {};
+      field['field'] = config.facets[key];
+      aggs[key] = {
+        terms: field
+      };
+    }
+      console.log("TEST aggs", aggs);
+    es.search({
+        body: {
+            "size": 0,
+            "query": {
+                "match_all": {}
+            },
+            "aggregations": {
+              "creator": {
+                    "terms": {
+                        "field": "creator"
+                    }
+                },
+                "type": {
+                    "terms": {
+                        "field": "type"
+                    }
+                }
+            }
+        }
+    }).then(function (body) {
+        callback(body.aggregations);
+    }, function (error) {
+        callback(error);
+    });
+};
+
+// body.aggregations

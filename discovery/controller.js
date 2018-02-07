@@ -7,12 +7,13 @@ var async = require('async'),
     Viewer = require('../libs/viewer'),
     Facets = require('../libs/facets');
 
-function getFacets(data, callback) {
+exports.getFacets = function(req, res) {
 
     Service.getFacets(function (facets) {
-        var facetObj = Facets.create(facets);
-        data.push(facetObj);
-        callback(data);
+        if(typeof facets == 'string') {
+        	console.log("Error");
+        }
+        res.send(facets);
     });
 }
 
@@ -107,7 +108,7 @@ exports.search = function(req, res) {
 
 	// TODO: Get page value from search query
 	// Update with ES pagination 
-
+		console.log("TEST pre-search: facets:", facets);
 	Service.searchIndex(query, type, facets, page, function(response) {
 		var data = {
 			facets: null,
@@ -116,13 +117,32 @@ exports.search = function(req, res) {
 			pageData: null
 		};
 
+		// Dummy facets for demo
+		var dummyType = [], dummyCreator = [];
+		dummyType.push({
+			"key": "moving image",
+			"doc_count": "4"
+		});
+		dummyType.push({
+			"key": "still image",
+			"doc_count": "2"
+		});
+		var dummyFacets = {
+		    "type": {
+		        "doc_count_error_upper_bound": 0,
+		        "sum_other_doc_count": 0,
+		        "buckets": dummyType
+		    }
+		}
+
 		data['base_url'] = config.baseUrl;
 		if(response.status) {
-				console.log("TEST search results: ", response.data.results);
 			// Get data for the view
 			var pagination = Helper.paginateResults(response.data.results, page);
 			//data['results'] = response.data.results;
-			data['facets'] = Facets.create(response.data.facets);
+
+			//data['facets'] = Facets.create(response.data.facets);	// PROD
+			data['facets'] = Facets.create(dummyFacets);			// DEV
 			data['facet_breadcrumb_trail'] = Facets.getFacetBreadcrumbObject(facets);  // Param: the facets from the search request params
 
 			data['results'] = pagination.results;

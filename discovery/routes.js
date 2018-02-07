@@ -29,6 +29,10 @@ module.exports = function (app) {
     // Search the discovery index
     app.route('/repository/search')
         .get(Discovery.search);
+
+    // Search the discovery index
+    app.route('/repository/facets')
+        .get(Discovery.getFacets);
 };
 
 
