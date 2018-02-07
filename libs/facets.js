@@ -30,7 +30,6 @@ exports.getFacetBreadcrumbObject = function(selectedFacets) {
 };
 
 function createList(facet, data) {
-        console.log("Data in", data);
     var i;
     var html = '';
     for (i = 0; i < data.length; i++) {

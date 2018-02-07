@@ -286,7 +286,7 @@ exports.getFacets = function (callback) {
     var aggs = {}, field;
     for(var key in config.facets) {
       field = {};
-      field['field'] = config.facets[key];
+      field['field'] = config.facets[key] + ".keyword";
       aggs[key] = {
         terms: field
       };
@@ -298,18 +298,7 @@ exports.getFacets = function (callback) {
             "query": {
                 "match_all": {}
             },
-            "aggregations": {
-              "creator": {
-                    "terms": {
-                        "field": "creator"
-                    }
-                },
-                "type": {
-                    "terms": {
-                        "field": "type"
-                    }
-                }
-            }
+            "aggregations": aggs
         }
     }).then(function (body) {
         callback(body.aggregations);

@@ -87,7 +87,7 @@ exports.search = function(req, res) {
 	var typeVal = req.query.type, type;
 	var page = req.query.page || 1;
 
-	// If search all, build array of types from config settings.  If type search, 'type'is passed into search function as a string.
+	// "Search field selection": If "search all", build array of types from config settings.  If type search, 'type'is passed into search function as a string.
 	if(typeVal == 'All') {
 		type = [];
 		config.searchFields.forEach(function(field) {	// TODO: Convert to for loop
@@ -137,9 +137,9 @@ exports.search = function(req, res) {
 
 		data['base_url'] = config.baseUrl;
 		if(response.status) {
+
 			// Get data for the view
 			var pagination = Helper.paginateResults(response.data.results, page);
-			//data['results'] = response.data.results;
 
 			//data['facets'] = Facets.create(response.data.facets);	// PROD
 			data['facets'] = Facets.create(dummyFacets);			// DEV
