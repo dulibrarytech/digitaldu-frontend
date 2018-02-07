@@ -611,6 +611,16 @@ dl[class$=collection] dd.basic-collection-caption a:hover {
     padding: 0;
 }
 
+#large-image-viewer-loading {
+    position: relative;
+    top: 12em;
+    left: 7em;
+}
+
+img.thumbnail-image {
+    max-width: 75%;
+}
+ 
 /* End collection grid **************************************************************************************************************************/
 
 

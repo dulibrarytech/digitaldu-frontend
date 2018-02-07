@@ -21,7 +21,7 @@
 
 				<% for (var i = 0; i < collections.length; i++) { %>
 				    <dl class="">
-				        <dt class=""><a href="<%= objectPath %>/<%= collections[i].pid %>"><img src="<%= collections[i].tn %>" /></a></dt>
+				        <dt class=""><a href="<%= objectPath %>/<%= collections[i].pid %>"><img class="thumbnail-image" src="<%= collections[i].tn %>" /></a></dt>
 				        <dd class="object-tn-title"><a href=<%= objectPath %>/<%= collections[i].pid %>"><%- collections[i].title %></a></dd>
 				    </dl>
 				<% } %>

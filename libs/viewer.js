@@ -157,7 +157,7 @@ function getLargeImageViewer(objectData) {
 
 	if(config.largeImageViewer == "openseadragon") {
 
-		viewer += '<div id="viewer-content-wrapper"><div id="openseadragon1" class="viewer-content" style="width: 96%; height: 420px; margin: 0 auto"></div>';
+		viewer += '<div id="viewer-content-wrapper"><div id="openseadragon1" class="viewer-content" style="width: 96%; height: 420px; margin: 0 auto"><span id="large-image-viewer-loading">Loading image...</span></div>';
 		viewer += '</div>';
 
 		viewer += '<script>var viewer = OpenSeadragon({'
