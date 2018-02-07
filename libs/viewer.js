@@ -100,7 +100,9 @@ function getVideoViewer(objectData) {
 
 	if(objectData.mime_type == "video/mp4") {
 		stream = Repository.getDatastreamUrl("mp4", objectData.pid, "video");
+		//stream = FedoraRepository.getDatastreamUrl("video", objectData.pid);
 	}
+	
 	else if(objectData.mime_type == "video/quicktime") {
 		stream = Repository.getDatastreamUrl("mov", objectData.pid, "video");
 	}
@@ -174,9 +176,9 @@ function getLargeImageViewer(objectData) {
 }
 
 function getPDFViewer(objectData) {
-	var viewer = '<div id="pdf-viewer" class="viewer-section">';
 
-	var doc = Repository.getDatastreamUrl("pdf", objectData.pid);
+	var viewer = '<div id="pdf-viewer" class="viewer-section">';
+	var doc = FedoraRepository.getDatastreamUrl("pdf", objectData.pid);
 
 	if(config.pdfViewer == "browser") {
 		viewer += '<embed class="viewer-content" src="' + doc + '" height="500px" />';

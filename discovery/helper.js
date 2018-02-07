@@ -7,8 +7,8 @@
 var config = require('../config/config');
 
 exports.createSummaryDisplayObject = function(result) {
-	var displayObj = {};
-	var displayFields = config.summaryDisplay,
+	var displayObj = {},
+	    displayFields = config.summaryDisplay,
 		displayRecord = {};
 
 	if(result.display_record) {
@@ -31,20 +31,15 @@ exports.createSummaryDisplayObject = function(result) {
 		else {
 			value = result[field];
 		}
-		
-
-
-		//if(typeof value != 'undefined' && value != '') {
-			displayObj[key] = value;
-		//}
+		displayObj[key] = value;
 	}
 
 	return displayObj;
 }
 
 exports.createMetadataDisplayObject = function(result) {
-	var displayObj = {};
-	var displayFields = config.metadataDisplay,
+	var displayObj = {},
+	    displayFields = config.metadataDisplay,
 		displayRecord = {};
 
 	// Get metadata object from result display record json
@@ -64,6 +59,10 @@ exports.createMetadataDisplayObject = function(result) {
 		if(typeof displayRecord[field] != 'undefined' && result[field] != '') {
 			displayObj[key] = displayRecord[field];
 		}
+	}
+
+	if(Object.keys(displayObj).length === 0 && displayObj.constructor === Object) {
+		displayObj["No display available"] = "";
 	}
 
 	return displayObj;
