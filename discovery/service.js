@@ -155,12 +155,13 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
         }
       }
     }
+      console.log("TEST matchfields:", matchFields);
 
     // Build elasticsearch aggregations object from config facet list
     var facetAggregations = {}, field;
     for(var key in config.facets) {
       field = {};
-      field['field'] = config.facets[key];
+      field['field'] = config.facets[key] + ".keyword";
       facetAggregations[key] = {
         "terms": field
       };
@@ -179,7 +180,7 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
               "should": matchFields
             }
         },
-        aggregations: {}
+        aggregations: facetAggregations
       }
     }
 
@@ -202,7 +203,7 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
 
         // Return the aggs for the facet display
         responseData['facets'] = response.aggregations;
-          //console.log("TEST SVC search results response returned:", response);
+          console.log("TEST SVC search results response returned:", response);
 
         try {
           // Build the search results object

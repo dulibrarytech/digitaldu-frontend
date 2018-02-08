@@ -140,9 +140,10 @@ exports.search = function(req, res) {
 
 			// Get data for the view
 			var pagination = Helper.paginateResults(response.data.results, page);
-
-			//data['facets'] = Facets.create(response.data.facets);	// PROD
-			data['facets'] = Facets.create(dummyFacets);			// DEV
+				console.log("TEST facets from search:", response);
+			data['facets'] = Facets.create(response.data.facets);	// PROD
+			//data['facets'] = Facets.create(dummyFacets);			// DEV
+				console.log("TEST facet object:", data['facets']);
 			data['facet_breadcrumb_trail'] = Facets.getFacetBreadcrumbObject(facets);  // Param: the facets from the search request params
 
 			data['results'] = pagination.results;
