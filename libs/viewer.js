@@ -106,7 +106,7 @@ function getVideoViewer(objectData) {
 	else {
 		console.log("Error: Incorrect object mime type for object: " + objectData.pid);
 	}
-		console.log("TEST video stream", stream);
+	console.log("Loading video stream: ", stream);
 
 	if(config.videoViewer == "videojs") {
 		viewer += '<video id="my-video" class="video-js" controls preload="auto" width="640" height="264" poster="' + tn + '" data-setup="{}"><source src="' + stream + '" type="video/mp4"><p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that<a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p></video>';
@@ -131,7 +131,6 @@ function getVideoViewer(objectData) {
 	else {
 		viewer += 'No video viewer is enabled.  Please check configuration</div>';
 	}
-		console.log("TEST viewer: ", viewer);
 
 	return viewer;
 }
@@ -153,7 +152,7 @@ function getLargeImageViewer(objectData) {
 
 	if(config.largeImageViewer == "openseadragon") {
 
-		viewer += '<div id="viewer-content-wrapper"><div id="openseadragon1" class="viewer-content" style="width: 96%; height: 420px; margin: 0 auto"><span id="large-image-viewer-loading">Loading image...</span></div>';
+		viewer += '<div id="viewer-content-wrapper"><div id="openseadragon1" class="viewer-content" style="width: 96%; height: 420px; margin: 0 auto"><span id="large-image-viewer-loading"></span></div>';
 		viewer += '</div>';
 
 		viewer += '<script>var viewer = OpenSeadragon({'
@@ -174,10 +173,11 @@ function getLargeImageViewer(objectData) {
 function getPDFViewer(objectData) {
 
 	var viewer = '<div id="pdf-viewer" class="viewer-section">';
-	var doc = FedoraRepository.getDatastreamUrl("pdf", objectData.pid);
+	var doc = Repository.getDatastreamUrl("pdf", objectData.pid);
+		console.log("TEST pdf src:", doc);
 
 	if(config.pdfViewer == "browser") {
-		viewer += '<embed class="viewer-content" src="' + doc + '" height="500px" />';
+		viewer += '<iframe class="viewer-content" src="' + doc + '" height="500px" />';
 		viewer += '</div>';
 	}
 	else {

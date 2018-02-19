@@ -74,7 +74,6 @@ exports.getTopLevelCollections = function(callback) {
     callback({status: false, message: error, data: null});
   })
   .then( response => {
-        console.log("TEST community objects: ", response);
       if(response) {
         var list = createItemList(JSON.parse(response));
         callback({status: true, data: list});
@@ -112,8 +111,9 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
     var field = { match: "" };
     var matchFields = [], results = [];
 
-    // Type specific search (if a searchfield is selected)
+      
 
+    // Type specific search (if a searchfield is selected)
     if(Array.isArray(type)) {
         //query = "*" + query + "*";
         type.forEach(function(type) {
@@ -135,27 +135,27 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
         });
     }
 
+    // TODO move to searchFacet() function
     // If facet data is present, add it to the search
-    if(facets) {
-        console.log("TEST have FACETS");
-      var matchFacetFields = [], indexKey, count=0;
-      for(var key in facets) {
-        for(var index of facets[key]) {
-          var q = {};
-          count++;
+    // if(facets) {
+    //   var matchFacetFields = [], indexKey, count=0;
+    //   for(var key in facets) {
+    //     for(var index of facets[key]) {
+    //       var q = {};
+    //       count++;
 
-          // Get the index key from the config facet list, using the facet name 
-          indexKey = config.facets[key];
+    //       // Get the index key from the config facet list, using the facet name 
+    //       indexKey = config.facets[key];
 
-          // Add to the main ES query object
-          q[indexKey] = index;
-          matchFields.push({
-            "match": q
-          });
-        }
-      }
-    }
-      console.log("TEST matchfields:", matchFields);
+    //       // Add to the main ES query object
+    //       q[indexKey] = index;
+    //       matchFields.push({
+    //         "match": q
+    //       });
+    //     }
+    //   }
+    // }
+    //   console.log("TEST matchfields:", matchFields);
 
     // Build elasticsearch aggregations object from config facet list
     var facetAggregations = {}, field;
@@ -166,7 +166,6 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
         "terms": field
       };
     }
-      console.log("TEST facet aggs:", facetAggregations);
 
     // Elasticsearch query object
     var data = {  
@@ -184,8 +183,6 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
       }
     }
 
-      console.log("TEST SVC search data in:", data);
-
     if(facets) {
       data.body.query.bool["minimum_should_match"] = count+1;
     }
@@ -197,13 +194,10 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
         callback({status: false, message: error, data: null});
       }
       else {
-       // console.log("Have response", response);
-        //console.log("Have result:", response.hits.hits[0]);
         var displayRecord = {}, title = "", description = "";
 
         // Return the aggs for the facet display
         responseData['facets'] = response.aggregations;
-          console.log("TEST SVC search results response returned:", response);
 
         try {
           // Build the search results object
@@ -292,7 +286,6 @@ exports.getFacets = function (callback) {
         terms: field
       };
     }
-      console.log("TEST aggs", aggs);
     es.search({
         body: {
             "size": 0,
@@ -308,4 +301,29 @@ exports.getFacets = function (callback) {
     });
 };
 
-// body.aggregations
+exports.searchFacets = function (search, callback) {
+
+    client.search({
+            body: {
+                "query": {
+                    "bool": {
+                        "must": {
+                            "multi_match": {
+                                "operator": "and",
+                                "fields": [
+                                    search.facet   //<-- facet_field
+                                ],
+                                "query": search.q // q
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ).then(function (body) {
+        // body.aggregations
+        callback(body);
+    }, function (error) {
+        callback(error);
+    });
+};

@@ -108,7 +108,6 @@ exports.search = function(req, res) {
 
 	// TODO: Get page value from search query
 	// Update with ES pagination 
-		console.log("TEST pre-search: facets:", facets);
 	Service.searchIndex(query, type, facets, page, function(response) {
 		var data = {
 			facets: null,
@@ -140,10 +139,9 @@ exports.search = function(req, res) {
 
 			// Get data for the view
 			var pagination = Helper.paginateResults(response.data.results, page);
-				console.log("TEST facets from search:", response);
 			data['facets'] = Facets.create(response.data.facets);	// PROD
 			//data['facets'] = Facets.create(dummyFacets);			// DEV
-				console.log("TEST facet object:", data['facets']);
+
 			data['facet_breadcrumb_trail'] = Facets.getFacetBreadcrumbObject(facets);  // Param: the facets from the search request params
 
 			data['results'] = pagination.results;
