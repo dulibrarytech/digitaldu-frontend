@@ -5,6 +5,7 @@ const config = require('../config/config');
 const request  = require("request");
 const Repository = require('../libs/repository');
 const FedoraRepository = require('../libs/repository.fedora');
+const Helper = require("./helper");
 
 
 // Create thumbnail links
@@ -111,7 +112,7 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
     var field = { match: "" };
     var matchFields = [], results = [];
 
-      
+      console.log("TEST SEARCH: query in:", query);
 
     // Type specific search (if a searchfield is selected)
     if(Array.isArray(type)) {
@@ -134,6 +135,8 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
           "match": q
         });
     }
+
+      console.log("TEST SEARCH: matchfields generated:", matchFields);
 
     // TODO move to searchFacet() function
     // If facet data is present, add it to the search
@@ -168,6 +171,21 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
     }
 
     // Elasticsearch query object
+    // var data = {  
+    //   index: config.elasticsearchIndex,
+    //   type: 'data',
+    //   body: {
+    //     from : 0, 
+    //     size : config.maxDisplayResults,
+    //     query: {
+    //         "bool": {
+    //           "should": matchFields
+    //         }
+    //     },
+    //     aggregations: facetAggregations
+    //   }
+    // }
+
     var data = {  
       index: config.elasticsearchIndex,
       type: 'data',
@@ -176,63 +194,53 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
         size : config.maxDisplayResults,
         query: {
             "bool": {
-              "should": matchFields
+                "must": {
+                    "multi_match": {
+                        "operator": "and",
+                        "fields": facets,
+                        "query": query // q
+                    }
+                }
             }
         },
         aggregations: facetAggregations
       }
     }
 
-    if(facets) {
-      data.body.query.bool["minimum_should_match"] = count+1;
-    }
+    // if(facets) {
+    //   data.body.query.bool["minimum_should_match"] = count+1;
+    // }
+
+      console.log("TEST SEARCH: search data object:", data);
 
     // Query the index
     es.search(data, function (error, response, status) {
       var responseData = {};
       if (error){
+          console.log("TEST SEARCH: search error:", error);
         callback({status: false, message: error, data: null});
       }
       else {
-        var displayRecord = {}, title = "", description = "";
-
+       
+          console.log("TEST SEARCH: search results:", response.hits.hits.length);
         // Return the aggs for the facet display
         responseData['facets'] = response.aggregations;
 
         try {
-          // Build the search results object
-          var results = [], tn;
+          // Build the search results objects
+          var results = [], tn, resultData;
           for(var result of response.hits.hits) {
 
             tn = FedoraRepository.getDatastreamUrl("tn", result._source.pid.replace('_', ':'));
-            //tn = Repository.getDatastreamUrl("tn", result._source.pid.replace('_', ':'));
 
-            // Get Display Record data
-            if(result._source.display_record && typeof result._source.display_record == 'string') {
-              displayRecord = JSON.parse(result._source.display_record);
-            }
-
-            // Find the title
-            if(result._source.title && result._source.title != "") {
-              title = result._source.title;
-            }
-            else if(displayRecord.title &&  displayRecord.title != "") {
-              title = displayRecord.title;
-            }
-
-            // Find the description
-            if(result._source.modsDescription && result._source.modsDescription != "") {
-              description = result._source.modsDescription;
-            }
-            else if(displayRecord.abstract && displayRecord.abstract != "") {
-              description = displayRecord.abstract;
-            }
+            // Get the title and description data for the result listing
+            resultData = Helper.getSearchResultDisplayFields(result);
 
             // Push a new result object to the results array
             results.push({
-              title: title,
+              title: resultData.title || "",
               namePersonal: result._source.namePersonal,
-              abstract: description,
+              abstract: resultData.description || "",
               tn: tn,
               pid: result._source.pid
             });
@@ -301,7 +309,7 @@ exports.getFacets = function (callback) {
     });
 };
 
-exports.searchFacets = function (search, callback) {
+exports.searchFacets = function (query, facets, page, callback) {
 
     client.search({
             body: {
@@ -310,10 +318,8 @@ exports.searchFacets = function (search, callback) {
                         "must": {
                             "multi_match": {
                                 "operator": "and",
-                                "fields": [
-                                    search.facet   //<-- facet_field
-                                ],
-                                "query": search.q // q
+                                "fields": facets,
+                                "query": query // q
                             }
                         }
                     }
@@ -321,7 +327,7 @@ exports.searchFacets = function (search, callback) {
             }
         }
     ).then(function (body) {
-        // body.aggregations
+          console.log("TEST FSEARCH: search facets results:", body);
         callback(body);
     }, function (error) {
         callback(error);

@@ -98,6 +98,43 @@ exports.paginateResults = function(results, page) {
 	return response;
 }
 
+exports.getSearchResultDisplayFields = function(searchResult) {
+	var fields = {
+		title: "",
+		description: ""
+	};
+
+	var displayRecord = {};
+
+	try {
+		// Get Display Record data
+	    if(searchResult._source.display_record && typeof searchResult._source.display_record == 'string') {
+	      displayRecord = JSON.parse(searchResult._source.display_record);
+	    }
+
+	    // Find the title
+	    if(searchResult._source.title && searchResult._source.title != "") {
+	      fields.title = searchResult._source.title;
+	    }
+	    else if(displayRecord.title &&  displayRecord.title != "") {
+	      fields.title = displayRecord.title;
+	    }
+
+	    // Find the description
+	    if(searchResult._source.modsDescription && searchResult._source.modsDescription != "") {
+	      fields.description = searchResult._source.modsDescription;
+	    }
+	    else if(displayRecord.abstract && displayRecord.abstract != "") {
+	      fields.description = displayRecord.abstract;
+	    }
+	}
+	catch(error) {
+		console.log("Error: " + error);
+	}
+
+    return fields;
+}
+
 /*
  * Create an array of facet breadcrumb objects for the view
  */

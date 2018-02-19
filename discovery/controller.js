@@ -116,23 +116,23 @@ exports.search = function(req, res) {
 			pageData: null
 		};
 
-		// Dummy facets for demo
-		var dummyType = [], dummyCreator = [];
-		dummyType.push({
-			"key": "moving image",
-			"doc_count": "4"
-		});
-		dummyType.push({
-			"key": "still image",
-			"doc_count": "2"
-		});
-		var dummyFacets = {
-		    "type": {
-		        "doc_count_error_upper_bound": 0,
-		        "sum_other_doc_count": 0,
-		        "buckets": dummyType
-		    }
-		}
+		// // Dummy facets for demo
+		// var dummyType = [], dummyCreator = [];
+		// dummyType.push({
+		// 	"key": "moving image",
+		// 	"doc_count": "4"
+		// });
+		// dummyType.push({
+		// 	"key": "still image",
+		// 	"doc_count": "2"
+		// });
+		// var dummyFacets = {
+		//     "type": {
+		//         "doc_count_error_upper_bound": 0,
+		//         "sum_other_doc_count": 0,
+		//         "buckets": dummyType
+		//     }
+		// }
 
 		data['base_url'] = config.baseUrl;
 		if(response.status) {
