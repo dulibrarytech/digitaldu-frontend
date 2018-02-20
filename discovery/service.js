@@ -137,6 +137,7 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
     }
 
     // If facet data is present, add it to the search
+    // TODO create the array to add to "must" key below
     if(facets) {
       // var matchFacetFields = [], indexKey, count=0;
       // for(var key in facets) {
@@ -178,56 +179,20 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
         size : config.maxDisplayResults,
         query: {
             "bool": {
-              "should": matchFields
+              "should": matchFields,
+              "must": [{ "match_phrase": { "subject": "Athletics,College sports,Men's basketball,Basketball" }},{ "match_phrase": { "creator": "Wildt, James W." }}]
             }
         },
         aggregations: facetAggregations
       }
     }
 
-    var query = {
-        "bool": {
-          "should": matchFields
-        }
-    }
-
-    // No facets in search
-    var data = {  
-    index: config.elasticsearchIndex,
-    type: 'data',
-    body: {
-        "from": "0", 
-        "size": config.maxDisplayResults,
-        "query": query,
-        "aggregations": facetAggregations
-        }
-    }
-
-    // Facets present in search
-    // var data = {  
-    // index: config.elasticsearchIndex,
-    // type: 'data',
-    // body: {
-    //     "from" : "0", 
-    //     "size" : config.maxDisplayResults,
-    //     "query": {
-    //         "bool": {
-    //             "must": {
-    //                 "multi_match": {
-    //                     "operator": "and",
-    //                     "fields": facets,
-    //                     "query": query // q
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
-
     // if(facets) {
-    //   data.body.query.bool["minimum_should_match"] = count+1;
+    //   //data.body.query.bool["minimum_should_match"] = count+1;
+    //   data.body.query.bool["must"] = facets;
     // }
 
-      console.log("TEST SEARCH: search data object:", data.body.query.bool.should);
+      console.log("TEST SEARCH: search data object:", data.body.query.bool);
 
     // Query the index
     es.search(data, function (error, response, status) {
@@ -237,8 +202,7 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
         callback({status: false, message: error, data: null});
       }
       else {
-       
-          console.log("TEST SEARCH: search results:", response.hits.hits.length);
+      
         // Return the aggs for the facet display
         responseData['facets'] = response.aggregations;
 

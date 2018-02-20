@@ -16,7 +16,7 @@ module.exports = {
     topLevelCollectionPID: "codu_root",
 
     // Search results list size
-    maxDisplayResults: 10,
+    maxDisplayResults: 1000,
     resultMaxCharacters: 400,
 
     /* 

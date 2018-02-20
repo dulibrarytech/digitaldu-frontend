@@ -87,6 +87,8 @@ exports.search = function(req, res) {
 	var typeVal = req.query.type, type;
 	var page = req.query.page || 1;
 
+		console.log("TEST search: type from client:", typeVal);
+
 	// "Search field selection": If "search all", build array of types from config settings.  If type search, 'type'is passed into search function as a string.
 	if(typeVal == 'All') {
 		type = [];
