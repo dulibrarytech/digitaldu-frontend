@@ -136,29 +136,28 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
         });
     }
 
-      console.log("TEST SEARCH: matchfields generated:", matchFields);
-
-    // TODO move to searchFacet() function
     // If facet data is present, add it to the search
-    // if(facets) {
-    //   var matchFacetFields = [], indexKey, count=0;
-    //   for(var key in facets) {
-    //     for(var index of facets[key]) {
-    //       var q = {};
-    //       count++;
+    if(facets) {
+      // var matchFacetFields = [], indexKey, count=0;
+      // for(var key in facets) {
+      //   for(var index of facets[key]) {
+      //     var q = {};
+      //     count++;
 
-    //       // Get the index key from the config facet list, using the facet name 
-    //       indexKey = config.facets[key];
+      //     // Get the index key from the config facet list, using the facet name 
+      //     indexKey = config.facets[key];
 
-    //       // Add to the main ES query object
-    //       q[indexKey] = index;
-    //       matchFields.push({
-    //         "match": q
-    //       });
-    //     }
-    //   }
-    // }
-    //   console.log("TEST matchfields:", matchFields);
+      //     // Add to the main ES query object
+      //     q[indexKey] = index;
+      //     matchFields.push({
+      //       "match": q
+      //     });
+      //   }
+      // }
+      console.log("Facets in:", facets);
+    }
+
+      console.log("TEST SEARCH: matchfields generated:", matchFields);
 
     // Build elasticsearch aggregations object from config facet list
     var facetAggregations = {}, field;
@@ -171,21 +170,6 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
     }
 
     // Elasticsearch query object
-    // var data = {  
-    //   index: config.elasticsearchIndex,
-    //   type: 'data',
-    //   body: {
-    //     from : 0, 
-    //     size : config.maxDisplayResults,
-    //     query: {
-    //         "bool": {
-    //           "should": matchFields
-    //         }
-    //     },
-    //     aggregations: facetAggregations
-    //   }
-    // }
-
     var data = {  
       index: config.elasticsearchIndex,
       type: 'data',
@@ -194,24 +178,56 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
         size : config.maxDisplayResults,
         query: {
             "bool": {
-                "must": {
-                    "multi_match": {
-                        "operator": "and",
-                        "fields": facets,
-                        "query": query // q
-                    }
-                }
+              "should": matchFields
             }
         },
         aggregations: facetAggregations
       }
     }
 
+    var query = {
+        "bool": {
+          "should": matchFields
+        }
+    }
+
+    // No facets in search
+    var data = {  
+    index: config.elasticsearchIndex,
+    type: 'data',
+    body: {
+        "from": "0", 
+        "size": config.maxDisplayResults,
+        "query": query,
+        "aggregations": facetAggregations
+        }
+    }
+
+    // Facets present in search
+    // var data = {  
+    // index: config.elasticsearchIndex,
+    // type: 'data',
+    // body: {
+    //     "from" : "0", 
+    //     "size" : config.maxDisplayResults,
+    //     "query": {
+    //         "bool": {
+    //             "must": {
+    //                 "multi_match": {
+    //                     "operator": "and",
+    //                     "fields": facets,
+    //                     "query": query // q
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
+
     // if(facets) {
     //   data.body.query.bool["minimum_should_match"] = count+1;
     // }
 
-      console.log("TEST SEARCH: search data object:", data);
+      console.log("TEST SEARCH: search data object:", data.body.query.bool.should);
 
     // Query the index
     es.search(data, function (error, response, status) {
