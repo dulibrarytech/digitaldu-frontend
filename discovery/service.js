@@ -112,8 +112,6 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
     var field = { match: "" };
     var matchFields = [], results = [];
 
-      console.log("TEST SEARCH: query in:", query);
-
     // Type specific search (if a searchfield is selected)
     if(Array.isArray(type)) {
         //query = "*" + query + "*";
@@ -146,7 +144,7 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
           var q = {};
           count++;
 
-          // Get the index key from the config facet list, using the facet name 
+          // Get the index key from the config facet list, using the stored facet name
           indexKey = config.facets[key];
 
           // Add to the main ES query object
@@ -156,11 +154,7 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
           });
         }
       }
-      console.log("Facets in:", facets);
     }
-    console.log("Facets out:", matchFacetFields);
-
-      console.log("TEST SEARCH: matchfields generated:", matchFields);
 
     // Build elasticsearch aggregations object from config facet list
     var facetAggregations = {}, field;
@@ -194,13 +188,10 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
     //   data.body.query.bool["must"] = facets;
     // }
 
-      console.log("TEST SEARCH: search data object:", data.body.query.bool);
-
     // Query the index
     es.search(data, function (error, response, status) {
       var responseData = {};
       if (error){
-          console.log("TEST SEARCH: search error:", error);
         callback({status: false, message: error, data: null});
       }
       else {
@@ -309,7 +300,6 @@ exports.searchFacets = function (query, facets, page, callback) {
             }
         }
     ).then(function (body) {
-          console.log("TEST FSEARCH: search facets results:", body);
         callback(body);
     }, function (error) {
         callback(error);

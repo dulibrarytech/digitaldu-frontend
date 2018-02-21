@@ -5,8 +5,10 @@
 
 	<div id="facet-data">
 		<% for(var key in facets) { %>
-			<h4>By <%- key %>:</h4>
+			<% if (facets[key]) { %>
+				<h4>By <%- key %>:</h4> 
 				<%- facets[key] %>
+			<% } %>
 		<% }; %>
 	</div>
 
