@@ -138,25 +138,27 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
 
     // If facet data is present, add it to the search
     // TODO create the array to add to "must" key below
+    var matchFacetFields = [];
     if(facets) {
-      // var matchFacetFields = [], indexKey, count=0;
-      // for(var key in facets) {
-      //   for(var index of facets[key]) {
-      //     var q = {};
-      //     count++;
+      var indexKey, count=0;
+      for(var key in facets) {
+        for(var index of facets[key]) {
+          var q = {};
+          count++;
 
-      //     // Get the index key from the config facet list, using the facet name 
-      //     indexKey = config.facets[key];
+          // Get the index key from the config facet list, using the facet name 
+          //indexKey = config.facets[key];
 
-      //     // Add to the main ES query object
-      //     q[indexKey] = index;
-      //     matchFields.push({
-      //       "match": q
-      //     });
-      //   }
-      // }
+          // Add to the main ES query object
+          q[key] = index;
+          matchFacetFields.push({
+            "match_phrase": q
+          });
+        }
+      }
       console.log("Facets in:", facets);
     }
+    console.log("Facets out:", matchFacetFields);
 
       console.log("TEST SEARCH: matchfields generated:", matchFields);
 
@@ -180,7 +182,7 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
         query: {
             "bool": {
               "should": matchFields,
-              "must": [{ "match_phrase": { "subject": "Athletics,College sports,Men's basketball,Basketball" }},{ "match_phrase": { "creator": "Wildt, James W." }}]
+              "must": matchFacetFields
             }
         },
         aggregations: facetAggregations
