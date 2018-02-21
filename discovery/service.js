@@ -147,10 +147,10 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
           count++;
 
           // Get the index key from the config facet list, using the facet name 
-          //indexKey = config.facets[key];
+          indexKey = config.facets[key];
 
           // Add to the main ES query object
-          q[key] = index;
+          q[indexKey] = index;
           matchFacetFields.push({
             "match_phrase": q
           });

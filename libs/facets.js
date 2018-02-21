@@ -34,7 +34,7 @@ function createList(facet, data) {
     for (i = 0; i < data.length; i++) {
         // If the key is not empty, add the facet to the list
         if(data[i].key != "") {
-            html += '<span><a href="javascript:document.location.href=selectFacet(\'' + facet.toLowerCase() + '\', \'' + data[i].key + '\');">' + data[i].key + '</a>&nbsp;&nbsp;(' + data[i].doc_count + ')</span><br>';   // good
+            html += '<span><a href="javascript:document.location.href=selectFacet(\'' + facet + '\', \'' + data[i].key + '\');">' + data[i].key + '</a>&nbsp;&nbsp;(' + data[i].doc_count + ')</span><br>';   // good
             //html += '<span><a  onclick="selectFacet(\'' + facet + '\', \'' + data[i].key + '\');">' + data[i].key + '</a>&nbsp;&nbsp;(' + data[i].doc_count + ')</span><br>';   // test
         }
     }
