@@ -333,6 +333,24 @@ div#facets {
     margin-top: 2em;
 }
 
+.facet-name-label {
+    float: left;
+    width: 76%;
+    margin-bottom: 0.2em;
+}
+
+.facet-count-label {
+    float: right;
+  /*  width: 12%;*/
+    margin-right: 1em;
+}
+
+#facet-listing:hover > span,
+#facet-listing:hover > span > a {
+    font-weight: bold;
+    text-decoration: none;
+}
+
 div.section-label {
 	padding-left: 1em;
     background-color: #EAE9E5;
@@ -364,7 +382,7 @@ div#facet-data span {
 }
 
 div#facet-data span a {
-	font-size: 16px;
+	font-size: 14px;
 }
 
 
