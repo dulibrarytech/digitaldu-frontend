@@ -217,15 +217,15 @@ div#facet-breadcrumbs span a strong.facet-breadcrumb-remove-link {
 	color: red;
 }
 
-div#pagination-header {
-	height: 75px;
+div.paginator {
+	height: 20px;
 	/*padding: 2em 40%;*/
-	padding: 1em 25% 2em 40%;
+	padding: 0 25% 0 40%;
 	font-size: 17px;
 	margin-top: 1em;
 }
 
-div#pagination-header a {
+div.paginator a {
 	margin-left: 1em;
 	color: #575757;
 }
