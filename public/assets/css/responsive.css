@@ -1,5 +1,6 @@
 @media only screen and (min-width: 2000px) {
-	div#main {
+	div#main,
+	div#du-red-header-inner {
 		width: 60%;
 	}
 
@@ -53,7 +54,11 @@
 	div#main {
 		margin: 1em auto 4em auto;
 	    /*max-width: 65%;*/
-	    width: 1050px;
+	}
+
+	div#main,
+	div#du-red-header-inner {
+		width: 1050px;
 	}
 
 	dt.basic-collection-thumb {
@@ -80,7 +85,11 @@
 	div#main {
 		margin: 1em auto 4em auto;
 	    /*max-width: 65%;*/
-	    width: 950px;
+	}
+
+	div#main,
+	div#du-red-header-inner {
+		width: 950px;
 	}
 
 	div#search-results {
@@ -111,7 +120,11 @@
 	div#main {
 		margin: 1em auto 4em auto;
 	    /*max-width: 65%;*/
-	    width: 750px;
+	}
+
+	div#main,
+	div#du-red-header-inner {
+		width: 750px;
 	}
 
 	div#search-results {

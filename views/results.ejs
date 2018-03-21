@@ -19,43 +19,45 @@
 		</div>
 		<% include partials/page-navigator %>
 		
-		<% include partials/facets %>
+		<div id="search-results-wrapper">
+			<% include partials/facets %>
 
-		<div id="search-results">
-			<% if (results && results.length > 0) { %>
-					<% results.forEach(function(result) { %>
+			<div id="search-results">
+				<% if (results && results.length > 0) { %>
+						<% results.forEach(function(result) { %>
 
-						<div class="search-result">
+							<div class="search-result">
 
-							<!-- Thumbnail -->
-				            <dl class="search-result-tn">
-				            	<dt>
-				              		<a href="/repository/object/<%- result.pid%>" title="<%- result.title %>"><img typeof="foaf:Image" src="<%- result.tn %>" alt="Img" /></a>            
-				              	</dt>
-				            <dd></dd>
-				          	</dl>
+								<!-- Thumbnail -->
+					            <dl class="search-result-tn">
+					            	<dt>
+					              		<a href="/repository/object/<%- result.pid%>" title="<%- result.title %>"><img typeof="foaf:Image" src="<%- result.tn %>" alt="Img" /></a>            
+					              	</dt>
+					            <dd></dd>
+					          	</dl>
 
-				          	<!-- Metadata -->
-				          	<dl class="search-result-data">
-                          		<dt class="">Title:</dt>
-              					<dd class=""><a href="/repository/object/<%- result.pid%>"><%- result.title %>&nbsp</a></dd>
-                          		<% if (result.namePersonal) { %>
-									<dt>Creator:</dt>
-									<dd><%- result.namePersonal %></dd>
-								<% } %>
+					          	<!-- Metadata -->
+					          	<dl class="search-result-data">
+	                          		<dt class="">Title:</dt>
+	              					<dd class=""><a href="/repository/object/<%- result.pid%>"><%- result.title %>&nbsp</a></dd>
+	                          		<% if (result.namePersonal) { %>
+										<dt>Creator:</dt>
+										<dd><%- result.namePersonal %></dd>
+									<% } %>
 
-								<% if (result.abstract) { %>
-									<dt>Description:</dt>
-									<dd id="result-description"><%- result.abstract %></dd>
-								<% } %>
-                      		</dl>
-						</div>
+									<% if (result.abstract) { %>
+										<dt>Description:</dt>
+										<dd id="result-description"><%- result.abstract %></dd>
+									<% } %>
+	                      		</dl>
+							</div>
 
-					<% }); %>
-					
-			<% } else { %>
-				<h3>No results found</h3>
-			<% } %>
+						<% }); %>
+						
+				<% } else { %>
+					<h3>No results found</h3>
+				<% } %>
+			</div>
 		</div>
 	</div>
 </div>
