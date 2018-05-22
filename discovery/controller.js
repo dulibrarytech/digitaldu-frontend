@@ -22,6 +22,7 @@ exports.renderCommunitiesView = function(req, res) {
 
 	// Get all communities
 	Service.getTopLevelCollections(function(response) {
+			
 		data['base_url'] = config.baseUrl;
 		data['error'] = null;
 
@@ -69,6 +70,8 @@ exports.renderCollection = function(req, res) {
 			console.log("RESP", response);
 		if(response.status) {
 			data['collections'] = response.data;
+
+			// Determine if it is a collection type, not another object??
 			data['objectPath'] = "/repository/object";
 		}
 		else {
