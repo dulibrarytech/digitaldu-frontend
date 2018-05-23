@@ -28,7 +28,6 @@ exports.renderCommunitiesView = function(req, res) {
 
 		if(response.status) {
 			data['collections'] = response.data;
-			//sdata['objectPath'] = "/repository/community";
 		}
 		else {
 			data['collections'] = [];
@@ -49,7 +48,6 @@ exports.renderCommunity = function(req, res) {
 
 		if(response.status) {
 			data['collections'] = response.data;
-			//data['objectPath'] = "/repository/collection";
 		}
 		else {
 			data['collections'] = [];
@@ -70,7 +68,6 @@ exports.renderRootCollection = function(req, res) {
 
 		if(response.status) {
 			data['collections'] = response.data;
-			//data['objectPath'] = "/repository/collection";
 		}
 		else {
 			data['collections'] = [];

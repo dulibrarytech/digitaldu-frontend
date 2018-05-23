@@ -154,13 +154,36 @@ exports.getObjectsInCollection = function(collectionID, callback) {
       else {
 
         // Use local index to find the collection children
-        console.log("NULLRSP detect");
+        var data = {  
+          index: config.elasticsearchIndex,
+          type: 'data',
+          body: {
+            from : 0, 
+            size : config.maxDisplayResults,
+            query: {
+                "match": {
+                  "is_member_of_collection": collectionID
+                }
+            }
+          }
+        }
+        // Query the index for root collection members
+        es.search(data, function (error, response, status) {
+          var responseData = {};
+          if (error){
+            callback({status: false, message: error, data: null});
+          }
+          else {
+            var results = [];
 
-        // Query index for is_member_of_collection:[collectionID]
-        // Build req list
-        // create item list()
-
-        callback({status: true, data: []});
+            // Create the result list
+            for(var index of response.hits.hits) {
+              results.push(index._source);
+            }
+            var list = createItemList(results);
+            callback({status: true, data: list});
+          }
+        });
       }
   });
 }
