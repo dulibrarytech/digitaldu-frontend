@@ -28,7 +28,7 @@ exports.renderCommunitiesView = function(req, res) {
 
 		if(response.status) {
 			data['collections'] = response.data;
-			data['objectPath'] = "/repository/community";
+			//sdata['objectPath'] = "/repository/community";
 		}
 		else {
 			data['collections'] = [];
@@ -49,7 +49,7 @@ exports.renderCommunity = function(req, res) {
 
 		if(response.status) {
 			data['collections'] = response.data;
-			data['objectPath'] = "/repository/collection";
+			//data['objectPath'] = "/repository/collection";
 		}
 		else {
 			data['collections'] = [];
@@ -70,7 +70,7 @@ exports.renderRootCollection = function(req, res) {
 
 		if(response.status) {
 			data['collections'] = response.data;
-			data['objectPath'] = "/repository/collection";
+			//data['objectPath'] = "/repository/collection";
 		}
 		else {
 			data['collections'] = [];
@@ -91,9 +91,6 @@ exports.renderCollection = function(req, res) {
 
 		if(response.status) {
 			data['collections'] = response.data;
-
-			// Determine if it is a collection type, not another object??
-			data['objectPath'] = "/repository/object";
 		}
 		else {
 			data['collections'] = [];

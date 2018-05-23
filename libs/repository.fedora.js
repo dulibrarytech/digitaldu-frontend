@@ -1,14 +1,11 @@
 'use strict'
 
 /*
- * DU Repository interface functions
+ * DU Fedora interface functions
  */
+ 
 const protocol = "http://",
 	  domain = "librepo01-vlp.du.edu:8080";
-
-var createJSONObject = function(xml) {
-	
-}
 
 exports.getDatastreamUrl = function(datastream, pid) {
 	var dsID = "";
@@ -38,23 +35,16 @@ exports.getDatastreamUrl = function(datastream, pid) {
 
 exports.getRootCollections = function() {
 	return new Promise(function(fulfill, reject) {
-		var url = protocol + domain + "/api/collections";
-		request(url, function (error, response, body) {
-			if(error) {
-				reject(error);
-			}
-			else if(response.statusCode !== 200) {
-				reject("Repository returns status " + response.statusCode);
-			}
-			else {
-				fulfill(body);
-			}
-		});
+		fulfill([]);
 	});
 }
 
-exports.getCollectionObjects = function(pid) {
-
+exports.getCollectionObjects = function(collectionID) {
+	return new Promise(function(fulfill, reject) {
+		fulfill([]);
+	});
 }
+
+
 
 

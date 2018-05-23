@@ -8,9 +8,11 @@ const Repository = require('../libs/repository.fedora');
 const Helper = require("./helper");
 
 
-// Create thumbnail links
+/*
+ * 
+ */
 var createItemList= function(items) {
-  var itemList = [], tn, pid, title, description, display;
+  var itemList = [], tn, pid, title, description, display, path;
   for(var item of items) {
       
     // 
@@ -52,11 +54,19 @@ var createItemList= function(items) {
       pid = item.id
     }
 
+    if(item.mime_type == "") {
+      path = "/repository/collection";
+    }
+    else {
+      path = "/repository/object";
+    }
+
     itemList.push({
         pid: pid,
         tn: tn,
         title: title,
-        description: description
+        description: description,
+        path: path
       });
   }
   return itemList;
@@ -71,57 +81,50 @@ var addTNData = function(resultArray) {
 }
 
 exports.getTopLevelCollections = function(callback) {
+  Repository.getRootCollections().catch(error => {
+    console.log(error);
+    callback({status: false, message: error, data: null});
+  })
+  .then( response => {
+      if(response && response.length > 0) {
+        var list = createItemList(JSON.parse(response));
+        callback({status: true, data: list});
+      }
+      else {
 
-  /*
-   * Fedora:
-   * Find root collection members via the index when using Fedora
-   * Fedora will provide thumbnails
-   */
-  var data = {  
-    index: config.elasticsearchIndex,
-    type: 'data',
-    body: {
-      from : 0, 
-      size : config.maxDisplayResults,
-      query: {
-          "match": {
-            "is_member_of_collection": "codu:root"
+        // Use the index to retrieve the top-level collection objects
+        var data = {  
+          index: config.elasticsearchIndex,
+          type: 'data',
+          body: {
+            from : 0, 
+            size : config.maxDisplayResults,
+            query: {
+                "match": {
+                  "is_member_of_collection": "codu:root"
+                }
+            }
           }
-      }
-    }
-  }
-  // Query the index for root collection members
-  es.search(data, function (error, response, status) {
-    var responseData = {};
-    if (error){
-      callback({status: false, message: error, data: null});
-    }
-    else {
-      var results = [];
+        }
+        // Query the index for root collection members
+        es.search(data, function (error, response, status) {
+          var responseData = {};
+          if (error){
+            callback({status: false, message: error, data: null});
+          }
+          else {
+            var results = [];
 
-      // Create the result list
-      for(var index of response.hits.hits) {
-        results.push(index._source);
+            // Create the result list
+            for(var index of response.hits.hits) {
+              results.push(index._source);
+            }
+            var list = createItemList(results);
+            callback({status: true, data: list});
+          }
+        });
       }
-      var list = createItemList(results);
-      callback({status: true, data: list});
-    }
   });
-
-  /*
-   * Libspec:
-   * LibSpec repo has api for fetching top level collection objects.
-   */
-  // Repository.getRootCollections().catch(error => {
-  //   console.log(error);
-  //   callback({status: false, message: error, data: null});
-  // })
-  // .then( response => {
-  //     if(response) {
-  //       var list = createItemList(JSON.parse(response));
-  //       callback({status: true, data: list});
-  //     }
-  // });
 }
 
 // Obsolete
@@ -142,9 +145,22 @@ exports.getObjectsInCollection = function(collectionID, callback) {
     callback({status: false, message: error, data: null});
   })
   .then( response => {
-      if(response) {
+
+      // Validate repository response
+      if(response && response.length > 0) {
         var list = createItemList(JSON.parse(response));
         callback({status: true, data: list});
+      }
+      else {
+
+        // Use local index to find the collection children
+        console.log("NULLRSP detect");
+
+        // Query index for is_member_of_collection:[collectionID]
+        // Build req list
+        // create item list()
+
+        callback({status: true, data: []});
       }
   });
 }

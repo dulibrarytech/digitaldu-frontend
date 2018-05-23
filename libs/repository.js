@@ -1,10 +1,11 @@
 'use strict'
 
-var request = require('request')
-
 /*
  * DU Repository interface functions
  */
+
+var request = require('request')
+
 const protocol = "http://",
 	  domain = process.env.REPOSITORY_HOST || "libspec01-vlp.du.edu:8080";
 
