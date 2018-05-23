@@ -3,8 +3,8 @@
 const es = require('../config/index');
 const config = require('../config/config');
 const request  = require("request");
-const Repository = require('../libs/repository');
-const FedoraRepository = require('../libs/repository.fedora');
+//const Repository = require('../libs/repository');
+const Repository = require('../libs/repository.fedora');
 const Helper = require("./helper");
 
 
@@ -38,17 +38,17 @@ var createItemList= function(items) {
     // This is a list of communities
     if(item.pid) {
       // tn = Repository.getCollectionTN(item.pid);
-      tn = Repository.getObjectTN(item.pid);
+      tn = Repository.getDatastreamUrl("tn", item.pid);
       pid = item.pid
     }
     // This is a list of objects
     else if(item.mime_type) {
-      tn = Repository.getObjectTN(item.pid);
+      tn = Repository.getDatastreamUrl("tn", item.pid);
       pid = item.pid
     }
     // This is a list of collections
     else {
-      tn = Repository.getCommunityTN(item.id);
+      tn = Repository.getDatastreamUrl("tn", item.pid);
       pid = item.id
     }
 
@@ -71,17 +71,60 @@ var addTNData = function(resultArray) {
 }
 
 exports.getTopLevelCollections = function(callback) {
-  Repository.getCommunities().catch(error => {
-    callback({status: false, message: error, data: null});
-  })
-  .then( response => {
-      if(response) {
-        var list = createItemList(JSON.parse(response));
-        callback({status: true, data: list});
+
+  /*
+   * Fedora:
+   * Find root collection members via the index when using Fedora
+   * Fedora will provide thumbnails
+   */
+  var data = {  
+    index: config.elasticsearchIndex,
+    type: 'data',
+    body: {
+      from : 0, 
+      size : config.maxDisplayResults,
+      query: {
+          "match": {
+            "is_member_of_collection": "codu:root"
+          }
       }
+    }
+  }
+  // Query the index for root collection members
+  es.search(data, function (error, response, status) {
+    var responseData = {};
+    if (error){
+      callback({status: false, message: error, data: null});
+    }
+    else {
+      var results = [];
+
+      // Create the result list
+      for(var index of response.hits.hits) {
+        results.push(index._source);
+      }
+      var list = createItemList(results);
+      callback({status: true, data: list});
+    }
   });
+
+  /*
+   * Libspec:
+   * LibSpec repo has api for fetching top level collection objects.
+   */
+  // Repository.getRootCollections().catch(error => {
+  //   console.log(error);
+  //   callback({status: false, message: error, data: null});
+  // })
+  // .then( response => {
+  //     if(response) {
+  //       var list = createItemList(JSON.parse(response));
+  //       callback({status: true, data: list});
+  //     }
+  // });
 }
 
+// Obsolete
 exports.getCollectionsInCommunity = function(communityID, callback) {
   Repository.getCollections(communityID).catch(error => {
     callback({status: false, message: error, data: null});
@@ -204,7 +247,7 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
           var results = [], tn, resultData;
           for(var result of response.hits.hits) {
 
-            tn = FedoraRepository.getDatastreamUrl("tn", result._source.pid.replace('_', ':'));
+            tn = Repository.getDatastreamUrl("tn", result._source.pid.replace('_', ':'));
 
             // Get the title and description data for the result listing
             resultData = Helper.getSearchResultDisplayFields(result);

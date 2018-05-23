@@ -11,8 +11,8 @@ module.exports = function (app) {
         });
 
 	// Render the top level community view (landing page)
-    app.route('/repository')
-        .get(Discovery.renderCommunitiesView);
+    app.route('/repository/collections')
+        .get(Discovery.renderRootCollection);
 
     // Render collection view, with all collections in the community [:id]
     app.route('/repository/community/:id')

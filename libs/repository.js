@@ -49,6 +49,7 @@ exports.getDatastreamUrl = function(datastream, pid) {
 	return protocol + domain + "/api/object/" + objectType + dsID + "?pid=" + pid;
 }
 
+/* Obsolete */
 exports.getCommunities = function() {
 	return new Promise(function(fulfill, reject) {
 		var url = protocol + domain + "/api/communities";
@@ -56,6 +57,9 @@ exports.getCommunities = function() {
 			if(error) {
 				reject(error);
 			}
+			else if(response.statusCode !== 200) {
+				reject("Repository returns status " + response.statusCode);
+			}
 			else {
 				fulfill(body);
 			}
@@ -63,6 +67,7 @@ exports.getCommunities = function() {
 	});
 }
 
+/* Obsolete */
 exports.getCommunity = function(communityID) {
 	return new Promise(function(fulfill, reject) {
 		var url = protocol + domain + "/api/communities?community_id=" + communityID;
@@ -70,6 +75,9 @@ exports.getCommunity = function(communityID) {
 			if(error) {
 				reject(error);
 			}
+			else if(response.statusCode !== 200) {
+				reject("Repository returns status " + response.statusCode);
+			}
 			else {
 				fulfill(body);
 			}
@@ -77,13 +85,17 @@ exports.getCommunity = function(communityID) {
 	});
 }
 
-exports.getAllCollections = function() {
+/* Test to make sure this will return root collections */
+exports.getRootCollections = function() {
 	return new Promise(function(fulfill, reject) {
 		var url = protocol + domain + "/api/collections";
 		request(url, function (error, response, body) {
 			if(error) {
 				reject(error);
 			}
+			else if(response.statusCode !== 200) {
+				reject("Repository returns status " + response.statusCode);
+			}
 			else {
 				fulfill(body);
 			}
@@ -91,12 +103,15 @@ exports.getAllCollections = function() {
 	});
 }
 
-exports.getCollections = function(communityID) {
+exports.getCollectionsByCommunity = function(communityID) {
 	return new Promise(function(fulfill, reject) {
 		var url = protocol + domain + "/api/collections?community_id=" + communityID;
 		request(url, function (error, response, body) {
 			if(error) {
 				reject(error);
+			}
+			else if(response.statusCode !== 200) {
+				reject("Repository returns status " + response.statusCode);
 			}
 			else {
 				fulfill(body);
@@ -111,6 +126,9 @@ exports.getCollectionObjects = function(collectionID) {
 		request(url, function (error, response, body) {
 			if(error) {
 				reject(error);
+			}
+			else if(response.statusCode !== 200) {
+				reject("Repository returns status " + response.statusCode);
 			}
 			else {
 				fulfill(body);
