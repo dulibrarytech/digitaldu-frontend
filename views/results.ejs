@@ -20,7 +20,9 @@
 		<% include partials/page-navigator %>
 		
 		<div id="search-results-wrapper">
-			<% include partials/facets %>
+			<% if (results && results.length > 0) { %>
+				<% include partials/facets %>
+			<% } %>
 
 			<div id="search-results">
 				<% if (results && results.length > 0) { %>
