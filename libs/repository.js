@@ -44,6 +44,10 @@ exports.getDatastreamUrl = function(datastream, pid) {
 			dsID = "mov";
 			objectType = "video";
 			break;
+		default:
+			console.log("Unsupported datastream (repository)");
+			return "";
+			break;
 	}
 	objectType = objectType == "" ? "" : objectType + "/";
 

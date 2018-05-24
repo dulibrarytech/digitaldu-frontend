@@ -1,8 +1,8 @@
 'use strict'
 
-var config = require('../config/config'),
-	Repository = require('./repository');
-var FedoraRepository = require('./repository.fedora');
+var config = require('../config/config');
+// var	Repository = require('./repository');
+var Repository = require('./repository.fedora');
 
 /*
  * Viewer module
@@ -54,8 +54,7 @@ function getAudioPlayer(objectData) {
 	var player = '<div id="audio-player" class="viewer-section">', tn, stream;
 	var extension = "mp3";
 
-	tn = FedoraRepository.getDatastreamUrl("tn", objectData.pid);
-	//tn = Repository.getObjectTN(objectData.pid);
+	tn = Repository.getDatastreamUrl("tn", objectData.pid);
 	stream = Repository.getDatastreamUrl("mp3", objectData.pid);
 
 	// Local test data
@@ -93,12 +92,9 @@ function getVideoViewer(objectData) {
 	var viewer = '<div id="video-viewer" class="viewer-section">', tn, stream;
 	var extension = "mp4";
 
-	tn = FedoraRepository.getDatastreamUrl("tn", objectData.pid);
-	//tn = Repository.getDatastreamUrl("tn", objectData.pid);
-
+	tn = Repository.getDatastreamUrl("tn", objectData.pid);
 	if(objectData.mime_type == "video/mp4") {
 		stream = Repository.getDatastreamUrl("mp4", objectData.pid);
-		//stream = FedoraRepository.getDatastreamUrl("video", objectData.pid);
 	}
 	else if(objectData.mime_type == "video/quicktime") {
 		stream = Repository.getDatastreamUrl("mov", objectData.pid);

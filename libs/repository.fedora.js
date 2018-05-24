@@ -23,9 +23,13 @@ exports.getDatastreamUrl = function(datastream, pid) {
 			dsID = "PROXY_MP3";
 			break;
 		case "video":
+		case "mp4":
 			dsID = "MP4";
 			break;
 		case "pdf":
+			dsID = "OBJ";
+			break;
+		default: 
 			dsID = "OBJ";
 			break;
 	}

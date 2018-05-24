@@ -4,16 +4,25 @@ var protocol = "http";
 
 module.exports = {
 
-    // ENV settings
+    /*
+     * ENV settings
+     */ 
     baseUrl: protocol + "://" + process.env.APP_HOST + ":" + process.env.APP_PORT,
     elasticsearchHost: process.env.ELASTICSEARCH_HOST,
     elasticsearchPort: process.env.ELASTICSEARCH_PORT,
     elasticsearchIndex: process.env.ELASTICSEARCH_INDEX,
     cantaloupePort: process.env.CANTALOUPE_PORT,
 
-    // Repository settings
+    /*
+     * Repository settings
+     */ 
     institutionPrefix: "codu",
     topLevelCollectionPID: "codu:root",
+
+    /*
+     * Index settings
+     */ 
+    collectionMimeType: "",
 
     // Search results list size
     maxDisplayResults: 1000,

@@ -54,7 +54,7 @@ var createItemList= function(items) {
       pid = item.id
     }
 
-    if(item.mime_type == "") {
+    if(item.mime_type == config.collectionMimeType) {
       path = "/repository/collection";
     }
     else {
@@ -70,14 +70,6 @@ var createItemList= function(items) {
       });
   }
   return itemList;
-}
-
-var addTNData = function(resultArray) {
-  // Foreach in array, add new prop 'tn'
-  var tn = "";
-  resultArray.forEach(function(result) {
-    console.log("Result:",result);
-  });
 }
 
 exports.getTopLevelCollections = function(callback) {
@@ -175,7 +167,6 @@ exports.getObjectsInCollection = function(collectionID, callback) {
           }
           else {
             var results = [];
-              console.log("TEST resp hits:", response.hits.hits.length);
             // Create the result list
             for(var index of response.hits.hits) {
               results.push(index._source);
@@ -285,6 +276,11 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
           // Build the search results objects
           var results = [], tn, resultData;
           for(var result of response.hits.hits) {
+
+            // Omit collection objects from the search results 
+            if(result._source.mime_type.trim() == config.collectionMimeType) {
+              continue;
+            }
 
             tn = Repository.getDatastreamUrl("tn", result._source.pid.replace('_', ':'));
 
