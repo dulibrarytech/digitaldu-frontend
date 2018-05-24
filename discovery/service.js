@@ -101,7 +101,7 @@ exports.getTopLevelCollections = function(callback) {
             size : config.maxDisplayResults,
             query: {
                 "match": {
-                  "is_member_of_collection": "codu:root"
+                  "is_member_of_collection": config.topLevelCollectionPID
                 }
             }
           }
@@ -162,7 +162,7 @@ exports.getObjectsInCollection = function(collectionID, callback) {
             size : config.maxDisplayResults,
             query: {
                 "match": {
-                  "is_member_of_collection": collectionID
+                  "is_member_of_collection": collectionID.substring(config.institutionPrefix.length)  // Remove the institution prefix
                 }
             }
           }
@@ -175,7 +175,7 @@ exports.getObjectsInCollection = function(collectionID, callback) {
           }
           else {
             var results = [];
-
+              console.log("TEST resp hits:", response.hits.hits.length);
             // Create the result list
             for(var index of response.hits.hits) {
               results.push(index._source);

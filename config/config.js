@@ -13,7 +13,7 @@ module.exports = {
 
     // Repository settings
     institutionPrefix: "codu",
-    topLevelCollectionPID: "codu_root",
+    topLevelCollectionPID: "codu:root",
 
     // Search results list size
     maxDisplayResults: 1000,
