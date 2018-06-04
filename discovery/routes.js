@@ -7,11 +7,11 @@ module.exports = function (app) {
 	// Root route to landing page
     app.route('/')
         .get(function(req, res) {
-        	res.redirect('/repository');
+        	res.redirect('/collections');
         });
 
 	// Render the top level community view (landing page)
-    app.route('/repository/collections')
+    app.route('/collections')
         .get(Discovery.renderRootCollection);
 
     // Render collection view, with all collections in the community [:id]
