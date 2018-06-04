@@ -1,36 +1,4 @@
 <% include partials/header %>
 
-<div id="main">
-	<span id="site-title">Special Collections @ DU</span>
-	<% include partials/banner %>
-
-	<div id="content">
-		
-		<div id="viewer-section">
-			<%- viewer %>
-		</div>
-
-		<div id="object-data">
-			<% for (var key in summary) { %>
-				<h3><%= key %></h3>
-				<p><%= summary[key] %></p>
-			<% } %>
-		</div>
-
-		<div id="object-controls">
-			<button type="button" class="btn" data-toggle="collapse" data-target="#metadata-display">Details</button>
-		</div>
-
-		<div id="metadata-display" class="collapse">
-			<table class="table">
-				<% for (var key in mods) { %>
-					<tr><td><%= key %></td><td><%= mods[key] %></td></tr>
-				<% } %>
-			</table>
-		</div>
-
-	</div>
-
-</div>
 
 <% include partials/footer %>

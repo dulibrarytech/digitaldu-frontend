@@ -1,34 +1,5 @@
 <% include partials/header %>
 
-<div id="main">
-	<span id="site-title">Special Collections @ DU</span>
-
-	<% include partials/banner %>
-
-	<% include partials/search %>
-
-	<div id="content">
-		<% include partials/page-navigator %>
-		
-		<div class="basic-collection-view">
-		  	<div class="basic-collection-grid clearfix">
-
-		  		<% if(error) { %>
-		  			<h4><%- error %></h4>
-		  		<% } %>
-
-				<% for (var i = 0; i < collections.length; i++) { %>
-				    <dl class="basic-collection-object collection">
-				        <dt class="basic-collection-thumb"><a href="<%= collections[i].path %>/<%= collections[i].pid %>"><img src="<%= collections[i].tn %>" /></a></dt>
-				        <dd class="basic-collection-caption"><a href=<%= collections[i].path %>/<%= collections[i].pid %>"><%- collections[i].title %></a></dd>
-				    </dl>
-				<% } %>
-
-			</div>
-		</div>
-
-	</div> <!-- content -->
-</div>
 
 <% include partials/footer %>
 
