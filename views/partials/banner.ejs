@@ -1,5 +1,18 @@
-<div id="banner">
-	<ul class="menu">
-		<li><i class="fa fa-home" aria-hidden="true"></i><a href="/repository/collections">Home</a></li>
-	</ul>
+<div class="banner">
+  <div class="banner-logo">
+      <img id="logo-image" class="logo" src="assets/img/logo.png" alt="Site Logo">
+  </div>
+  <div id="searchform">
+      <form method="get" action="#">
+        <select id="search-type">
+          <% for (var i = 0; i < searchFields.length; i++) { %>
+            <% for (var key in searchFields[i]) { %>
+              <option value='<%- searchFields[i][key] %>'><%- key %></option>
+            <% } %>
+          <% } %>
+        </select>
+        <input type="text" placeholder="Search here..."/>
+        <button type="submit"><i class="fas fa-search"></i></button>
+      </form>
+  </div>
 </div>

@@ -68,6 +68,7 @@ exports.renderRootCollection = function(req, res) {
 
 		if(response.status) {
 			data['collections'] = response.data;
+			data['searchFields'] = config.searchFields;
 		}
 		else {
 			data['collections'] = [];
