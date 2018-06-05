@@ -14,6 +14,7 @@ module.exports = {
     // Repository settings
     institutionPrefix: "codu",
     topLevelCollectionPID: "codu:root",
+    collectionMimeType: "",
 
     // Search results list size
     maxDisplayResults: 1000,
@@ -42,7 +43,6 @@ module.exports = {
      * [browser | [openseadragon]]
      */
     largeImageViewer: "openseadragon",
-
     openseadragonImagePath: "libs/openseadragon/images/",
 
     /*
