@@ -626,21 +626,25 @@ div#collection-grid dl.item {
   zoom: 1;
 }
 
+div#collection-grid dl.item  > dt {
+  height: 265px;
+}
+
 div#collection-grid dl.item  > dd {
   margin-left: 0;
 }
 
 div#collection-grid {
-  padding-top: 9vh;
+  padding-top: 6vh;
 }
 
-div#collection-grid .item-thumb:hover {
+.item-thumb:hover {
   cursor: pointer;
 }
 
-div#collection-grid .item-thumb img {
+.item-thumb img {
   height: 100%;
-  width: 100%;
+  width: 92%;
 }
 
 div#search-results-wrapper {

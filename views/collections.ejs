@@ -34,22 +34,20 @@
 		  		<% } %>
 
 	            <div id="collection-grid">
-	            
+
 					<% for (var i = 0; i < collections.length; i++) { %>
-						<dl class="item">
-							<dt>
-								<a href="<%= collections[i].path %>/<%= collections[i].pid %>">
+	            		<div class="content-col-3">
+	            			<div class="item">
+		            			<a href="<%= collections[i].path %>/<%= collections[i].pid %>">
 		            				<div class="item-thumb">
 								  		<img src="<%= collections[i].tn %>" alt="Thumb Image">
 									</div>
 								</a>
-							</dt>
-							<dd>
 								<div class="item-details">
 								  	<h3 class="item-title"><a target="_blank" href="<%= collections[i].path %>/<%= collections[i].pid %>"><%= collections[i].title %></a></h3>
 								</div>
-							</dd>
-						</dl>
+	            			</div>
+	            		</div>
 					<% } %>
 	           
 	          	</div>
