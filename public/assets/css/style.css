@@ -615,8 +615,21 @@ button.accordion {
   opacity: 1;
 }
 
+div#collection-grid {
+  padding-top: 50px;
+}
+
+div#collection-grid .item-thumb:hover {
+  cursor: pointer;
+}
+
+div#collection-grid .item-thumb img {
+  height: 250px;
+  width: 200px;
+}
+
 div#search-results-wrapper {
-      padding-top: 35px;
+    padding-top: 35px;
 }
 
 div#results-grid {
@@ -632,15 +645,21 @@ div#results-grid .item-title {
 div#results-grid .item-title a {
   color: #00637b;
   line-height: 18px;
+  color: #000;
+  text-decoration: none;
 }
 
 div#results-grid .item-thumb img {
-  max-width: 150px;
+  /*max-width: 150px;*/
+  width: 100%;
+  height: 100%;
 }
 
 div#results-grid .item-thumb {
-    overflow: hidden;
-    height: 150px;
+/*    overflow: hidden;
+    height: 150px;*/
+    height: 250px;
+    width: 200px;
     border-bottom-style: solid;
     border-bottom-color: #e5e3e1;
     border-radius: 2px;

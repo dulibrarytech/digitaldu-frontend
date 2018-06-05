@@ -32,38 +32,29 @@
 	            <% if(error) { %>
 		  			<h4><%- error %></h4>
 		  		<% } %>
-<!-- 	            <div id="collection-grid">
 
-	              <div class="content-col-3">
-	                  <div class="item">
-	                      <div class="item-thumb">
-	                          <img src="assets/img/dummy/d1.jpg" alt="Thumb Image">
-	                      </div>
-	                      <div class="item-details">
-	                          <h3 class="item-title"><a target="_blank" href="index-01.html">Collection 01</a></h3>
-	                      </div>
-	                  </div>
-	              </div>
-	              <div class="content-col-3">
-	                  <div class="item">
-	                      <div class="item-thumb">
-	                          <img src="assets/img/dummy/d2.jpg" alt="Thumb Image">
-	                      </div>
-	                      <div class="item-details">
-	                          <h3 class="item-title"><a target="_blank" href="index-02.html">Collection 02</a></h3>
-	                      </div>
-	                  </div>
-	              </div>
+	            <div id="collection-grid">
+
+	            	<% for (var i = 0; i < collections.length; i++) { %>
+	            		<div class="content-col-3">
+	            			<div class="item">
+	            				<div class="item-thumb">
+	            					<a href="<%= collections[i].path %>/<%= collections[i].pid %>">
+								  		<img src="<%= collections[i].tn %>" alt="Thumb Image">
+								  	</a>
+								</div>
+								<div class="item-details">
+								  	<h3 class="item-title"><a target="_blank" href="<%= collections[i].path %>/<%= collections[i].pid %>"><%= collections[i].title %></a></h3>
+								</div>
+	            			</div>
+	            		</div>
+					<% } %>
 	              
-	          	</div> -->
-
+	          	</div>
         	</div>
       	</div>
       </div>
     </div>
-
-
-
 
 </div><!-- #main -->
 
