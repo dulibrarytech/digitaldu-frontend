@@ -38,11 +38,11 @@
 	            	<% for (var i = 0; i < collections.length; i++) { %>
 	            		<div class="content-col-3">
 	            			<div class="item">
-	            				<div class="item-thumb">
-	            					<a href="<%= collections[i].path %>/<%= collections[i].pid %>">
+		            			<a href="<%= collections[i].path %>/<%= collections[i].pid %>">
+		            				<div class="item-thumb">
 								  		<img src="<%= collections[i].tn %>" alt="Thumb Image">
-								  	</a>
-								</div>
+									</div>
+								</a>
 								<div class="item-details">
 								  	<h3 class="item-title"><a target="_blank" href="<%= collections[i].path %>/<%= collections[i].pid %>"><%= collections[i].title %></a></h3>
 								</div>
