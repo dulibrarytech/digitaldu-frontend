@@ -25,11 +25,14 @@
           </div>
         </div>
         <div class="content-col-9">
-<!--         	<div id="collections">
-
+        	<div id="collections">
 	            <h3>Collections</h3>
 	            <hr>
-	            <div id="collection-grid">
+
+	            <% if(error) { %>
+		  			<h4><%- error %></h4>
+		  		<% } %>
+<!-- 	            <div id="collection-grid">
 
 	              <div class="content-col-3">
 	                  <div class="item">
@@ -52,9 +55,9 @@
 	                  </div>
 	              </div>
 	              
-	          	</div>
+	          	</div> -->
 
-        	</div> -->
+        	</div>
       	</div>
       </div>
     </div>

@@ -31,7 +31,7 @@ exports.renderCommunitiesView = function(req, res) {
 		}
 		else {
 			data['collections'] = [];
-			data['error'] = "Could not retrieve communities.  Please contact Systems support";
+			data['error'] = "Error: could not retrieve communities.";
 		}
 		return res.render('collections', data);
 	});
@@ -51,28 +51,29 @@ exports.renderCommunity = function(req, res) {
 		}
 		else {
 			data['collections'] = [];
-			data['error'] = "Could not retrieve collections.  Please contact Systems support";
+			data['error'] = "Error: could not retrieve communities.";
 		}
 		return res.render('collections', data);
 	});
 }
 
 exports.renderRootCollection = function(req, res) {
-	var data = {};
+	var data = {
+		collections: [],
+		searchFields: [],
+		error: null
+	};
 
 	// Get all communities
 	Service.getTopLevelCollections(function(response) {
-			
 		data['base_url'] = config.baseUrl;
-		data['error'] = null;
 
 		if(response.status) {
 			data['collections'] = response.data;
 			data['searchFields'] = config.searchFields;
 		}
 		else {
-			data['collections'] = [];
-			data['error'] = "Could not retrieve communities.  Please contact Systems support";
+			data['error'] = "Error: could not retrieve collections.";
 		}
 		return res.render('collections', data);
 	});

@@ -438,6 +438,10 @@ div#title-banner > .container {
   top: 10px;
 }
 
+div#collections > h4 {
+  font-size: 1em;
+}
+
 div#collection-grid {
   margin-left: 44px;
 }
