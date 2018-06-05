@@ -563,17 +563,6 @@ button.accordion {
 
 /* End facet bloc */
 
-dl.item {
-  width: 20%;
-  min-width: 100px;
-  min-height: 180px;
-  display: -moz-inline-stack;
-  display: inline-block;
-  vertical-align: top;
-  margin: 1.5em 1.84%;
-  zoom: 1;
-}
-
 .item-title {
   color: #000;
   font-size: 18px;
@@ -626,8 +615,23 @@ dl.item {
   opacity: 1;
 }
 
+div#collection-grid dl.item {
+  width: 20%;
+  min-width: 100px;
+  min-height: 180px;
+  display: -moz-inline-stack;
+  display: inline-block;
+  vertical-align: top;
+  margin: 1.5em 1.84%;
+  zoom: 1;
+}
+
+div#collection-grid dl.item  > dd {
+  margin-left: 0;
+}
+
 div#collection-grid {
-  padding-top: 50px;
+  padding-top: 9vh;
 }
 
 div#collection-grid .item-thumb:hover {
@@ -635,8 +639,8 @@ div#collection-grid .item-thumb:hover {
 }
 
 div#collection-grid .item-thumb img {
-  height: 250px;
-  width: 200px;
+  height: 100%;
+  width: 100%;
 }
 
 div#search-results-wrapper {

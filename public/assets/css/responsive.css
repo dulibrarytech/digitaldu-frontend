@@ -84,6 +84,10 @@
     width: 85%;
   }
 
+  h3.item-title a {
+    font-size: 0.85em;
+  }
+
   div#banner-box {
       width: 490px;
   }
@@ -203,6 +207,10 @@
 
   .item-thumb img {
     width: 78%;
+  }
+
+  h3.item-title a {
+    font-size: 0.8em;
   }
 
   div#banner-box {
