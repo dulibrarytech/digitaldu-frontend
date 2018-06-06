@@ -9,7 +9,7 @@
     </div>
 </div>
 
-<div id="main" class="content container demo-test-view">
+<div id="main" class="content container">
     <div id="facet-breadcrumbs">
     	<a href="<%= base_url %>/collections">Start Over</a>
     	<% if (facet_breadcrumb_trail) { %>
@@ -38,11 +38,11 @@
 		  		<% } %>
 
 		  		<div class="paginator">
-	              <span><< Previous | <strong>1 - 20</strong> of <strong>33</strong> | Next >></span>
+	              <span><< <a href="#">Previous</a> | <strong>1 - 12</strong> of <strong>33</strong> | <a href="#">Next</a> >></span>
 	            </div>
 
 	            <div id="collection-grid">
-					<% for (var i = 0; i < collections.length; i++) { %>
+					<% for (var i = 0; i < 12; i++) { %>
 						<dl class="item">
 							<dt>
 								<a href="<%= collections[i].path %>/<%= collections[i].pid %>">

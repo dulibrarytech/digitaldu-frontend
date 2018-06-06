@@ -243,9 +243,15 @@ div#main {
   margin-bottom:200px;
 }
 
-div.main-front-page {
+div#main {
+  min-height:1274px;
+}
+
+div#main.homepage {
   min-height:1400px;
 }
+
+min-height: 1275px;
 
 div#content-wrapper {
   margin-top: 65px;
@@ -443,7 +449,12 @@ div#collections > h4 {
 }
 
 div#collection-grid {
-  margin-left: 44px;
+  margin: 10px 0 0 44px;
+}
+
+div#collection-grid:not(.homepage) dt {
+  border-bottom-style: solid;
+  border-bottom-color: #e5e3e1;
 }
 
 /* Facet bloc */
@@ -777,6 +788,15 @@ dt.result-title a {
 /*div.result-facets h4*/
 div#main h4 {
   font-size: 1.2em;
+}
+
+div.paginator {
+  margin-top: 35px;
+}
+
+div.paginator a {
+  text-decoration: none;
+  color: inherit;
 }
 
 div.paginator > span {
