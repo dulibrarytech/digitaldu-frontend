@@ -716,6 +716,10 @@ div.search-result {
   margin-bottom: 20px;
 }
 
+dl.item > dt {
+  overflow: hidden;
+}
+
 dl.search-result-data {
   float: left;
   width: 90%;

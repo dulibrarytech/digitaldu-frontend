@@ -29,11 +29,11 @@ var createItemList= function(items) {
           continue;
         }
 
-        title = display.title || "";
+        title = display.title || "Untitled";
         description = display.description || display.abstract || "";
     }
     else {
-      title = "";
+      title = "Untitled";
       description = "";
     }
       
