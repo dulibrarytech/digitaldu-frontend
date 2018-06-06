@@ -135,6 +135,18 @@ exports.getSearchResultDisplayFields = function(searchResult) {
     return fields;
 }
 
+exports.getFacetAggregationObject = function(facets) {
+	var facetAggregations = {}, field;
+    for(var key in facets) {
+      field = {};
+      field['field'] = facets[key] + ".keyword";
+      facetAggregations[key] = {
+        "terms": field
+      };
+    }
+    return facetAggregations;
+}
+
 /*
  * Create an array of facet breadcrumb objects for the view
  */

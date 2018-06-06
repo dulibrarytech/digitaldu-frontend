@@ -248,7 +248,7 @@ div.main-front-page {
 }
 
 div#content-wrapper {
-  margin-top: 77px;
+  margin-top: 65px;
 }
 
 #logo-banner {
@@ -635,7 +635,8 @@ div#collection-grid dl.item  > dd {
 }
 
 div#collection-grid {
-  padding-top: 6vh;
+  /*padding-top: 6vh;*/
+  padding-top: 7px;
 }
 
 .item-thumb:hover {

@@ -98,6 +98,7 @@ exports.getTopLevelCollections = function(callback) {
             }
           }
         }
+
         // Query the index for root collection members
         es.search(data, function (error, response, status) {
           var responseData = {};
@@ -112,6 +113,13 @@ exports.getTopLevelCollections = function(callback) {
               results.push(index._source);
             }
             var list = createItemList(results);
+
+            // Get the root level facets
+            // getFacets(function(body) {
+            //   console.log("TESTC body", body);
+            //   callback({status: true, data: list});
+            // });
+
             callback({status: true, data: list});
           }
         });
@@ -144,6 +152,8 @@ exports.getObjectsInCollection = function(collectionID, callback) {
         callback({status: true, data: list});
       }
       else {
+        // Get facets for this collection
+        var facetAggregations = Helper.getFacetAggregationObject(config.facets);
 
         // Use local index to find the collection children
         var data = {  
@@ -156,22 +166,28 @@ exports.getObjectsInCollection = function(collectionID, callback) {
                 "match": {
                   "is_member_of_collection": collectionID.substring(config.institutionPrefix.length)  // Remove the institution prefix
                 }
-            }
+            },
+            aggs: facetAggregations
           }
         }
+        
         // Query the index for root collection members
         es.search(data, function (error, response, status) {
+            console.log("TESTB response", response.aggregations["Type"].buckets);
+            console.log("TESTB ", response.hits.hits);
           var responseData = {};
           if (error){
             callback({status: false, message: error, data: null});
           }
           else {
             var results = [];
+
             // Create the result list
             for(var index of response.hits.hits) {
               results.push(index._source);
             }
             var list = createItemList(results);
+              console.log("TEST list", list);
             callback({status: true, data: list});
           }
         });
@@ -230,14 +246,7 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
     }
 
     // Build elasticsearch aggregations object from config facet list
-    var facetAggregations = {}, field;
-    for(var key in config.facets) {
-      field = {};
-      field['field'] = config.facets[key] + ".keyword";
-      facetAggregations[key] = {
-        "terms": field
-      };
-    }
+    var facetAggregations = Helper.getFacetAggregationObject(config.facets);
 
     // Elasticsearch query object
     var data = {  
@@ -334,7 +343,7 @@ exports.fetchObjectByPid = function(pid, callback) {
   });
 }
 
-exports.getFacets = function (callback) {
+var getFacets = function (callback) {
 
     // Build elasticsearch aggregations object from config facet list
     var aggs = {}, field;
