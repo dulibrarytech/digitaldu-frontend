@@ -109,13 +109,22 @@ exports.renderCollection = function(req, res) {
 			data.current_collection = pid;
 			data.current_collection_title = response.data.title || "Untitled";
 			//data['facet_breadcrumb_trail'] = ;
+
+			// TODO move to SERVICE
 			data.pagination.beginCount = (config.maxCollectionsPerPage * (page-1)) + 1;
-			data.pagination.pageHits = response.data.list.length * page;
+			if(response.data.list.length < config.maxCollectionsPerPage) {
+				data.pagination.pageHits = (data.pagination.beginCount - 1) + response.data.list.length;
+			}
+			else {	
+				data.pagination.pageHits = response.data.list.length * page;
+			}
 			data.pagination.totalHits = response.data.count;
+
+			//data.pagination = response.data.paginationData;
 		}
 		else {
 			console.log(response.message);
-			data.error = "Could not retrieve collections.  Please contact Systems support";
+			data.error = "Could not retrieve collections.";
 			data.current_collection_title = "Error";
 		}
 		return res.render('collection', data);
