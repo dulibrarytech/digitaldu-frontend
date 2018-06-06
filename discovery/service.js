@@ -164,13 +164,13 @@ exports.getObjectsInCollection = function(collectionID, pageNum, callback) {
             size : config.maxCollectionsPerPage,
             query: {
                 "match": {
-                  "is_member_of_collection": collectionID.substring(config.institutionPrefix.length)  // Remove the institution prefix
+                  "pid": "codu:*"  // Remove the institution prefix
                 }
             },
             aggs: facetAggregations
           }
         }
-        
+
         // Get children objects of this collection
         es.search(data, function (error, response, status) {
           var responseData = {};

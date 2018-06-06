@@ -96,6 +96,7 @@ exports.renderCollection = function(req, res) {
 	if(page) {
 		data.pagination = {
 			page: page,
+			beginCount: 0,
 			pageHits: 0,
 			totalHits: 0
 		};
@@ -108,10 +109,9 @@ exports.renderCollection = function(req, res) {
 			data.current_collection = pid;
 			data.current_collection_title = response.data.title || "Untitled";
 			//data['facet_breadcrumb_trail'] = ;
-				console.log("TEST response", response.data);
-			data.pagination.pageHits = response.data.list.length;
+			data.pagination.beginCount = (config.maxCollectionsPerPage * (page-1)) + 1;
+			data.pagination.pageHits = response.data.list.length * page;
 			data.pagination.totalHits = response.data.count;
-				console.log("TEST pagehits:", data.pagination.pageHits);
 		}
 		else {
 			console.log(response.message);
