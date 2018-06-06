@@ -170,12 +170,16 @@ exports.getObjectsInCollection = function(collectionID, pageNum, callback) {
             aggs: facetAggregations
           }
         }
-
+ 
         // Get children objects of this collection
         es.search(data, function (error, response, status) {
+
           var responseData = {};
           if (error){
             callback({status: false, message: error, data: null});
+          }
+          else if(data.body.from > response.hits.total) {
+            callback({status: false, message: "Invalid page number", data: null});
           }
           else {
             var results = [],
