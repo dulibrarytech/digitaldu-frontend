@@ -16,9 +16,20 @@ module.exports = {
     topLevelCollectionPID: "codu:root",
     collectionMimeType: "",
 
+    /*
+     * Begin application settings
+     */
+
     // Search results list size
     maxDisplayResults: 1000,
     resultMaxCharacters: 400,
+
+    // Collection results per page
+    maxCollectionsPerPage: 12,
+
+    /*
+     * End application settings
+     */
 
     /* 
      * Viewer to play audio files

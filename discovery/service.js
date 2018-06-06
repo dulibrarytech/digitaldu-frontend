@@ -140,7 +140,7 @@ exports.getCollectionsInCommunity = function(communityID, callback) {
   });
 }
 
-exports.getObjectsInCollection = function(collectionID, callback) {
+exports.getObjectsInCollection = function(collectionID, pageNum, callback) {
   Repository.getCollectionObjects(collectionID).catch(error => {
     callback({status: false, message: error, data: null});
   })
@@ -160,8 +160,8 @@ exports.getObjectsInCollection = function(collectionID, callback) {
           index: config.elasticsearchIndex,
           type: 'data',
           body: {
-            from : 0, 
-            size : config.maxDisplayResults,
+            from : (pageNum - 1) * config.maxCollectionsPerPage,
+            size : config.maxCollectionsPerPage,
             query: {
                 "match": {
                   "is_member_of_collection": collectionID.substring(config.institutionPrefix.length)  // Remove the institution prefix
@@ -173,7 +173,7 @@ exports.getObjectsInCollection = function(collectionID, callback) {
         
         // Get children objects of this collection
         es.search(data, function (error, response, status) {
-            console.log("TESTB ", response.hits.hits);
+
           var responseData = {};
           if (error){
             callback({status: false, message: error, data: null});

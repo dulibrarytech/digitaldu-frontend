@@ -79,24 +79,39 @@ exports.renderRootCollection = function(req, res) {
 	});
 }
 
+// 2.0 ok
 exports.renderCollection = function(req, res) {
-	var data = {},
-		pid = req.params.pid;
+	var data = {
+			facet_breadcrumb_trail: null,
+			current_collection_title: "",
+			current_collection: "",
+			collections: [],
+			error: null,
+			pagination: {},
+			base_url: config.baseUrl
+		},
+		pid = req.params.pid || "",
+		page = req.query.page || 0;
+
+	if(page) {
+		data.pagination = {
+			page: page,
+			maxPageResults: config.maxCollectionsPerPage || 12
+		};
+	}
 
 	// Get all collections in this community
-	Service.getObjectsInCollection(pid, function(response) {
-		data['base_url'] = config.baseUrl;
-		data['error'] = null;
-			console.log("TETABC response:", response.data.list);
+	Service.getObjectsInCollection(pid, page, function(response) {
 		if(response.status) {
-			data['collections'] = response.data.list;
-			data['current_collection'] = pid;
-			data['current_collection_title'] = response.data.title || "Untitled";
-			data['facet_breadcrumb_trail'] = null;
+			data.collections = response.data.list;
+			data.current_collection = pid;
+			data.current_collection_title = response.data.title || "Untitled";
+			//data['facet_breadcrumb_trail'] = ;
 		}
 		else {
-			data['collections'] = [];
-			data['error'] = "Could not retrieve collections.  Please contact Systems support";
+			console.log(response.message);
+			data.error = "Could not retrieve collections.  Please contact Systems support";
+			data.current_collection_title = "Error";
 		}
 		return res.render('collection', data);
 	});
