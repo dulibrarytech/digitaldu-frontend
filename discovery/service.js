@@ -195,7 +195,7 @@ exports.getObjectsInCollection = function(collectionID, callback) {
   });
 }
 
-exports.searchIndex = function(query, type, facets=null, page=null, callback) {
+exports.searchIndex = function(query, type, facets=null, collection=null, page=null, callback) {
 
     // Build elasticsearch matchfields object for query: this object enables field specific searching
     var field = { match: "" };
@@ -224,7 +224,6 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
     }
 
     // If facet data is present, add it to the search
-    // TODO create the array to add to "must" key below
     var matchFacetFields = [];
     if(facets) {
       var indexKey, count=0;
@@ -265,6 +264,12 @@ exports.searchIndex = function(query, type, facets=null, page=null, callback) {
       }
     }
 
+    // If a collection id is present, scope search to that collection
+    if(collection) {
+      // TODO add collection condition to search query?
+    }
+
+    // UNKNOWN CODE
     // if(facets) {
     //   //data.body.query.bool["minimum_should_match"] = count+1;
     //   data.body.query.bool["must"] = facets;

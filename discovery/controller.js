@@ -106,6 +106,7 @@ exports.search = function(req, res) {
 	var facets = req.query.f || null;
 	var typeVal = req.query.type, type;
 	var page = req.query.page || 1;
+	var collection = req.query.coll || null;
 
 	// "Search field selection": If "search all", build array of types from config settings.  If type search, 'type'is passed into search function as a string.
 	if(typeVal == 'All') {
@@ -128,7 +129,7 @@ exports.search = function(req, res) {
 
 	// TODO: Get page value from search query
 	// Update with ES pagination 
-	Service.searchIndex(query, type, facets, page, function(response) {
+	Service.searchIndex(query, type, facets, collection, page, function(response) {
 		var data = {
 			facets: null,
 			facet_breadcrumb_trail: null,
@@ -145,6 +146,7 @@ exports.search = function(req, res) {
 			//data['facets'] = Facets.create(dummyFacets);			// DEV
 
 			data['facet_breadcrumb_trail'] = Facets.getFacetBreadcrumbObject(facets);  // Param: the facets from the search request params
+			//data['collection_scope'] = pop collection stack
 
 			data['results'] = pagination.results;
 			data['pageData'] = pagination.data;
