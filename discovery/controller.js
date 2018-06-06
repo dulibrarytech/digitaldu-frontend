@@ -87,15 +87,18 @@ exports.renderCollection = function(req, res) {
 	Service.getObjectsInCollection(pid, function(response) {
 		data['base_url'] = config.baseUrl;
 		data['error'] = null;
-
+			console.log("TETABC response:", response);
 		if(response.status) {
-			data['collections'] = response.data;
+			data['collections'] = response.data.list;
+			data['current_collection'] = pid;
+			data['current_collection_title'] = response.data.title || "Untitled";
+			data['facet_breadcrumb_trail'] = null;
 		}
 		else {
 			data['collections'] = [];
 			data['error'] = "Could not retrieve collections.  Please contact Systems support";
 		}
-		return res.render('objects', data);
+		return res.render('collection', data);
 	});
 }
 

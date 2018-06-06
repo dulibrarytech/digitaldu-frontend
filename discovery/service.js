@@ -171,24 +171,31 @@ exports.getObjectsInCollection = function(collectionID, callback) {
           }
         }
         
-        // Query the index for root collection members
+        // Get children objects of this collection
         es.search(data, function (error, response, status) {
-            console.log("TESTB response", response.aggregations["Type"].buckets);
             console.log("TESTB ", response.hits.hits);
           var responseData = {};
           if (error){
             callback({status: false, message: error, data: null});
           }
           else {
-            var results = [];
+            var results = [], collection = {list: [], title: ""};
 
             // Create the result list
             for(var index of response.hits.hits) {
               results.push(index._source);
             }
-            var list = createItemList(results);
-              console.log("TEST list", list);
-            callback({status: true, data: list});
+
+            collection.list = createItemList(results);
+
+            // Get this collection's title
+            fetchObjectByPid(collectionID, function(response) {
+
+              if(response.status) {
+                collection.title = response.data.title;
+                callback({status: true, data: collection});
+              }
+            });
           }
         });
       }
@@ -321,7 +328,7 @@ exports.searchIndex = function(query, type, facets=null, collection=null, page=n
   });
 }
 
-exports.fetchObjectByPid = function(pid, callback) {
+var fetchObjectByPid = function(pid, callback) {
   var objectData = {
     pid: null
   };
@@ -347,6 +354,7 @@ exports.fetchObjectByPid = function(pid, callback) {
       }
   });
 }
+exports.fetchObjectByPid = fetchObjectByPid;
 
 var getFacets = function (callback) {
 

@@ -13,7 +13,7 @@ body {
   -webkit-text-size-adjust: 100%;*/
 
   background: #fff;
-  font-family: 'Lato', 'Poppins', 'Raleway', sans-serif;
+  font-family: 'Montserrat', 'Poppins', 'Raleway', sans-serif;
   font-size: 16px;
   line-height: 1;
   margin: 0 !important;
@@ -774,7 +774,8 @@ dt.result-title a {
   font-size: 18px;
 }
 
-div.result-facets h4 {
+/*div.result-facets h4*/
+div#main h4 {
   font-size: 1.2em;
 }
 

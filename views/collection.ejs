@@ -1,0 +1,71 @@
+<% include partials/header %>
+
+<div id="title-banner">
+    <div class="container">
+    <div id="title-text" class="col-sm-6 cul">
+            <a class="sm-title" href="http://www.library.du.edu">University Libraries</a>
+            <h1><a class="title" href="/">SPECIAL COLLECTIONS <span class="highlight-text">@ DU</span></a></h1>
+        </div>
+    </div>
+</div>
+
+<div id="main" class="content container demo-test-view">
+    <div id="facet-breadcrumbs">
+    	<a href="<%= base_url %>/collections">Start Over</a>
+    	<% if (facet_breadcrumb_trail) { %>
+    		<%- facet_breadcrumb_trail %>
+    	<% } %>
+    </div>
+    <div class="content-col-3">
+	    <div id="result-facets-wrapper" class="sidebar">
+	      <div class="result-facets">
+	        <h4>Facets</h4>
+	        <hr>
+
+	        <!-- facets.ejs here -->
+
+	      </div>
+	    </div>
+    </div>
+
+    <div class="content-col-9">
+        	<div id="collections">
+	            <h4><%= current_collection_title %></h4>
+	            <hr>
+
+	            <% if(error) { %>
+		  			<h4><%- error %></h4>
+		  		<% } %>
+
+		  		<div class="paginator">
+	              <span><< Previous | <strong>1 - 20</strong> of <strong>33</strong> | Next >></span>
+	            </div>
+
+	            <div id="collection-grid">
+					<% for (var i = 0; i < collections.length; i++) { %>
+						<dl class="item">
+							<dt>
+								<a href="<%= collections[i].path %>/<%= collections[i].pid %>">
+		            				<div class="item-thumb">
+								  		<img src="<%= collections[i].tn %>" alt="Thumb Image">
+									</div>
+								</a>
+							</dt>
+							<dd>
+								<div class="item-details">
+								  	<h3 class="item-title"><a target="_blank" href="<%= collections[i].path %>/<%= collections[i].pid %>"><%= collections[i].title %></a></h3>
+								</div>
+							</dd>
+						</dl>
+					<% } %>
+	          	</div>
+        	</div>
+      	</div>
+  </div>
+
+<% include partials/footer %>
+
+
+
+
+
