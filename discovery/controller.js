@@ -91,12 +91,13 @@ exports.renderCollection = function(req, res) {
 			base_url: config.baseUrl
 		},
 		pid = req.params.pid || "",
-		page = req.query.page || 0;
+		page = req.query.page || 1;
 
 	if(page) {
 		data.pagination = {
 			page: page,
-			maxPageResults: config.maxCollectionsPerPage || 12
+			pageHits: 0,
+			totalHits: 0
 		};
 	}
 
@@ -107,6 +108,10 @@ exports.renderCollection = function(req, res) {
 			data.current_collection = pid;
 			data.current_collection_title = response.data.title || "Untitled";
 			//data['facet_breadcrumb_trail'] = ;
+				console.log("TEST response", response.data);
+			data.pagination.pageHits = response.data.list.length;
+			data.pagination.totalHits = response.data.count;
+				console.log("TEST pagehits:", data.pagination.pageHits);
 		}
 		else {
 			console.log(response.message);

@@ -34,31 +34,32 @@
 	            <hr>
 
 	            <% if(error) { %>
-		  			<h4><%- error %></h4>
-		  		<% } %>
+		  			<h5><%- error %></h5>
+		  		<% } else { %>
 
-		  		<div class="paginator">
-	              <span><< <a href="#">Previous</a> | <strong>1 - 12</strong> of <strong>33</strong> | <a href="#">Next</a> >></span>
-	            </div>
+			  		<div class="paginator">
+		              <span><< <a href="#">Previous</a> | <strong>1 - <%= pagination.pageHits %></strong> of <strong><%= pagination.totalHits %></strong> | <a href="#">Next</a> >></span>
+		            </div>
 
-	            <div id="collection-grid">
-					<% for (var i = 0; i < collections.length; i++) { %>
-						<dl class="item">
-							<dt>
-								<a href="<%= collections[i].path %>/<%= collections[i].pid %>">
-		            				<div class="item-thumb">
-								  		<img src="<%= collections[i].tn %>" alt="Thumb Image">
+		            <div id="collection-grid">
+						<% for (var i = 0; i < collections.length; i++) { %>
+							<dl class="item">
+								<dt>
+									<a href="<%= collections[i].path %>/<%= collections[i].pid %>">
+			            				<div class="item-thumb">
+									  		<img src="<%= collections[i].tn %>" alt="Thumb Image">
+										</div>
+									</a>
+								</dt>
+								<dd>
+									<div class="item-details">
+									  	<h3 class="item-title"><a target="_blank" href="<%= collections[i].path %>/<%= collections[i].pid %>"><%= collections[i].title %></a></h3>
 									</div>
-								</a>
-							</dt>
-							<dd>
-								<div class="item-details">
-								  	<h3 class="item-title"><a target="_blank" href="<%= collections[i].path %>/<%= collections[i].pid %>"><%= collections[i].title %></a></h3>
-								</div>
-							</dd>
-						</dl>
-					<% } %>
-	          	</div>
+								</dd>
+							</dl>
+						<% } %>
+		          	</div>
+	          	<% } %>
         	</div>
       	</div>
   </div>

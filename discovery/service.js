@@ -173,13 +173,17 @@ exports.getObjectsInCollection = function(collectionID, pageNum, callback) {
         
         // Get children objects of this collection
         es.search(data, function (error, response, status) {
-
           var responseData = {};
           if (error){
             callback({status: false, message: error, data: null});
           }
           else {
-            var results = [], collection = {list: [], title: ""};
+            var results = [],
+                collection = {
+                  list: [], 
+                  title: "",
+                  count: response.hits.total
+                };
 
             // Create the result list
             for(var index of response.hits.hits) {
@@ -190,7 +194,6 @@ exports.getObjectsInCollection = function(collectionID, pageNum, callback) {
 
             // Get this collection's title
             fetchObjectByPid(collectionID, function(response) {
-
               if(response.status) {
                 collection.title = response.data.title;
                 callback({status: true, data: collection});

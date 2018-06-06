@@ -30,29 +30,30 @@
 	            <hr>
 
 	            <% if(error) { %>
-		  			<h4><%- error %></h4>
-		  		<% } %>
+		  			<h5><%- error %></h5>
+		  		<% } else { %>
 
-	            <div id="collection-grid" class="homepage">
-	            
-					<% for (var i = 0; i < collections.length; i++) { %>
-						<dl class="item">
-							<dt>
-								<a href="<%= collections[i].path %>/<%= collections[i].pid %>">
-		            				<div class="item-thumb">
-								  		<img src="<%= collections[i].tn %>" alt="Thumb Image">
+		            <div id="collection-grid" class="homepage">
+		            
+						<% for (var i = 0; i < collections.length; i++) { %>
+							<dl class="item">
+								<dt>
+									<a href="<%= collections[i].path %>/<%= collections[i].pid %>">
+			            				<div class="item-thumb">
+									  		<img src="<%= collections[i].tn %>" alt="Thumb Image">
+										</div>
+									</a>
+								</dt>
+								<dd>
+									<div class="item-details">
+									  	<h3 class="item-title"><a target="_blank" href="<%= collections[i].path %>/<%= collections[i].pid %>"><%= collections[i].title %></a></h3>
 									</div>
-								</a>
-							</dt>
-							<dd>
-								<div class="item-details">
-								  	<h3 class="item-title"><a target="_blank" href="<%= collections[i].path %>/<%= collections[i].pid %>"><%= collections[i].title %></a></h3>
-								</div>
-							</dd>
-						</dl>
-					<% } %>
-	           
-	          	</div>
+								</dd>
+							</dl>
+						<% } %>
+		           
+		          	</div>
+	          	<% } %>
         	</div>
       	</div>
       </div>
