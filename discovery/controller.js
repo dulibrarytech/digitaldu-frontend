@@ -87,7 +87,7 @@ exports.renderCollection = function(req, res) {
 	Service.getObjectsInCollection(pid, function(response) {
 		data['base_url'] = config.baseUrl;
 		data['error'] = null;
-			console.log("TETABC response:", response);
+			console.log("TETABC response:", response.data.list);
 		if(response.status) {
 			data['collections'] = response.data.list;
 			data['current_collection'] = pid;
