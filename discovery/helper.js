@@ -109,13 +109,18 @@ exports.getViewPaginatorDataObject = function(items, page) {
 		totalHits: 0
 	};
 
+	// First item on the current page
 	pagination.beginCount = (config.maxCollectionsPerPage * (page-1)) + 1;
+
+	// Items on the current page
 	if(items.list.length < config.maxCollectionsPerPage) {
 		pagination.pageHits = (pagination.beginCount - 1) + items.list.length;
 	}
 	else {	
 		pagination.pageHits = items.list.length * page;
 	}
+
+	// The total number of search results
 	pagination.totalHits = items.count;
 
 	return pagination;
@@ -128,13 +133,13 @@ exports.getTypeFacetTotalsObject = function(facets) {
 	
 	// Default values
 	var totals = {
-		stillImage: 1234,
-		movingImage: 1234,
-		soundRecording: 1234,
-		text: 1234,
-		map: 1234,
-		artReproduction: 1234,
-		scrapbook: 1234
+		stillImage: 0,
+		movingImage: 0,
+		soundRecording: 0,
+		text: 0,
+		map: 0,
+		artReproduction: 0,
+		scrapbook: 0
 	}
 
 	// TODO If necessary, normalize type fields here (ala Blacklight)
