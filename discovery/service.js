@@ -179,12 +179,9 @@ exports.getObjectsInCollection = function(collectionID, pageNum, callback) {
             aggs: facetAggregations
           }
         }
-
-          console.log("TEST search data", data);
  
         // Get children objects of this collection
         es.search(data, function (error, response, status) {
-            console.log("TEST search res", response);
           var responseData = {};
           if (error){
             callback({status: false, message: error, data: null});
@@ -296,7 +293,7 @@ exports.searchIndex = function(query, type, facets=null, collection=null, page=n
     //   //data.body.query.bool["minimum_should_match"] = count+1;
     //   data.body.query.bool["must"] = facets;
     // }
-
+      console.log("TEST search data", data);
     // Query the index
     es.search(data, function (error, response, status) {
       var responseData = {};
@@ -304,7 +301,7 @@ exports.searchIndex = function(query, type, facets=null, collection=null, page=n
         callback({status: false, message: error, data: null});
       }
       else {
-      
+          console.log("TEST search res2", response);
         // Return the aggs for the facet display
         responseData['facets'] = response.aggregations;
 
