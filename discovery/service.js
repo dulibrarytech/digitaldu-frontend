@@ -11,7 +11,7 @@ const Helper = require("./helper");
 /*
  * Normalizes item data for the view model
  */
-var createItemList= function(items) {
+var createItemList= function(items, page=1) {
   var itemList = [], tn, pid, title, description, display, path;
   for(var item of items) {
       
@@ -75,7 +75,7 @@ var createItemList= function(items) {
 /*
  * Create array of items for the collection view's object display
  */
-exports.getTopLevelCollections = function(callback) {
+exports.getTopLevelCollections = function(page=1, callback) {
   Repository.getRootCollections().catch(error => {
     console.log(error);
     callback({status: false, message: error, data: null});
@@ -83,8 +83,7 @@ exports.getTopLevelCollections = function(callback) {
   .then( response => {
       if(response && response.length > 0) {
 
-
-        var list = createItemList(JSON.parse(response));
+        var list = createItemList(JSON.parse(response), page);
         callback({status: true, data: list});
       }
       else {
@@ -118,15 +117,8 @@ exports.getTopLevelCollections = function(callback) {
             for(var index of response.hits.hits) {
               results.push(index._source);
             }
-            var list = createItemList(results);
 
-            // Get the root level facets
-            // getFacets(function(body) {
-            //   console.log("TESTC body", body);
-            //   callback({status: true, data: list});
-            // });
-
-            callback({status: true, data: list});
+            callback({status: true, data: createItemList(results), page});
           }
         });
       }
@@ -165,7 +157,7 @@ exports.getObjectsInCollection = function(collectionID, pageNum, callback) {
       if(response && response.length > 0) {
         collection.count = response.length;
 
-        var list = createItemList(JSON.parse(response));
+        var list = createItemList(JSON.parse(response), pageNum);
         callback({status: true, data: list});
       }
       else {
@@ -205,7 +197,7 @@ exports.getObjectsInCollection = function(collectionID, pageNum, callback) {
               results.push(index._source);
             }
 
-            collection.list = createItemList(results);
+            collection.list = createItemList(results, pagenum);
 
             // Get this collection's title
             fetchObjectByPid(collectionID, function(response) {

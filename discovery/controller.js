@@ -65,10 +65,11 @@ exports.renderRootCollection = function(req, res) {
 		facets: {},
 		error: null,
 		base_url: config.baseUrl
-	};
+	},
+	page = req.query.page || 1;
 
 	// Get all root collections
-	Service.getTopLevelCollections(function(response) {
+	Service.getTopLevelCollections(page, function(response) {
 
 		Service.getFacets(function(facets) {
 
@@ -76,8 +77,6 @@ exports.renderRootCollection = function(req, res) {
 				data.collections = response.data;
 				data.searchFields = config.searchFields;
 				data.facets = Facets.create(facets);
-					console.log("TEST facets in from function (should be minus the Type prop):", facets);
-					console.log("TEST facets created:", data.facets);
 			}
 			else {
 				data.error = "Error: could not retrieve collections.";
@@ -135,6 +134,7 @@ exports.renderCollection = function(req, res) {
 			data.error = "Could not retrieve collections.";
 			data.current_collection_title = "Error";
 		}
+			console.log("TEST render collection data", data);
 		return res.render('collection', data);
 	});
 }
