@@ -251,8 +251,6 @@ div#main.homepage {
   min-height:1400px;
 }
 
-min-height: 1275px;
-
 div#content-wrapper {
   margin-top: 65px;
 }
@@ -367,7 +365,7 @@ div#title-logo {
 }
 
 .welcomeBox .description {
-    font: 1.3em 'Open Sans', "Helvetica Neue", Helvetica, sans-serif;
+    font: 1.1em 'Open Sans', "Helvetica Neue", Helvetica, sans-serif;
     line-height: 24px;
     color: #797878;
     text-align: left;
@@ -510,9 +508,13 @@ div#facets > div.panel .facet-count {
 
 .facet-count {
   width: 10%;
-  margin-top: 5px;
+/*  margin-top: 5px;*/
   margin-right:24px;
   color: #757371;
+}
+
+.fixed-facets .facet-count {
+  margin-top: 5px;
 }
 
 .facet-thumbnail > img {
