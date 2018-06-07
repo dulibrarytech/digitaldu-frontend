@@ -93,6 +93,7 @@ exports.renderCollection = function(req, res) {
 			current_collection_title: "",
 			current_collection: "",
 			collections: [],
+			facets: {},
 			error: null,
 			pagination: {},
 			base_url: config.baseUrl
@@ -127,14 +128,14 @@ exports.renderCollection = function(req, res) {
 			}
 			data.pagination.totalHits = response.data.count;
 
-			//data.pagination = response.data.paginationData;
+			data.facets = Facets.create(response.data.facets);
 		}
 		else {
 			console.log(response.message);
 			data.error = "Could not retrieve collections.";
 			data.current_collection_title = "Error";
 		}
-			console.log("TEST render collection data", data);
+
 		return res.render('collection', data);
 	});
 }

@@ -147,6 +147,7 @@ exports.getObjectsInCollection = function(collectionID, pageNum, callback) {
       var collection = {
         list: [], 
         title: "",
+        facets: {},
         count: 0
       };
 
@@ -197,7 +198,8 @@ exports.getObjectsInCollection = function(collectionID, pageNum, callback) {
               results.push(index._source);
             }
 
-            collection.list = createItemList(results, pagenum);
+            collection.list = createItemList(results, pageNum);
+            collection.facets = response.aggregations;
 
             // Get this collection's title
             fetchObjectByPid(collectionID, function(response) {
