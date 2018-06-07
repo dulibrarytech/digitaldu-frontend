@@ -640,7 +640,7 @@ div#collection-grid dl.item {
 }
 
 div#collection-grid dl.item  > dt {
-  height: 265px;
+  height: 150px;
 }
 
 div#collection-grid dl.item  > dd {
