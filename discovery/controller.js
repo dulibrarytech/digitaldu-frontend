@@ -57,25 +57,38 @@ exports.renderCommunity = function(req, res) {
 	});
 }
 
+// 2.0 ok
 exports.renderRootCollection = function(req, res) {
 	var data = {
 		collections: [],
 		searchFields: [],
-		error: null
+		facets: {},
+		error: null,
+		base_url: config.baseUrl
 	};
 
-	// Get all communities
+	// Get all root collections
 	Service.getTopLevelCollections(function(response) {
-		data['base_url'] = config.baseUrl;
 
-		if(response.status) {
-			data['collections'] = response.data;
-			data['searchFields'] = config.searchFields;
-		}
-		else {
-			data['error'] = "Error: could not retrieve collections.";
-		}
-		return res.render('collections', data);
+		Service.getFacets(function(facets) {
+
+			if(response.status) {
+				data.collections = response.data;
+				data.searchFields = config.searchFields;
+
+				// Remove the 'Type' facets, omit so homepage can render the hardcoded Type facets
+				if(facets.Type) {
+					delete facets.Type;
+				}
+				data.facets = Facets.create(facets);
+					console.log("TEST facets in from function (should be minus the Type prop):", facets);
+					console.log("TEST facets created:", data.facets);
+			}
+			else {
+				data.error = "Error: could not retrieve collections.";
+			}
+			return res.render('collections', data);
+		});
 	});
 }
 

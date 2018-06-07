@@ -374,6 +374,7 @@ var getFacets = function (callback) {
         terms: field
       };
     }
+
     es.search({
         body: {
             "size": 0,
@@ -388,6 +389,7 @@ var getFacets = function (callback) {
         callback(error);
     });
 };
+exports.getFacets = getFacets;
 
 exports.searchFacets = function (query, facets, page, callback) {
 

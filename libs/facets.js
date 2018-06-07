@@ -31,14 +31,20 @@ exports.getFacetBreadcrumbObject = function(selectedFacets) {
 function createList(facet, data) {
     var i;
     var html = '';
+    html += '<div class="panel"><ul>';
     for (i = 0; i < data.length; i++) {
         // If the key is not empty, add the facet to the list
+        // if(data[i].key != "") {
+        //     html += '<div id="facet-listing"><span class="facet-name-label"><a href="javascript:document.location.href=selectFacet(\'' + facet + '\', \'' + data[i].key + '\');">' + data[i].key + '</a></span><span class="facet-count-label">' + data[i].doc_count + '</span></div><br>';   // good
+        //     //html += '<span><a  onclick="selectFacet(\'' + facet + '\', \'' + data[i].key + '\');">' + data[i].key + '</a>&nbsp;&nbsp;(' + data[i].doc_count + ')</span><br>';   // test
+        // }
+
+        // Ex4
         if(data[i].key != "") {
-            html += '<div id="facet-listing"><span class="facet-name-label"><a href="javascript:document.location.href=selectFacet(\'' + facet + '\', \'' + data[i].key + '\');">' + data[i].key + '</a></span><span class="facet-count-label">' + data[i].doc_count + '</span></div><br>';   // good
-            //html += '<span><a  onclick="selectFacet(\'' + facet + '\', \'' + data[i].key + '\');">' + data[i].key + '</a>&nbsp;&nbsp;(' + data[i].doc_count + ')</span><br>';   // test
+            html += '<li><span class="facet-name"><a href="javascript:document.location.href=selectFacet(\'' + facet + '\', \'' + data[i].key + '\');">' + data[i].key + '</a></span><span class="facet-count">' + data[i].doc_count + '</span></li>';
         }
     }
-
+    html += '</ul></div>';
     return html;
 };
 
