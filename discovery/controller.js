@@ -63,6 +63,7 @@ exports.renderRootCollection = function(req, res) {
 		collections: [],
 		searchFields: [],
 		facets: {},
+		typeCount: {},
 		error: null,
 		base_url: config.baseUrl
 	},
@@ -77,6 +78,7 @@ exports.renderRootCollection = function(req, res) {
 				data.collections = response.data;
 				data.searchFields = config.searchFields;
 				data.facets = Facets.create(facets);
+				data.typeCount = Helper.getTypeFacetTotalsObject(facets);
 			}
 			else {
 				data.error = "Error: could not retrieve collections.";
@@ -101,15 +103,6 @@ exports.renderCollection = function(req, res) {
 		pid = req.params.pid || "",
 		page = req.query.page || 1;
 
-	if(page) {
-		data.pagination = {
-			page: page,
-			beginCount: 0,
-			pageHits: 0,
-			totalHits: 0
-		};
-	}
-
 	// Get all collections in this community
 	Service.getObjectsInCollection(pid, page, function(response) {
 		if(response.status) {
@@ -117,18 +110,11 @@ exports.renderCollection = function(req, res) {
 			data.current_collection = pid;
 			data.current_collection_title = response.data.title || "Untitled";
 			//data['facet_breadcrumb_trail'] = ;
-				console.log("TEST response.data", response.data);
-			// TODO move to SERVICE
-			data.pagination.beginCount = (config.maxCollectionsPerPage * (page-1)) + 1;
-			if(response.data.list.length < config.maxCollectionsPerPage) {
-				data.pagination.pageHits = (data.pagination.beginCount - 1) + response.data.list.length;
-			}
-			else {	
-				data.pagination.pageHits = response.data.list.length * page;
-			}
-			data.pagination.totalHits = response.data.count;
 
-			//data.pagination = Helper.getViewPaginatorDataObject(response.data);
+			if(page) {
+				data.pagination = Helper.getViewPaginatorDataObject(response.data, page);
+			}
+			//data.pagination = Helper.getViewPaginatorDataObject(response.data, page);
 
 			data.facets = Facets.create(response.data.facets);
 		}

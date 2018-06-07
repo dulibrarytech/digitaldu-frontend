@@ -98,6 +98,62 @@ exports.paginateResults = function(results, page) {
 	return response;
 }
 
+/*
+ * Creates the view object containing the paginator data
+ */
+exports.getViewPaginatorDataObject = function(items, page) {
+	var pagination = {
+		page: page,
+		beginCount: 0,
+		pageHits: 0,
+		totalHits: 0
+	};
+
+	pagination.beginCount = (config.maxCollectionsPerPage * (page-1)) + 1;
+	if(items.list.length < config.maxCollectionsPerPage) {
+		pagination.pageHits = (pagination.beginCount - 1) + items.list.length;
+	}
+	else {	
+		pagination.pageHits = items.list.length * page;
+	}
+	pagination.totalHits = items.count;
+
+	return pagination;
+}
+
+/*
+ * Get the totals for all type facets, for the front page template (Matches the hard coded type facets)
+ */
+exports.getTypeFacetTotalsObject = function(facets) {
+	
+	// Default values
+	var totals = {
+		stillImage: 1234,
+		movingImage: 1234,
+		soundRecording: 1234,
+		text: 1234,
+		map: 1234,
+		artReproduction: 1234,
+		scrapbook: 1234
+	}
+
+	// TODO If necessary, normalize type fields here (ala Blacklight)
+
+	for(var facet of facets.Type.buckets) {
+		if(facet.key == "still image") {
+			totals.stillImage = facet.doc_count;
+		}
+		else if(facet.key == "moving image") {
+			totals.movingImage = facet.doc_count;
+		}
+		else if(facet.key == "text") {
+			totals.text = facet.doc_count;
+		}
+	}
+
+	return totals;
+}
+
 exports.getSearchResultDisplayFields = function(searchResult) {
 	var fields = {
 		title: "",
