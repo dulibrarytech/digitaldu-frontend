@@ -162,7 +162,7 @@ exports.getObjectsInCollection = function(collectionID, pageNum, callback) {
         callback({status: true, data: list});
       }
       else {
-        
+         
         // Use local index to find the collection children
         var data = {  
           index: config.elasticsearchIndex,
@@ -172,17 +172,19 @@ exports.getObjectsInCollection = function(collectionID, pageNum, callback) {
             size : config.maxCollectionsPerPage,
             query: {
                 "match": {
-                  "pid": "codu:*"  // Remove the institution prefix
-                  // "is_member_of_collection": collectionID 
+                  //"pid": "codu:*" 
+                  "is_member_of_collection": collectionID.substring(config.institutionPrefix.length) 
                 }
             },
             aggs: facetAggregations
           }
         }
+
+          console.log("TEST search data", data);
  
         // Get children objects of this collection
         es.search(data, function (error, response, status) {
-
+            console.log("TEST search res", response);
           var responseData = {};
           if (error){
             callback({status: false, message: error, data: null});

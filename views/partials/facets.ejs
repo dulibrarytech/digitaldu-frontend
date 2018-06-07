@@ -1,16 +1,10 @@
 <div id="facets">
-	<div class="section-label">
-		<h4>Refine your search</h4>
-	</div>
-
-	<div id="facet-data">
-		<% for(var key in facets) { %>
-			<% if (facets[key]) { %>
-				<h4>By <%- key %>:</h4> 
-				<%- facets[key] %>
-			<% } %>
-		<% }; %>
-	</div>
+	<% for(var key in facets) { %>	
+	  <button class="accordion">
+	    <h5><%= key %></h5><i class="fas fa-caret-right facet-caret"></i>
+	  </button>
+	  <%- facets[key] %>
+	<% } %>
 
 	<script type="text/javascript">
 

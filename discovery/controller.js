@@ -114,9 +114,10 @@ exports.renderCollection = function(req, res) {
 			if(page) {
 				data.pagination = Helper.getViewPaginatorDataObject(response.data, page);
 			}
-			//data.pagination = Helper.getViewPaginatorDataObject(response.data, page);
 
 			data.facets = Facets.create(response.data.facets);
+
+			console.log("TEST facets type", data.facets);
 		}
 		else {
 			console.log(response.message);
