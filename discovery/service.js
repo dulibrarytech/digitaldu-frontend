@@ -200,6 +200,7 @@ exports.getObjectsInCollection = function(collectionID, pageNum, callback) {
 
             collection.list = createItemList(results, pageNum);
             collection.facets = response.aggregations;
+            collection.count = response.hits.total;
 
             // Get this collection's title
             fetchObjectByPid(collectionID, function(response) {

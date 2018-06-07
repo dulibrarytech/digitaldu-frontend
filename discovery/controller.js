@@ -117,7 +117,7 @@ exports.renderCollection = function(req, res) {
 			data.current_collection = pid;
 			data.current_collection_title = response.data.title || "Untitled";
 			//data['facet_breadcrumb_trail'] = ;
-
+				console.log("TEST response.data", response.data);
 			// TODO move to SERVICE
 			data.pagination.beginCount = (config.maxCollectionsPerPage * (page-1)) + 1;
 			if(response.data.list.length < config.maxCollectionsPerPage) {
@@ -127,6 +127,8 @@ exports.renderCollection = function(req, res) {
 				data.pagination.pageHits = response.data.list.length * page;
 			}
 			data.pagination.totalHits = response.data.count;
+
+			//data.pagination = Helper.getViewPaginatorDataObject(response.data);
 
 			data.facets = Facets.create(response.data.facets);
 		}
