@@ -75,11 +75,6 @@ exports.renderRootCollection = function(req, res) {
 			if(response.status) {
 				data.collections = response.data;
 				data.searchFields = config.searchFields;
-
-				// Remove the 'Type' facets, omit so homepage can render the hardcoded Type facets
-				if(facets.Type) {
-					delete facets.Type;
-				}
 				data.facets = Facets.create(facets);
 					console.log("TEST facets in from function (should be minus the Type prop):", facets);
 					console.log("TEST facets created:", data.facets);

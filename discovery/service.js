@@ -9,7 +9,7 @@ const Helper = require("./helper");
 
 
 /*
- * 
+ * Normalizes item data for the view model
  */
 var createItemList= function(items) {
   var itemList = [], tn, pid, title, description, display, path;
@@ -72,6 +72,9 @@ var createItemList= function(items) {
   return itemList;
 }
 
+/*
+ * Create array of items for the collection view's object display
+ */
 exports.getTopLevelCollections = function(callback) {
   Repository.getRootCollections().catch(error => {
     console.log(error);
@@ -79,11 +82,14 @@ exports.getTopLevelCollections = function(callback) {
   })
   .then( response => {
       if(response && response.length > 0) {
+
+
         var list = createItemList(JSON.parse(response));
         callback({status: true, data: list});
       }
       else {
 
+        // No data from repository:
         // Use the index to retrieve the top-level collection objects
         var data = {  
           index: config.elasticsearchIndex,
@@ -146,15 +152,24 @@ exports.getObjectsInCollection = function(collectionID, pageNum, callback) {
   })
   .then( response => {
 
+      var collection = {
+        list: [], 
+        title: "",
+        count: 0
+      };
+
+      // Get facets for this collection
+      var facetAggregations = Helper.getFacetAggregationObject(config.facets);
+
       // Validate repository response
       if(response && response.length > 0) {
+        collection.count = response.length;
+
         var list = createItemList(JSON.parse(response));
         callback({status: true, data: list});
       }
       else {
-        // Get facets for this collection
-        var facetAggregations = Helper.getFacetAggregationObject(config.facets);
-
+        
         // Use local index to find the collection children
         var data = {  
           index: config.elasticsearchIndex,
@@ -165,6 +180,7 @@ exports.getObjectsInCollection = function(collectionID, pageNum, callback) {
             query: {
                 "match": {
                   "pid": "codu:*"  // Remove the institution prefix
+                  // "is_member_of_collection": collectionID 
                 }
             },
             aggs: facetAggregations
@@ -182,12 +198,7 @@ exports.getObjectsInCollection = function(collectionID, pageNum, callback) {
             callback({status: false, message: "Invalid page number", data: null});
           }
           else {
-            var results = [],
-                collection = {
-                  list: [], 
-                  title: "",
-                  count: response.hits.total
-                };
+            var results = [];
 
             // Create the result list
             for(var index of response.hits.hits) {
