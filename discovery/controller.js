@@ -5,8 +5,12 @@ var async = require('async'),
     Helper = require('./helper.js'),
     Service = require('./service.js'),
     Viewer = require('../libs/viewer'),
-    Facets = require('../libs/facets');
+    Facets = require('../libs/facets'),
+    Paginator = require('../libs/paginator');
 
+/*
+ * Get facets for all data (public route)
+ */
 exports.getFacets = function(req, res) {
 
     Service.getFacets(function (facets) {
@@ -17,6 +21,9 @@ exports.getFacets = function(req, res) {
     });
 }
 
+/*
+ * Not in use
+ */
 exports.renderCommunitiesView = function(req, res) {
 	var data = {};
 
@@ -37,6 +44,9 @@ exports.renderCommunitiesView = function(req, res) {
 	});
 }
 
+/*
+ * Not in use
+ */
 exports.renderCommunity = function(req, res) {
 	var data = {},
 		id = req.params.id;
@@ -57,12 +67,16 @@ exports.renderCommunity = function(req, res) {
 	});
 }
 
-// 2.0 ok
+/*
+ * Get the root level collections, get facet data for all items
+ * Render landing page view
+ */
 exports.renderRootCollection = function(req, res) {
 	var data = {
 		collections: [],
 		searchFields: [],
 		facets: {},
+		paginator: {},
 		typeCount: {},
 		error: null,
 		base_url: config.baseUrl
@@ -72,23 +86,37 @@ exports.renderRootCollection = function(req, res) {
 	// Get all root collections
 	Service.getTopLevelCollections(page, function(response) {
 
-		Service.getFacets(function(facets) {
+		// Get the view data
+		if(response.status) {
+			data.collections = response.data;
+			data.searchFields = config.searchFields;
+			data.pagination = Paginator.create(response.data, page, config.maxCollectionsPerPage);
+		}
+		else {
+			data.error = "Error: could not retrieve collections.";
+		}
 
-			if(response.status) {
-				data.collections = response.data;
-				data.searchFields = config.searchFields;
-				data.facets = Facets.create(facets);
-				data.typeCount = Helper.getTypeFacetTotalsObject(facets);
+		// Get facets for all data
+		Service.getFacets(function(facets) {
+				console.log("TEST typeof facets:", typeof facets);
+			if(typeof facets == "string") {
+				console.log("FACETS ERR?:", facets);
 			}
 			else {
-				data.error = "Error: could not retrieve collections.";
+				data.facets = Facets.create(facets);
+
+				// Totals for the static type facets on the front page
+				data.typeCount = Helper.getTypeFacetTotalsObject(facets);
 			}
+			
 			return res.render('collections', data);
 		});
 	});
 }
 
-// 2.0 ok
+/*
+ * Render the collections page, displaying items in collection
+ */
 exports.renderCollection = function(req, res) {
 	var data = {
 			facet_breadcrumb_trail: null,
@@ -109,15 +137,10 @@ exports.renderCollection = function(req, res) {
 			data.collections = response.data.list;
 			data.current_collection = pid;
 			data.current_collection_title = response.data.title || "Untitled";
-			//data['facet_breadcrumb_trail'] = ;
+			//data.facet_breadcrumb_trail = ;
 
-			if(page) {
-				data.pagination = Helper.getViewPaginatorDataObject(response.data, page);
-			}
-
+			data.pagination = Paginator.create(response.data, page, config.maxCollectionsPerPage);
 			data.facets = Facets.create(response.data.facets);
-
-			console.log("TEST facets type", data.facets);
 		}
 		else {
 			console.log(response.message);
@@ -129,6 +152,48 @@ exports.renderCollection = function(req, res) {
 	});
 }
 
+/*
+ * Render the object view page
+ */
+exports.renderObjectView = function(req, res) {
+	var data = {
+		viewer: null,
+		object: null,
+		mods: null
+	};
+
+	// Get the object data
+	Service.fetchObjectByPid(req.params.pid, function(response) {
+
+		if(response.status) {
+
+			var object;
+			if(response.data.pid) {
+				object = response.data;
+				data['object'] = object;
+
+				// Get viewer
+				data['viewer'] = Viewer.getObjectViewer(object);
+				data['summary'] = Helper.createSummaryDisplayObject(object);
+				data['mods'] = Helper.createMetadataDisplayObject(object);
+			}	
+			else {
+				data['error'] = "Error rendering object, object not found";
+			}
+		}
+		else {
+			console.error("Index error: ", response.message);
+			data['error'] = "Error rendering object, object not found";
+		}
+		
+		data['base_url'] = config.baseUrl;
+		return res.render('object', data);
+	});
+};
+
+/*
+ * Search the index
+ */
 exports.search = function(req, res) {
 
 	// Verify / sanitize
@@ -189,41 +254,5 @@ exports.search = function(req, res) {
 		}
 
 		return res.render('results', data);
-	});
-};
-
-exports.renderObjectView = function(req, res) {
-	var data = {
-		viewer: null,
-		object: null,
-		mods: null
-	};
-
-	// Get the object data
-	Service.fetchObjectByPid(req.params.pid, function(response) {
-
-		if(response.status) {
-
-			var object;
-			if(response.data.pid) {
-				object = response.data;
-				data['object'] = object;
-
-				// Get viewer
-				data['viewer'] = Viewer.getObjectViewer(object);
-				data['summary'] = Helper.createSummaryDisplayObject(object);
-				data['mods'] = Helper.createMetadataDisplayObject(object);
-			}	
-			else {
-				data['error'] = "Error rendering object, object not found";
-			}
-		}
-		else {
-			console.error("Index error: ", response.message);
-			data['error'] = "Error rendering object, object not found";
-		}
-		
-		data['base_url'] = config.baseUrl;
-		return res.render('object', data);
 	});
 };

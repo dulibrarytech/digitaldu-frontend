@@ -10,8 +10,10 @@ const Helper = require("./helper");
 
 /*
  * Normalizes item data for the view model
+ *
+ * @param int page: If null, creates list with 
  */
-var createItemList= function(items, page=1) {
+var createItemList= function(items) {
   var itemList = [], tn, pid, title, description, display, path;
   for(var item of items) {
       
@@ -75,7 +77,7 @@ var createItemList= function(items, page=1) {
 /*
  * Create array of items for the collection view's object display
  */
-exports.getTopLevelCollections = function(page=1, callback) {
+exports.getTopLevelCollections = function(pageNum=1, callback) {
   Repository.getRootCollections().catch(error => {
     console.log(error);
     callback({status: false, message: error, data: null});
@@ -83,7 +85,7 @@ exports.getTopLevelCollections = function(page=1, callback) {
   .then( response => {
       if(response && response.length > 0) {
 
-        var list = createItemList(JSON.parse(response), page);
+        var list = createItemList(JSON.parse(response));
         callback({status: true, data: list});
       }
       else {
@@ -94,7 +96,7 @@ exports.getTopLevelCollections = function(page=1, callback) {
           index: config.elasticsearchIndex,
           type: 'data',
           body: {
-            from : 0, 
+            from : (pageNum - 1) * config.maxCollectionsPerPage, 
             size : config.maxDisplayResults,
             query: {
                 "match": {
@@ -118,7 +120,8 @@ exports.getTopLevelCollections = function(page=1, callback) {
               results.push(index._source);
             }
 
-            callback({status: true, data: createItemList(results), page});
+            var list = createItemList(results);
+            callback({status: true, data: list});
           }
         });
       }
@@ -158,7 +161,7 @@ exports.getObjectsInCollection = function(collectionID, pageNum, callback) {
       if(response && response.length > 0) {
         collection.count = response.length;
 
-        var list = createItemList(JSON.parse(response), pageNum);
+        var list = createItemList(JSON.parse(response));
         callback({status: true, data: list});
       }
       else {
@@ -197,7 +200,7 @@ exports.getObjectsInCollection = function(collectionID, pageNum, callback) {
               results.push(index._source);
             }
 
-            collection.list = createItemList(results, pageNum);
+            collection.list = createItemList(results);
             collection.facets = response.aggregations;
             collection.count = response.hits.total;
 

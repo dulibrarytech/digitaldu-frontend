@@ -38,9 +38,7 @@
 		  			<h5><%- error %></h5>
 		  		<% } else { %>
 
-			  		<div class="paginator">
-		              <span><< <a href="#">Previous</a> | <strong><%= pagination.beginCount %> - <%= pagination.pageHits %></strong> of <strong><%= pagination.totalHits %></strong> | <a href="#">Next</a> >></span>
-		            </div>
+			  		<% include partials/paginator %>
 
 		            <div id="collection-grid">
 						<% for (var i = 0; i < collections.length; i++) { %>
