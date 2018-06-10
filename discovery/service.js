@@ -141,7 +141,7 @@ exports.getCollectionsInCommunity = function(communityID, callback) {
   });
 }
 
-exports.getObjectsInCollection = function(collectionID, pageNum, callback) {
+exports.getObjectsInCollection = function(collectionID, pageNum=1, callback) {
   Repository.getCollectionObjects(collectionID).catch(error => {
     callback({status: false, message: error, data: null});
   })
