@@ -1,4 +1,113 @@
 <% include partials/header %>
 
+<!-- TODO include ext title banner (with search box -->)
+
+  <!--Logo banner -->
+  <div id="title-banner">
+    <div class="container">
+    <div id="title-text" class="col-sm-6 cul">
+            <a class="sm-title" href="http://www.library.du.edu">University Libraries</a>
+            <h1><a class="title" href="/">SPECIAL COLLECTIONS <span class="highlight-text">@ DU</span></a></h1>
+        </div>
+    </div>
+  </div>
+
+  <div id="main" class="content container demo-test-view">
+    <div id="facet-breadcrumbs">
+      <a href="#">Start Over</a><a href="#" class="facet-breadcrumb"><span>All Fields</span><i class="fa fa-chevron-right"></i><span>Baseball</span><i class="fa fa-times"></i></a>
+    </div>
+    <div id="result-facets-wrapper" class="content-col-3 sidebar">
+      <div class="result-facets">
+        <h4>Limit Your Search</h4>
+        <hr>
+
+        <div id="facets">
+          <button class="accordion">
+            
+            <h5>Type</h5><i class="fas fa-caret-right facet-caret"></i>
+          </button>
+          <div class="panel">
+            <ul>
+                <li><span class="facet-name"><a href="#">Still Image</a></span><span class="facet-count">10</span></li>
+                <li><span class="facet-name"><a href="#">Moving Image</a></span><span class="facet-count">15</span></li>
+            </ul>
+          </div>
+
+          <button class="accordion">
+            
+            <h5>Subject</h5><i class="fas fa-caret-right facet-caret"></i>
+          </button>
+          <div class="panel">
+            <ul>
+                <li><span class="facet-name"><a href="#">Athletics</a></span><span class="facet-count">101</span></li>
+                <li><span class="facet-name"><a href="#">University of Denver</a></span><span class="facet-count">33</span></li>
+            </ul>
+          </div>
+          <button class="accordion">
+            
+            <h5>Creator</h5><i class="fas fa-caret-right facet-caret"></i>
+          </button>
+          <div class="panel">
+            <ul>
+                <li><span class="facet-name"><a href="#">John Smith</a></span><span class="facet-count">10</span></li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div id="search-results-wrapper" class="content-col-9">
+      <div class="search-results">
+
+        <div class="paginator">
+          <span><< Previous | <strong>1 - 20</strong> of <strong>33</strong> | Next >></span>
+        </div>
+
+        <hr>
+        <div id="result-list" class="content">
+
+
+          <div class="search-result">
+              <dl class="search-result-tn">
+                  <dt>
+                      <a href="#" title="result"><img typeof="foaf:Image" src="assets/img/dummy/d3.jpg" alt="Img" /></a>            
+                  </dt>
+              <dd></dd>
+              </dl>
+              <dl class="search-result-data">
+                  <dt class="result-title">1.&nbsp&nbsp<a href="#">Professor teaching a class</a></dt>
+                      <dd></dd>
+                  <!-- <dd class=""><a href="#">search result</a></dd> -->
+                      <dt>Creator:</dt>
+                      <dd>creator</dd>
+                      <dt>Description:</dt>
+                      <dd id="result-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut</dd>
+              </dl>
+          </div>
+          
+          <div class="search-result">
+              <dl class="search-result-tn">
+                  <dt>
+                      <a href="#" title="result"><img typeof="foaf:Image" src="assets/img/dummy/d5.jpg" alt="Img" /></a>            
+                  </dt>
+              <dd></dd>
+              </dl>
+              <dl class="search-result-data">
+                  <dt class="result-title">1.&nbsp&nbsp<a href="#">University of Denver Ice Hockey</a></dt>
+                      <dd></dd>
+                  <!-- <dd class=""><a href="#">search result</a></dd> -->
+                      <dt>Creator:</dt>
+                      <dd>creator</dd>
+                      <dt>Description:</dt>
+                      <dd id="result-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </dd>
+              </dl>
+          </div>
+
+
+      </div>
+      </div>
+    </div>
+  </div>
 
 <% include partials/footer %>
