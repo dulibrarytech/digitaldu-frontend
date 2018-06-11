@@ -4,12 +4,16 @@ var protocol = "http";
 
 module.exports = {
 
-    // ENV settings
+    rootRoute: "repository",
     baseUrl: protocol + "://" + process.env.APP_HOST + ":" + process.env.APP_PORT,
+    rootUrl: protocol + "://" + process.env.APP_HOST + ":" + process.env.APP_PORT + "/" + this.rootRoute,
+
+    // ENV settings
     elasticsearchHost: process.env.ELASTICSEARCH_HOST,
     elasticsearchPort: process.env.ELASTICSEARCH_PORT,
     elasticsearchIndex: process.env.ELASTICSEARCH_INDEX,
     cantaloupePort: process.env.CANTALOUPE_PORT,
+
 
     // Repository settings
     institutionPrefix: "codu",

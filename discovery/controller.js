@@ -88,9 +88,9 @@ exports.renderRootCollection = function(req, res) {
 
 		// Get the view data
 		if(response.status) {
-			data.collections = response.data;
+			data.collections = response.data.list;
 			data.searchFields = config.searchFields;
-			data.pagination = Paginator.create(response.data, page, config.maxCollectionsPerPage);
+			data.pagination = Paginator.create(response.data.list, page, config.maxCollectionsPerPage, response.data.count, config.rootUrl);
 		}
 		else {
 			data.error = "Error: could not retrieve collections.";
@@ -98,9 +98,8 @@ exports.renderRootCollection = function(req, res) {
 
 		// Get facets for all data
 		Service.getFacets(function(facets) {
-				console.log("TEST typeof facets:", typeof facets);
 			if(typeof facets == "string") {
-				console.log("FACETS ERR?:", facets);
+				console.log("Error retrieving facet data:", facets);
 			}
 			else {
 				data.facets = Facets.create(facets);
@@ -129,7 +128,8 @@ exports.renderCollection = function(req, res) {
 			base_url: config.baseUrl
 		},
 		pid = req.params.pid || "",
-		page = req.query.page || 1;
+		page = req.query.page || 1,
+		path = config.rootUrl + "/collection/" + pid;
 
 	// Get all collections in this community
 	Service.getObjectsInCollection(pid, page, function(response) {
@@ -139,7 +139,7 @@ exports.renderCollection = function(req, res) {
 			data.current_collection_title = response.data.title || "Untitled";
 			//data.facet_breadcrumb_trail = ;
 
-			data.pagination = Paginator.create(response.data, page, config.maxCollectionsPerPage);
+			data.pagination = Paginator.create(response.data.list, page, config.maxCollectionsPerPage, response.data.count, path);
 			data.facets = Facets.create(response.data.facets);
 		}
 		else {

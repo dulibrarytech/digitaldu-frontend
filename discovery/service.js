@@ -83,6 +83,10 @@ exports.getTopLevelCollections = function(pageNum=1, callback) {
     callback({status: false, message: error, data: null});
   })
   .then( response => {
+      var collections = {
+        list: [],
+        count: 0
+      }
       if(response && response.length > 0) {
 
         var list = createItemList(JSON.parse(response));
@@ -120,8 +124,9 @@ exports.getTopLevelCollections = function(pageNum=1, callback) {
               results.push(index._source);
             }
 
-            var list = createItemList(results);
-            callback({status: true, data: list});
+            collections.count = response.hits.total;
+            collections.list = createItemList(results);
+            callback({status: true, data: collections});
           }
         });
       }

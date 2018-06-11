@@ -1,13 +1,17 @@
 /*
  * Creates the view object containing the paginator data
+ * Nodejs is awesome
  */
 
-exports.create = function(items, page, maxItems) {
+const url = require('url');
+
+exports.create = function(items, page, maxItems, totalItems, path) {
 	var pagination = {
-		page: page,
+		page: page || 1,
 		beginCount: 0,
 		pageHits: 0,
-		totalHits: 0
+		totalHits: 0,
+		path: ""
 	};
 
 	// First item on the current page
@@ -24,18 +28,23 @@ exports.create = function(items, page, maxItems) {
 	}
 
 	// The total number of search results
-	pagination.totalHits = items.length;
-	pagination['buttons'] = getButtons(items.length, page, maxItems);
-		console.log("TEST buttons are", pagination.buttons);
+	pagination.totalHits = totalItems;
+	pagination['buttons'] = getButtons(items.length, page, maxItems, totalItems);
+
 	return pagination;
 }
 
-var getButtons = function(pageItemCount, page, maxItems) {
+var getButtons = function(pageItemCount, page, maxItems, totalItems) {
 	var buttons = {
 		prev: 0,
 		next: 0
 	}
-	if(pageItemCount <= maxItems && maxItems % pageItemCount == 0) {
+
+	if(typeof page == "string") {
+		page = parseInt(page);
+	}
+
+	if(pageItemCount < maxItems || pageItemCount == maxItems && totalItems % maxItems == 0) {
 		buttons.next = 0;
 		buttons.prev = page-1;
 	}
