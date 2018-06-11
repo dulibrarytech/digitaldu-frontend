@@ -223,7 +223,7 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, callback) {
 }
 
 exports.searchIndex = function(query, type, facets=null, collection=null, page=null, callback) {
-
+      console.log("TEST type", type);
     // Build elasticsearch matchfields object for query: this object enables field specific searching
     var field = { match: "" };
     var matchFields = [], results = [];
@@ -296,12 +296,8 @@ exports.searchIndex = function(query, type, facets=null, collection=null, page=n
       // TODO add collection condition to search query?
     }
 
-    // UNKNOWN CODE
-    // if(facets) {
-    //   //data.body.query.bool["minimum_should_match"] = count+1;
-    //   data.body.query.bool["must"] = facets;
-    // }
-      console.log("TEST search data", data);
+      console.log("TEST query search data", data.body.query.bool.should);
+      console.log("TEST search facet data", data.body.query.bool.must);
     // Query the index
     es.search(data, function (error, response, status) {
       var responseData = {};

@@ -1,9 +1,10 @@
 <div id="searchform">
   <form method="get" action="/repository/search">
-    <select id="search-type">
+    <select id="search-type" name="type">
+      <option value="all">All</option>
       <% for (var i = 0; i < searchFields.length; i++) { %>
         <% for (var key in searchFields[i]) { %>
-          <option value='<%- searchFields[i][key] %>'><%- key %></option>
+          <option value='<%- key %>'><%- key %></option>
         <% } %>
       <% } %>
     </select>

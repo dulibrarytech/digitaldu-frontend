@@ -1,6 +1,6 @@
 <% include partials/header %>
 
-<!-- TODO include ext title banner (with search box -->)
+<!-- TODO include ext title banner (with search box -->
 
   <!--Logo banner -->
   <div id="title-banner">
@@ -21,38 +21,7 @@
         <h4>Limit Your Search</h4>
         <hr>
 
-        <div id="facets">
-          <button class="accordion">
-            
-            <h5>Type</h5><i class="fas fa-caret-right facet-caret"></i>
-          </button>
-          <div class="panel">
-            <ul>
-                <li><span class="facet-name"><a href="#">Still Image</a></span><span class="facet-count">10</span></li>
-                <li><span class="facet-name"><a href="#">Moving Image</a></span><span class="facet-count">15</span></li>
-            </ul>
-          </div>
-
-          <button class="accordion">
-            
-            <h5>Subject</h5><i class="fas fa-caret-right facet-caret"></i>
-          </button>
-          <div class="panel">
-            <ul>
-                <li><span class="facet-name"><a href="#">Athletics</a></span><span class="facet-count">101</span></li>
-                <li><span class="facet-name"><a href="#">University of Denver</a></span><span class="facet-count">33</span></li>
-            </ul>
-          </div>
-          <button class="accordion">
-            
-            <h5>Creator</h5><i class="fas fa-caret-right facet-caret"></i>
-          </button>
-          <div class="panel">
-            <ul>
-                <li><span class="facet-name"><a href="#">John Smith</a></span><span class="facet-count">10</span></li>
-            </ul>
-          </div>
-        </div>
+        <% include partials/facets %>
 
       </div>
     </div>
@@ -66,6 +35,13 @@
 
         <hr>
         <div id="result-list" class="content">
+
+
+
+
+
+
+
 
 
           <div class="search-result">
