@@ -206,20 +206,20 @@ exports.search = function(req, res) {
 	// "Search field selection": If "search all", build array of types from config settings.  If type search, 'type'is passed into search function as a string.
 	if(typeVal.toLowerCase() == 'all') {
 		type = [];
-		config.searchFields.forEach(function(field) {	// TODO: Convert to for loop
+		for(var field of config.searchFields) {
 			for(var key in field) {
 				type.push(field[key]);
 			}
-		});
+		}
 	}
 	else {
-		config.searchFields.forEach(function(field) {	// TODO: Convert to for loop
+		for(var field of config.searchFields) {
 			for(var key in field) {
 				if(key == typeVal) {
 					type = field[key];
 				}
 			}
-		});
+		}
 	}
 
 	// TODO: Get page value from search query
