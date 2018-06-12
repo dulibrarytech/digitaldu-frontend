@@ -199,7 +199,7 @@ exports.search = function(req, res) {
 	// Verify / sanitize
 	var query = req.query.q;
 	var facets = req.query.f || null;
-	var typeVal = req.query.type, type;
+	var typeVal = req.query.type || "all", type;
 	var page = req.query.page || 1;
 	var collection = req.query.coll || null;
 
@@ -226,20 +226,22 @@ exports.search = function(req, res) {
 	// Update with ES pagination 
 	Service.searchIndex(query, type, facets, collection, page, function(response) {
 		var data = {
-			facets: null,
+			facets: {},
 			facet_breadcrumb_trail: null,
-			results: null,
+			results: [],
 			pageData: null,
-			base_url: config.baseUrl
+			base_url: config.baseUrl,
+			collection_scope: ""
 		};
 
 		if(response.status) {
 
+				console.log("TEST search svc returns results:", response.data.results);
 			// Get data for the view
-			var pagination = Helper.paginateResults(response.data.results, page);
+			data.results = response.data.results;
 			data.facets = Facets.create(response.data.facets);	// PROD
 			data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(facets);  // Param: the facets from the search request params
-			//data['collection_scope'] = pop collection stack
+			//data.collection_scope = 
 
 			data.results = pagination.results;
 			data.pageData = pagination.data;

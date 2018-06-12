@@ -222,8 +222,7 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, callback) {
   });
 }
 
-exports.searchIndex = function(query, type, facets=null, collection=null, page=null, callback) {
-      console.log("TEST type", type);
+exports.searchIndex = function(query, type, facets=null, collection=null, page=1, callback) {
     // Build elasticsearch matchfields object for query: this object enables field specific searching
     var field = { match: "" };
     var matchFields = [], results = [];
@@ -296,8 +295,6 @@ exports.searchIndex = function(query, type, facets=null, collection=null, page=n
       // TODO add collection condition to search query?
     }
 
-      console.log("TEST query search data", data.body.query.bool.should);
-      console.log("TEST search facet data", data.body.query.bool.must);
     // Query the index
     es.search(data, function (error, response, status) {
       var responseData = {};
@@ -305,7 +302,6 @@ exports.searchIndex = function(query, type, facets=null, collection=null, page=n
         callback({status: false, message: error, data: null});
       }
       else {
-          console.log("TEST search res2", response);
         // Return the aggs for the facet display
         responseData['facets'] = response.aggregations;
 
@@ -323,11 +319,10 @@ exports.searchIndex = function(query, type, facets=null, collection=null, page=n
 
             // Get the title and description data for the result listing
             resultData = Helper.getSearchResultDisplayFields(result);
-
             // Push a new result object to the results array
             results.push({
               title: resultData.title || "",
-              namePersonal: result._source.namePersonal,
+              creator: result._source.creator,
               abstract: resultData.description || "",
               tn: tn,
               pid: result._source.pid
