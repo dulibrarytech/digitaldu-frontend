@@ -36,6 +36,9 @@ module.exports = {
     // Collection results per page
     maxCollectionsPerPage: 12,
 
+    // Namespace path to the indexed search fields, if the fields are not in top-level of item index object.  Include ALL periods
+    searchFieldNamespace: "",
+
     /*
      * End application settings
      */

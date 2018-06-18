@@ -232,6 +232,8 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
         //query = "*" + query + "*";
         type.forEach(function(type) {
           var q = {};
+
+          type = config.searchFieldNamespace + type;
           q[type] = query;
           matchFields.push({
               "match": q
@@ -289,7 +291,7 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
         aggregations: facetAggregations
       }
     }
-      console.log("TEST search data obj", data);
+
     // If a collection id is present, scope search to that collection
     if(collection) {
       // TODO add collection condition to search query?
@@ -305,8 +307,6 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
         // Return the aggs for the facet display
         responseData['facets'] = response.aggregations;
         responseData['count'] = response.hits.total;
-          console.log("TEST search total hits", response.hits.total);
-          console.log("TEST search total hits in array", response.hits.hits.length);
 
         try {
           // Build the search results objects

@@ -32,10 +32,9 @@
         <% if(error) { %>
           <h5><%- error %></h5>
         <% } else { %>
-
-            <% include partials/paginator %>
             
             <hr>
+            <% include partials/paginator %>
             <div id="result-list" class="content">
               <% for (var i = 0; i < results.length; i++) { %>
 

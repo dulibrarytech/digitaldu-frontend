@@ -239,8 +239,6 @@ exports.search = function(req, res) {
 		page = req.query.page || 1,
 		path = config.rootUrl + req.url.substring(req.url.indexOf('search')-1);
 
-			console.log("TEST req data:", path);
-
 		if(response.status) {
 
 			// Get data for the view

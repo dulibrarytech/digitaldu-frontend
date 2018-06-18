@@ -15,6 +15,12 @@ exports.create = function(items, page, maxItems, totalItems, path) {
 		path: {}
 	};
 
+	// View button data
+	pagination.path = {
+		prev: "",
+		next: ""
+	}
+
 	// Remove the page variable if it exists in the path.  The page will be added below
 	var pattern = /[?&]page=[0-9]*/i;
 	if(path.search("page=") > 0) {
@@ -24,9 +30,9 @@ exports.create = function(items, page, maxItems, totalItems, path) {
 	// First item on the current page
 	pagination.beginCount = (maxItems * (page-1)) + 1;
 
-	// Items on the current page
+	// Get the max number of "hits"  displayed as of this page.  
 	if(items.length < maxItems) {
-		// This is the 'last page', when page count > number of items left to display.
+		// This is the 'last page'.  Page hits should == the total number of hits here
 		pagination.pageHits = (pagination.beginCount - 1) + items.length;
 	}
 	else {	
@@ -37,11 +43,7 @@ exports.create = function(items, page, maxItems, totalItems, path) {
 	pagination.totalHits = totalItems;
 	pagination.buttons = getButtons(items.length, page, maxItems, totalItems);
 
-	pagination.path = {
-		prev: "",
-		next: ""
-	}
-
+	// Add the path to the prev/next buttons
 	if(pagination.buttons.prev > 0) {
 		pagination.path.prev = path + "&page=" + parseInt(pagination.buttons.prev);
 	}
@@ -62,14 +64,19 @@ var getButtons = function(pageItemCount, page, maxItems, totalItems) {
 		page = parseInt(page);
 	}
 
+	// This is the first page
 	if(pageItemCount < maxItems || pageItemCount == maxItems && totalItems % maxItems == 0) {
 		buttons.next = 0;
 		buttons.prev = page-1;
 	}
+
+	// This is the last page
 	else if(pageItemCount == maxItems && page == 1) {
 		buttons.next = page+1;
 		buttons.prev = 0;
 	}
+
+	// Any other page between first/last
 	else {
 		buttons.next = page+1;
 		buttons.prev = page-1;
