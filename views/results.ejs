@@ -14,7 +14,7 @@
 
   <div id="main" class="content container demo-test-view">
     <div id="facet-breadcrumbs">
-      <a href="#">Start Over</a><a href="#" class="facet-breadcrumb"><span>All Fields</span><i class="fa fa-chevron-right"></i><span>Baseball</span><i class="fa fa-times"></i></a>
+      <!-- <a href="#">Start Over</a><a href="#" class="facet-breadcrumb"><span>All Fields</span><i class="fa fa-chevron-right"></i><span>Baseball</span><i class="fa fa-times"></i></a> -->
     </div>
     <div id="result-facets-wrapper" class="content-col-3 sidebar">
       <div class="result-facets">
@@ -29,66 +29,35 @@
     <div id="search-results-wrapper" class="content-col-9">
       <div class="search-results">
 
-        <div class="paginator">
-          <span><< Previous | <strong>1 - 20</strong> of <strong>33</strong> | Next >></span>
-        </div>
+        <% if(error) { %>
+          <h5><%- error %></h5>
+        <% } else { %>
+            
+            <hr>
+            <div id="result-list" class="content">
+              <% for (var i = 0; i < results.length; i++) { %>
 
-        <hr>
-        <div id="result-list" class="content">
+                <div class="search-result">
+                    <dl class="search-result-tn">
+                        <dt>
+                            <a href="<%= root_url %>/object/<%= results[i].pid %>" title="<%= results[i].title %>"><img src="<%= results[i].tn %>" alt="<%= results[i].title %>" /></a>            
+                        </dt>
+                    <dd></dd>
+                    </dl>
+                    <dl class="search-result-data">
+                        <dt class="result-title">1.&nbsp&nbsp<a href="<%= root_url %>/object/<%= results[i].pid %>"><%= results[i].title %></a></dt>
+                            <dd></dd>
+                        <!-- <dd class=""><a href="#">search result</a></dd> -->
+                            <dt>Creator:</dt>
+                            <dd><%= results[i].creator %></dd>
+                            <dt>Description:</dt>
+                            <dd id="result-description"><%= results[i].abstract %></dd>
+                    </dl>
+                </div>
 
-
-
-<!--
-RESULT:
-title: resultData.title || "",
-creator: result._source.creator,
-abstract: resultData.description || "",
-tn: tn,
-pid: result._source.pid
--->
-
-
-
-
-
-          <div class="search-result">
-              <dl class="search-result-tn">
-                  <dt>
-                      <a href="#" title="result"><img typeof="foaf:Image" src="assets/img/dummy/d3.jpg" alt="Img" /></a>            
-                  </dt>
-              <dd></dd>
-              </dl>
-              <dl class="search-result-data">
-                  <dt class="result-title">1.&nbsp&nbsp<a href="#">Professor teaching a class</a></dt>
-                      <dd></dd>
-                  <!-- <dd class=""><a href="#">search result</a></dd> -->
-                      <dt>Creator:</dt>
-                      <dd>creator</dd>
-                      <dt>Description:</dt>
-                      <dd id="result-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut</dd>
-              </dl>
+              <% } %>  
           </div>
-          
-          <div class="search-result">
-              <dl class="search-result-tn">
-                  <dt>
-                      <a href="#" title="result"><img typeof="foaf:Image" src="assets/img/dummy/d5.jpg" alt="Img" /></a>            
-                  </dt>
-              <dd></dd>
-              </dl>
-              <dl class="search-result-data">
-                  <dt class="result-title">1.&nbsp&nbsp<a href="#">University of Denver Ice Hockey</a></dt>
-                      <dd></dd>
-                  <!-- <dd class=""><a href="#">search result</a></dd> -->
-                      <dt>Creator:</dt>
-                      <dd>creator</dd>
-                      <dt>Description:</dt>
-                      <dd id="result-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </dd>
-              </dl>
-          </div>
-
-
-      </div>
+        <% } %>
       </div>
     </div>
   </div>
