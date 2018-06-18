@@ -19,7 +19,6 @@ exports.create = function(items, page, maxItems, totalItems, path) {
 
 	// Items on the current page
 	if(items.length < maxItems) {
-
 		// This is the 'last page', when page count > number of items left to display.
 		pagination.pageHits = (pagination.beginCount - 1) + items.length;
 	}

@@ -24,8 +24,13 @@ module.exports = {
      * Begin application settings
      */
 
-    // Search results list size
+    // Search results limit
     maxDisplayResults: 1000,
+
+    // Max search results on results page
+    maxResultsPerPage: 10,
+
+    // Max characters in result description field
     resultMaxCharacters: 400,
 
     // Collection results per page

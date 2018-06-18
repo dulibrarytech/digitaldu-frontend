@@ -222,7 +222,7 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, callback) {
   });
 }
 
-exports.searchIndex = function(query, type, facets=null, collection=null, page=1, callback) {
+exports.searchIndex = function(query, type, facets=null, collection=null, pageNum=1, callback) {
     // Build elasticsearch matchfields object for query: this object enables field specific searching
     var field = { match: "" };
     var matchFields = [], results = [];
@@ -278,8 +278,8 @@ exports.searchIndex = function(query, type, facets=null, collection=null, page=1
       index: config.elasticsearchIndex,
       type: 'data',
       body: {
-        from : 0, 
-        size : config.maxDisplayResults,
+        from : (pageNum - 1) * config.maxResultsPerPage, 
+        size : config.maxResultsPerPage,
         query: {
             "bool": {
               "should": matchFields,
@@ -289,7 +289,7 @@ exports.searchIndex = function(query, type, facets=null, collection=null, page=1
         aggregations: facetAggregations
       }
     }
-
+      console.log("TEST search data obj", data);
     // If a collection id is present, scope search to that collection
     if(collection) {
       // TODO add collection condition to search query?
@@ -304,6 +304,9 @@ exports.searchIndex = function(query, type, facets=null, collection=null, page=1
       else {
         // Return the aggs for the facet display
         responseData['facets'] = response.aggregations;
+        responseData['count'] = response.hits.total;
+          console.log("TEST search total hits", response.hits.total);
+          console.log("TEST search total hits in array", response.hits.hits.length);
 
         try {
           // Build the search results objects
@@ -322,7 +325,7 @@ exports.searchIndex = function(query, type, facets=null, collection=null, page=1
             // Push a new result object to the results array
             results.push({
               title: resultData.title || "",
-              creator: result._source.creator,
+              creator: result._source.creator || "",
               abstract: resultData.description || "",
               tn: tn,
               pid: result._source.pid

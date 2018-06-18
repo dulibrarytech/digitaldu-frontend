@@ -234,20 +234,16 @@ exports.search = function(req, res) {
 			base_url: config.baseUrl,
 			root_url: config.rootUrl,
 			collection_scope: ""
-		};
-			console.log("TEST data", data);
+		},
+		page = page || 1;
+
 		if(response.status) {
 
 			// Get data for the view
 			data.results = response.data.results;
 			data.facets = Facets.create(response.data.facets);	// PROD
 			data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(facets);  // Param: the facets from the search request params
-			//data.collection_scope = 
-
-			// data.results = pagination.results;
-			// data.pageData = pagination.data;
-
-
+			data.pagination = Paginator.create(response.data.results, page, config.maxResultsPerPage, response.data.count, "[path]");
 		}
 		else {
 			console.error("Search Error: ", response.message);

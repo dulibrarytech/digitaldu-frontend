@@ -32,6 +32,8 @@
         <% if(error) { %>
           <h5><%- error %></h5>
         <% } else { %>
+
+            <% include partials/paginator %>
             
             <hr>
             <div id="result-list" class="content">
@@ -45,7 +47,7 @@
                     <dd></dd>
                     </dl>
                     <dl class="search-result-data">
-                        <dt class="result-title">1.&nbsp&nbsp<a href="<%= root_url %>/object/<%= results[i].pid %>"><%= results[i].title %></a></dt>
+                        <dt class="result-title"><%= i+1 %>.&nbsp&nbsp<a href="<%= root_url %>/object/<%= results[i].pid %>"><%= results[i].title %></a></dt>
                             <dd></dd>
                         <!-- <dd class=""><a href="#">search result</a></dd> -->
                             <dt>Creator:</dt>
