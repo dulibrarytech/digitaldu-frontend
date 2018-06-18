@@ -225,6 +225,7 @@ exports.search = function(req, res) {
 	// TODO: Get page value from search query
 	// Update with ES pagination 
 	Service.searchIndex(query, type, facets, collection, page, function(response) {
+
 		var data = {
 			error: null,
 			facets: {},
@@ -235,7 +236,7 @@ exports.search = function(req, res) {
 			root_url: config.rootUrl,
 			collection_scope: ""
 		},
-		page = page || 1;
+		page = req.query.page || 1;
 
 		if(response.status) {
 
