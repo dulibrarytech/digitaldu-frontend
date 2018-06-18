@@ -6,7 +6,7 @@ module.exports = {
 
     rootRoute: "repository",
     baseUrl: protocol + "://" + process.env.APP_HOST + ":" + process.env.APP_PORT,
-    rootUrl: protocol + "://" + process.env.APP_HOST + ":" + process.env.APP_PORT + "/" + this.rootRoute,
+    rootUrl: protocol + "://" + process.env.APP_HOST + ":" + process.env.APP_PORT + "/repository",
 
     // ENV settings
     elasticsearchHost: process.env.ELASTICSEARCH_HOST,
