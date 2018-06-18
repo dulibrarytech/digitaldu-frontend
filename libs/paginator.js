@@ -11,8 +11,15 @@ exports.create = function(items, page, maxItems, totalItems, path) {
 		beginCount: 0,
 		pageHits: 0,
 		totalHits: 0,
-		path: ""
+		buttons: {},
+		path: {}
 	};
+
+	// Remove the page variable if it exists in the path.  The page will be added below
+	var pattern = /[?&]page=[0-9]*/i;
+	if(path.search("page=") > 0) {
+		path = path.replace(pattern, "");
+	}
 
 	// First item on the current page
 	pagination.beginCount = (maxItems * (page-1)) + 1;
@@ -28,7 +35,19 @@ exports.create = function(items, page, maxItems, totalItems, path) {
 
 	// The total number of search results
 	pagination.totalHits = totalItems;
-	pagination['buttons'] = getButtons(items.length, page, maxItems, totalItems);
+	pagination.buttons = getButtons(items.length, page, maxItems, totalItems);
+
+	pagination.path = {
+		prev: "",
+		next: ""
+	}
+
+	if(pagination.buttons.prev > 0) {
+		pagination.path.prev = path + "&page=" + parseInt(pagination.buttons.prev);
+	}
+	if(pagination.buttons.next > 0) {
+		pagination.path.next = path + "&page=" + parseInt(pagination.buttons.next);
+	}
 
 	return pagination;
 }
@@ -38,7 +57,7 @@ var getButtons = function(pageItemCount, page, maxItems, totalItems) {
 		prev: 0,
 		next: 0
 	}
-
+		
 	if(typeof page == "string") {
 		page = parseInt(page);
 	}

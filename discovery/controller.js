@@ -236,7 +236,10 @@ exports.search = function(req, res) {
 			root_url: config.rootUrl,
 			collection_scope: ""
 		},
-		page = req.query.page || 1;
+		page = req.query.page || 1,
+		path = config.rootUrl + req.url.substring(req.url.indexOf('search')-1);
+
+			console.log("TEST req data:", path);
 
 		if(response.status) {
 
@@ -244,7 +247,7 @@ exports.search = function(req, res) {
 			data.results = response.data.results;
 			data.facets = Facets.create(response.data.facets);	// PROD
 			data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(facets);  // Param: the facets from the search request params
-			data.pagination = Paginator.create(response.data.results, page, config.maxResultsPerPage, response.data.count, "[path]");
+			data.pagination = Paginator.create(response.data.results, page, config.maxResultsPerPage, response.data.count, path);
 		}
 		else {
 			console.error("Search Error: ", response.message);
