@@ -21,6 +21,9 @@ exports.create = function(items, page, maxItems, totalItems, path) {
 		next: ""
 	}
 
+	// Check the path for the '?' character.  If it exists, add 'page' as an additional variable.  If not, 'page' is the first querystring variable, so use '?'
+	var prefix = path.indexOf("?") >= 0 ? "&" : "?";
+
 	// Remove the page variable if it exists in the path.  The page will be added below
 	var pattern = /[?&]page=[0-9]*/i;
 	if(path.search("page=") > 0) {
@@ -45,10 +48,10 @@ exports.create = function(items, page, maxItems, totalItems, path) {
 
 	// Add the path to the prev/next buttons
 	if(pagination.buttons.prev > 0) {
-		pagination.path.prev = path + "&page=" + parseInt(pagination.buttons.prev);
+		pagination.path.prev = path + prefix + "page=" + parseInt(pagination.buttons.prev);
 	}
 	if(pagination.buttons.next > 0) {
-		pagination.path.next = path + "&page=" + parseInt(pagination.buttons.next);
+		pagination.path.next = path + prefix + "page=" + parseInt(pagination.buttons.next);
 	}
 
 	return pagination;

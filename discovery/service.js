@@ -9,19 +9,21 @@ const Helper = require("./helper");
 
 
 /*
- * Normalizes item data for the view model
+ * Create view model data object for display items
  *
- * @param int page: If null, creates list with 
+ * @param object items  The items to include in the list
  */
 var createItemList= function(items) {
   var itemList = [], tn, pid, title, description, display, path;
   for(var item of items) {
       
-    // 
+    // Get the title and description data from the item
     if(item.title && item.title != "") {
       title = item.title || config.noTitlePlaceholder;
       description = item.description || "";
     }
+
+    // If the title field is absent from this item, try to get the title from the display record
     else if(item.display_record && typeof item.display_record == 'string') {
         try {
           display = JSON.parse(item.display_record);
@@ -34,6 +36,8 @@ var createItemList= function(items) {
         title = display.title || config.noTitlePlaceholder;
         description = display.description || display.abstract || "";
     }
+
+    // Use the default values
     else {
       title = config.noTitlePlaceholder;
       description = "";
@@ -64,6 +68,7 @@ var createItemList= function(items) {
       path = "/repository/object";
     }
 
+    // Pusg the current item to the list
     itemList.push({
         pid: pid,
         tn: tn,
@@ -102,7 +107,7 @@ exports.getTopLevelCollections = function(pageNum=1, callback) {
           type: 'data',
           body: {
             from : (pageNum - 1) * config.maxCollectionsPerPage, 
-            size : config.maxDisplayResults,
+            size : config.maxCollectionsPerPage,
             query: {
                 "match": {
                   "is_member_of_collection": config.topLevelCollectionPID

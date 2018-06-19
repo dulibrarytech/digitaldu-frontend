@@ -85,7 +85,7 @@ exports.renderRootCollection = function(req, res) {
 
 	// Get all root collections
 	Service.getTopLevelCollections(page, function(response) {
-
+			console.log("TEST gtlcoll resp", response.data);
 		// Get the view data
 		if(response.status) {
 			data.collections = response.data.list;
