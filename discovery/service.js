@@ -63,6 +63,13 @@ var createItemList= function(items) {
       path = "/repository/object";
     }
 
+    if(item.mime_type == config.collectionMimeType) {
+      path = "/repository/collection";
+    }
+    else {
+      path = "/repository/object";
+    }
+
     itemList.push({
         pid: pid,
         tn: tn,
