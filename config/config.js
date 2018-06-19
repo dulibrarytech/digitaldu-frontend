@@ -18,7 +18,7 @@ module.exports = {
     // Repository settings
     institutionPrefix: "codu",
     topLevelCollectionPID: "codu:root",
-    collectionMimeType: "",
+    collectionMimeType: "collection",
 
     /*
      * Begin application settings
@@ -38,6 +38,9 @@ module.exports = {
 
     // Namespace path to the indexed search fields, if the fields are not in top-level of item index object.  Include ALL periods
     searchFieldNamespace: "",
+
+    // Will appear in the view, if an item has no title information
+    noTitlePlaceholder: "Untitled",
 
     /*
      * End application settings

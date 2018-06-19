@@ -19,7 +19,7 @@ var createItemList= function(items) {
       
     // 
     if(item.title && item.title != "") {
-      title = item.title;
+      title = item.title || config.noTitlePlaceholder;
       description = item.description || "";
     }
     else if(item.display_record && typeof item.display_record == 'string') {
@@ -31,11 +31,11 @@ var createItemList= function(items) {
           continue;
         }
 
-        title = display.title || "Untitled";
+        title = display.title || config.noTitlePlaceholder;
         description = display.description || display.abstract || "";
     }
     else {
-      title = "Untitled";
+      title = config.noTitlePlaceholder;
       description = "";
     }
       
@@ -56,14 +56,8 @@ var createItemList= function(items) {
       pid = item.id
     }
 
-    if(item.mime_type == config.collectionMimeType) {
-      path = "/repository/collection";
-    }
-    else {
-      path = "/repository/object";
-    }
-
-    if(item.mime_type == config.collectionMimeType) {
+    // Add collection or object path
+    if(item.object_type && item.object_type == config.collectionMimeType) {
       path = "/repository/collection";
     }
     else {
