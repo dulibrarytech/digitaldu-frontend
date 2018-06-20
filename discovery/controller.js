@@ -85,7 +85,7 @@ exports.renderRootCollection = function(req, res) {
 
 	// Get all root collections
 	Service.getTopLevelCollections(page, function(response) {
-			console.log("TEST gtlcoll resp", response.data);
+
 		// Get the view data
 		if(response.status) {
 			data.collections = response.data.list;
@@ -98,6 +98,7 @@ exports.renderRootCollection = function(req, res) {
 
 		// Get facets for all data
 		Service.getFacets(function(facets) {
+
 			if(typeof facets == "string") {
 				console.log("Error retrieving facet data:", facets);
 			}

@@ -389,14 +389,14 @@ var getFacets = function (callback) {
     }
 
     es.search({
+        index: config.elasticsearchIndex,
+        type: 'data',
         body: {
             "size": 0,
-            "query": {
-                "match_all": {}
-            },
             "aggregations": aggs
         }
     }).then(function (body) {
+
         callback(body.aggregations);
     }, function (error) {
         callback(error);
@@ -407,6 +407,8 @@ exports.getFacets = getFacets;
 exports.searchFacets = function (query, facets, page, callback) {
 
     client.search({
+            index: config.elasticsearchIndex,
+            type: 'data',
             body: {
                 "query": {
                     "bool": {
