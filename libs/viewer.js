@@ -12,33 +12,14 @@ exports.getObjectViewer = function(object) {
  	var viewer = "";
  	//var contentModel = typeof object["rels-ext_hasModel"] != 'string' ? object["rels-ext_hasModel"][0] : object["rels-ext_hasModel"];
 
- 	var mimeType = "";
- 	if(typeof object.mime_type != 'undefined') {
- 		mimeType = object.mime_type;
+ 	var objectType = "", mimeType = "";
+ 	if(typeof object.type != 'undefined') {
+ 		objectType = object.type;
  	}
 
- 	switch(mimeType) {
- 		case "audio/mpeg":
- 			viewer = getAudioPlayer(object);
- 			break;
-
- 		case "video/mp4":
- 		case "video/quicktime":
- 			viewer = getVideoViewer(object);
- 			break;
-
- 		case "image/png":
- 		case "image/jpeg":
- 			viewer = getSmallImageViewer(object);
- 			break;
-
- 		case "image/tiff":
- 		case "image/jp2":
+ 	switch(objectType) {
+ 		case "still image":
  			viewer = getLargeImageViewer(object);
- 			break;
-
- 		case "application/pdf":
- 			viewer = getPDFViewer(object);
  			break;
 
  		default:
@@ -46,6 +27,36 @@ exports.getObjectViewer = function(object) {
  			viewer = "";
  			break;
  	}
+
+ 	// switch(mimeType) {
+ 	// 	case "audio/mpeg":
+ 	// 		viewer = getAudioPlayer(object);
+ 	// 		break;
+
+ 	// 	case "video/mp4":
+ 	// 	case "video/quicktime":
+ 	// 		viewer = getVideoViewer(object);
+ 	// 		break;
+
+ 	// 	case "image/png":
+ 	// 	case "image/jpeg":
+ 	// 		viewer = getSmallImageViewer(object);
+ 	// 		break;
+
+ 	// 	case "image/tiff":
+ 	// 	case "image/jp2":
+ 	// 		viewer = getLargeImageViewer(object);
+ 	// 		break;
+
+ 	// 	case "application/pdf":
+ 	// 		viewer = getPDFViewer(object);
+ 	// 		break;
+
+ 	// 	default:
+ 	// 		console.log("Viewer error: invalid content model");
+ 	// 		viewer = "";
+ 	// 		break;
+ 	// }
 
  	return viewer;
 }

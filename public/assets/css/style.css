@@ -973,7 +973,7 @@ a.lSPrev, a.lSNext {
 div#viewer-section {
     height: 437px;
     background: #e5e3e1;
-    padding: 20px;
+    /*padding: 20px;*/
 }
 
 div#viewer-wrapper {
@@ -1061,6 +1061,16 @@ div#object-options button:hover {
 div#object-options button:focus {
   outline: none;
 }
+
+div#viewer-content-wrapper {
+  /*width: 500px;*/
+       /* max-width: 75%;*/
+}
+
+div#viewer-content-wrapper > audio {
+  /*width: 100%;*/
+}
+
 
 footer div#footer-links {
   margin: 0 1em 0 1em;

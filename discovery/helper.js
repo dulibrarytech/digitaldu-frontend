@@ -11,13 +11,16 @@ exports.createSummaryDisplayObject = function(result) {
 	    displayFields = config.summaryDisplay,
 		displayRecord = {};
 
-	if(result.display_record) {
+	if(result.display_record && typeof result.display_record == "string") {
 		try {
 			displayRecord = JSON.parse(result.display_record);
 		}
 		catch(e) {
 			console.log("Error: invalid object display record for object: " + result.pid);
 		}
+	}
+	else if(result.display_record && typeof result.display_record == "object") {
+		displayRecord = result.display_record;
 	}
 
 	var key, field, value;
@@ -33,7 +36,7 @@ exports.createSummaryDisplayObject = function(result) {
 		}
 		displayObj[key] = value;
 	}
-
+		console.log("TEST displ obj", displayObj);
 	return displayObj;
 }
 
@@ -43,13 +46,16 @@ exports.createMetadataDisplayObject = function(result) {
 		displayRecord = {};
 
 	// Get metadata object from result display record json
-	if(result.display_record) {
+	if(result.display_record && typeof result.display_record == "string") {
 		try {
 			displayRecord = JSON.parse(result.display_record);
 		}
 		catch(e) {
 			console.log("Error: invalid object display record for object: " + result.pid);
 		}
+	}
+	else if(result.display_record && typeof result.display_record == "object") {
+		displayRecord = result.display_record;
 	}
 
 	var key, field;
