@@ -64,6 +64,10 @@ img {
     border: 0;
 }
 
+p {
+  line-height: 24px;
+}
+
 footer {
   height: 300px;
   background-color: #8b2332;
