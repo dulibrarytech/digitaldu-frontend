@@ -1070,13 +1070,10 @@ div#object-options button:focus {
   outline: none;
 }
 
-div#viewer-content-wrapper {
-  /*width: 500px;*/
-       /* max-width: 75%;*/
-}
-
-div#viewer-content-wrapper > audio {
-  /*width: 100%;*/
+div#mediaplayer_wrapper {
+  width: auto !important;
+  position: relative;
+  top: 68px;
 }
 
 

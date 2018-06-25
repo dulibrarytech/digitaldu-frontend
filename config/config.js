@@ -50,7 +50,7 @@ module.exports = {
      * Viewer to play audio files
      * [browser | jwplayer | [ext audio lib]]
      */
-    audioPlayer: "browser",
+    audioPlayer: "jwplayer",
 
     /* 
      * Viewer to display video files
@@ -113,8 +113,11 @@ module.exports = {
         "Corporate Creator": "nameCorporate",
         "Publisher": "publisher",
         "Type": "typeOfResource",
+        "Genre": "genre",
         "Topic": "subjectTopic",
         "Identifier": "identifier",
-        "Description": "abstract"
+        "Language": "language",
+        "Access Condition": "accessCondition",
+        "Location": []
     }
 };
