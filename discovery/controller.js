@@ -107,6 +107,7 @@ exports.renderRootCollection = function(req, res) {
 
 				// Totals for the static type facets on the front page
 				data.typeCount = Helper.getTypeFacetTotalsObject(facets);
+					console.log("TEST contr: typeCount out", data.typeCount);
 			}
 			
 			return res.render('collections', data);

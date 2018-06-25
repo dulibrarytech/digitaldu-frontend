@@ -108,14 +108,26 @@ exports.paginateResults = function(results, page) {
 exports.getTypeFacetTotalsObject = function(facets) {
 	
 	// Default values
+	// var totals = {
+	// 	stillImage: 0,
+	// 	movingImage: 0,
+	// 	soundRecording: 0,
+	// 	text: 0,
+	// 	map: 0,
+	// 	artReproduction: 0,
+	// 	scrapbook: 0
+	// }
+
 	var totals = {
 		stillImage: 0,
 		movingImage: 0,
 		soundRecording: 0,
+		soundRecordingMusical: 0,
+		soundRecordingNonMusical: 0,
 		text: 0,
 		map: 0,
-		artReproduction: 0,
-		scrapbook: 0
+		mixedMaterial: 0,
+		threeDObject: 0
 	}
 
 	// TODO If necessary, normalize type fields here (ala Blacklight)
@@ -127,8 +139,26 @@ exports.getTypeFacetTotalsObject = function(facets) {
 		else if(facet.key == "moving image") {
 			totals.movingImage = facet.doc_count;
 		}
+		else if(facet.key == "sound recording") {
+			totals.soundRecording = facet.doc_count;
+		}
+		else if(facet.key == "sound recording-musical") {
+			totals.soundRecordingMusical = facet.doc_count;
+		}
+		else if(facet.key == "sound recording-nonmusical") {
+			totals.soundRecordingNonMusical = facet.doc_count;
+		}
 		else if(facet.key == "text") {
 			totals.text = facet.doc_count;
+		}
+		else if(facet.key == "cartographic") {
+			totals.map = facet.doc_count;
+		}
+		else if(facet.key == "mixed material") {
+			totals.mixedMaterial = facet.doc_count;
+		}
+		else if(facet.key == "three dimensional object") {
+			totals.threeDObject = facet.doc_count;
 		}
 	}
 

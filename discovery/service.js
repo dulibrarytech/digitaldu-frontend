@@ -320,7 +320,7 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
           for(var result of response.hits.hits) {
 
             // Omit collection objects from the search results 
-            if(result._source.mime_type.trim() == config.collectionMimeType) {
+            if(result._source.object_type.trim() == config.collectionMimeType) {
               continue;
             }
 

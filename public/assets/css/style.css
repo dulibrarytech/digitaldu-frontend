@@ -522,6 +522,10 @@ div#facets > div.panel .facet-count {
   margin-top: 5px;
 }
 
+#facets ul {
+  font-size: 14px;
+}
+
 .facet-thumbnail > img {
   width: 27px;
   height: 25px;
