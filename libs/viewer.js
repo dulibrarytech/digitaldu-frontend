@@ -22,41 +22,25 @@ exports.getObjectViewer = function(object) {
  			viewer = getLargeImageViewer(object);
  			break;
 
+ 		case "sound recording":
+ 		case "sound recording-musical":
+ 		case "sound recording-nonmusical":
+ 			viewer = getAudioPlayer(object);
+ 			break;
+
+ 		case "moving image":
+ 			viewer = getVideoViewer(object);
+ 			break;
+
+ 		case "mixed material":
+ 			viewer = getPDFViewer(object);
+ 			break;
+
  		default:
  			console.log("Viewer error: invalid content model");
  			viewer = "";
  			break;
  	}
-
- 	// switch(mimeType) {
- 	// 	case "audio/mpeg":
- 	// 		viewer = getAudioPlayer(object);
- 	// 		break;
-
- 	// 	case "video/mp4":
- 	// 	case "video/quicktime":
- 	// 		viewer = getVideoViewer(object);
- 	// 		break;
-
- 	// 	case "image/png":
- 	// 	case "image/jpeg":
- 	// 		viewer = getSmallImageViewer(object);
- 	// 		break;
-
- 	// 	case "image/tiff":
- 	// 	case "image/jp2":
- 	// 		viewer = getLargeImageViewer(object);
- 	// 		break;
-
- 	// 	case "application/pdf":
- 	// 		viewer = getPDFViewer(object);
- 	// 		break;
-
- 	// 	default:
- 	// 		console.log("Viewer error: invalid content model");
- 	// 		viewer = "";
- 	// 		break;
- 	// }
 
  	return viewer;
 }
@@ -67,10 +51,6 @@ function getAudioPlayer(objectData) {
 
 	tn = Repository.getDatastreamUrl("tn", objectData.pid);
 	stream = Repository.getDatastreamUrl("mp3", objectData.pid);
-
-	// Local test data
-	// tn = 'http://localhost:9006/assets/img/dev/MY_VIDEO_POSTER.jpg';
-	// stream = 'http://localhost:9006/assets/img/dev/small.mp4';
 
 	if(config.audioPlayer == "browser") {
 		player += '<div id="viewer-content-wrapper"><audio controls><source src="' + stream + '" type="audio/mpeg"></audio></div>';
