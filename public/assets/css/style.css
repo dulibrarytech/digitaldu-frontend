@@ -973,7 +973,7 @@ a.lSPrev, a.lSNext {
 div#viewer-section {
     height: 437px;
     background: #e5e3e1;
-    /*padding: 20px;*/
+    padding: 20px 0px;
 }
 
 div#viewer-wrapper {
