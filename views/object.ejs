@@ -1,4 +1,48 @@
 <% include partials/header %>
 
+<!-- TODO include ext title banner (with search box -->
+
+	<div id="title-banner">
+      <div class="container">
+      <div id="title-text" class="col-sm-6 cul">
+              <a class="sm-title" href="http://www.library.du.edu">University Libraries</a>
+              <h1><a class="title" href="/">SPECIAL COLLECTIONS <span class="highlight-text">@ DU</span></a></h1>
+          </div>
+      </div>
+  	</div>
+
+	<div id="main">
+	    <div id="viewer-section">
+	      <div id="viewer-wrapper">
+	        <%- viewer %>
+	      </div>
+	    </div>
+	    <div id="metadata-section">
+	      <div id="object-options">
+	        <div class="container">
+	          <span>
+	            <!-- <button>View Details</button> -->
+	            <button class="collapsible">View Details</button>
+	            <button>Download Item</button>
+	          </span>
+	        </div>
+	      </div>
+	      <div class="container">
+	        <div id="mods-display" class="metadata-content">
+	            <table class="data-table">
+	              <% for (var key in mods) { %>
+					<tr><td><%= key %></td><td><%= mods[key] %></td></tr>
+				  <% } %>
+	            </table>
+	        </div>
+	        <div id="object-data">
+	          <% for (var key in summary) { %>
+				<h3><%= key %></h3>
+				<p><%= summary[key] %></p>
+			  <% } %>
+	        </div>
+	      </div>
+	    </div>
+	</div>
 
 <% include partials/footer %>

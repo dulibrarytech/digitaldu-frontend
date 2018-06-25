@@ -160,34 +160,36 @@ exports.renderObjectView = function(req, res) {
 	var data = {
 		viewer: null,
 		object: null,
-		mods: null
+		summary: null,
+		mods: null,
+		error: null,
+		base_url: config.baseUrl
 	};
 
 	// Get the object data
 	Service.fetchObjectByPid(req.params.pid, function(response) {
 
 		if(response.status) {
-
+				console.log("TEST renderObjectView: fetchObject response", response.data);
 			var object;
 			if(response.data.pid) {
 				object = response.data;
-				data['object'] = object;
+				data.object = object;
 
 				// Get viewer
-				data['viewer'] = Viewer.getObjectViewer(object);
-				data['summary'] = Helper.createSummaryDisplayObject(object);
-				data['mods'] = Helper.createMetadataDisplayObject(object);
+				data.viewer = Viewer.getObjectViewer(object);
+				data.summary = Helper.createSummaryDisplayObject(object);
+				data.mods = Helper.createMetadataDisplayObject(object);
 			}	
 			else {
-				data['error'] = "Error rendering object, object not found";
+				data.error = "Error rendering object, object not found";
 			}
 		}
 		else {
 			console.error("Index error: ", response.message);
-			data['error'] = "Error rendering object, object not found";
+			data.error = "Error rendering object, object not found";
 		}
 		
-		data['base_url'] = config.baseUrl;
 		return res.render('object', data);
 	});
 };
