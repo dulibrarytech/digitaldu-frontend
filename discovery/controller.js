@@ -189,7 +189,7 @@ exports.renderObjectView = function(req, res) {
 			console.error("Index error: ", response.message);
 			data.error = "Error rendering object, object not found";
 		}
-		
+	
 		return res.render('object', data);
 	});
 };

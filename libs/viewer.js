@@ -171,9 +171,10 @@ function getLargeImageViewer(objectData) {
 		viewer += '});</script>';
 	}
 	else {
-		viewer += 'Viewer is down temporarily.  Please check configuration/div>';
+		viewer += 'Viewer is down temporarily.  Please check configuration';
 	}
 
+	viewer += '</div>';
 	return viewer;
 }
 
