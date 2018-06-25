@@ -36,7 +36,7 @@ exports.createSummaryDisplayObject = function(result) {
 		}
 		displayObj[key] = value;
 	}
-		console.log("TEST displ obj", displayObj);
+
 	return displayObj;
 }
 
