@@ -4,7 +4,8 @@ const es = require('../config/index');
 const config = require('../config/config');
 const request  = require("request");
 //const Repository = require('../libs/repository');
-const Repository = require('../libs/repository.fedora');
+const Repository = require('../libs/repository.fedora'),
+      LibRepo = require('../libs/repository');
 const Helper = require("./helper");
 
 
@@ -94,7 +95,6 @@ exports.getTopLevelCollections = function(pageNum=1, callback) {
         count: 0
       }
       if(response && response.length > 0) {
-
         var list = createItemList(JSON.parse(response));
         callback({status: true, data: list});
       }

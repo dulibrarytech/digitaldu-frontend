@@ -8,31 +8,35 @@ var Repository = require('./repository.fedora');
  * Viewer module
  */
 
-exports.getObjectViewer = function(object) {
+exports.getObjectViewer = function(object, mimeType="") {
  	var viewer = "";
  	//var contentModel = typeof object["rels-ext_hasModel"] != 'string' ? object["rels-ext_hasModel"][0] : object["rels-ext_hasModel"];
 
- 	var objectType = "", mimeType = "";
- 	if(typeof object.type != 'undefined') {
- 		objectType = object.type;
+ 	if(mimeType == "" && typeof object.mime_type != 'undefined') {
+ 		mimeType = object.mime_type;
  	}
 
- 	switch(objectType) {
- 		case "still image":
- 			viewer = getLargeImageViewer(object);
- 			break;
-
- 		case "sound recording":
- 		case "sound recording-musical":
- 		case "sound recording-nonmusical":
+ 	switch(mimeType) {
+ 		case "audio/mpeg":
  			viewer = getAudioPlayer(object);
  			break;
 
- 		case "moving image":
+ 		case "video/mp4":
+ 		case "video/quicktime":
  			viewer = getVideoViewer(object);
  			break;
 
- 		case "mixed material":
+ 		case "image/png":
+ 		case "image/jpeg":
+ 			viewer = getSmallImageViewer(object);
+ 			break;
+
+ 		case "image/tiff":
+ 		case "image/jp2":
+ 			viewer = getLargeImageViewer(object);
+ 			break;
+
+ 		case "application/pdf":
  			viewer = getPDFViewer(object);
  			break;
 

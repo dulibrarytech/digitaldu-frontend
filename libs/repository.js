@@ -93,7 +93,7 @@ exports.getCommunity = function(communityID) {
 /* Test to make sure this will return root collections */
 exports.getRootCollections = function() {
 	return new Promise(function(fulfill, reject) {
-		var url = protocol + domain + "/api/collections";
+		var url = protocol + domain + "/api/v1/objects?pid=codu:root";
 		request(url, function (error, response, body) {
 			if(error) {
 				reject(error);
@@ -102,6 +102,7 @@ exports.getRootCollections = function() {
 				reject("Repository returns status " + response.statusCode);
 			}
 			else {
+					console.log("TEST repo returns top coll:", body);
 				fulfill(body);
 			}
 		});
