@@ -67,7 +67,9 @@ exports.createMetadataDisplayObject = function(result) {
 		if(key == "title") {
 			displayObj['Title'] = displayRecord[key];
 		}
-
+		else if(key == "typeOfResource") {
+			displayObj['Type'] = displayRecord[key];
+		}
 	}
 
 		console.log("TEST display obj", displayObj);

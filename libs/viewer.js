@@ -167,10 +167,9 @@ function getPDFViewer(objectData) {
 
 	var viewer = '<div id="pdf-viewer" class="viewer-section">';
 	var doc = Repository.getDatastreamUrl("pdf", objectData.pid);
-		console.log("TEST pdf src:", doc);
 
 	if(config.pdfViewer == "browser") {
-		viewer += '<iframe class="viewer-content" src="' + doc + '" height="500px" />';
+		viewer += '<iframe class="viewer-content" src="' + doc + '" height="500px"></iframe>';
 		viewer += '</div>';
 	}
 	else {

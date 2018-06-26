@@ -182,6 +182,7 @@ exports.renderObjectView = function(req, res) {
 				data.summary = Helper.createSummaryDisplayObject(object);
 				data.mods = Helper.createMetadataDisplayObject(object);
 					console.log("TEST mods:", data.mods);
+					console.log("TEST viewer:", data.viewer);
 			}	
 			else {
 				data.error = "Error rendering object, object not found";
