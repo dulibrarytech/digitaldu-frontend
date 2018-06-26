@@ -1076,6 +1076,20 @@ div#mediaplayer_wrapper {
   top: 68px;
 }
 
+div#video-viewer > div.video-js {
+    height: 437px;
+    width: 100%;
+}
+
+div#audio-player > div#viewer-content-wrapper {
+  width: 70%;
+  margin: 0 auto;
+}
+
+div#audio-player > div#viewer-content-wrapper > audio {
+  width: 100%;
+}
+
 
 footer div#footer-links {
   margin: 0 1em 0 1em;
