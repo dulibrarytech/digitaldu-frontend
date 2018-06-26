@@ -60,12 +60,33 @@ exports.createMetadataDisplayObject = function(result) {
 
 		console.log("TEST DispF", displayRecord);
 
-	var tempStr;
+	// Manually build the display
+	var tempStr = "",
+		creators = [], 
+		contributors = [];
 	for(var key in displayRecord) {
 		tempStr = "";
 
+		// Title
 		if(key == "title") {
 			displayObj['Title'] = displayRecord[key];
+		}
+
+		// Creator, Contributor
+		else if(key == "name" && typeof displayRecord[key] == "object") {
+			var nameData = displayRecord[key];
+			for(var name in nameData) {
+				if(nameData[name].role && nameData[name].namePart) {
+					if(nameData[name].role == "creator") {
+						creators.push(nameData[name].namePart);
+					}
+					else if(nameData[name].role == "contributor") {
+						contributors.push(nameData[name].namePart);
+					}
+				}
+			}
+			displayObj['Creator'] = creators;
+			displayObj['Contributors'] = contributors;
 		}
 		else if(key == "typeOfResource") {
 			displayObj['Type'] = displayRecord[key];
