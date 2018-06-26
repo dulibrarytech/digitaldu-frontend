@@ -36,7 +36,14 @@
 	        <div id="mods-display" class="metadata-content">
 	            <table class="data-table">
 	              <% for (var key in mods) { %>
-					<tr><td><%= key %></td><td><p><%= mods[key] %></p></td></tr>
+					<tr><td><%= key %></td>
+					<% if(typeof mods[key] == "object") { %>
+						<% for (var subkey in mods[key]) { %>
+							<td><p><%= mods[key][subkey] %></p></td></tr>
+						<% } %>
+					<% } else { %>
+						<td><p><%= mods[key] %></p></td></tr>
+					<% } %>
 				  <% } %>
 	            </table>
 	        </div>

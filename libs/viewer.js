@@ -15,7 +15,7 @@ exports.getObjectViewer = function(object, mimeType="") {
  	if(mimeType == "" && typeof object.mime_type != 'undefined') {
  		mimeType = object.mime_type;
  	}
- 		mimeType = "audio/mpeg";
+ 		mimeType = "image/tiff";
  	switch(mimeType) {
  		case "audio/mpeg":
  			viewer = getAudioPlayer(object);

@@ -107,9 +107,10 @@ module.exports = {
      * "Display field name": "index field"
      */
     metadataDisplay: {
-        "Title": "title",
-        "Subtitle": "subTitle",
-        "Creator": "namePersonal",
+        "Title": ["title"],
+        "Creator": {"field": "name", "data": "namePart", "id": {"role": "creator"}},
+
+
         "Corporate Creator": "nameCorporate",
         "Publisher": "publisher",
         "Type": "typeOfResource",
@@ -118,6 +119,6 @@ module.exports = {
         "Identifier": "identifier",
         "Language": "language",
         "Access Condition": "accessCondition",
-        "Location": []
+        "Subject": "subject"
     }
 };

@@ -58,14 +58,19 @@ exports.createMetadataDisplayObject = function(result) {
 		displayRecord = result.display_record;
 	}
 
-	var key, field;
-	for(key in displayFields) {
-		field = displayFields[key];
-		
-		if(typeof displayRecord[field] != 'undefined' && result[field] != '') {
-			displayObj[key] = displayRecord[field];
+		console.log("TEST DispF", displayRecord);
+
+	var tempStr;
+	for(var key in displayRecord) {
+		tempStr = "";
+
+		if(key == "title") {
+			displayObj['Title'] = displayRecord[key];
 		}
+
 	}
+
+		console.log("TEST display obj", displayObj);
 
 	if(Object.keys(displayObj).length === 0 && displayObj.constructor === Object) {
 		displayObj["No display available"] = "";
