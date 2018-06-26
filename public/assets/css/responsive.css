@@ -85,7 +85,7 @@
   }
 
   div#viewer-section {
-    height: 395px;
+    /*height: 395px;*/
   }
 
   div#viewer-wrapper {
@@ -206,7 +206,7 @@
   }
 
   div#viewer-section {
-    height: 395px;
+    /*height: 395px;*/
   }
 
   div#viewer-wrapper {
@@ -216,7 +216,7 @@
 
 @media only screen and (min-width: 1350px) and (max-width: 1499px) {
   div#viewer-section {
-    height: 395px;
+    /*height: 395px;*/
   }
 
   div#viewer-wrapper {
@@ -226,7 +226,7 @@
 
 @media only screen and (min-width: 1250px) and (max-width: 1349px) {
   div#viewer-section {
-    height: 395px;
+    /*height: 395px;*/
   }
 
   div#viewer-wrapper {
