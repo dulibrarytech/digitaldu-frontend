@@ -1074,11 +1074,19 @@ div#object-options button:focus {
 div#mediaplayer_wrapper {
   width: auto !important;
   position: relative;
-  top: 68px;
+  /*top: 68px;*/
+}
+
+div#audio-player > div#mediaplayer_wrapper {
+  height: 360px !important;
+}
+
+div#video-viewer > div#mediaplayer_wrapper {
+  height: 550px !important;
 }
 
 div#video-viewer > div.video-js {
-    height: 437px;
+    height: 550px;
     width: 100%;
 }
 
