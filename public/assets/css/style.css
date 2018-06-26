@@ -987,7 +987,7 @@ div#viewer-section {
 
 div#viewer-wrapper {
   margin: 0 auto;
-  width: 48%;
+  width: 60%;
 }
 
 div#metadata-section .container {
@@ -1085,6 +1085,10 @@ div#video-viewer > div#mediaplayer_wrapper {
   height: 550px !important;
 }
 
+.video-js {
+  /*background-color: #181818 !important;*/
+}
+
 div#video-viewer > div.video-js {
     height: 550px;
     width: 100%;
@@ -1097,6 +1101,15 @@ div#audio-player > div#viewer-content-wrapper {
 
 div#audio-player > div#viewer-content-wrapper > audio {
   width: 100%;
+}
+
+div#pdf-viewer > iframe {
+  width: 100%;
+  height: 700px;
+}
+
+div#openseadragon1 {
+  height: 700px;
 }
 
 
