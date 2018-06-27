@@ -61,9 +61,18 @@ exports.createMetadataDisplayObject = function(result) {
 		console.log("TEST DispF", displayRecord);
 
 	// Manually build the display
+	var	creators = [], 
+		contributors = [],
+		topics = [],
+		subjectNames = [],
+		subjectGenres = [],
+		links = [];
+
 	var tempStr = "",
-		creators = [], 
-		contributors = [];
+		anchor = "",
+		subjectType = "",
+		locationType = "";
+
 	for(var key in displayRecord) {
 		tempStr = "";
 
@@ -88,12 +97,109 @@ exports.createMetadataDisplayObject = function(result) {
 			displayObj['Creator'] = creators;
 			displayObj['Contributors'] = contributors;
 		}
+
+		// Type of resource
 		else if(key == "typeOfResource") {
 			displayObj['Type'] = displayRecord[key];
 		}
-	}
 
-		console.log("TEST display obj", displayObj);
+		// Genre
+		else if(key == "genre") {
+			displayObj['Genre'] = displayRecord[key];
+		}
+
+		// Origin Info
+		else if(key == "originInfo") {
+			var originInfo = displayRecord[key];
+			for(var origin in originInfo) {
+				for(var info in originInfo[origin]) {
+					if(info == "publisher") {
+						displayObj['Publisher'] = originInfo[origin][info];
+					}
+					else if(info == "place") {
+						displayObj['Place'] = originInfo[origin][info];
+					}
+					else if(info == "d_created") {
+						displayObj['Date Created'] = originInfo[origin][info];
+					}
+					else if(info == "d_issued") {
+						displayObj['Date Issued'] = originInfo[origin][info];
+					}
+				}
+			}
+		}
+
+		// Language
+		else if(key == "language") {
+			displayObj['Language'] = displayRecord[key];
+		}
+
+		// physicalDescription
+		else if(key == "physicalDescription") {
+			var physicalDescription = displayRecord[key];
+			for(var description in physicalDescription) {
+				for(var info in physicalDescription[description]) {
+					if(info == "form") {
+						displayObj['Form'] = physicalDescription[description][info];
+					}
+					else if(info == "extent") {
+						displayObj['Extent'] = physicalDescription[description][info];
+					}
+					else if(info == "digitalOrigin") {
+						displayObj['Digital Origin'] = physicalDescription[description][info];
+					}
+				}
+			}
+		}
+
+		// Access Condition
+		else if(key == "accessCondition") {
+			displayObj['Access Condition'] = displayRecord[key];
+		}
+
+		// Subject, Topic
+		else if(key == "subject" && typeof displayRecord[key] == "string") {
+			displayObj['Subject'] = displayRecord[key];
+		}
+		else if(key == "subject" && typeof displayRecord[key] == "object") {
+			for(var subject in displayRecord[key]) {
+				subjectType = displayRecord[key][subject];
+				for(var typeKey in subjectType) {
+					if(typeKey == "topic") {
+						topics.push(subjectType[typeKey]);
+					}
+					else if(typeKey == "namePart") {
+						subjectNames.push(subjectType[typeKey]);
+					}
+					else if(typeKey == "genre") {
+						subjectGenres.push(subjectType[typeKey]);
+					}
+				}
+			}
+			displayObj['Topics'] = topics;
+			displayObj['Subject Names'] = subjectNames;
+			displayObj['Subject Genres'] = subjectGenres;
+		}
+
+		// Links
+		else if(key == "location" && typeof displayRecord[key] == "object") {
+			for(var location in displayRecord[key]) {
+				locationType = displayRecord[key][location];
+				for(var typeKey in locationType) {
+					if(typeKey == "url") {
+						//anchor = '<a href="' + locationType[typeKey] + '">' + locationType[typeKey] + '</a>';
+						links.push(locationType[typeKey]);
+					}
+				}
+			}
+			displayObj['Link'] = links;
+		}
+
+		// Target Audience
+		else if(key == "targetAudience") {
+			displayObj['Target Audience'] = displayRecord[key];
+		}
+	}
 
 	if(Object.keys(displayObj).length === 0 && displayObj.constructor === Object) {
 		displayObj["No display available"] = "";
