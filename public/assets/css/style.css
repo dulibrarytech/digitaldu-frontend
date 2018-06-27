@@ -494,6 +494,27 @@ div#facets > div.panel .facet-count {
   float: right;
 }
 
+div#facet-breadcrumbs span {
+    background-color: #e5e3e1;
+    color: #444;
+    padding: 8px;
+    text-decoration: none;
+}
+
+div#facet-breadcrumbs span a {
+  text-decoration: none;
+}
+
+div#facet-breadcrumbs span a strong {
+  color: red;
+}
+
+div#facet-breadcrumbs a {
+    /* text-decoration: none; */
+    color: inherit;
+    margin-right: 20px;
+}
+
 .facet-caret {
   color: #8b2332;
 }
