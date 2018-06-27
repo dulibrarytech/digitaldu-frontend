@@ -1,19 +1,9 @@
 <% include partials/header %>
-
-
-
-<div id="title-banner">
-    <div class="container">
-    <div id="title-text" class="col-sm-6 cul">
-            <a class="sm-title" href="http://www.library.du.edu">University Libraries</a>
-            <h1><a class="title" href="/">SPECIAL COLLECTIONS <span class="highlight-text">@ DU</span></a></h1>
-        </div>
-    </div>
-</div>
+<% include partials/title-banner %>
 
 <div id="main" class="content container">
     <div id="facet-breadcrumbs">
-    	<a href="<%= base_url %>">Start Over</a>
+    	<a href="<%= rootUrl %>">Start Over</a>
     	<% if (facet_breadcrumb_trail) { %>
     		<%- facet_breadcrumb_trail %>
     	<% } %>

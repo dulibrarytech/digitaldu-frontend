@@ -1,20 +1,12 @@
 <% include partials/header %>
-
-<!-- TODO include ext title banner (with search box -->
-
-  <!--Logo banner -->
-  <div id="title-banner">
-    <div class="container">
-    <div id="title-text" class="col-sm-6 cul">
-            <a class="sm-title" href="http://www.library.du.edu">University Libraries</a>
-            <h1><a class="title" href="/">SPECIAL COLLECTIONS <span class="highlight-text">@ DU</span></a></h1>
-        </div>
-    </div>
-  </div>
+<% include partials/title-banner %>
 
   <div id="main" class="content container demo-test-view">
     <div id="facet-breadcrumbs">
-      <!-- <a href="#">Start Over</a><a href="#" class="facet-breadcrumb"><span>All Fields</span><i class="fa fa-chevron-right"></i><span>Baseball</span><i class="fa fa-times"></i></a> -->
+      <a href="<%= rootUrl %>">Start Over</a>
+      <% if (facet_breadcrumb_trail) { %>
+        <%- facet_breadcrumb_trail %>
+      <% } %>
     </div>
     <div id="result-facets-wrapper" class="content-col-3 sidebar">
       <div class="result-facets">
@@ -41,12 +33,12 @@
                 <div class="search-result">
                     <dl class="search-result-tn">
                         <dt>
-                            <a href="<%= root_url %>/object/<%= results[i].pid %>" title="<%= results[i].title %>"><img src="<%= results[i].tn %>" alt="<%= results[i].title %>" /></a>            
+                            <a href="<%= rootUrl %>/object/<%= results[i].pid %>" title="<%= results[i].title %>"><img src="<%= results[i].tn %>" alt="<%= results[i].title %>" /></a>            
                         </dt>
                     <dd></dd>
                     </dl>
                     <dl class="search-result-data">
-                        <dt class="result-title"><%= i+1 %>.&nbsp&nbsp<a href="<%= root_url %>/object/<%= results[i].pid %>"><%= results[i].title %></a></dt>
+                        <dt class="result-title"><%= i+1 %>.&nbsp&nbsp<a href="<%= rootUrl %>/object/<%= results[i].pid %>"><%= results[i].title %></a></dt>
                             <dd></dd>
                         <!-- <dd class=""><a href="#">search result</a></dd> -->
                             <dt>Creator:</dt>

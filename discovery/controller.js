@@ -127,7 +127,8 @@ exports.renderCollection = function(req, res) {
 			facets: {},
 			error: null,
 			pagination: {},
-			base_url: config.baseUrl
+			base_url: config.baseUrl,
+			rootUrl: config.rootUrl
 		},
 		pid = req.params.pid || "",
 		page = req.query.page || 1,
@@ -164,7 +165,8 @@ exports.renderObjectView = function(req, res) {
 		summary: null,
 		mods: null,
 		error: null,
-		base_url: config.baseUrl
+		base_url: config.baseUrl,
+		rootUrl: config.rootUrl
 	};
 
 	// Get the object data
@@ -237,7 +239,7 @@ exports.search = function(req, res) {
 			results: [],
 			pageData: null,
 			base_url: config.baseUrl,
-			root_url: config.rootUrl,
+			rootUrl: config.rootUrl,
 			collection_scope: ""
 		},
 		page = req.query.page || 1,
