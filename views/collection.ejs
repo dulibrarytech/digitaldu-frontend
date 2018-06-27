@@ -46,7 +46,7 @@
 						<% for (var i = 0; i < collections.length; i++) { %>
 							<dl class="item">
 								<dt>
-									<a href="<%= collections[i].path %>/<%= collections[i].pid %>">
+									<a href="<%= base_url %><%= collections[i].path %>/<%= collections[i].pid %>">
 			            				<div class="item-thumb">
 									  		<img src="<%= collections[i].tn %>" alt="Thumb Image">
 										</div>
@@ -54,7 +54,7 @@
 								</dt>
 								<dd>
 									<div class="item-details">
-									  	<h3 class="item-title"><a href="<%= collections[i].path %>/<%= collections[i].pid %>"><%= collections[i].title %></a></h3>
+									  	<h3 class="item-title"><a href="<%= base_url %><%= collections[i].path %>/<%= collections[i].pid %>"><%= collections[i].title %></a></h3>
 									</div>
 								</dd>
 							</dl>
