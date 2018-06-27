@@ -71,7 +71,8 @@ exports.createMetadataDisplayObject = function(result) {
 	var tempStr = "",
 		anchor = "",
 		subjectType = "",
-		locationType = "";
+		locationType = "",
+		subjectGeographics = [];
 
 	for(var key in displayRecord) {
 		tempStr = "";
@@ -174,11 +175,23 @@ exports.createMetadataDisplayObject = function(result) {
 					else if(typeKey == "genre") {
 						subjectGenres.push(subjectType[typeKey]);
 					}
+					else if(typeKey == "geographic") {
+						subjectGeographics.push(subjectType[typeKey]);
+					}
 				}
 			}
-			displayObj['Topics'] = topics;
-			displayObj['Subject Names'] = subjectNames;
-			displayObj['Subject Genres'] = subjectGenres;
+			if(topics.length > 0) {
+				displayObj['Topics'] = topics;
+			}
+			if(subjectNames.length > 0) {
+				displayObj['Subject Name'] = subjectNames;
+			}
+			if(subjectGenres.length > 0) {
+				displayObj['Subject Genre'] = subjectGenres;
+			}
+			if(subjectGeographics.length > 0) {
+				displayObj['Subject Geographic'] = subjectGeographics;
+			}
 		}
 
 		// Links

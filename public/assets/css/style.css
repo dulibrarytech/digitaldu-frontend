@@ -1112,6 +1112,13 @@ div#openseadragon1 {
   height: 700px;
 }
 
+div#viewer-message {
+  float: right;
+  position: relative;
+  right: 50%;
+  top: 30vh;
+}
+
 
 footer div#footer-links {
   margin: 0 1em 0 1em;
