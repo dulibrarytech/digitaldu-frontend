@@ -330,9 +330,9 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
             resultData = Helper.getSearchResultDisplayFields(result);
             // Push a new result object to the results array
             results.push({
-              title: resultData.title || "",
-              creator: result._source.creator || "",
-              abstract: resultData.description || "",
+              title: resultData.title || "Untitled",
+              creator: resultData.creator || "Unknown",
+              abstract: resultData.description || "No Description",
               tn: tn,
               pid: result._source.pid
             });

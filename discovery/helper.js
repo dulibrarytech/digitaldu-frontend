@@ -66,13 +66,14 @@ exports.createMetadataDisplayObject = function(result) {
 		topics = [],
 		subjectNames = [],
 		subjectGenres = [],
+		subjectGeographics = [],
+		subjectOccupations = [],
 		links = [];
 
 	var tempStr = "",
 		anchor = "",
 		subjectType = "",
-		locationType = "",
-		subjectGeographics = [];
+		locationType = "";
 
 	for(var key in displayRecord) {
 		tempStr = "";
@@ -95,8 +96,12 @@ exports.createMetadataDisplayObject = function(result) {
 					}
 				}
 			}
-			displayObj['Creator'] = creators;
-			displayObj['Contributors'] = contributors;
+			if(creators.length > 0) {
+				displayObj['Creator'] = creators;
+			}
+			if(contributors.length > 0) {
+				displayObj['Contributors'] = contributors;
+			}
 		}
 
 		// Type of resource
@@ -149,6 +154,9 @@ exports.createMetadataDisplayObject = function(result) {
 					else if(info == "digitalOrigin") {
 						displayObj['Digital Origin'] = physicalDescription[description][info];
 					}
+					else if(info == "note") {
+						displayObj['Note'] = physicalDescription[description][info];
+					}
 				}
 			}
 		}
@@ -178,6 +186,9 @@ exports.createMetadataDisplayObject = function(result) {
 					else if(typeKey == "geographic") {
 						subjectGeographics.push(subjectType[typeKey]);
 					}
+					else if(typeKey == "occupation") {
+						subjectOccupations.push(subjectType[typeKey]);
+					}
 				}
 			}
 			if(topics.length > 0) {
@@ -192,6 +203,9 @@ exports.createMetadataDisplayObject = function(result) {
 			if(subjectGeographics.length > 0) {
 				displayObj['Subject Geographic'] = subjectGeographics;
 			}
+			if(subjectOccupations.length > 0) {
+				displayObj['Subject Occupation'] = subjectOccupations;
+			}
 		}
 
 		// Links
@@ -205,7 +219,9 @@ exports.createMetadataDisplayObject = function(result) {
 					}
 				}
 			}
-			displayObj['Link'] = links;
+			if(links.length > 0) {
+				displayObj['Link'] = links;
+			}
 		}
 
 		// Target Audience
@@ -315,7 +331,8 @@ exports.getTypeFacetTotalsObject = function(facets) {
 exports.getSearchResultDisplayFields = function(searchResult) {
 	var fields = {
 		title: "",
-		description: ""
+		description: "",
+		creator: ""
 	};
 
 	var displayRecord = {};
@@ -324,6 +341,9 @@ exports.getSearchResultDisplayFields = function(searchResult) {
 		// Get Display Record data
 	    if(searchResult._source.display_record && typeof searchResult._source.display_record == 'string') {
 	      displayRecord = JSON.parse(searchResult._source.display_record);
+	    }
+	    else if(searchResult._source.display_record && typeof searchResult._source.display_record == 'object') {
+	    	displayRecord = searchResult._source.display_record;
 	    }
 
 	    // Find the title
@@ -340,6 +360,14 @@ exports.getSearchResultDisplayFields = function(searchResult) {
 	    }
 	    else if(displayRecord.abstract && displayRecord.abstract != "") {
 	      fields.description = displayRecord.abstract;
+	    }
+
+	    // Find the creator
+	    if(searchResult._source.creator && searchResult._source.creator != "") {
+	      fields.creator = searchResult._source.creator;
+	    }
+	    else if(displayRecord.creator && displayRecord.creator != "") {
+	      fields.creator = displayRecord.creator;
 	    }
 	}
 	catch(error) {
