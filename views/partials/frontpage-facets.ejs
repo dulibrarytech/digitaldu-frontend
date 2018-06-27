@@ -1,0 +1,67 @@
+<div id="facets">
+ <button id="type-facet" class="accordion active">
+    <h5>Type</h5><i class="fas fa-caret-down facet-caret"></i>
+  </button>
+  <div class="panel fixed-facets" style="display: block">
+    <ul>
+      <li><span class="facet-thumbnail"><img src="assets/img/picture-in-frame-TN.png"/></span><span class="facet-name"><a href="#">Still Image</a></span><span class="facet-count">(<%= typeCount.stillImage %>)</span></li>
+      <li><span id="moving-image-facet-tn" class="facet-thumbnail"><img src="assets/img/film-camera-TN.png"/></span><span class="facet-name"><a href="#">Moving Image</a></span><span class="facet-count">(<%= typeCount.movingImage %>)</span></li>
+      <li><span id="text-facet-tn" class="facet-thumbnail"><img src="assets/img/old-book-TN.png"/></span><span class="facet-name"><a href="#">Text</a></span><span class="facet-count">(<%= typeCount.text %>)</span></li>
+      <li><span id="sound-recording-facet-tn" class="facet-thumbnail"><img src="assets/img/mic-TN.png"/></span><span class="facet-name"><a href="#">Sound Recording</a></span><span class="facet-count">(<%= typeCount.soundRecording %>)</span></li>
+      <li><span id="sound-recording-musical-facet-tn" class="facet-thumbnail"><img src="assets/img/note-TN.png"/></span><span class="facet-name"><a href="#">Music Recording</a></span><span class="facet-count">(<%= typeCount.soundRecordingMusical %>)</span></li>
+      <li><span id="sound-recording-nonmusical-facet-tn" class="facet-thumbnail"><img src="assets/img/mic-TN.png"/></span><span class="facet-name"><a href="#">Nonmusic Recording</a></span><span class="facet-count">(<%= typeCount.soundRecordingNonMusical %>)</span></li>
+      <li><span id="map-facet-tn" class="facet-thumbnail"><img src="assets/img/map-TN.png"/></span><span class="facet-name"><a href="#">Map</a></span><span class="facet-count">(<%= typeCount.map %>)</span></li>
+      <li><span id="mixed-facet-tn" class="facet-thumbnail"><img src="assets/img/mixed-TN.png"/></span><span class="facet-name"><a href="#">Mixed Material</a></span><span class="facet-count">(<%= typeCount.mixedMaterial %>)</span></li>
+      <li><span id="threeD-facet-tn" class="facet-thumbnail"><img src="assets/img/threeD-TN.png"/></span><span class="facet-name"><a href="#">3D Object</a></span><span class="facet-count">(<%= typeCount.threeDObject %>)</span></li>
+    </ul>
+  </div>
+
+  <!-- This should render all facets EXCEPT the 'Type' facet.  That is hard-coded above ^  Below, should be button/div combos like above for each facet in facets --> 
+  <% for(var key in facets) { %>
+    <% if(key != 'Type' && key != 'type') { %>
+      <button class="accordion">
+        <h5><%= key %></h5><i class="fas fa-caret-right facet-caret"></i>
+      </button>
+      <%- facets[key] %>
+    <% } %>%>
+  <% } %>
+
+  <script type="text/javascript">
+
+    function selectFacet(facetType, facet) {
+
+      // Url encode spaces for querystring
+      facet = facet.replace(' ', '%20');
+
+      // Get current search querystring
+      var url = window.location.href;
+      var searchUrl = "/" + url.substring(url.indexOf("repository"), url.length);
+      var facetParam = "&f[" + facetType + "][]=" + facet;
+
+      // Add the selected facet param to the search querystring, if it has not been added yet
+      if(searchUrl.indexOf(facetParam) <= 0) {
+        searchUrl += facetParam;
+      }
+
+      return searchUrl;
+    };
+
+    function removeFacet(facetType, facet) {
+
+      // Get the facet param string to remove from the search querystring
+      var facetParam = "&f[" + facetType + "][]=" + facet;
+      facetParam = facetParam.replace(/\s/g, "%20");
+
+      // Get current search querystring
+      url = window.location.href;
+      searchUrl = "/" + url.substring(url.indexOf("repository"), url.length);
+
+      // Remove the selected facet param from the search querystring
+      searchUrl = searchUrl.replace(facetParam, "");
+
+      return searchUrl;
+    };
+
+  </script>
+
+</div>
