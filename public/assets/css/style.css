@@ -1071,17 +1071,20 @@ div#object-options button:focus {
   outline: none;
 }
 
-div#mediaplayer_wrapper {
+div#mediaplayer_wrapper,
+div#mediaplayer {
   width: auto !important;
   position: relative;
   /*top: 68px;*/
 }
 
-div#audio-player > div#mediaplayer_wrapper {
+div#audio-player > div#mediaplayer_wrapper,
+div#audio-player > div#mediaplayer {
   height: 360px !important;
 }
 
-div#video-viewer > div#mediaplayer_wrapper {
+div#video-viewer > div#mediaplayer_wrapper,
+div#video-viewer > div#mediaplayer {
   height: 550px !important;
 }
 
