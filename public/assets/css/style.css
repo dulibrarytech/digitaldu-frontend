@@ -1117,6 +1117,7 @@ div#viewer-message {
   position: relative;
   right: 50%;
   top: 30vh;
+  z-index: -1;
 }
 
 
