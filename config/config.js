@@ -5,8 +5,8 @@ var protocol = "http";
 module.exports = {
 
     rootRoute: "repository",
-    baseUrl: protocol + "://" + process.env.APP_HOST + ":" + process.env.APP_PORT,
-    rootUrl: protocol + "://" + process.env.APP_HOST + ":" + process.env.APP_PORT + "/repository",
+    baseUrl: protocol + "://" + process.env.APP_HOST,
+    rootUrl: protocol + "://" + process.env.APP_HOST + "/repository",
 
     // ENV settings
     elasticsearchHost: process.env.ELASTICSEARCH_HOST,
@@ -59,8 +59,9 @@ module.exports = {
     videoViewer: "videojs",
 
     /* 
-     * Viewer to display video files
-     * [browser | [ext viewer lib]]
+     * Viewer to display pdf files
+     * * PDF-JS currently unavailable
+     * [browser | [pdf-js]]
      */
     pdfViewer: "browser",
 
