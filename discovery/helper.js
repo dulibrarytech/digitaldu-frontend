@@ -58,8 +58,6 @@ exports.createMetadataDisplayObject = function(result) {
 		displayRecord = result.display_record;
 	}
 
-		console.log("TEST DispF", displayRecord);
-
 	// Manually build the display
 	var	creators = [], 
 		contributors = [],

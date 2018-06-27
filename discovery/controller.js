@@ -131,7 +131,7 @@ exports.renderCollection = function(req, res) {
 		},
 		pid = req.params.pid || "",
 		page = req.query.page || 1,
-		path = config.baseUrl + "/collection/" + pid;
+		path = config.rootUrl + "/collection/" + pid;
 
 	// Get all collections in this community
 	Service.getObjectsInCollection(pid, page, function(response) {
@@ -181,8 +181,6 @@ exports.renderObjectView = function(req, res) {
 				data.viewer = Viewer.getObjectViewer(object);
 				data.summary = Helper.createSummaryDisplayObject(object);
 				data.mods = Helper.createMetadataDisplayObject(object);
-					console.log("TEST mods:", data.mods);
-					console.log("TEST viewer:", data.viewer);
 			}	
 			else {
 				data.error = "Error rendering object, object not found";
