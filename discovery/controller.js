@@ -79,7 +79,8 @@ exports.renderRootCollection = function(req, res) {
 		paginator: {},
 		typeCount: {},
 		error: null,
-		base_url: config.baseUrl
+		base_url: config.baseUrl,
+		rootUrl: config.rootUrl
 	},
 	page = req.query.page || 1;
 
