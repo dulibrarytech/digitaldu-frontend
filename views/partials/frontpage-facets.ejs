@@ -4,15 +4,15 @@
   </button>
   <div class="panel fixed-facets" style="display: block">
     <ul>
-      <li><span class="facet-thumbnail"><img src="assets/img/picture-in-frame-TN.png"/></span><span class="facet-name"><a href="javascript:document.location.href=selectFacet('Type', 'Still Image');">Still Image</a></span><span class="facet-count">(<%= typeCount.stillImage %>)</span></li>
-      <li><span id="moving-image-facet-tn" class="facet-thumbnail"><img src="assets/img/film-camera-TN.png"/></span><span class="facet-name"><a href="javascript:document.location.href=selectFacet('Type', 'Moving Image');">Moving Image</a></span><span class="facet-count">(<%= typeCount.movingImage %>)</span></li>
-      <li><span id="text-facet-tn" class="facet-thumbnail"><img src="assets/img/old-book-TN.png"/></span><span class="facet-name"><a href="javascript:document.location.href=selectFacet('Type', 'Text');">Text</a></span><span class="facet-count">(<%= typeCount.text %>)</span></li>
-      <li><span id="sound-recording-facet-tn" class="facet-thumbnail"><img src="assets/img/mic-TN.png"/></span><span class="facet-name"><a href="javascript:document.location.href=selectFacet('Type', 'Sound Recording');">Sound Recording</a></span><span class="facet-count">(<%= typeCount.soundRecording %>)</span></li>
-      <li><span id="sound-recording-musical-facet-tn" class="facet-thumbnail"><img src="assets/img/note-TN.png"/></span><span class="facet-name"><a href="javascript:document.location.href=selectFacet('Type', ''Music Recording);">Music Recording</a></span><span class="facet-count">(<%= typeCount.soundRecordingMusical %>)</span></li>
-      <li><span id="sound-recording-nonmusical-facet-tn" class="facet-thumbnail"><img src="assets/img/mic-TN.png"/></span><span class="facet-name"><a href="javascript:document.location.href=selectFacet('Type', 'Nonmusic Recording');">Nonmusic Recording</a></span><span class="facet-count">(<%= typeCount.soundRecordingNonMusical %>)</span></li>
-      <li><span id="map-facet-tn" class="facet-thumbnail"><img src="assets/img/map-TN.png"/></span><span class="facet-name"><a href="javascript:document.location.href=selectFacet('Type', 'Map');">Map</a></span><span class="facet-count">(<%= typeCount.map %>)</span></li>
-      <li><span id="mixed-facet-tn" class="facet-thumbnail"><img src="assets/img/mixed-TN.png"/></span><span class="facet-name"><a href="javascript:document.location.href=selectFacet('Type', 'Mixed Materials');">Mixed Material</a></span><span class="facet-count">(<%= typeCount.mixedMaterial %>)</span></li>
-      <li><span id="threeD-facet-tn" class="facet-thumbnail"><img src="assets/img/threeD-TN.png"/></span><span class="facet-name"><a href="javascript:document.location.href=selectFacet('Type', '3D Object');">3D Object</a></span><span class="facet-count">(<%= typeCount.threeDObject %>)</span></li>
+      <li><span class="facet-thumbnail"><img src="assets/img/picture-in-frame-TN.png"/></span><span class="facet-name"><a href="#">Still Image</a></span><span class="facet-count">(<%= typeCount.stillImage %>)</span></li>
+      <li><span id="moving-image-facet-tn" class="facet-thumbnail"><img src="assets/img/film-camera-TN.png"/></span><span class="facet-name"><a href="#">Moving Image</a></span><span class="facet-count">(<%= typeCount.movingImage %>)</span></li>
+      <li><span id="text-facet-tn" class="facet-thumbnail"><img src="assets/img/old-book-TN.png"/></span><span class="facet-name"><a href="#">Text</a></span><span class="facet-count">(<%= typeCount.text %>)</span></li>
+      <li><span id="sound-recording-facet-tn" class="facet-thumbnail"><img src="assets/img/mic-TN.png"/></span><span class="facet-name"><a href="#">Sound Recording</a></span><span class="facet-count">(<%= typeCount.soundRecording %>)</span></li>
+      <li><span id="sound-recording-musical-facet-tn" class="facet-thumbnail"><img src="assets/img/note-TN.png"/></span><span class="facet-name"><a href="#">Music Recording</a></span><span class="facet-count">(<%= typeCount.soundRecordingMusical %>)</span></li>
+      <li><span id="sound-recording-nonmusical-facet-tn" class="facet-thumbnail"><img src="assets/img/mic-TN.png"/></span><span class="facet-name"><a href="#">Nonmusic Recording</a></span><span class="facet-count">(<%= typeCount.soundRecordingNonMusical %>)</span></li>
+      <li><span id="map-facet-tn" class="facet-thumbnail"><img src="assets/img/map-TN.png"/></span><span class="facet-name"><a href="#">Map</a></span><span class="facet-count">(<%= typeCount.map %>)</span></li>
+      <li><span id="mixed-facet-tn" class="facet-thumbnail"><img src="assets/img/mixed-TN.png"/></span><span class="facet-name"><a href="#">Mixed Material</a></span><span class="facet-count">(<%= typeCount.mixedMaterial %>)</span></li>
+      <li><span id="threeD-facet-tn" class="facet-thumbnail"><img src="assets/img/threeD-TN.png"/></span><span class="facet-name"><a href="#">3D Object</a></span><span class="facet-count">(<%= typeCount.threeDObject %>)</span></li>
     </ul>
   </div>
 
@@ -38,7 +38,7 @@
       var url = window.location.href;
       searchUrl = "/repository/search?type=all&q=&f[" + facetType + "][]=" + facet;
 
-      return searchUrl;
+      return "searchUrl";
     };
 
     function removeFacet(facetType, facet) {
@@ -54,6 +54,8 @@
 
       // // Remove the selected facet param from the search querystring
       // searchUrl = searchUrl.replace(facetParam, "");
+
+      // javascript:document.location.href=selectFacet('Type', 'Still Image');
 
       // return searchUrl;
       return "/repository";
