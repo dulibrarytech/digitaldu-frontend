@@ -16,7 +16,6 @@
     </ul>
   </div>
 
-  <!-- This should render all facets EXCEPT the 'Type' facet.  That is hard-coded above ^  Below, should be button/div combos like above for each facet in facets --> 
   <% for(var key in facets) { %>
     <% if(key != 'Type' && key != 'type') { %>
       <button class="accordion">
@@ -47,10 +46,9 @@
 
       // Get current search querystring
       url = window.location.href;
-      searchUrl = "/" + url.substring(url.indexOf("repository"), url.length);
 
       // Remove the selected facet param from the search querystring
-      searchUrl = searchUrl.replace(facetParam, "");
+      var searchUrl = url.replace(facetParam, "");
 
       return searchUrl;
     };

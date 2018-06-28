@@ -34,10 +34,9 @@
 
 			// Get current search querystring
 			url = window.location.href;
-			searchUrl = "/" + url.substring(url.indexOf("repository"), url.length);
 
 			// Remove the selected facet param from the search querystring
-			searchUrl = searchUrl.replace(facetParam, "");
+			var searchUrl = searchUrl.replace(facetParam, "");
 
 			return searchUrl;
 		};
