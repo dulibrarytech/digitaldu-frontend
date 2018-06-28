@@ -14,8 +14,7 @@
 			facet = facet.replace(' ', '%20');
 
 			// Get current search querystring
-			var url = window.location.href;
-			var searchUrl = "/" + url.substring(url.indexOf("repository"), url.length);
+			var searchUrl = window.location.href;
 			var facetParam = "&f[" + facetType + "][]=" + facet;
 
 			// Add the selected facet param to the search querystring, if it has not been added yet
