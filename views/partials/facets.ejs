@@ -8,7 +8,7 @@
 
 	<script type="text/javascript">
 
-		function selectFacet(facetType, facet) {
+		function selectFacet(facetType, facet, baseUrl) {
 
 			// Url encode spaces for querystring
 			facet = facet.replace(' ', '%20');
@@ -26,7 +26,7 @@
 			return searchUrl;
 		};
 
-		function removeFacet(facetType, facet) {
+		function removeFacet(facetType, facet, baseUrl) {
 
 			// Get the facet param string to remove from the search querystring
 			var facetParam = "&f[" + facetType + "][]=" + facet;

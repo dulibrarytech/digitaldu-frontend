@@ -4,7 +4,7 @@
   </button>
   <div class="panel fixed-facets" style="display: block">
     <ul>
-      <li><span class="facet-thumbnail"><img src="assets/img/picture-in-frame-TN.png"/></span><span class="facet-name"><a href="#">Still Image</a></span><span class="facet-count">(<%= typeCount.stillImage %>)</span></li>
+      <li><span class="facet-thumbnail"><img src="assets/img/picture-in-frame-TN.png"/></span><span class="facet-name"><a href="javascript:document.location.href=selectFacet('Type', 'Still Image');">Still Image</a></span><span class="facet-count">(<%= typeCount.stillImage %>)</span></li>
       <li><span id="moving-image-facet-tn" class="facet-thumbnail"><img src="assets/img/film-camera-TN.png"/></span><span class="facet-name"><a href="#">Moving Image</a></span><span class="facet-count">(<%= typeCount.movingImage %>)</span></li>
       <li><span id="text-facet-tn" class="facet-thumbnail"><img src="assets/img/old-book-TN.png"/></span><span class="facet-name"><a href="#">Text</a></span><span class="facet-count">(<%= typeCount.text %>)</span></li>
       <li><span id="sound-recording-facet-tn" class="facet-thumbnail"><img src="assets/img/mic-TN.png"/></span><span class="facet-name"><a href="#">Sound Recording</a></span><span class="facet-count">(<%= typeCount.soundRecording %>)</span></li>
@@ -29,36 +29,30 @@
   <script type="text/javascript">
 
     function selectFacet(facetType, facet) {
-      var searchUrl = "";
-
       // Url encode spaces for querystring
       facet = facet.replace(' ', '%20');
 
       // Get current search querystring
       var url = window.location.href;
-      searchUrl = "/repository/search?type=all&q=&f[" + facetType + "][]=" + facet;
+      var searchUrl = url + "/search?type=all&q=&f[" + facetType + "][]=" + facet;
 
-      return "searchUrl";
+      return searchUrl;
     };
 
     function removeFacet(facetType, facet) {
 
-      // TODO: Implement this if needed
       // Get the facet param string to remove from the search querystring
-      // var facetParam = "&f[" + facetType + "][]=" + facet;
-      // facetParam = facetParam.replace(/\s/g, "%20");
+      var facetParam = "&f[" + facetType + "][]=" + facet;
+      facetParam = facetParam.replace(/\s/g, "%20");
 
-      // // Get current search querystring
-      // url = window.location.href;
-      // searchUrl = "/repository/search?type=all&q=&f[" + facetType + "][]=" + facet;
+      // Get current search querystring
+      url = window.location.href;
+      searchUrl = "/" + url.substring(url.indexOf("repository"), url.length);
 
-      // // Remove the selected facet param from the search querystring
-      // searchUrl = searchUrl.replace(facetParam, "");
+      // Remove the selected facet param from the search querystring
+      searchUrl = searchUrl.replace(facetParam, "");
 
-      // javascript:document.location.href=selectFacet('Type', 'Still Image');
-
-      // return searchUrl;
-      return "/repository";
+      return searchUrl;
     };
 
   </script>
