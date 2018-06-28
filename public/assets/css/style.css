@@ -499,6 +499,7 @@ div#facet-breadcrumbs span {
     color: #444;
     padding: 8px;
     text-decoration: none;
+    margin-left: 10px;
 }
 
 div#facet-breadcrumbs span a {
