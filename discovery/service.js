@@ -281,6 +281,17 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
     // Build elasticsearch aggregations object from config facet list
     var facetAggregations = Helper.getFacetAggregationObject(config.facets);
 
+    // USe an empty query object if query is an empty string, and no facets are present (* search)
+    var queryObj = {};
+    if(query != "" || facets) {
+        queryObj = {
+            "bool": {
+              "should": matchFields,
+              "must": matchFacetFields
+            }
+        }
+    }
+
     // Elasticsearch query object
     var data = {  
       index: config.elasticsearchIndex,
@@ -288,12 +299,7 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
       body: {
         from : (pageNum - 1) * config.maxResultsPerPage, 
         size : config.maxResultsPerPage,
-        query: {
-            "bool": {
-              "should": matchFields,
-              "must": matchFacetFields
-            }
-        },
+        query: queryObj,
         aggregations: facetAggregations
       }
     }
