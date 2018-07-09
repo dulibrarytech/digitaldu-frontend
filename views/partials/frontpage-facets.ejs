@@ -1,3 +1,5 @@
+<!-- Static frontpage facets -->
+
 <div id="facets">
  <button id="type-facet" class="accordion active">
     <h5>Type</h5><i class="fas fa-caret-down facet-caret"></i>
@@ -28,6 +30,25 @@
   <script type="text/javascript">
 
     function selectFacet(facetType, facet, baseurl) {
+
+      // Handle unmatching facet label names to their correct facet value
+      switch(facet) {
+        case "Music Recording":
+          facet = "sound recording-musical";
+          break;
+        case "Nonmusic Recording":
+          facet = "sound recording-nonmusical";
+          break;
+        case "Map":
+          facet = "cartographic";
+          break;
+        case "3D Object":
+          facet = "three dimensional object";
+          break;
+        default:
+          break;
+      }
+
       // Url encode spaces for querystring
       facet = facet.replace(' ', '%20');
 
