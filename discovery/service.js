@@ -393,7 +393,7 @@ var getFacets = function (callback) {
         terms: field
       };
     }
-      console.log("TEST GF aggs in:", aggs);
+      //console.log("TEST GF aggs in:", aggs.Type);
     es.search({
         index: config.elasticsearchIndex,
         type: 'data',
@@ -402,7 +402,7 @@ var getFacets = function (callback) {
             "aggregations": aggs
         }
     }).then(function (body) {
-          console.log("TEST GF body out:", body.aggregations.Type.buckets);
+          //console.log("TEST GF body out:", body.aggregations.Type.buckets);
         callback(body.aggregations);
     }, function (error) {
         callback(error);

@@ -267,17 +267,6 @@ exports.paginateResults = function(results, page) {
  * Get the totals for all type facets, for the front page template (Matches the hard coded type facets)
  */
 exports.getTypeFacetTotalsObject = function(facets) {
-	
-	// Default values
-	// var totals = {
-	// 	stillImage: 0,
-	// 	movingImage: 0,
-	// 	soundRecording: 0,
-	// 	text: 0,
-	// 	map: 0,
-	// 	artReproduction: 0,
-	// 	scrapbook: 0
-	// }
 
 	var totals = {
 		stillImage: 0,

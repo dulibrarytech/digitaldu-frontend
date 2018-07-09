@@ -99,7 +99,6 @@ exports.renderRootCollection = function(req, res) {
 
 		// Get facets for all data
 		Service.getFacets(function(facets) {
-
 			if(typeof facets == "string") {
 				console.log("Error retrieving facet data:", facets);
 			}

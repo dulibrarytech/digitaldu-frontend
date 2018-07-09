@@ -32,10 +32,10 @@
 			facetParam = facetParam.replace(/\s/g, "%20");
 
 			// Get current search querystring
-			url = window.location.href;
+			var searchUrl = window.location.href;
 
 			// Remove the selected facet param from the search querystring
-			var searchUrl = searchUrl.replace(facetParam, "");
+			searchUrl = searchUrl.replace(facetParam, "");
 
 			return searchUrl;
 		};
