@@ -281,15 +281,31 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
     // Build elasticsearch aggregations object from config facet list
     var facetAggregations = Helper.getFacetAggregationObject(config.facets);
 
-    // USe an empty query object if query is an empty string, and no facets are present (* search)
+    // Build query object for q.  If q is empty, search for all items that are not collections
     var queryObj = {};
     if(query != "" || facets) {
-        queryObj = {
-            "bool": {
-              "should": matchFields,
-              "must": matchFacetFields
+      queryObj = {
+        "bool": {
+          "should": matchFields,
+          "must": matchFacetFields,
+          "must_not": {
+            "match": {
+              "object_type": "collection"
             }
+          }
         }
+      }
+    }
+    else {
+      queryObj = {
+        "bool": {
+          "must_not": {
+            "match": {
+              "object_type": "collection"
+            }
+          }
+        }
+      }
     }
 
     // Elasticsearch query object
@@ -308,7 +324,7 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
     if(collection) {
       // TODO add collection condition to search query?
     }
-
+      console.log("TEST queryobj is", queryObj);
     // Query the index
     es.search(data, function (error, response, status) {
       var responseData = {};
@@ -324,7 +340,7 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
           // Build the search results objects
           var results = [], tn, resultData;
           for(var result of response.hits.hits) {
-
+              console.log("TEST result:",  result);
             // Omit collection objects from the search results 
             if(result._source.object_type.trim() == config.collectionMimeType) {
               continue;

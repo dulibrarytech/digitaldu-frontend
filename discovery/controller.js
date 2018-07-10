@@ -258,6 +258,7 @@ exports.search = function(req, res) {
 			data.error = response.message;
 		}
 
+			console.log("TEST rendersearch pagination is:", data.pagination);
 		return res.render('results', data);
 	});
 };
