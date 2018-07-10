@@ -13,13 +13,24 @@
 			// Url encode spaces for querystring
 			facet = facet.replace(' ', '%20');
 
-			// Get current search querystring
-			var searchUrl = window.location.href;
-			var facetParam = "&f[" + facetType + "][]=" + facet;
+			var searchUrl = window.location.href,
+				facetParam = "&f[" + facetType + "][]=" + facet;
 
-			// Add the selected facet param to the search querystring, if it has not been added yet
-			if(searchUrl.indexOf(facetParam) <= 0) {
-				searchUrl += facetParam;
+			if(searchUrl.indexOf("/search") > 0) {
+				// Add the selected facet param to the search querystring, if it has not been added yet
+				if(searchUrl.indexOf(facetParam) <= 0) {
+					searchUrl += facetParam;
+				}
+			}
+			else if(searchUrl.indexOf("/collection") > 0) {
+
+				var pidIndex = (searchUrl.indexOf("/collection") + 12),
+				    pid = searchUrl.substring(pidIndex);
+
+				searchUrl = baseUrl + '/search?q=&collection=' + pid + facetParam;
+			}
+			else {
+				console.log("Error selecting facet");
 			}
 
 			return searchUrl;

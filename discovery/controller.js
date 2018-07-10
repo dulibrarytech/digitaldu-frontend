@@ -103,8 +103,7 @@ exports.renderRootCollection = function(req, res) {
 				console.log("Error retrieving facet data:", facets);
 			}
 			else {
-				data.facets = Facets.create(facets);
-
+				data.facets = Facets.create(facets, config.rootUrl);
 				// Totals for the static type facets on the front page
 				data.typeCount = Helper.getTypeFacetTotalsObject(facets);
 			}
@@ -142,7 +141,7 @@ exports.renderCollection = function(req, res) {
 			//data.facet_breadcrumb_trail = ;
 
 			data.pagination = Paginator.create(response.data.list, page, config.maxCollectionsPerPage, response.data.count, path);
-			data.facets = Facets.create(response.data.facets);
+			data.facets = Facets.create(response.data.facets, config.rootUrl);
 		}
 		else {
 			console.log(response.message);
@@ -206,7 +205,7 @@ exports.search = function(req, res) {
 	var facets = req.query.f || null;
 	var typeVal = req.query.type || "all", type;
 	var page = req.query.page || 1;
-	var collection = req.query.coll || null;
+	var collection = req.query.collection || null;
 
 	// "Search field selection": If "search all", build array of types from config settings.  If type search, 'type'is passed into search function as a string.
 	if(typeVal.toLowerCase() == 'all') {
@@ -248,7 +247,7 @@ exports.search = function(req, res) {
 
 			// Get data for the view
 			data.results = response.data.results;
-			data.facets = Facets.create(response.data.facets);	// PROD
+			data.facets = Facets.create(response.data.facets, config.rootUrl);	// PROD
 			data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(facets);  // Param: the facets from the search request params
 			data.pagination = Paginator.create(response.data.results, page, config.maxResultsPerPage, response.data.count, path);
 		}
@@ -258,7 +257,6 @@ exports.search = function(req, res) {
 			data.error = response.message;
 		}
 
-			console.log("TEST rendersearch pagination is:", data.pagination);
 		return res.render('results', data);
 	});
 };

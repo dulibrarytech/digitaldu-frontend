@@ -229,6 +229,7 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, callback) {
 }
 
 exports.searchIndex = function(query, type, facets=null, collection=null, pageNum=1, callback) {
+
     // Build elasticsearch matchfields object for query: this object enables field specific searching
     var field = { match: "" };
     var matchFields = [], results = [];
@@ -278,10 +279,16 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
       }
     }
 
-    // Build elasticsearch aggregations object from config facet list
-    var facetAggregations = Helper.getFacetAggregationObject(config.facets);
+    // If a collection id is present, scope search to that collection
+    if(collection) {
+      matchFacetFields.push({
+          "match_phrase": {
+            "is_member_of_collection": collection
+          }
+      });
+    }
 
-    // Build query object for q.  If q is empty, search for all items that are not collections
+    // Build query data object.  If query is empty, search for all items that are not collections. 
     var queryObj = {};
     if(query != "" || facets) {
       queryObj = {
@@ -299,6 +306,7 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
     else {
       queryObj = {
         "bool": {
+          "must": matchFacetFields,
           "must_not": {
             "match": {
               "object_type": "collection"
@@ -308,7 +316,10 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
       }
     }
 
-    // Elasticsearch query object
+    // Build elasticsearch aggregations object from config facet list.
+    var facetAggregations = Helper.getFacetAggregationObject(config.facets);
+
+    // Build elasticsearch query object.
     var data = {  
       index: config.elasticsearchIndex,
       type: 'data',
@@ -320,36 +331,30 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
       }
     }
 
-    // If a collection id is present, scope search to that collection
-    if(collection) {
-      // TODO add collection condition to search query?
-    }
-      console.log("TEST queryobj is", queryObj);
-    // Query the index
+    // Query the index.
     es.search(data, function (error, response, status) {
       var responseData = {};
       if (error){
         callback({status: false, message: error, data: null});
       }
       else {
+
         // Return the aggs for the facet display
         responseData['facets'] = response.aggregations;
         responseData['count'] = response.hits.total;
 
         try {
+
           // Build the search results objects
           var results = [], tn, resultData;
           for(var result of response.hits.hits) {
-              console.log("TEST result:",  result);
-            // Omit collection objects from the search results 
-            if(result._source.object_type.trim() == config.collectionMimeType) {
-              continue;
-            }
 
+            // Get the thumbnail
             tn = Repository.getDatastreamUrl("tn", result._source.pid.replace('_', ':'));
 
             // Get the title and description data for the result listing
             resultData = Helper.getSearchResultDisplayFields(result);
+
             // Push a new result object to the results array
             results.push({
               title: resultData.title || "Untitled",
@@ -359,6 +364,8 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
               pid: result._source.pid
             });
           }
+
+          // Add results array
           responseData['results'] = results;
 
           callback({status: true, data: responseData});
@@ -409,7 +416,7 @@ var getFacets = function (callback) {
         terms: field
       };
     }
-      //console.log("TEST GF aggs in:", aggs.Type);
+
     es.search({
         index: config.elasticsearchIndex,
         type: 'data',
@@ -418,7 +425,6 @@ var getFacets = function (callback) {
             "aggregations": aggs
         }
     }).then(function (body) {
-          //console.log("TEST GF body out:", body.aggregations.Type.buckets);
         callback(body.aggregations);
     }, function (error) {
         callback(error);
@@ -427,7 +433,6 @@ var getFacets = function (callback) {
 exports.getFacets = getFacets;
 
 exports.searchFacets = function (query, facets, page, callback) {
-
     client.search({
             index: config.elasticsearchIndex,
             type: 'data',

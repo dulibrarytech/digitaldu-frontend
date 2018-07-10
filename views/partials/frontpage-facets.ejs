@@ -30,7 +30,7 @@
   <script type="text/javascript">
 
     function selectFacet(facetType, facet, baseurl) {
-
+        console.log("TEST2");
       // Handle unmatching facet label names to their correct facet value
       switch(facet) {
         case "Music Recording":
@@ -52,8 +52,7 @@
       // Url encode spaces for querystring
       facet = facet.replace(' ', '%20');
 
-      // Get current search querystring
-      var url = window.location.href;
+      // Get search querystring
       var searchUrl = baseurl + "/search?type=all&q=&f[" + facetType + "][]=" + facet;
 
       return searchUrl;

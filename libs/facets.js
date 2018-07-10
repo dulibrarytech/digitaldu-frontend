@@ -1,9 +1,9 @@
 'use strict';
 
-exports.create = function (facets) {
+exports.create = function(facets, baseUrl) {
     var facetObj = {};
     for(var key in facets) {
-        facetObj[key] = createList(key, facets[key].buckets);
+        facetObj[key] = createList(key, facets[key].buckets, baseUrl);
     }
 
     return facetObj;
@@ -28,13 +28,13 @@ exports.getFacetBreadcrumbObject = function(selectedFacets) {
     return createBreadcrumbTrail(breadcrumbs);
 };
 
-function createList(facet, data) {
+function createList(facet, data, baseUrl) {
     var i;
     var html = '';
     html += '<div class="panel"><ul>';
     for (i = 0; i < data.length; i++) {
         if(data[i].key != "") {
-            html += '<li><span class="facet-name"><a href="javascript:document.location.href=selectFacet(\'' + facet + '\', \'' + data[i].key + '\');">' + data[i].key + '</a></span><span class="facet-count">(' + data[i].doc_count + ')</span></li>';
+            html += '<li><span class="facet-name"><a href="javascript:document.location.href=selectFacet(\'' + facet + '\', \'' + data[i].key + '\', \'' + baseUrl + '\');">' + data[i].key + '</a></span><span class="facet-count">(' + data[i].doc_count + ')</span></li>';
         }
     }
     html += '</ul></div>';
