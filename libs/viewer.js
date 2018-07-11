@@ -149,7 +149,7 @@ function getLargeImageViewer(objectData) {
 
 		viewer += '<script>var viewer = OpenSeadragon({'
 		viewer +=     'id: "openseadragon1",'
-		viewer +=     'prefixUrl: "' + viewerImages + '",'
+		viewer +=     'prefixUrl: "' + config.baseUrl + viewerImages + '",'
 		viewer +=     'immediateRender: true,'
 		viewer +=     'showNavigator: true,'
 		viewer +=     'tileSources: "http://localhost:' + config.cantaloupePort + '/iiif/2/' + objectData.pid + '"'
