@@ -1042,7 +1042,7 @@ table.data-table {
 }
 
 table.data-table td {
-  padding: 15px;
+  padding: 0 15px;
   border-bottom-style: solid;
   border-bottom-color: #e5e3e1;
   border-bottom-width: 1px;
