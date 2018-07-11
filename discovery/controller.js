@@ -130,10 +130,11 @@ exports.renderCollection = function(req, res) {
 		},
 		pid = req.params.pid || "",
 		page = req.query.page || 1,
-		path = config.rootUrl + "/collection/" + pid;
+		path = config.rootUrl + "/collection/" + pid,
+		reqFacets = req.query.f || null;
 
 	// Get all collections in this community
-	Service.getObjectsInCollection(pid, page, function(response) {
+	Service.getObjectsInCollection(pid, page, reqFacets, function(response) {
 		if(response.status) {
 			data.collections = response.data.list;
 			data.current_collection = pid;
@@ -142,6 +143,7 @@ exports.renderCollection = function(req, res) {
 
 			data.pagination = Paginator.create(response.data.list, page, config.maxCollectionsPerPage, response.data.count, path);
 			data.facets = Facets.create(response.data.facets, config.rootUrl);
+			data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(reqFacets);
 		}
 		else {
 			console.log(response.message);

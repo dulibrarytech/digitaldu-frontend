@@ -152,7 +152,7 @@ exports.getCollectionsInCommunity = function(communityID, callback) {
   });
 }
 
-exports.getObjectsInCollection = function(collectionID, pageNum=1, callback) {
+exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, callback) {
   Repository.getCollectionObjects(collectionID).catch(error => {
     callback({status: false, message: error, data: null});
   })
@@ -176,7 +176,34 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, callback) {
         callback({status: true, data: list});
       }
       else {
-         
+
+        // If facet data is present, add it to the search
+        var matchFacetFields = [];
+        if(facets) {
+          var indexKey, count=0;
+          for(var key in facets) {
+            for(var index of facets[key]) {
+              var q = {};
+              count++;
+
+              // Get the index key from the config facet list, using the stored facet name
+              indexKey = config.facets[key];
+
+              // Add to the main ES query object
+              q[indexKey] = index;
+              matchFacetFields.push({
+                "match_phrase": q
+              });
+            }
+          }
+        }
+
+        matchFacetFields.push({
+            "match_phrase": {
+              "is_member_of_collection": collectionID
+            }
+        });
+
         // Use local index to find the collection children
         var data = {  
           index: config.elasticsearchIndex,
@@ -185,9 +212,12 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, callback) {
             from : (pageNum - 1) * config.maxCollectionsPerPage,
             size : config.maxCollectionsPerPage,
             query: {
-                "match": {
-                  //"pid": "codu:*" 
-                  "is_member_of_collection": collectionID.substring(config.institutionPrefix.length) 
+                // "match": {
+                //   //"pid": "codu:*" 
+                //   "is_member_of_collection": collectionID.substring(config.institutionPrefix.length) 
+                // }
+                "bool": {
+                  "must": matchFacetFields
                 }
             },
             aggs: facetAggregations
