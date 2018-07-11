@@ -4,6 +4,7 @@ var protocol = "http";
 
 module.exports = {
 
+    host: process.env.APP_HOST,
     rootRoute: "repository",
     baseUrl: protocol + "://" + process.env.APP_HOST,
     rootUrl: protocol + "://" + process.env.APP_HOST + "/repository",
@@ -70,7 +71,7 @@ module.exports = {
      * [browser | [openseadragon]]
      */
     largeImageViewer: "openseadragon",
-    openseadragonImagePath: "libs/openseadragon/images/",
+    openseadragonImagePath: "/libs/openseadragon/images/",
 
     /*
      * List of fields to search.  These will appear in 'Search Type' dropdown list
