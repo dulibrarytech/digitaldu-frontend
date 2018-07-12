@@ -31,10 +31,10 @@ exports.getFacetBreadcrumbObject = function(selectedFacets) {
 function createList(facet, data, baseUrl) {
     var i;
     var html = '';
-    html += '<div class="panel"><ul>';
+    html += '<div class="panel facet-panel"><ul>';
     for (i = 0; i < data.length; i++) {
         if(data[i].key != "") {
-            html += '<li><span class="facet-name"><a href="javascript:document.location.href=selectFacet(\'' + facet + '\', \'' + data[i].key + '\', \'' + baseUrl + '\');">' + data[i].key.substring(0,30) + '</a></span><span class="facet-count">(' + data[i].doc_count + ')</span></li>';
+            html += '<li><span class="facet-name"><a href="javascript:document.location.href=selectFacet(\'' + facet + '\', \'' + data[i].key + '\', \'' + baseUrl + '\');">' + data[i].key + '</a></span><span class="facet-count">(' + data[i].doc_count + ')</span></li>';
         }
     }
     html += '</ul></div>';

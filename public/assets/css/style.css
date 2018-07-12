@@ -530,7 +530,7 @@ div#facet-breadcrumbs a {
 }
 
 .facet-name {
-  width: 75%;
+  width: 71%;
   margin-left:20px;
 }
 
@@ -556,6 +556,16 @@ div#facet-breadcrumbs a {
 .facet-thumbnail > img {
   width: 27px;
   height: 25px;
+}
+
+.facet-panel span {
+  display: inline-block;
+}
+
+.facet-panel span.facet-name {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 #moving-image-facet-tn > img {
