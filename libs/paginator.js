@@ -48,10 +48,10 @@ exports.create = function(items, page, maxItems, totalItems, path) {
 
 	// Add the path to the prev/next buttons
 	if(pagination.buttons.prev > 0) {
-		pagination.path.prev = path + prefix + "page=" + parseInt(pagination.buttons.prev);
+		pagination.path.prev = path + prefix + "page=" + parseInt(pagination.buttons.prev) + "#sidebar";
 	}
 	if(pagination.buttons.next > 0) {
-		pagination.path.next = path + prefix + "page=" + parseInt(pagination.buttons.next);
+		pagination.path.next = path + prefix + "page=" + parseInt(pagination.buttons.next) + "#sidebar";
 	}
 
 	return pagination;
