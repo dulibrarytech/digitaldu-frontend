@@ -376,23 +376,25 @@ exports.getFacetAggregationObject = function(facets) {
     return facetAggregations;
 }
 
-/*
- * Create an array of facet breadcrumb objects for the view
- */
-// exports.getFacetBreadcrumbObject = function(selectedFacets) {
+exports.sortSearchResultObjects = function(objects) {
+	var titles = [], sorted = [];
 
-// 	var breadcrumbTrail = [];
-// 	for(var key in selectedFacets) {
+	// Sort the titles alphabetically
+	for(var object of objects) {
+		titles.push(object.title[0]);
+	}
+	titles.sort();
+	
+	// Sort the objects based on the sorted titles.
+	for(var title of titles) {
+		for(object of objects) {
+			if(object.title[0] == title) {
+				sorted.push(object);
+			}
+		}
+	}
 
-// 		for(var index of selectedFacets[key]) {
-// 			breadcrumbTrail.push({
-// 				type: key,
-// 				name: index
-// 			});
-// 		}
-// 	}
-
-// 	return breadcrumbTrail;
-// };
+	return sorted;
+}
 
 

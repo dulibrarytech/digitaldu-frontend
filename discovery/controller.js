@@ -21,6 +21,16 @@ exports.getFacets = function(req, res) {
     });
 }
 
+// TEST
+exports.getMediaStream = function(req, res) {
+	var path = req.params.path || "testpath";
+	// 	console.log("TEST path:", path);
+	Service.getMedia(path, function(response) {
+		console.log("TEST getMediaStream() have response:");
+		res.send(response);
+	})
+}
+
 /*
  * Not in use
  */
@@ -91,9 +101,10 @@ exports.renderRootCollection = function(req, res) {
 		if(response.status) {
 			data.collections = response.data.list;
 			data.searchFields = config.searchFields;
-			data.pagination = Paginator.create(response.data.list, page, config.maxCollectionsPerPage, response.data.count, config.rootUrl);
+			//data.pagination = Paginator.create(response.data.list, page, config.maxCollectionsPerPage, response.data.count, config.rootUrl);
 		}
 		else {
+			console.log("Error:", response.message);
 			data.error = "Error: could not retrieve collections.";
 		}
 

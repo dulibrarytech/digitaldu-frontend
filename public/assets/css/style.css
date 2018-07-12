@@ -131,8 +131,10 @@ select {
 }
 
 .highlight-text {
-  color: #c72200;
-  border-color: #c72200;
+/*  color: #c72200;
+  border-color: #c72200;*/
+  color: #8b2332;
+  border-color: #8b2332;
 }
 
 .collection-tn {
@@ -357,7 +359,8 @@ div#title-logo {
 }
 
 .welcomeBox .title1 > span {
-    color: #c72200;
+    /*color: #c72200;*/
+    color: #8b2332;
 }
 
 .welcomeBox .title1 {
@@ -430,8 +433,10 @@ div#title-banner {
 }
 
 .highlight-text {
-  color: #c72200;
-  border-color: #c72200;
+/*  color: #c72200;
+  border-color: #c72200;*/
+  color: #8b2332;
+  border-color: #8b2332;
 }
 
 div#title-banner > .container {
@@ -857,7 +862,7 @@ div.paginator > span > strong {
 }
 
 #searchform button {
-  background-color: #c72200;
+  background-color: #8b2332;
   border-bottom-style: none;
   border-top-style: none;
   border-right-style: none;
@@ -1082,6 +1087,11 @@ div#object-options button {
   padding: 10px;
   margin-right: 10px;
   color: #353331;
+}
+
+div#object-options button#file-download:hover {
+  cursor: default;
+  background-color: white;
 }
 
 div#object-options button:hover {

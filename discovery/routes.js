@@ -33,6 +33,10 @@ module.exports = function (app) {
     // Search the discovery index
     app.route('/repository/facets')
         .get(Discovery.getFacets);
+
+    // TEST
+    app.route('/repository/media/:path')
+        .get(Discovery.getMediaStream);
 };
 
 

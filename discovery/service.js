@@ -106,8 +106,10 @@ exports.getTopLevelCollections = function(pageNum=1, callback) {
           index: config.elasticsearchIndex,
           type: 'data',
           body: {
-            from : (pageNum - 1) * config.maxCollectionsPerPage, 
-            size : config.maxCollectionsPerPage,
+            // from : (pageNum - 1) * config.maxCollectionsPerPage, 
+            // size : config.maxCollectionsPerPage,
+            from: 0,
+            size: 1000,
             query: {
                 "match": {
                   "is_member_of_collection": config.topLevelCollectionPID
@@ -130,8 +132,11 @@ exports.getTopLevelCollections = function(pageNum=1, callback) {
               results.push(index._source);
             }
 
+            // Sort the results by title string in alphabetic order
+            var sorted = Helper.sortSearchResultObjects(results);
+
             collections.count = response.hits.total;
-            collections.list = createItemList(results);
+            collections.list = createItemList(sorted);
             callback({status: true, data: collections});
           }
         });
@@ -486,3 +491,10 @@ exports.searchFacets = function (query, facets, page, callback) {
         callback(error);
     });
 };
+
+exports.getMedia = function(path, callback) {
+  // TEST
+  request("http://librepo01-vlp.du.edu:8080/fedora/objects/codu:37703/datastreams/MP4/content", function(error, response, body) {
+    callback(body);
+  });
+}
