@@ -1,12 +1,14 @@
 'use strict';
 
-var async = require('async'),
+const async = require('async'),
     config = require('../config/config'),
     Helper = require('./helper.js'),
     Service = require('./service.js'),
+
     Viewer = require('../libs/viewer'),
     Facets = require('../libs/facets'),
-    Paginator = require('../libs/paginator');
+    Paginator = require('../libs/paginator'),
+    Media = require('../libs/media');
 
 /*
  * Get facets for all data (public route)
@@ -19,16 +21,6 @@ exports.getFacets = function(req, res) {
         }
         res.send(facets);
     });
-}
-
-// TEST
-exports.getMediaStream = function(req, res) {
-	var path = req.params.path || "testpath";
-	// 	console.log("TEST path:", path);
-	Service.getMedia(path, function(response) {
-		console.log("TEST getMediaStream() have response:");
-		res.send(response);
-	})
 }
 
 /*
@@ -273,3 +265,26 @@ exports.search = function(req, res) {
 		return res.render('results', data);
 	});
 };
+
+/*
+ * Test media stream
+ */
+exports.getMediaStream = function(req, res) {
+
+	var path = req.query.path || "testpath";
+	//var path = req.params.path || "testpath";
+
+	// *** Remove the file extension?
+	// path = path.substring(-20);
+		console.log("TEST GMS route rx path:", path);
+
+	Media.getFileStream(path, function(response) {
+			console.log("TEST getMediaStream() rx response from Media:" response == null ? "NULL" : response);
+		if(response) {
+			res.send(response);
+		}
+		else {
+			res.sendStatus(404);
+		}
+	})
+}

@@ -85,7 +85,7 @@ function getAudioPlayer(objectData) {
 }
 
 function getVideoViewer(objectData) {
-	var viewer = '<div id="video-viewer" class="viewer-section">', tn, stream;
+	var viewer = '<div id="video-viewer" class="viewer-section">', tn, stream, url;
 	var extension = "mp4";
 
 	tn = Repository.getDatastreamUrl("tn", objectData.pid);
@@ -98,20 +98,22 @@ function getVideoViewer(objectData) {
 	else {
 		console.log("Error: Incorrect object mime type for object: " + objectData.pid);
 	}
-	stream = "http://localhost:9006/repository/media";
-	console.log("Loading video stream: ", stream);
+	url = config.rootUrl + "/media?path=" + stream;
+	//url = config.rootUrl + "/media/" + stream;
+	// stream ^^^ : http://librepo01-vlp.du.edu:8080/fedora/objects/codu:37703/datastreams/MP4/content 
+		console.log("TEST Loading video stream: ", stream);
 	if(config.videoViewer == "videojs") {
-		viewer += '<video id="my-video" class="video-js" controls preload="auto" width="640" height="264" poster="' + tn + '" data-setup="{}"><source src="' + stream + '" type="video/mp4"><p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that<a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p></video>';
+		viewer += '<video id="my-video" class="video-js" controls preload="auto" width="640" height="264" poster="' + tn + '" data-setup="{}"><source src="' + url + '" type="video/mp4"><p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that<a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p></video>';
 		viewer += '</div>';
 	}
 	else if(config.videoViewer == "jwplayer") {
 		// JWPlayer needs a filename in the path.  
-		stream += "/file_name_spoof." + extension;
+		url += "/file_name_spoof." + extension;
 			console.log("TEST file stream is:", stream);
 		viewer += '<div id="mediaplayer" class="viewer-content">Loading JW Player...</div>';
 		viewer += '</div>';
 		viewer += '<script>jwplayer("mediaplayer").setup({'
-		viewer +=     'file: "' + stream + '",'
+		viewer +=     'file: "' + url + '",'
 		viewer +=     'image: "' +  tn + '",'
 		viewer +=     'width: 500,'
 		viewer +=     'height: 300,'

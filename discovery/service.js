@@ -491,10 +491,3 @@ exports.searchFacets = function (query, facets, page, callback) {
         callback(error);
     });
 };
-
-exports.getMedia = function(path, callback) {
-  // TEST
-  request("http://librepo01-vlp.du.edu:8080/fedora/objects/codu:37703/datastreams/MP4/content", function(error, response, body) {
-    callback(body);
-  });
-}
