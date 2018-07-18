@@ -356,7 +356,7 @@ div#title-logo {
 
 div#title-text {
   float: left;
-  width: 50%;
+  /*width: 50%;*/
 }
 
 div.banner-search {
@@ -367,7 +367,7 @@ div.banner-search {
 }
 
 div.banner-search input {
-  width: 80%;
+  width: 70%;
 }
 
 div.banner-search button {
