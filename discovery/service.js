@@ -314,6 +314,9 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
       }
     }
 
+      // console.log("TEST matchFacetFields in searchIndex:", matchFacetFields);
+      // console.log("TEST matchFields in searchIndex:", matchFields);
+
     // If a collection id is present, scope search to that collection
     if(collection) {
       matchFacetFields.push({

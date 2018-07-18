@@ -14,7 +14,6 @@ const async = require('async'),
  * Get facets for all data (public route)
  */
 exports.getFacets = function(req, res) {
-
     Service.getFacets(function (facets) {
         if(typeof facets == 'string') {
         	console.log("Error");
@@ -102,6 +101,7 @@ exports.renderRootCollection = function(req, res) {
 
 		// Get facets for all data
 		Service.getFacets(function(facets) {
+				console.log("TEST have facets:", facets.Type.buckets);
 			if(typeof facets == "string") {
 				console.log("Error retrieving facet data:", facets);
 			}

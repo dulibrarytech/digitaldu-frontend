@@ -24,7 +24,6 @@ exports.getFacetBreadcrumbObject = function(selectedFacets) {
             });
         }
     }
-
     return createBreadcrumbTrail(breadcrumbs);
 };
 

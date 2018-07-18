@@ -102,7 +102,6 @@ exports.getRootCollections = function() {
 				reject("Repository returns status " + response.statusCode);
 			}
 			else {
-					console.log("TEST repo returns top coll:", body);
 				fulfill(body);
 			}
 		});
