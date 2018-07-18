@@ -1,8 +1,13 @@
 /* Responsive styles */
-
 @media only screen and (min-width: 1750px) {
   div.banner-logo {
-    width: 56%;
+    width: 64%;
+  }
+}
+
+@media only screen and (min-width: 1750px) and (max-width: 1879px) {
+  div.banner-logo {
+    width: 72%;
   }
 
   div#collection-grid dl.item  > dt {
@@ -62,6 +67,10 @@
   
   div.slider-section > div {
     width: 95%;
+  }
+
+  div#searchform {
+    width: 47%;
   }
 
   div#searchform input {
@@ -149,7 +158,7 @@
   }
 
   div#searchform {
-    width: 43%;
+    width: 50%;
   }
 
   div#searchform input {
@@ -252,6 +261,10 @@
     width: 78%;
   }
 
+  div.banner-logo {
+    width: 90%;
+  }
+
   h3.item-title a {
     font-size: 0.8em;
   }
@@ -267,6 +280,10 @@
 
   div#banner-text {
     height: 290px;
+  }
+
+  div#searchform {
+    width: 60%;
   }
 
   div#searchform input {
