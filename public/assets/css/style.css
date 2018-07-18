@@ -362,6 +362,20 @@ div#title-text {
 div.banner-search {
   float: right;
   width: 30%;
+  position: relative;
+  top: 16px;
+}
+
+div.banner-search input {
+  width: 80%;
+}
+
+div.banner-search button {
+  width: 15%;
+  height: 38px;
+  position: relative;
+  bottom: 1px;
+  right: 5px;
 }
 
 .welcomeBox {

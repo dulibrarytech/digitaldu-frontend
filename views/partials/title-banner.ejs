@@ -1,8 +1,15 @@
 <div id="title-banner">
     <div class="container">
-    <div id="title-text" class="col-sm-6 cul">
+    	<div id="title-text" class="col-sm-6 cul">
             <a class="sm-title" href="<%= rootUrl %>">University Libraries</a>
             <h1><a class="title" href="<%= rootUrl %>">SPECIAL COLLECTIONS <span class="highlight-text">@ DU</span></a></h1>
         </div>
+
+        <div class="banner-search">
+        	<form method="get" action="<%= rootUrl %>/search">
+                <input type="text" name="q" placeholder="Search Keyword(s)" required />
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </form>
+    	</div>
     </div>
 </div>
