@@ -87,7 +87,9 @@ select {
   color: #3f3a34;
 }
 
-
+button:hover {
+  cursor: pointer;
+}
 
 /* Global classes */
 
@@ -376,6 +378,10 @@ div.banner-search button {
   position: relative;
   bottom: 1px;
   right: 5px;
+  background-color: #e5e3e1;
+  border-style: solid;
+  border-color: #777;
+  border-width: 1px;
 }
 
 .welcomeBox {
