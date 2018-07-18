@@ -743,7 +743,11 @@ div#collection-grid {
 
 div#search-results-wrapper {
     margin-top: 17px;
-    padding-top: 35px;
+    padding-top: 17px;
+}
+
+div#search-results-wrapper h4 {
+  margin-top: 0;
 }
 
 div#results-grid {
