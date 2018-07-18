@@ -2,7 +2,7 @@
 
 @media only screen and (min-width: 1750px) {
   div.banner-logo {
-   /* width: 55%;*/
+    width: 56%;
   }
 
   div#collection-grid dl.item  > dt {
