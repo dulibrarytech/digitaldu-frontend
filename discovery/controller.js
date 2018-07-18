@@ -243,7 +243,8 @@ exports.search = function(req, res) {
 			pageData: null,
 			base_url: config.baseUrl,
 			rootUrl: config.rootUrl,
-			collection_scope: ""
+			collection_scope: "",
+			query: query
 		},
 		page = req.query.page || 1,
 		path = config.rootUrl + req.url.substring(req.url.indexOf('search')-1);
@@ -271,20 +272,19 @@ exports.search = function(req, res) {
  */
 exports.getMediaStream = function(req, res) {
 
-	var path = req.query.path || "testpath";
-	//var path = req.params.path || "testpath";
+	//var path = req.query.path || "testpath";
+	var path = req.params.path || "testpath";
 
-	// *** Remove the file extension?
-	// path = path.substring(-20);
-		console.log("TEST GMS route rx path:", path);
-
-	Media.getFileStream(path, function(response) {
-			console.log("TEST getMediaStream() rx response from Media:" response == null ? "NULL" : response);
-		if(response) {
-			res.send(response);
+	var stream = Media.getFileStream(path, function(stream) {
+		if(stream) {
+			console.log("Sending stream ajax");
+			res.send(stream);
 		}
 		else {
 			res.sendStatus(404);
 		}
-	})
+	});
+	console.log("Sending stream");
+	//console.log("Stream:", stream);
+	res.send(stream);
 }

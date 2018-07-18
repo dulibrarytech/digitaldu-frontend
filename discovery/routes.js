@@ -35,10 +35,10 @@ module.exports = function (app) {
         .get(Discovery.getFacets);
 
     // TEST
-    app.route('/repository/media')
-        .get(Discovery.getMediaStream);
-    // app.route('/repository/media/:path')
+    // app.route('/repository/media')
     //     .get(Discovery.getMediaStream);
+    app.route('/repository/media/:path/:spoof')
+        .get(Discovery.getMediaStream);
 };
 
 
