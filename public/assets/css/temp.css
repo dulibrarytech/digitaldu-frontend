@@ -1,0 +1,9 @@
+div.hero {
+	background-image: url("../img/CO031-3-ipad-cropped.png");
+	background-size: cover;
+	height: 448px;
+}
+
+div.content {
+	min-height: 700px;
+}
