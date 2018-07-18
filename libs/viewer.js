@@ -59,7 +59,7 @@ function getAudioPlayer(objectData, type) {
 	stream = Repository.getDatastreamUrl("mp3", objectData.pid);
 
 	if(config.audioPlayer == "browser") {
-		player += '<div id="viewer-content-wrapper"><audio controls><source src="' + stream + '" type="audio/mpeg"></audio></div>';
+		player += '<div id="viewer-content-wrapper"><audio controlsList="nodownload" controls><source src="' + stream + '" type="audio/mpeg"></audio></div>';
 		player += '</div>';
 	}
 	else if(config.audioPlayer == "jwplayer") {
