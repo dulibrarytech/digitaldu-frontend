@@ -162,8 +162,6 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
     callback({status: false, message: error, data: null});
   })
   .then( response => {
-        console.log("TEST collectionID is", collectionID);
-        console.log("TEST getCollectionObjects initial repo response is", response);
       var collection = {
         list: [], 
         title: "",
@@ -209,7 +207,7 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
               "is_member_of_collection": collectionID
             }
         });
-          console.log("TEST gco matchFacetFields", matchFacetFields);
+
         // Use local index to find the collection children
         var data = {  
           index: config.elasticsearchIndex,
@@ -240,7 +238,6 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
             callback({status: false, message: "Invalid page number", data: null});
           }
           else {
-              console.log("TEST gco es response is", response);
             var results = [];
 
             // Create the result list
@@ -255,7 +252,6 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
             // Get this collection's title
             fetchObjectByPid(collectionID, function(response) {
               if(response.status) {
-                  console.log("TEST response.data", response.data);
                 collection.title = response.data.title;
                 callback({status: true, data: collection});
               }
