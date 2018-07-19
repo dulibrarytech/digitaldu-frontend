@@ -162,7 +162,8 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
     callback({status: false, message: error, data: null});
   })
   .then( response => {
-
+        console.log("TEST collectionID is", collectionID);
+        console.log("TEST getCollectionObjects initial repo response is", response);
       var collection = {
         list: [], 
         title: "",
@@ -208,7 +209,7 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
               "is_member_of_collection": collectionID
             }
         });
-
+          console.log("TEST gco matchFacetFields", matchFacetFields);
         // Use local index to find the collection children
         var data = {  
           index: config.elasticsearchIndex,
@@ -239,6 +240,7 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
             callback({status: false, message: "Invalid page number", data: null});
           }
           else {
+              console.log("TEST gco es response is", response);
             var results = [];
 
             // Create the result list
@@ -253,8 +255,13 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
             // Get this collection's title
             fetchObjectByPid(collectionID, function(response) {
               if(response.status) {
+                  console.log("TEST response.data", response.data);
                 collection.title = response.data.title;
                 callback({status: true, data: collection});
+              }
+              else {
+                collection.title = "";
+                callback({status: false, message: response.message, data: []});
               }
             });
           }
@@ -419,24 +426,34 @@ var fetchObjectByPid = function(pid, callback) {
   var objectData = {
     pid: null
   };
-  
-  // Remove prefix for index id
-  pid = pid.replace(config.institutionPrefix + "_", "");
-  pid = pid.replace(config.institutionPrefix + ":", "");
-  es.get({
+
+  // Get an exact match on the id and the namespace.  Extract both segments of the id, and require a match on both
+  var temp, fields, matchFields = [], segments = pid.split(":");
+  for(var index in segments) {
+    temp = {}, fields = {};
+    temp['pid'] = segments[index];
+    fields['match'] = temp;
+    matchFields.push(fields);
+  }
+
+  // Search for the pid segments as an "and" search.  This should only return one result.
+  es.search({
       index: config.elasticsearchIndex,
       type: "data",
-      id: pid
+      body: {
+        query: {
+          "bool": {
+            "must": matchFields
+          }
+        }
+      }
   }, function (error, response) {
 
       if(error) {
         callback({status: false, message: error, data: null});
       }
-      else if(response.found) {
-        objectData = response._source;
-        callback({status: true, data: objectData});
-      }
       else {
+        objectData = response.hits.hits[0]._source;
         callback({status: true, data: objectData});
       }
   });
