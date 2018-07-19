@@ -185,6 +185,10 @@ exports.renderObjectView = function(req, res) {
 				data.viewer = Viewer.getObjectViewer(object);
 				data.summary = Helper.createSummaryDisplayObject(object);
 				data.mods = Helper.createMetadataDisplayObject(object);
+
+				if(data.viewer == "") {
+					data.viewer = "Viewer is unavailable for this object."
+				}
 			}	
 			else {
 				data.error = "Error rendering object, object not found";

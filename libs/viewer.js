@@ -10,12 +10,11 @@ var Repository = require('./repository.fedora');
 
 exports.getObjectViewer = function(object, mimeType="") {
  	var viewer = "";
- 	//var contentModel = typeof object["rels-ext_hasModel"] != 'string' ? object["rels-ext_hasModel"][0] : object["rels-ext_hasModel"];
 
  	if(mimeType == "" && typeof object.mime_type != 'undefined') {
  		mimeType = object.mime_type;
  	}
- 		//console.log("TEST viewer mimeType is", object.mime_type);
+
  	switch(mimeType) {
  		case "audio/mpeg":
  		case "audio/x-wav":
@@ -43,7 +42,7 @@ exports.getObjectViewer = function(object, mimeType="") {
  			break;
 
  		default:
- 			console.log("Viewer error: invalid content model");
+ 			console.log("Viewer error: invalid content model:", mimeType, "for pid:", object.pid);
  			viewer = "";
  			break;
  	}
