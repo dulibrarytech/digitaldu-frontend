@@ -19,7 +19,11 @@
     </div>
 
     <div id="search-results-wrapper" class="content-col-9">
-      <h4>Results for: "<%- query %>"</h4>
+
+      <% if(query.length > 0) { %>
+          <h4>Results for: <span>"<%- query %>"</span></h4>
+      <% } %>
+
       <div class="search-results">
 
         <% if(error) { %>

@@ -5,6 +5,11 @@
 
 const url = require('url');
 
+/*
+ *
+ *
+ * 
+ */
 exports.create = function(items, page, maxItems, totalItems, path) {
 	var pagination = {
 		page: page || 1,
@@ -12,13 +17,15 @@ exports.create = function(items, page, maxItems, totalItems, path) {
 		pageHits: 0,
 		totalHits: 0,
 		buttons: {},
-		path: {}
+		path: {},
+		pageCount: 0
 	};
 
 	// View button data
 	pagination.path = {
 		prev: "",
-		next: ""
+		next: "",
+		root: ""
 	}
 
 	// Check the path for the '?' character.  If it exists, add 'page' as an additional variable.  If not, 'page' is the first querystring variable, so use '?'
@@ -29,6 +36,9 @@ exports.create = function(items, page, maxItems, totalItems, path) {
 	if(path.search("page=") > 0) {
 		path = path.replace(pattern, "");
 	}
+
+	// Get total number of pages to be displayed in the page list
+	pagination.pageCount = totalItems / maxItems;
 
 	// First item on the current page
 	pagination.beginCount = (maxItems * (page-1)) + 1;
@@ -53,6 +63,7 @@ exports.create = function(items, page, maxItems, totalItems, path) {
 	if(pagination.buttons.next > 0) {
 		pagination.path.next = path + prefix + "page=" + parseInt(pagination.buttons.next);
 	}
+	pagination.path.root = path + prefix;
 
 	return pagination;
 }
@@ -86,4 +97,8 @@ var getButtons = function(pageItemCount, page, maxItems, totalItems) {
 	}
 
 	return buttons;
+}
+
+var getPageList = function() {
+
 }

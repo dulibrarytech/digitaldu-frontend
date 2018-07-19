@@ -750,6 +750,10 @@ div#search-results-wrapper h4 {
   margin-top: 0;
 }
 
+div#search-results-wrapper > h4 span {
+  font-weight: normal;
+}
+
 div#results-grid {
   margin-top: 10px;
 }
