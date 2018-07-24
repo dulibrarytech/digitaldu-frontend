@@ -904,7 +904,10 @@ div.paginator > span > strong {
 }
 
 div.paginator-pages {
-  margin-top: 10px;
+ /* margin-top: 10px;*/
+    position: relative;
+    left: 340px;
+    bottom: 16px;
 }
 
 div.paginator-pages a {

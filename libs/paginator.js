@@ -19,7 +19,9 @@ exports.create = function(items, page, maxItems, totalItems, path) {
 		buttons: {},
 		path: {},
 		pageCount: 0,
-		maxPageLinks: 0
+		maxPageLinks: 0,
+		firstPage: 0,
+		lastPage: 0
 	};
 
 	// View button data
@@ -67,7 +69,17 @@ exports.create = function(items, page, maxItems, totalItems, path) {
 	pagination.path.current = path + prefix;
 
 	pagination.maxPageLinks = 10;
-		console.log("TEST pag links", pagination);
+	if(page <= (pagination.maxPageLinks / 2)) {
+		pagination.firstPage = 1;
+		pagination.lastPage = pagination.maxPageLinks;
+	}
+	else {
+		pagination.firstPage = parseInt(page) - (pagination.maxPageLinks / 2);
+		pagination.lastPage = parseInt(page) + (pagination.maxPageLinks / 2);
+	}
+		console.log("TEST pag typ", typeof page);
+		console.log("TEST pag obj", pagination);
+
 	return pagination;
 }
 
