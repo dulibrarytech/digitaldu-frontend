@@ -18,14 +18,15 @@ exports.create = function(items, page, maxItems, totalItems, path) {
 		totalHits: 0,
 		buttons: {},
 		path: {},
-		pageCount: 0
+		pageCount: 0,
+		maxPageLinks: 0
 	};
 
 	// View button data
 	pagination.path = {
 		prev: "",
 		next: "",
-		root: ""
+		current: ""
 	}
 
 	// Check the path for the '?' character.  If it exists, add 'page' as an additional variable.  If not, 'page' is the first querystring variable, so use '?'
@@ -63,8 +64,10 @@ exports.create = function(items, page, maxItems, totalItems, path) {
 	if(pagination.buttons.next > 0) {
 		pagination.path.next = path + prefix + "page=" + parseInt(pagination.buttons.next);
 	}
-	pagination.path.root = path + prefix;
+	pagination.path.current = path + prefix;
 
+	pagination.maxPageLinks = 10;
+		console.log("TEST pag links", pagination);
 	return pagination;
 }
 

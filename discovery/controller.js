@@ -265,7 +265,7 @@ exports.search = function(req, res) {
 			data.results = null;
 			data.error = response.message;
 		}
-
+			console.log("TEST pag data in controller", data.pagination);
 		return res.render('results', data);
 	});
 };
