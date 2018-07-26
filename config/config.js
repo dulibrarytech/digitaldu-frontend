@@ -1,13 +1,14 @@
 'use strict';
 
-var protocol = "http";
+var protocol = "http",
+    port = process.env.APP_PORT == "" ? "" : (":" + process.env.APP_PORT);
 
 module.exports = {
 
-    host: process.env.APP_HOST,
+    host: protocol + "://" + process.env.APP_HOST,
     rootRoute: "repository",
-    baseUrl: protocol + "://" + process.env.APP_HOST,
-    rootUrl: protocol + "://" + process.env.APP_HOST + "/repository",
+    baseUrl: protocol + "://" + process.env.APP_HOST + port,
+    rootUrl: protocol + "://" + process.env.APP_HOST + port + "/repository",
 
     // ENV settings
     elasticsearchHost: process.env.ELASTICSEARCH_HOST,
