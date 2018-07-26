@@ -68,11 +68,18 @@ exports.create = function(items, page, maxItems, totalItems, path) {
 	}
 	pagination.path.current = path + prefix;
 
+	// Get the first and last page for the page link list
 	pagination.maxPageLinks = 10;
 	if(pagination.totalHits > 0) {
 		if(page <= (pagination.maxPageLinks / 2)) {
 			pagination.firstPage = 1;
-			pagination.lastPage = pagination.maxPageLinks;
+
+			if(pagination.pageCount <= pagination.maxPageLinks) {
+				pagination.lastPage = pagination.maxPageLinks;
+			}
+			else {
+				pagination.lastPage = pagination.pageCount;
+			}
 		}
 		else {
 			pagination.firstPage = parseInt(page) - (pagination.maxPageLinks / 2);
