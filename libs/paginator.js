@@ -41,7 +41,7 @@ exports.create = function(items, page, maxItems, totalItems, path) {
 	}
 
 	// Get total number of pages to be displayed in the page list
-	pagination.pageCount = totalItems / maxItems;
+	pagination.pageCount = Math.ceil(totalItems / maxItems);
 
 	// First item on the current page
 	pagination.beginCount = (maxItems * (page-1)) + 1;
@@ -70,7 +70,7 @@ exports.create = function(items, page, maxItems, totalItems, path) {
 
 	// Get the first and last page for the page link list
 	pagination.maxPageLinks = 10;
-	if(pagination.totalHits > 0) {
+	if(pagination.totalHits > 0 && pagination.pageCount > 1) {
 		if(page <= (pagination.maxPageLinks / 2)) {
 			pagination.firstPage = 1;
 
