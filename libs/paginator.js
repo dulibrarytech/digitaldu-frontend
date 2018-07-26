@@ -10,6 +10,8 @@ const url = require('url');
  * 
  */
 exports.create = function(items, page, maxItems, totalItems, path) {
+	
+	// Output data
 	var pagination = {
 		page: page || 1,
 		beginCount: 0,
@@ -74,7 +76,6 @@ exports.create = function(items, page, maxItems, totalItems, path) {
 		// Pages present are within the range of max links.  Show current page within this range
 		if(page <= (pagination.maxPageLinks / 2)) {
 			pagination.firstPage = 1;
-
 			// Get the last page value.  If pages present are less than max links per page value, the last page is the max value.
 			if(pagination.pageCount <= pagination.maxPageLinks) {
 				pagination.lastPage = pagination.pageCount;
@@ -88,6 +89,10 @@ exports.create = function(items, page, maxItems, totalItems, path) {
 		else {
 			pagination.firstPage = parseInt(page) - (pagination.maxPageLinks / 2);
 			pagination.lastPage = parseInt(page) + (pagination.maxPageLinks / 2);
+
+			if(pagination.lastPage > pagination.pageCount) {
+				pagination.lastPage = pagination.pageCount;
+			}
 		}
 	}
 
