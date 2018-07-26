@@ -2,15 +2,17 @@
   <span><% if(pagination.buttons.prev > 0) { %><< <a href="<%= pagination.path.prev %>">Previous</a> | <% } %><strong><%= pagination.beginCount %> - <%= pagination.pageHits %></strong> of <strong><%= pagination.totalHits %></strong><% if(pagination.buttons.next > 0) { %> | <a href="<%= pagination.path.next %>">Next</a> >><% } %></span>
 </div>
 <div class="paginator-pages">
-	<span>
-		<% for(var i=pagination.firstPage; i<=pagination.lastPage; i++) { %>
-			<a href="<%= pagination.path.current %>page=<%= i %>">
-				<% if(pagination.page == i) { %>
-					<strong><%= i %></strong>
-				<% } else { %>
-					<%= i %>
-				<% } %>
-			</a>
-		<% } %>
-	</span>
+	<% if(pagination.firstPage > 0) { %>
+		<span>
+			<% for(var i=pagination.firstPage; i<=pagination.lastPage; i++) { %>
+				<a href="<%= pagination.path.current %>page=<%= i %>">
+					<% if(pagination.page == i) { %>
+						<strong><%= i %></strong>
+					<% } else { %>
+						<%= i %>
+					<% } %>
+				</a>
+			<% } %>
+		</span>
+	<% } %>
 </div>

@@ -69,13 +69,19 @@ exports.create = function(items, page, maxItems, totalItems, path) {
 	pagination.path.current = path + prefix;
 
 	pagination.maxPageLinks = 10;
-	if(page <= (pagination.maxPageLinks / 2)) {
-		pagination.firstPage = 1;
-		pagination.lastPage = pagination.maxPageLinks;
+	if(pagination.totalHits > 0) {
+		if(page <= (pagination.maxPageLinks / 2)) {
+			pagination.firstPage = 1;
+			pagination.lastPage = pagination.maxPageLinks;
+		}
+		else {
+			pagination.firstPage = parseInt(page) - (pagination.maxPageLinks / 2);
+			pagination.lastPage = parseInt(page) + (pagination.maxPageLinks / 2);
+		}
 	}
 	else {
-		pagination.firstPage = parseInt(page) - (pagination.maxPageLinks / 2);
-		pagination.lastPage = parseInt(page) + (pagination.maxPageLinks / 2);
+		pagination.firstPage = 0;
+		pagination.lastPage = 0;
 	}
 		console.log("TEST pag typ", typeof page);
 		console.log("TEST pag obj", pagination);
