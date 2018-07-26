@@ -15,6 +15,9 @@
 
 			var searchUrl = window.location.href,
 				facetParam = "";
+
+			// Remove page param from url if it is there.  Facet update will show updated results from page 1
+			searchUrl = searchUrl.replace(/page=[1234567890]*/g, "");
 			
 			// Create the facet parameter string.  Use ? if the url containd no parameters	
 			if(searchUrl.indexOf("?") < 0) {
@@ -38,6 +41,9 @@
 			// Get current search querystring
 			var searchUrl = window.location.href,
 				facetParam = "";
+
+			// Remove page param from url if it is there.  Facet update will show updated results from page 1
+			searchUrl = searchUrl.replace(/page=[1234567890]*/g, "");
 
 			// Create the facet parameter string.  Use ? if the url containd no parameters	
 			if(searchUrl.indexOf("?f") > 0) {

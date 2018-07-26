@@ -476,8 +476,8 @@ var getFacets = function (callback) {
             "aggregations": aggs
         }
     }).then(function (body) {
-        console.log("TEST top level facets response object:", body.aggregations);
-        console.log("TEST top level facets response object Type buckets:", body.aggregations.Type);
+        // console.log("TEST top level facets response object:", body.aggregations);
+        // console.log("TEST top level facets response object Type buckets:", body.aggregations.Type);
         callback(body.aggregations);
     }, function (error) {
         callback(error);
