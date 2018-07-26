@@ -75,10 +75,10 @@ exports.create = function(items, page, maxItems, totalItems, path) {
 			pagination.firstPage = 1;
 
 			if(pagination.pageCount <= pagination.maxPageLinks) {
-				pagination.lastPage = pagination.maxPageLinks;
+				pagination.lastPage = pagination.pageCount;
 			}
 			else {
-				pagination.lastPage = pagination.pageCount;
+				pagination.lastPage = pagination.maxPageLinks;
 			}
 		}
 		else {
