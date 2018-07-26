@@ -1,13 +1,12 @@
 /*
  * Creates the view object containing the paginator data
- * Nodejs is awesome
  */
 
 const url = require('url');
 
 /*
- *
- *
+ * TODO Will revise this code for less clunkiness
+ * TODO Will add header comments
  * 
  */
 exports.create = function(items, page, maxItems, totalItems, path) {
@@ -71,9 +70,12 @@ exports.create = function(items, page, maxItems, totalItems, path) {
 	// Get the first and last page for the page link list
 	pagination.maxPageLinks = 10;
 	if(pagination.totalHits > 0 && pagination.pageCount > 1) {
+
+		// Pages present are within the range of max links.  Show current page within this range
 		if(page <= (pagination.maxPageLinks / 2)) {
 			pagination.firstPage = 1;
 
+			// Get the last page value.  If pages present are less than max links per page value, the last page is the max value.
 			if(pagination.pageCount <= pagination.maxPageLinks) {
 				pagination.lastPage = pagination.pageCount;
 			}
@@ -81,17 +83,19 @@ exports.create = function(items, page, maxItems, totalItems, path) {
 				pagination.lastPage = pagination.maxPageLinks;
 			}
 		}
+
+		// Pages present exceed the range of max links.  Show the current page at the center of the page list for ease of forward/backward navigation
 		else {
 			pagination.firstPage = parseInt(page) - (pagination.maxPageLinks / 2);
 			pagination.lastPage = parseInt(page) + (pagination.maxPageLinks / 2);
 		}
 	}
+
+	// No page links are to be shown
 	else {
 		pagination.firstPage = 0;
 		pagination.lastPage = 0;
 	}
-		console.log("TEST pag typ", typeof page);
-		console.log("TEST pag obj", pagination);
 
 	return pagination;
 }
