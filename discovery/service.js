@@ -467,7 +467,7 @@ var getFacets = function (callback) {
         terms: field
       };
     }
-      console.log("TEST top level facets aggs object:", aggs);
+
     es.search({
         index: config.elasticsearchIndex,
         type: 'data',

@@ -132,7 +132,8 @@ exports.renderCollection = function(req, res) {
 		},
 		pid = req.params.pid || "",
 		page = req.query.page || 1,
-		path = config.rootUrl + "/collection/" + pid,
+		// path = config.rootUrl + "/collection/" + pid,
+		path = req._parsedOriginalUrl.path,
 		reqFacets = req.query.f || null;
 
 	// Get all collections in this community
@@ -265,7 +266,7 @@ exports.search = function(req, res) {
 			data.results = null;
 			data.error = response.message;
 		}
-			console.log("TEST pag data in controller", data.pagination);
+
 		return res.render('results', data);
 	});
 };
