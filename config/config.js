@@ -31,6 +31,9 @@ module.exports = {
     // Max search results on results page
     maxResultsPerPage: 10,
 
+    // Max number of page links shown in the page list
+    maxPaginatorPageLinks: 10,
+
     // Max characters in result description field
     resultMaxCharacters: 400,
 
