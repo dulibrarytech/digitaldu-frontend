@@ -45,9 +45,9 @@ exports.create = function(items, page, maxItems, totalItems, path) {
 	// First item on the current page
 	pagination.beginCount = (maxItems * (page-1)) + 1;
 
-	// Get the max number of "hits"  displayed as of this page.  
+	// Get the max number of hits displayed as of this page.  
 	if(items.length < maxItems) {
-		// This is the 'last page'.  Page hits should == the total number of hits here
+		// This is the last page.  Page hits should == the total number of hits here
 		pagination.pageHits = (pagination.beginCount - 1) + items.length;
 	}
 	else {	
