@@ -152,13 +152,13 @@ function getLargeImageViewer(objectData) {
 		viewer +=     'prefixUrl: "' + config.baseUrl + viewerImages + '",'
 		viewer +=     'immediateRender: true,'
 		viewer +=     'showNavigator: true,'
-		viewer +=     'tileSources: "' + config.host + ':' + config.cantaloupePort + '/iiif/2/' + objectData.pid + '"'
+		viewer +=     'tileSources: "' + config.cantaloupeUrl + '/iiif/2/' + objectData.pid + '"'
 		viewer += '});</script>';
 	}
 	else {
 		viewer += 'Viewer is down temporarily.  Please check configuration';
 	}
-
+		console.log("TEST viewer", viewer);
 	viewer += '</div>';
 	return viewer;
 }
