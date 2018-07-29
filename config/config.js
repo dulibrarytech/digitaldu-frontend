@@ -5,10 +5,10 @@ var protocol = "http",
 
 module.exports = {
 
-    host: protocol + "://" + process.env.APP_HOST,
+    host: process.env.APP_HOST,
     rootRoute: "repository",
-    baseUrl: protocol + "://" + process.env.CLIENT_URL,
-    rootUrl: protocol + "://" + process.env.CLIENT_URL + path,
+    baseUrl: process.env.CLIENT_HOST,
+    rootUrl: process.env.CLIENT_HOST + process.env.CLIENT_PATH,
 
     // ENV settings
     elasticsearchHost: process.env.ELASTICSEARCH_HOST,

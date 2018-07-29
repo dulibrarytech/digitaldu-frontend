@@ -158,7 +158,7 @@ function getLargeImageViewer(objectData) {
 	else {
 		viewer += 'Viewer is down temporarily.  Please check configuration';
 	}
-		console.log("TEST viewer", viewer);
+
 	viewer += '</div>';
 	return viewer;
 }
