@@ -15,14 +15,13 @@ exports.create = function(items, page, maxItems, totalItems, path) {
 	var pagination = {};
 	pagination['page'] = page || 1;
 
-	// Determine is page param should be added as existing or initial param
-	var prefix = path.indexOf("?") >= 0 ? "&" : "?";
-
-	// Remove the page variable if it already exists in the path
 	var pattern = /[?&]page=[0-9]*/i;
 	if(path.search("page=") > 0) {
 		path = path.replace(pattern, "");
 	}
+
+	// Determine is page param should be added as existing or initial param
+	var prefix = path.indexOf("?") >= 0 ? "&" : "?";
 
 	// Get total number of pages to be displayed in the page list
 	pagination['pageCount'] = Math.ceil(totalItems / maxItems);
