@@ -1,5 +1,6 @@
 'use strict';
 
+var config = require('../config/config');
 var Discovery = require('../discovery/controller');
 
 module.exports = function (app) {
@@ -7,7 +8,7 @@ module.exports = function (app) {
 	// Root route to landing page
     app.route('/')
         .get(function(req, res) {
-        	res.redirect('/repository');
+        	res.redirect(config.rootUrl);
         });
 
 	// Render the top level community view (landing page)
