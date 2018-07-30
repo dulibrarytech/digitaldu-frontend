@@ -1,8 +1,5 @@
 'use strict';
 
-var protocol = "http",
-    path = "/repository";
-
 module.exports = {
 
     host: process.env.APP_HOST,
