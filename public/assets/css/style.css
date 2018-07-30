@@ -1082,6 +1082,15 @@ div#viewer-wrapper {
   width: 60%;
 }
 
+div#large-image-viewer {
+  text-align: center;
+}
+
+div#large-image-viewer .display-message {
+  position: relative;
+  top: 300px;
+}
+
 div#metadata-section .container {
   width: 60%;
 }

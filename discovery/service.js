@@ -301,7 +301,6 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
           q[type] = query;
 
           if(stringQuery) {
-              console.log("TEST is string q");
             matchFields.push({
                 "match_phrase": q
             });
@@ -319,8 +318,8 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
 
         var q = {};
         q[type] = query;
+        
         if(stringQuery) {
-            console.log("TEST is string q.");
           matchFields.push({
               "match_phrase": q
           });
