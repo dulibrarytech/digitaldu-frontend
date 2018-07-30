@@ -267,71 +267,56 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
 }
 
 exports.searchIndex = function(query, type, facets=null, collection=null, pageNum=1, callback) {
-      console.log("TEST query in", query);
-      console.log("TEST query inf", query[0]);
-      console.log("TEST query inl", query[query.length-1]);
+
     // Build elasticsearch matchfields object for query: this object enables field specific searching
     var field = { match: "" };
     var matchFields = [], results = [];
-    var stringQuery = false;
+    var queryType;
 
-    // If query is bound by parens, flag the query as a string, and remove the parens.  
+    // This is a string literal search if the query is contained by parentheses.  Use 'match_phrase'
     if(query[0] == '"' && query[ query.length-1 ] == '"') {
-      stringQuery = true;
       query = query.replace(/"/g, '');
+      queryType = "match_phrase";
     }
 
-    // If query is not bound by parens, build an and query object to be applied to the specified search type fields
+    // This is a wildcard search.  Use 'wildcard'
+    else if(query.indexOf('*') >= 0) {
+      queryType = "wildcard";
+    }
+
+    // This is a regular term search.  Use 'match'  Query will be tokenized searched with an AND operator
     else  {
       var qtemp = query;
       query = {
         "query": qtemp,
         "operator": "and"
       }
+      queryType = "match";
     }
-      console.log("TEST query is", query);
 
-    // Type specific search (if a searchfield is selected)
+    // Search specified field (type) (if a searchfield is selected)
     if(Array.isArray(type)) {
         //query = "*" + query + "*";
         type.forEach(function(type) {
-          var q = {};
+          var q = {}, tempObj = {};
 
           type = config.searchFieldNamespace + type;
           q[type] = query;
 
-          if(stringQuery) {
-            matchFields.push({
-                "match_phrase": q
-            });
-          }
-          else {
-            matchFields.push({
-                "match": q
-            });
-          }
+          tempObj[queryType] = q;
+          matchFields.push(tempObj);
         })
     }
 
-    // Search all fields (searchfield == All)
+    // Search all available fields (searchfield == All)
     else {
 
-        var q = {};
+        var q = {}, tempObj = {};
         q[type] = query;
-        
-        if(stringQuery) {
-          matchFields.push({
-              "match_phrase": q
-          });
-        }
-        else {
-          matchFields.push({
-              "match": q
-          });
-        }
-    }
 
-      console.log("TEST matchfields", matchFields);
+        tempObj[queryType] = q;
+        matchFields.push(tempObj);
+    }
 
     // If facet data is present, add it to the search
     var matchFacetFields = [];
