@@ -267,10 +267,29 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
 }
 
 exports.searchIndex = function(query, type, facets=null, collection=null, pageNum=1, callback) {
-
+      console.log("TEST query in", query);
+      console.log("TEST query inf", query[0]);
+      console.log("TEST query inl", query[query.length-1]);
     // Build elasticsearch matchfields object for query: this object enables field specific searching
     var field = { match: "" };
     var matchFields = [], results = [];
+    var stringQuery = false;
+
+    // If query is bound by parens, flag the query as a string, and remove the parens.  
+    if(query[0] == '"' && query[ query.length-1 ] == '"') {
+      stringQuery = true;
+      query = query.replace(/"/g, '');
+    }
+
+    // If query is not bound by parens, build an and query object to be applied to the specified search type fields
+    else  {
+      var qtemp = query;
+      query = {
+        "query": qtemp,
+        "operator": "and"
+      }
+    }
+      console.log("TEST query is", query);
 
     // Type specific search (if a searchfield is selected)
     if(Array.isArray(type)) {
@@ -280,9 +299,18 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
 
           type = config.searchFieldNamespace + type;
           q[type] = query;
-          matchFields.push({
-              "match": q
-          });
+
+          if(stringQuery) {
+              console.log("TEST is string q");
+            matchFields.push({
+                "match_phrase": q
+            });
+          }
+          else {
+            matchFields.push({
+                "match": q
+            });
+          }
         })
     }
 
@@ -291,10 +319,20 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
 
         var q = {};
         q[type] = query;
-        matchFields.push({
-          "match": q
-        });
+        if(stringQuery) {
+            console.log("TEST is string q.");
+          matchFields.push({
+              "match_phrase": q
+          });
+        }
+        else {
+          matchFields.push({
+              "match": q
+          });
+        }
     }
+
+      console.log("TEST matchfields", matchFields);
 
     // If facet data is present, add it to the search
     var matchFacetFields = [];
@@ -316,9 +354,6 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
         }
       }
     }
-
-      // console.log("TEST matchFacetFields in searchIndex:", matchFacetFields);
-      // console.log("TEST matchFields in searchIndex:", matchFields);
 
     // If a collection id is present, scope search to that collection
     if(collection) {
