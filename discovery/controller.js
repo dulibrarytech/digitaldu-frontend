@@ -133,7 +133,7 @@ exports.renderCollection = function(req, res) {
 		pid = req.params.pid || "",
 		page = req.query.page || 1,
 		// path = config.rootUrl + "/collection/" + pid,
-		path = req._parsedOriginalUrl.path,
+		path = config.baseUrl + req._parsedOriginalUrl.path,
 		reqFacets = req.query.f || null;
 
 	// Get all collections in this community
