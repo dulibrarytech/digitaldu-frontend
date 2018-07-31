@@ -267,8 +267,7 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
 }
 
 exports.searchIndex = function(query, type, facets=null, collection=null, pageNum=1, callback) {
-      console.log("TEST query in", query);
-      console.log("TEST facets in", facets);
+
     // Build elasticsearch matchfields object for query: this object enables field specific searching
     var field = { match: "" };
     var matchFields = [], results = [];
@@ -352,7 +351,6 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
     // Build query data object.  If query is empty, search for all items that are not collections. 
     var queryObj = {};
     if(query != "" || facets) {
-        // console.log("TEST a");
       queryObj = {
         "bool": {
           "should": matchFields,
@@ -361,12 +359,16 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
             "match": {
               "object_type": "collection"
             }
+          },
+          "filter": {
+            "bool": {
+              "should": matchFields
+            }
           }
         }
       }
     }
     else {
-        // console.log("TEST b");
       queryObj = {
         "bool": {
           "must": matchFacetFields,
@@ -378,9 +380,6 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
         }
       }
     }
-      // console.log("TEST QO mfields", matchFields[0].match.title);
-      // console.log("TEST QO sh", queryObj.bool.should);
-      // console.log("TEST QO mu", queryObj.bool.must);
 
     // Build elasticsearch aggregations object from config facet list.
     var facetAggregations = Helper.getFacetAggregationObject(config.facets);
@@ -399,7 +398,7 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
 
     // Query the index.
     es.search(data, function (error, response, status) {
-        console.log("TEST es res", response.hits.total);
+
       var responseData = {};
       if (error){
         callback({status: false, message: error, data: null});
