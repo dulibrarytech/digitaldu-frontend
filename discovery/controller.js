@@ -106,6 +106,7 @@ exports.renderRootCollection = function(req, res) {
 			}
 			else {
 				data.facets = Facets.create(facets, config.rootUrl);
+					console.log("TEST facets:", facets);
 				// Totals for the static type facets on the front page
 				data.typeCount = Helper.getTypeFacetTotalsObject(facets);
 			}

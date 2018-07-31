@@ -45,6 +45,9 @@ module.exports = {
     // Will appear in the view, if an item has no title information
     noTitlePlaceholder: "Untitled",
 
+    // Limit of facet results returned from a search
+    facetLimit: 200,
+
     /*
      * End application settings
      */
@@ -113,8 +116,6 @@ module.exports = {
     metadataDisplay: {
         "Title": ["title"],
         "Creator": {"field": "name", "data": "namePart", "id": {"role": "creator"}},
-
-
         "Corporate Creator": "nameCorporate",
         "Publisher": "publisher",
         "Type": "typeOfResource",

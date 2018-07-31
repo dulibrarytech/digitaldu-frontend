@@ -482,11 +482,12 @@ var getFacets = function (callback) {
     for(var key in config.facets) {
       field = {};
       field['field'] = config.facets[key] + ".keyword";
+      field['size'] = config.facetLimit;
       aggs[key] = {
         terms: field
       };
     }
-
+      console.log("TEST aggs for fp facets:", aggs);
     es.search({
         index: config.elasticsearchIndex,
         type: 'data',
@@ -495,11 +496,9 @@ var getFacets = function (callback) {
             "aggregations": aggs
         }
     }).then(function (body) {
-        // console.log("TEST top level facets response object:", body.aggregations);
-        // console.log("TEST top level facets response object Type buckets:", body.aggregations.Type);
         callback(body.aggregations);
     }, function (error) {
-        callback(error);
+        callback(error.body.error.reason);
     });
 };
 exports.getFacets = getFacets;
