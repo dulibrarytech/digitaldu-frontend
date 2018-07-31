@@ -589,6 +589,11 @@ div#facet-breadcrumbs a {
   height: 25px;
 }
 
+.facet-panel {
+    max-height: 327px;
+    overflow: scroll;
+}
+
 .facet-panel span {
   display: inline-block;
 }

@@ -487,7 +487,7 @@ var getFacets = function (callback) {
         terms: field
       };
     }
-      console.log("TEST aggs for fp facets:", aggs);
+
     es.search({
         index: config.elasticsearchIndex,
         type: 'data',
