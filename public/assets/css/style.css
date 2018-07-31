@@ -93,6 +93,21 @@ button:hover {
 
 /* Global classes */
 
+/* Scrollbar width */
+::-webkit-scrollbar {
+    width: 15px;
+}
+
+/* Scrollbar track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+}
+
+/* Scrollbar handle */
+::-webkit-scrollbar-thumb {
+    background: #c5c3c1; 
+}
+
 .demo-test-view {
   min-height: 800px;
 }
