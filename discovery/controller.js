@@ -216,6 +216,11 @@ exports.search = function(req, res) {
 	var page = req.query.page || 1;
 	var collection = req.query.collection || null;
 
+	// Allow empty search to return all results in the repository
+	if(query == "") {
+		query = '*';
+	}
+
 	// "Search field selection": If "search all", build array of types from config settings.  If type search, 'type'is passed into search function as a string.
 	if(typeVal.toLowerCase() == 'all') {
 		type = [];
