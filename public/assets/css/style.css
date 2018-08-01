@@ -753,8 +753,10 @@ div#collection-grid dl.item {
 
 div#collection-grid dl.item  > dt {
 
+  /* Div Resize: no height attribute here */;
+
   /*Image Resize*/
-  /*height: 200px;*/
+  height: 200px;
 }
 
 div#collection-grid.homepage dl.item  > dt {
@@ -780,12 +782,13 @@ div#collection-grid {
 }
 
 .item-thumb img {
-  height: 100%;
-  width: 92%;
+  /*Div Resize*/
+/*  height: 100%;
+  width: 92%;*/
 
 /*Image Resize*/
-/*  width: auto;
-  height: 100%;*/
+  width: auto;
+  height: 100%;
 }
 
 div#search-results-wrapper {
