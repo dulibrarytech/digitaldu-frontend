@@ -19,7 +19,7 @@
   }
 
   div#collection-grid dl.item  > dt {
-    height: 140px;
+   /* height: 140px;*/
   }
 
   div#collection-grid.homepage dl.item  > dt {
@@ -41,7 +41,7 @@
   }
 
   div#collection-grid dl.item  > dt {
-    height: 105px;
+    /*height: 105px;*/
   }
 
   div#collection-grid.homepage dl.item  > dt {
@@ -78,7 +78,7 @@
   }
 
   div#collection-grid dl.item  > dt {
-    height: 105px;
+    /*height: 105px;*/
   }
 
   div#collection-grid.homepage dl.item  > dt {
@@ -170,12 +170,12 @@
     width: 71.999999%;
   }
 
-  .item-thumb img {
+  div#results-grid .item-thumb img {
     width: 85%;
   }
 
   div#collection-grid dl.item  > dt {
-    height: 92px;
+    /*height: 92px;*/
   }
 
   div#collection-grid.homepage dl.item  > dt {
@@ -325,7 +325,7 @@
     width: 70.999999%;
   }
 
-  .item-thumb img {
+  div#results-grid .item-thumb img {
     width: 78%;
   }
 
