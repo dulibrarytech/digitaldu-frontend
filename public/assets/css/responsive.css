@@ -3,6 +3,10 @@
   div.banner-logo {
     width: 64%;
   }
+
+  .logo h1 {
+    font-size: 5em;
+  }
 }
 
 @media only screen and (min-width: 1750px) and (max-width: 1879px) {
@@ -102,9 +106,19 @@
   }
 }
 
+@media only screen and (min-width: 1350px) and (max-width: 1499px) {
+  .logo h1 {
+    font-size: 4.5em;
+  }
+}
+
 @media only screen and (min-width: 1250px) and (max-width: 1349px) {
   div#collection-grid.homepage dl.item  > dt {
     height: 162px;
+  }
+
+  .logo h1 {
+    font-size: 4em;
   }
 }
 
@@ -244,6 +258,10 @@
 }
 
 @media only screen and (max-width: 1249px) { 
+
+  .logo h1 {
+    font-size: 4em;
+  }
 
   .container {
     width: 100%;

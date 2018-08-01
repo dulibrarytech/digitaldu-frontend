@@ -357,6 +357,17 @@ div#banner-text > hr {
   margin-bottom: 2em;
 }
 
+.logo {
+  text-align: center;
+}
+
+.logo h1 {
+  color: white;
+  font-weight: bolder;
+  font-size: 13vh;
+  margin: 0;
+}
+
 div.logo-banner {
   height: 100px;
 }
