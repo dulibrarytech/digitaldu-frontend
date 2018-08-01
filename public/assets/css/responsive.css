@@ -36,6 +36,10 @@
    /* width: 55%;*/
   }
 
+  .logo h1 {
+    font-size: 4.5em;
+  }
+
   div#collection-grid dl.item  > dt {
     height: 105px;
   }
@@ -67,6 +71,10 @@
 
   .content-col-3 {
     width: 20.999999%;
+  }
+
+  .logo h1 {
+    font-size: 4.5em;
   }
 
   div#collection-grid dl.item  > dt {
