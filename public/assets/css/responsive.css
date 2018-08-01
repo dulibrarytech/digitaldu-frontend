@@ -262,6 +262,10 @@
 }
 
 @media only screen and (min-width: 1350px) and (max-width: 1499px) {
+  .logo h1 {
+    font-size: 4em;
+  }
+
   div#viewer-section {
     /*height: 395px;*/
   }
@@ -269,15 +273,29 @@
   div#viewer-wrapper {
     width: 56%;
   }
+
+  footer {
+    font-size: 13px;
+    padding: 4.5em 1em 1em 5em;
+  }
 }
 
 @media only screen and (min-width: 1250px) and (max-width: 1349px) {
+  .logo h1 {
+    font-size: 4em;
+  }
+
   div#viewer-section {
     /*height: 395px;*/
   }
 
   div#viewer-wrapper {
     width: 61%;
+  }
+
+  footer {
+    font-size: 12px;
+    padding: 3em 1em 1em 5em;
   }
 }
 
@@ -304,7 +322,7 @@
   }
 
   div.banner-logo {
-    width: 90%;
+    width: 100%;
   }
 
   h3.item-title a {
@@ -371,6 +389,11 @@
 
   div#facets > div.panel {
     padding: 12px;
+  }
+
+  footer {
+    font-size: 12px;
+    padding: 3em 1em 1em 5em;
   }
 
   footer .footer-column {
