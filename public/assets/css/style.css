@@ -777,7 +777,7 @@ div#collection-grid {
 }
 
 .item-thumb {
-  /*height: 200px;*/
+  height: 200px;
   /*max-height: 200px;*/
 }
 
@@ -787,8 +787,10 @@ div#collection-grid {
   width: 92%;*/
 
 /*Image Resize*/
-  width: auto;
-  height: 100%;
+/*  width: auto;
+  height: 100%;*/
+
+  max-height: 100%;
 }
 
 div#search-results-wrapper {
