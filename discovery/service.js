@@ -469,13 +469,16 @@ var fetchObjectByPid = function(pid, callback) {
         }
       }
   }, function (error, response) {
-
       if(error) {
         callback({status: false, message: error, data: null});
       }
-      else {
+      else if(response.hits.hits.total > 0) {
         objectData = response.hits.hits[0]._source;
         callback({status: true, data: objectData});
+      }
+      else {
+        console.log("Item not found");
+        callback({status: true, message: "Item not found", data: {}});
       }
   });
 }
