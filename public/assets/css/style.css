@@ -69,7 +69,7 @@ p {
 }
 
 footer {
-  height: 300px;
+  height: 200px;
   background-color: #8b2332;
   padding: 3.5em 1em 1em 1em;
 }
@@ -413,6 +413,10 @@ div.banner-search button {
 
 .welcomeBox {
     text-align: center;
+}
+
+.welcomeBox hr {
+    margin: 32px 0 !important;
 }
 
 .welcomeBox .title1 > span {
@@ -1271,7 +1275,6 @@ div#viewer-message {
   z-index: -1;
 }
 
-
 footer div#footer-links {
   margin: 0 1em 0 1em;
 }
@@ -1279,4 +1282,23 @@ footer div#footer-links {
 footer a {
   color: #e5e3e1;
   text-decoration: none;
+  font-weight: bold;
+}
+
+footer .footer-column {
+  width: 25%;
+  min-height: 200px;
+  background-color: inherit;
+  float:left;
+  margin-left: 20px;
+}
+
+.footer-link-list {
+  width: 70%;
+  margin: 0 auto;
+}
+
+.footer-link-list ul li {
+  list-style-type: none;
+  padding: 11px 0;
 }

@@ -7,6 +7,10 @@
   .logo h1 {
     font-size: 5em;
   }
+
+  footer .footer-column {
+    width: 23.5%;
+  }
 }
 
 @media only screen and (min-width: 1750px) and (max-width: 1879px) {
@@ -20,6 +24,10 @@
 
   div#collection-grid.homepage dl.item  > dt {
     height: 257px;
+  }
+
+  footer .footer-column {
+    width: 23.5%;
   }
 }
 
@@ -42,6 +50,10 @@
 
   img.lg-tn-row {
       width: 195px;
+  }
+
+  footer .footer-column {
+    width: 23%;
   }
 }
 
@@ -104,11 +116,19 @@
   div#viewer-wrapper {
     width: 50%;
   }
+
+  footer .footer-column {
+    width: 23%;
+  }
 }
 
 @media only screen and (min-width: 1350px) and (max-width: 1499px) {
   .logo h1 {
     font-size: 4.5em;
+  }
+
+  footer .footer-column {
+    width: 22.5%;
   }
 }
 
@@ -119,6 +139,10 @@
 
   .logo h1 {
     font-size: 4em;
+  }
+
+  footer .footer-column {
+    width: 22.5%;
   }
 }
 
@@ -347,5 +371,9 @@
 
   div#facets > div.panel {
     padding: 12px;
+  }
+
+  footer .footer-column {
+    width: 21.5%;
   }
 }
