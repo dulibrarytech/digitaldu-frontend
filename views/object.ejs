@@ -6,9 +6,11 @@
 			<h2>Title here</h2>
 		</div> -->
 	    <div id="viewer-section">
-<!-- 	      <div id="viewer-message">
-	    	<h4>Loading...</h4>
-	      </div> -->
+
+	      <% if(error) { %>
+		    <h5><%- error %></h5>
+		  <% } %>
+
 	      <div id="viewer-wrapper">
 	        <!-- Dummy -->
 	        <%- viewer %>

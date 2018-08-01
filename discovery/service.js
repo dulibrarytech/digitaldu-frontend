@@ -472,12 +472,11 @@ var fetchObjectByPid = function(pid, callback) {
       if(error) {
         callback({status: false, message: error, data: null});
       }
-      else if(response.hits.hits.total > 0) {
+      else if(response.hits.total > 0) {
         objectData = response.hits.hits[0]._source;
         callback({status: true, data: objectData});
       }
       else {
-        console.log("Item not found");
         callback({status: true, message: "Item not found", data: {}});
       }
   });

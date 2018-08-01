@@ -192,12 +192,13 @@ exports.renderObjectView = function(req, res) {
 				}
 			}	
 			else {
-				data.error = "Error rendering object, object not found";
+				console.error("Index error: ", response.message);
+				data.error = response.message;
 			}
 		}
 		else {
 			console.error("Index error: ", response.message);
-			data.error = "Error rendering object, object not found";
+			data.error = response.message;
 		}
 	
 		return res.render('object', data);
