@@ -9,7 +9,13 @@ module.exports = function (app) {
     app.route('/')
         .get(function(req, res) {
         	res.redirect(config.rootUrl);
-        });
+    });
+
+    // Temporary
+    app.route('/islandora/object/:pid')
+        .get(function(req, res) {
+            res.redirect("/repository/object/" + req.params.pid);
+    });
 
 	// Render the top level community view (landing page)
     app.route('/repository')
