@@ -194,12 +194,12 @@ exports.renderObjectView = function(req, res) {
 			}	
 			else {
 				console.error("Index error: ", response.message);
-				data.error = response.message;
+				data.error = "Sorry, this item can not be displayed";
 			}
 		}
 		else {
 			console.error("Index error: ", response.message);
-			data.error = response.message;
+			data.error = "Sorry, this item can not be displayed";
 		}
 	
 		return res.render('object', data);
