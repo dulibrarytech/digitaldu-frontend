@@ -14,7 +14,8 @@ exports.getObjectViewer = function(object, mimeType="") {
  	if(mimeType == "" && typeof object.mime_type != 'undefined') {
  		mimeType = object.mime_type;
  	}
- 		console.log("TEST viewer mimetype found:", mimeType);
+ 	console.log("Viewer receives object with mimetype:", mimeType);
+ 	
  	switch(mimeType) {
  		case "audio/mpeg":
  		case "audio/x-wav":

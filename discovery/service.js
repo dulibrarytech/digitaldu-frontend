@@ -230,6 +230,7 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
  
         // Get children objects of this collection
         es.search(data, function (error, response, status) {
+
           var responseData = {};
           if (error){
             callback({status: false, message: error, data: null});

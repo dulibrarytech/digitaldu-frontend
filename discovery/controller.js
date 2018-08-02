@@ -139,6 +139,7 @@ exports.renderCollection = function(req, res) {
 	// Get all collections in this community
 	Service.getObjectsInCollection(pid, page, reqFacets, function(response) {
 		if(response.status) {
+				
 			data.collections = response.data.list;
 			data.current_collection = pid;
 			data.current_collection_title = response.data.title || "Untitled";

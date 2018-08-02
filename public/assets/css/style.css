@@ -759,6 +759,21 @@ div#collection-grid dl.item  > dt {
   height: 200px;
 }
 
+div#collection-grid.homepage h3.item-title {
+  padding: 0 0 30px 0;
+}
+
+div#collection-grid.homepage div.item-thumb {
+  height: auto;
+}
+
+div#collection-grid.homepage div.item-thumb img {
+    /*max-height: 250px;
+    max-width: 200px;*/
+    max-height: 100%;
+    max-width: 100%;
+}
+
 div#collection-grid.homepage dl.item  > dt {
   height: 265px;
 }
