@@ -62,7 +62,7 @@ module.exports = {
      * Viewer to display video files
      * [videojs | jwplayer]
      */
-    videoViewer: "jwplayer",
+    videoViewer: "videojs",
 
     /* 
      * Viewer to display pdf files

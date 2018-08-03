@@ -1265,6 +1265,12 @@ div#video-viewer > div#mediaplayer {
   /*background-color: #181818 !important;*/
 }
 
+video#my-video,
+#my-video_html5_api {
+  height: 100%;
+  width: 100%;
+}
+
 div#video-viewer > div.video-js {
     height: 550px;
     width: 100%;
