@@ -299,3 +299,18 @@ exports.getMediaStream = function(req, res) {
 	//console.log("Stream:", stream);
 	res.send(stream);
 }
+
+exports.getDatastream = function(req, res) {
+	var ds = req.params.datastream || "",
+		pid = req.params.pid || "";
+
+	Service.getDatastream(pid, ds, function(stream, error) {
+		if(error) {
+			res.send(error);
+		}
+		else {
+			//res.send(stream);
+			stream.pipe(res);
+		}
+	});
+}

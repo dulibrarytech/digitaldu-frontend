@@ -41,11 +41,11 @@ module.exports = function (app) {
     app.route('/repository/facets')
         .get(Discovery.getFacets);
 
-    // TEST
-    // app.route('/repository/media')
-    //     .get(Discovery.getMediaStream);
     app.route('/repository/media/:path/:spoof')
         .get(Discovery.getMediaStream);
+
+    app.route('/repository/datastream/:pid/:datastream')
+        .get(Discovery.getDatastream);
 };
 
 

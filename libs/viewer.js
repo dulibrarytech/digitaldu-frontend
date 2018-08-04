@@ -169,11 +169,15 @@ function getLargeImageViewer(objectData) {
 function getPDFViewer(objectData) {
 
 	var viewer = '<div id="pdf-viewer" class="viewer-section">';
-	var doc = Repository.getDatastreamUrl("pdf", objectData.pid);
+
+	// var doc = Repository.getDatastreamUrl("pdf", objectData.pid);
+	var doc = config.baseUrl + "/repository/datastream/" + objectData.pid + "/OBJ";
+	// var tdoc = "http:localhost:9006/fedora/datastream/codu:37703/OBJ";
 
 	if(config.pdfViewer == "browser") {
-		viewer += '<iframe class="viewer-content" src="' + doc + '" height="500px"></iframe>';
+		viewer += '<iframe class="viewer-content" src="' + doc + '" height="500px" type="application/pdf" ></iframe>';
 		viewer += '</div>';
+		console.log("TEST viewer", viewer);
 	}
 	else {
 		viewer += 'Viewer is down temporarily.  Please check configuration</div>';

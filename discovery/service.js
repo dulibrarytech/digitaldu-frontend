@@ -536,3 +536,9 @@ exports.searchFacets = function (query, facets, page, callback) {
         callback(error);
     });
 };
+
+exports.getDatastream = function(objectID, datastreamID, callback) {
+  Repository.streamData(objectID, datastreamID, function(stream) {
+    callback(stream);
+  }) 
+}

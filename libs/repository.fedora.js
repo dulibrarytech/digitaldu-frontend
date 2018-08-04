@@ -7,6 +7,8 @@
 const protocol = "http://",
 	  domain = "librepo01-vlp.du.edu:8080";
 
+const request = require('request');
+
 exports.getDatastreamUrl = function(datastream, pid) {
 	var dsID = "";
 	switch(datastream) {
@@ -47,6 +49,25 @@ exports.getRootCollections = function() {
 exports.getCollectionObjects = function(collectionID) {
 	return new Promise(function(fulfill, reject) {
 		fulfill([]);
+	});
+}
+
+exports.streamData = function(pid, dsid, callback) {
+	var url = protocol + domain + "/fedora/objects/" + pid + "/datastreams/" + dsid + "/content";
+
+	// Test
+	url = "http://www.pdf995.com/samples/pdf.pdf";
+
+	// NPM Stream
+	var rs = require('request-stream');
+	rs(url, {}, function(err, res) {
+		if(err) {
+			console.log("Error: Could not open stream", err);
+			callback(null);
+		}
+		else {
+			callback(res);
+		}
 	});
 }
 
