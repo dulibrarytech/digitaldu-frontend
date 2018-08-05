@@ -54,12 +54,8 @@ function getAudioPlayer(objectData, type) {
 	var player = '<div id="audio-player" class="viewer-section">', tn, stream;
 	var extension = "mp3";
 
-	//tn = Repository.getDatastreamUrl("tn", objectData.pid);
 	tn = config.rootUrl + "/datastream/" + objectData.pid + "/tn";
-	stream = Repository.getDatastreamUrl(extension, objectData.pid);
-
-	// Test: 
-	// stream = config.rootUrl + "/repository/datastream/" + objectData.pid + "/mp3";
+	stream = config.rootUrl + "/datastream/" + objectData.pid + "/mp3";
 
 	if(config.audioPlayer == "browser") {
 		player += '<div id="viewer-content-wrapper"><audio controlsList="nodownload" controls><source src="' + stream + '" type="audio/mpeg"></audio></div>';
@@ -90,28 +86,21 @@ function getAudioPlayer(objectData, type) {
 
 function getVideoViewer(objectData) {
 	var viewer = '<div id="video-viewer" class="viewer-section">', tn, stream, url;
-	var extension = "mp4";
+	var extension = "", datastreamID = "";
 
-	//tn = Repository.getDatastreamUrl("tn", objectData.pid);
 	tn = config.rootUrl + "/datastream/" + objectData.pid + "/tn";
 	if(objectData.mime_type == "video/mp4") {
-		stream = Repository.getDatastreamUrl(extension, objectData.pid);
-
-		// Test: 
-		// stream = config.rootUrl + "/repository/datastream/" + objectData.pid + "/mp4";
-		url = config.rootUrl + "/repository/datastream/" + objectData.pid + "/" + extension;
+		extension = "mp4";
+		datastreamID = "mp4";
 	}
 	else if(objectData.mime_type == "video/quicktime") {
 		extnsion = "mov";
-		stream = Repository.getDatastreamUrl(extension, objectData.pid);
-
-		// Test: 
-		// stream = config.rootUrl + "/repository/datastream/" + objectData.pid + "/mov";
-		url = config.rootUrl + "/repository/datastream/" + objectData.pid + "/" + extension;
+		datastreamID = "mov";
 	}
 	else {
 		console.log("Error: Incorrect object mime type for object: " + objectData.pid);
 	}
+	stream = config.baseUrl + "/repository/datastream/" + objectData.pid + "/" + datastreamID;
 
 	if(config.videoViewer == "videojs") {
 		viewer += '<video id="my-video" class="video-js" controls preload="auto" width="640" height="264" poster="' + tn + '" data-setup="{}"><source src="' + stream + '" type="video/mp4"><p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that<a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p></video>';
@@ -123,7 +112,7 @@ function getVideoViewer(objectData) {
 		viewer += '<div id="mediaplayer" class="viewer-content">Loading JW Player...</div>';
 		viewer += '</div>';
 		viewer += '<script>jwplayer("mediaplayer").setup({'
-		viewer +=     'file: "' + url + '",'
+		viewer +=     'file: "' + stream + '",'
 		viewer +=     'image: "' +  tn + '",'
 		viewer +=     'width: 500,'
 		viewer +=     'height: 300,'

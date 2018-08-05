@@ -41,11 +41,13 @@ module.exports = function (app) {
     app.route('/repository/facets')
         .get(Discovery.getFacets);
 
-    app.route('/repository/media/:path/:spoof')
-        .get(Discovery.getMediaStream);
-
     app.route('/repository/datastream/:pid/:datastream')
         .get(Discovery.getDatastream);
+
+    app.route('/repository/datastream/:pid/:datastream/:spoof')
+        .get(function(req, res) {
+            res.redirect("/repository/datastream/" + req.params.pid + "/" + req.params.datastream);
+    });
 };
 
 
