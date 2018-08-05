@@ -54,7 +54,8 @@ function getAudioPlayer(objectData, type) {
 	var player = '<div id="audio-player" class="viewer-section">', tn, stream;
 	var extension = "mp3";
 
-	tn = Repository.getDatastreamUrl("tn", objectData.pid);
+	//tn = Repository.getDatastreamUrl("tn", objectData.pid);
+	tn = config.rootUrl + "/datastream/" + objectData.pid + "/tn";
 	stream = Repository.getDatastreamUrl(extension, objectData.pid);
 
 	// Test: 
@@ -91,7 +92,8 @@ function getVideoViewer(objectData) {
 	var viewer = '<div id="video-viewer" class="viewer-section">', tn, stream, url;
 	var extension = "mp4";
 
-	tn = Repository.getDatastreamUrl("tn", objectData.pid);
+	//tn = Repository.getDatastreamUrl("tn", objectData.pid);
+	tn = config.rootUrl + "/datastream/" + objectData.pid + "/tn";
 	if(objectData.mime_type == "video/mp4") {
 		stream = Repository.getDatastreamUrl(extension, objectData.pid);
 
