@@ -29,6 +29,9 @@ exports.getDatastreamUrl = function(datastream, pid) {
 		case "mp4":
 			dsID = "MP4";
 			break;
+		case "mov":
+			dsID = "MOV";
+			break;
 		case "pdf":
 			dsID = "OBJ";
 			break;
@@ -53,12 +56,13 @@ exports.getCollectionObjects = function(collectionID) {
 }
 
 exports.streamData = function(pid, dsid, callback) {
-	var url = protocol + domain + "/fedora/objects/" + pid + "/datastreams/" + dsid + "/content";
+	var url = this.getDatastreamUrl(dsid, pid);
 
 	// Test
-	url = "http://www.pdf995.com/samples/pdf.pdf";
+	//url = "http://www.pdf995.com/samples/pdf.pdf";
+	//url = "http://librepo01-vlp.du.edu:8080/fedora/objects/codu:65237/datastreams/OBJ/content";
 
-	// NPM Stream
+	// Get the stream 
 	var rs = require('request-stream');
 	rs(url, {}, function(err, res) {
 		if(err) {

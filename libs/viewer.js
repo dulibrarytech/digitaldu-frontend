@@ -56,7 +56,10 @@ function getAudioPlayer(objectData, type) {
 	var extension = "mp3";
 
 	tn = Repository.getDatastreamUrl("tn", objectData.pid);
-	stream = Repository.getDatastreamUrl("mp3", objectData.pid);
+	stream = Repository.getDatastreamUrl(extension, objectData.pid);
+
+	// Test: 
+	// stream = config.rootUrl + "/repository/datastream/" + objectData.pid + "/mp3";
 
 	if(config.audioPlayer == "browser") {
 		player += '<div id="viewer-content-wrapper"><audio controlsList="nodownload" controls><source src="' + stream + '" type="audio/mpeg"></audio></div>';
@@ -91,16 +94,23 @@ function getVideoViewer(objectData) {
 
 	tn = Repository.getDatastreamUrl("tn", objectData.pid);
 	if(objectData.mime_type == "video/mp4") {
-		stream = Repository.getDatastreamUrl("mp4", objectData.pid);
+		stream = Repository.getDatastreamUrl(extension, objectData.pid);
+
+		// Test: 
+		// stream = config.rootUrl + "/repository/datastream/" + objectData.pid + "/mp4";
+		url = config.rootUrl + "/repository/datastream/" + objectData.pid + "/" + extension;
 	}
 	else if(objectData.mime_type == "video/quicktime") {
-		stream = Repository.getDatastreamUrl("mov", objectData.pid);
+		extnsion = "mov";
+		stream = Repository.getDatastreamUrl(extension, objectData.pid);
+
+		// Test: 
+		// stream = config.rootUrl + "/repository/datastream/" + objectData.pid + "/mov";
+		url = config.rootUrl + "/repository/datastream/" + objectData.pid + "/" + extension;
 	}
 	else {
 		console.log("Error: Incorrect object mime type for object: " + objectData.pid);
 	}
-
-	url = config.rootUrl + "/media/" + objectData.pid;
 
 	if(config.videoViewer == "videojs") {
 		viewer += '<video id="my-video" class="video-js" controls preload="auto" width="640" height="264" poster="' + tn + '" data-setup="{}"><source src="' + stream + '" type="video/mp4"><p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that<a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p></video>';
@@ -167,17 +177,14 @@ function getLargeImageViewer(objectData) {
 }
 
 function getPDFViewer(objectData) {
-
 	var viewer = '<div id="pdf-viewer" class="viewer-section">';
 
-	// var doc = Repository.getDatastreamUrl("pdf", objectData.pid);
-	var doc = config.baseUrl + "/repository/datastream/" + objectData.pid + "/OBJ";
-	// var tdoc = "http:localhost:9006/fedora/datastream/codu:37703/OBJ";
+	var doc = Repository.getDatastreamUrl("pdf", objectData.pid);
+	//var doc = config.baseUrl + "/repository/datastream/" + objectData.pid + "/OBJ";
 
 	if(config.pdfViewer == "browser") {
 		viewer += '<iframe class="viewer-content" src="' + doc + '" height="500px" type="application/pdf" ></iframe>';
 		viewer += '</div>';
-		console.log("TEST viewer", viewer);
 	}
 	else {
 		viewer += 'Viewer is down temporarily.  Please check configuration</div>';

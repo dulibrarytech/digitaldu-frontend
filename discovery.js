@@ -10,5 +10,4 @@ var app = express();
 app.listen(process.env.APP_PORT);
 
 console.log('Digital-DU application running at http://' + process.env.APP_HOST + ':' + process.env.APP_PORT + ' in ' + process.env.NODE_ENV + ' mode.');
-
 module.exports = app;
