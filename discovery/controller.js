@@ -303,7 +303,7 @@ exports.getMediaStream = function(req, res) {
 exports.getDatastream = function(req, res) {
 	var ds = req.params.datastream || "",
 		pid = req.params.pid || "";
-
+			console.log("TEST ds in: ", ds, " PID: ", pid);
 	Service.getDatastream(pid, ds, function(stream, error) {
 		if(error) {
 			res.send(error);

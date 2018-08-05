@@ -13,6 +13,7 @@ const request = require('request');
 
 exports.getFedoraDatastreamUrl = function(datastream, pid) {
 	var dsID = "";
+	datastream = datastream.toLowerCase();
 	switch(datastream) {
 		case "tn":
 			dsID = "TN";
@@ -69,7 +70,6 @@ exports.streamData = function(pid, dsid, callback) {
 
 	// Fedora
 	var url = this.getFedoraDatastreamUrl(dsid, pid);
-
 	// Repo
 	//var url = this.getDatastreamUrl(dsid, pid);
 

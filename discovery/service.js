@@ -45,17 +45,20 @@ var createItemList= function(items) {
       
     // This is a list of communities
     if(item.pid) {
-      tn = Repository.getDatastreamUrl("tn", item.pid);
+      //tn = Repository.getDatastreamUrl("tn", item.pid);
+      tn = config.rootUrl + "/datastream/" + item.pid + "/tn";
       pid = item.pid
     }
     // This is a list of objects
     else if(item.mime_type) {
-      tn = Repository.getDatastreamUrl("tn", item.pid);
+      //tn = Repository.getDatastreamUrl("tn", item.pid);
+      tn = config.rootUrl + "/datastream/" + item.pid + "/tn";
       pid = item.pid
     }
     // This is a list of collections
     else {
-      tn = Repository.getDatastreamUrl("tn", item.pid);
+      //tn = Repository.getDatastreamUrl("tn", item.pid);
+      tn = config.rootUrl + "/datastream/" + item.pid + "/tn";
       pid = item.id
     }
 
@@ -415,7 +418,8 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
           for(var result of response.hits.hits) {
 
             // Get the thumbnail
-            tn = Repository.getDatastreamUrl("tn", result._source.pid.replace('_', ':'));
+            //tn = Repository.getDatastreamUrl("tn", result._source.pid.replace('_', ':'));
+            tn = config.rootUrl + "/datastream/" + result._source.pid.replace('_', ':') + "/tn";
 
             // Get the title and description data for the result listing
             resultData = Helper.getSearchResultDisplayFields(result);
