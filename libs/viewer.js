@@ -1,8 +1,7 @@
 'use strict'
 
 var config = require('../config/config');
-// var	Repository = require('./repository');
-var Repository = require('./repository.fedora');
+var Repository = require('./repository');
 
 /*
  * Viewer module

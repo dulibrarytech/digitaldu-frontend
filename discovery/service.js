@@ -4,8 +4,7 @@ const es = require('../config/index');
 const config = require('../config/config');
 const request  = require("request");
 //const Repository = require('../libs/repository');
-const Repository = require('../libs/repository.fedora'),
-      LibRepo = require('../libs/repository');
+const Repository = require('../libs/repository');
 const Helper = require("./helper");
 
 
@@ -46,7 +45,6 @@ var createItemList= function(items) {
       
     // This is a list of communities
     if(item.pid) {
-      // tn = Repository.getCollectionTN(item.pid);
       tn = Repository.getDatastreamUrl("tn", item.pid);
       pid = item.pid
     }

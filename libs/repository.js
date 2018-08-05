@@ -1,157 +1,95 @@
 'use strict'
 
 /*
- * DU Repository interface functions
+ * DU Fedora interface functions
  */
-
-var request = require('request')
-
+ 
 const protocol = "http://",
-	  domain = process.env.REPOSITORY_HOST || "libspec01-vlp.du.edu:8080";
+	  domain = "librepo01-vlp.du.edu:8080";
 
+const config = require('../config/config');
+
+const request = require('request');
+
+exports.getFedoraDatastreamUrl = function(datastream, pid) {
+	var dsID = "";
+	switch(datastream) {
+		case "tn":
+			dsID = "TN";
+			break;
+		case "small_image":
+			dsID = "OBJ";
+			break;
+		case "large_image":
+			dsID = "OBJ";
+			break;
+		case "audio":
+		case "mp3":
+			dsID = "PROXY_MP3";
+			break;
+		case "video":
+		case "mp4":
+			dsID = "MP4";
+			break;
+		case "mov":
+			dsID = "MOV";
+			break;
+		case "pdf":
+			dsID = "OBJ";
+			break;
+		default: 
+			dsID = "OBJ";
+			break;
+	}
+
+	return protocol + domain + "/fedora/objects/" + pid + "/datastreams/" + dsID + "/content";
+}
 
 exports.getDatastreamUrl = function(datastream, pid) {
 
-	var dsID = "", objectType = "";
-	switch(datastream) {
-		case "tn":
-			dsID = "tn";
-			break;
-		case "mp3":
-			dsID = "mp3";
-			objectType = "audio";
-			break;
-		case "jpg":
-			dsID = "jpg";
-			objectType = "image";
-			break;
-		case "jp2":
-			dsID = "jp2";
-			objectType = "image";
-			break;
-		case "tiff":
-			dsID = "tiff";
-			objectType = "image";
-			break;
-		case "pdf":
-			dsID = "pdf";
-			break;
-		case "mp4":
-			dsID = "mp4";
-			objectType = "video";
-			break;
-		case "mov":
-			dsID = "mov";
-			objectType = "video";
-			break;
-		default:
-			console.log("Unsupported datastream (repository)");
-			return "";
-			break;
-	}
-	objectType = objectType == "" ? "" : objectType + "/";
+	// Temp
+	return this.getFedoraDatastreamUrl(datastream, pid);
 
-	return protocol + domain + "/api/object/" + objectType + dsID + "?pid=" + pid;
+	// TODO local repo api
 }
 
-/* Obsolete */
-exports.getCommunities = function() {
-	return new Promise(function(fulfill, reject) {
-		var url = protocol + domain + "/api/communities";
-		request(url, function (error, response, body) {
-			if(error) {
-				reject(error);
-			}
-			else if(response.statusCode !== 200) {
-				reject("Repository returns status " + response.statusCode);
-			}
-			else {
-				fulfill(body);
-			}
-		});
-	});
-}
-
-/* Obsolete */
-exports.getCommunity = function(communityID) {
-	return new Promise(function(fulfill, reject) {
-		var url = protocol + domain + "/api/communities?community_id=" + communityID;
-		request(url, function (error, response, body) {
-			if(error) {
-				reject(error);
-			}
-			else if(response.statusCode !== 200) {
-				reject("Repository returns status " + response.statusCode);
-			}
-			else {
-				fulfill(body);
-			}
-		});
-	});
-}
-
-/* Test to make sure this will return root collections */
 exports.getRootCollections = function() {
 	return new Promise(function(fulfill, reject) {
-		var url = protocol + domain + "/api/v1/objects?pid=codu:root";
-		request(url, function (error, response, body) {
-			if(error) {
-				reject(error);
-			}
-			else if(response.statusCode !== 200) {
-				reject("Repository returns status " + response.statusCode);
-			}
-			else {
-				fulfill(body);
-			}
-		});
-	});
-}
-
-exports.getCollectionsByCommunity = function(communityID) {
-	return new Promise(function(fulfill, reject) {
-		var url = protocol + domain + "/api/collections?community_id=" + communityID;
-		request(url, function (error, response, body) {
-			if(error) {
-				reject(error);
-			}
-			else if(response.statusCode !== 200) {
-				reject("Repository returns status " + response.statusCode);
-			}
-			else {
-				fulfill(body);
-			}
-		});
+		fulfill([]);
 	});
 }
 
 exports.getCollectionObjects = function(collectionID) {
 	return new Promise(function(fulfill, reject) {
-		var url = protocol + domain + "/api/objects?pid=" + collectionID;
-		request(url, function (error, response, body) {
-			if(error) {
-				reject(error);
-			}
-			else if(response.statusCode !== 200) {
-				reject("Repository returns status " + response.statusCode);
-			}
-			else {
-				fulfill(body);
-			}
-		});
+		fulfill([]);
 	});
 }
 
-exports.getCollectionTN = function(collectionID) {
-	return protocol + domain + "/api/collection/tn?collection_id=" + collectionID;
+exports.streamData = function(pid, dsid, callback) {
+
+	// Fedora
+	var url = this.getFedoraDatastreamUrl(dsid, pid);
+
+	// Repo
+	//var url = this.getDatastreamUrl(dsid, pid);
+
+	// Test
+	//url = "http://www.pdf995.com/samples/pdf.pdf";
+	//url = "http://librepo01-vlp.du.edu:8080/fedora/objects/codu:65237/datastreams/OBJ/content";
+
+	// Get the stream 
+	var rs = require('request-stream');
+	rs(url, {}, function(err, res) {
+		if(err) {
+			console.log("Error: Could not open stream", err);
+			callback(null);
+		}
+		else {
+			callback(res);
+		}
+	});
 }
 
-exports.getCommunityTN = function(communityID) {
-	return protocol + domain + "/api/community/tn?community_id=" + communityID;
-}
 
-exports.getObjectTN = function(objectID) {
-	return protocol + domain + "/api/object/tn?pid=" + objectID;
-}
 
 
