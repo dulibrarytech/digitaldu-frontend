@@ -14,7 +14,7 @@ const request = require('request');
 exports.getFedoraDatastreamUrl = function(datastream, pid) {
 	var dsID = "";
 	datastream = datastream.toLowerCase();
-	console.log("TEST ds in is", datastream);
+
 	switch(datastream) {
 		case "tn":
 			dsID = "TN";
@@ -73,10 +73,6 @@ exports.streamData = function(pid, dsid, callback) {
 	var url = this.getFedoraDatastreamUrl(dsid, pid);
 	// Repo
 	//var url = this.getDatastreamUrl(dsid, pid);
-		console.log("TEST stream path", url);
-	// Test
-	//url = "http://www.pdf995.com/samples/pdf.pdf";
-	//url = "http://librepo01-vlp.du.edu:8080/fedora/objects/codu:65237/datastreams/OBJ/content";
 
 	// Get the stream 
 	var rs = require('request-stream');
