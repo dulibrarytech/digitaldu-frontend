@@ -178,9 +178,7 @@ function getLargeImageViewer(objectData) {
 
 function getPDFViewer(objectData) {
 	var viewer = '<div id="pdf-viewer" class="viewer-section">';
-
-	var doc = Repository.getDatastreamUrl("pdf", objectData.pid);
-	//var doc = config.baseUrl + "/repository/datastream/" + objectData.pid + "/OBJ";
+	var doc = config.baseUrl + "/repository/datastream/" + objectData.pid + "/OBJ";
 
 	if(config.pdfViewer == "browser") {
 		viewer += '<iframe class="viewer-content" src="' + doc + '" height="500px" type="application/pdf" ></iframe>';
