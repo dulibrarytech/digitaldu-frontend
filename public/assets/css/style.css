@@ -1000,7 +1000,7 @@ div.paginator-pages span a + a {
   border-left-style: none;
   position: relative;
   top: 2px;
-  right: 9px;
+  right: 8px;
   padding: 9px;
   width: 18%;
   height: 38px;
@@ -1019,10 +1019,10 @@ select#search-type {
   border-style: none;
   width: 18%;
   padding-left: 0.6em;
-
-
   height: 38px;
   background-color: #e5e3e1;
+  position: relative;
+  left: 1px;
 }
 
 .search-results > h3 {
@@ -1339,3 +1339,15 @@ footer .footer-column {
   /*list-style-type: none;*/
   padding: 7px 0;
 }
+
+@media screen and (min-color-index:0) and(-webkit-min-device-pixel-ratio:0)
+{ @media {
+    #searchform button {
+        top: 1px;
+    }
+
+    select#search-type {
+        top: -1px;
+        border-radius: none;
+    }
+}}
