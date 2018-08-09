@@ -17,7 +17,7 @@ exports.testViewer = function(req, res) {
 		base_url: config.baseUrl
 	};
 
-	var viewer = Viewer.getObjectViewer({mime_type: "video/mp4", pid: "codu:37703"}, "video/mp4");
+	var viewer = Viewer.getObjectViewer({mime_type: "image/tiff", pid: "codu:58211"}, "image/tiff");
 	data['viewer'] = viewer;
 
 	// Build viewer, render test.html
