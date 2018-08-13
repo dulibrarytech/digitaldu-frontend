@@ -7,8 +7,7 @@ const async = require('async'),
 
     Viewer = require('../libs/viewer'),
     Facets = require('../libs/facets'),
-    Paginator = require('../libs/paginator'),
-    Media = require('../libs/media');
+    Paginator = require('../libs/paginator');
 
 /*
  * Get facets for all data (public route)
@@ -277,28 +276,6 @@ exports.search = function(req, res) {
 		return res.render('results', data);
 	});
 };
-
-/*
- * Test media stream
- */
-exports.getMediaStream = function(req, res) {
-
-	//var path = req.query.path || "testpath";
-	var path = req.params.path || "testpath";
-
-	var stream = Media.getFileStream(path, function(stream) {
-		if(stream) {
-			console.log("Sending stream ajax");
-			res.send(stream);
-		}
-		else {
-			res.sendStatus(404);
-		}
-	});
-	console.log("Sending stream");
-	//console.log("Stream:", stream);
-	res.send(stream);
-}
 
 exports.getDatastream = function(req, res) {
 	var ds = req.params.datastream || "",

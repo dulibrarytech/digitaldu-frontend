@@ -8,8 +8,7 @@ const async = require('async'),
 
     Viewer = require('../libs/viewer'),
     Facets = require('../libs/facets'),
-    Paginator = require('../libs/paginator'),
-    Media = require('../libs/media');
+    Paginator = require('../libs/paginator');
 
 exports.testViewer = function(req, res) {
 
