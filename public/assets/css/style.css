@@ -1153,7 +1153,7 @@ div#large-image-viewer {
   text-align: center;
 }
 
-div#large-image-viewer .display-message {
+div#large-image-viewer #display-message {
   position: relative;
   top: 300px;
 }

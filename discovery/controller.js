@@ -286,8 +286,14 @@ exports.getDatastream = function(req, res) {
 			res.send(error);
 		}
 		else {
-			//res.send(stream);
-			stream.pipe(res);
+			if(stream.headers['content-type'] == "text/plain") {
+				Service.getThumbnailPlaceholderStream(function(stream, error) {
+					stream.pipe(res);
+				});
+			}
+			else {
+				stream.pipe(res);
+			}
 		}
 	});
 }

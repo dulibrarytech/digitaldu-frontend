@@ -1,6 +1,7 @@
 'use strict';
 
 const es = require('../config/index');
+const fs = require('fs');
 const config = require('../config/config');
 const request  = require("request");
 //const Repository = require('../libs/repository');
@@ -543,4 +544,9 @@ exports.getDatastream = function(objectID, datastreamID, callback) {
   Repository.streamData(objectID, datastreamID, function(stream) {
     callback(stream);
   }) 
+}
+
+exports.getThumbnailPlaceholderStream = function(callback) {
+  var rstream = fs.createReadStream(config.tnPlaceholderPath);
+  callback(rstream, null);
 }

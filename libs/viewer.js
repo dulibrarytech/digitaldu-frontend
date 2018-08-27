@@ -144,7 +144,7 @@ function getLargeImageViewer(objectData) {
 	var viewer = '<div id="large-image-viewer" class="viewer-section">',
 		viewerImages = config.openseadragonImagePath;
 
-	viewer += "<span class='display-message' >Loading image, please wait...</span>";
+	viewer += "<span id='display-message' >Loading image, please wait...</span>";
 
 	if(config.largeImageViewer == "openseadragon") {
 
@@ -157,6 +157,9 @@ function getLargeImageViewer(objectData) {
 		viewer +=     'immediateRender: true,'
 		viewer +=     'showNavigator: true,'
 		viewer +=     'tileSources: "' + config.cantaloupeUrl + '/iiif/2/' + objectData.pid + '"'
+		viewer += '});'
+		viewer += 'viewer.addHandler("tile-drawn", function() {'
+		viewer += 'document.getElementById("#title-text").style.color = "blue";'
 		viewer += '});</script>';
 	}
 	else {

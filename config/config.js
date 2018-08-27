@@ -45,6 +45,9 @@ module.exports = {
     // Will appear in the view, if an item has no title information
     noTitlePlaceholder: "Untitled",
 
+    // Image to display if no thumbnail image exists in the repository
+    tnPlaceholderPath: "files/tn-placeholder.jpg",
+
     // Limit of facet results returned from a search
     facetLimit: 200,
 
