@@ -54,7 +54,7 @@ function createBreadcrumbTrail(data) {
         //html += '<span><a  onclick="removeFacet(\'' + data[i].type + '\', \'' + data[i].name + '\');"><strong id="facet-breadcrumb-remove-link">X</strong></a>' + data[i].type + '&nbsp&nbsp<strong id="facet-breadcrumb-sidearrow"> > </strong>&nbsp&nbsp' + data[i].name + '</span>';   // test
     }
 
-    return data.length > 0 ? html : null;;
+    return data.length > 0 ? html : null;
 };
 
 function createBreadcrumbLinks(data) {

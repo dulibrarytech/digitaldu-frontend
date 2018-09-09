@@ -7,7 +7,9 @@ const async = require('async'),
 
     Viewer = require('../libs/viewer'),
     Facets = require('../libs/facets'),
-    Paginator = require('../libs/paginator');
+    Paginator = require('../libs/paginator'),
+
+    Search = require('../search/service');
 
 /*
  * Get facets for all data (public route)
@@ -84,6 +86,8 @@ exports.renderRootCollection = function(req, res) {
 	},
 	page = req.query.page || 1;
 
+	Search.test(123);
+
 	// Get all root collections
 	Service.getTopLevelCollections(page, function(response) {
 
@@ -124,6 +128,7 @@ exports.renderCollection = function(req, res) {
 	// Get the open collections from the url
 	// Assign collections member in data object
 	// * Start with current open collection from params, get recursive parent pids here
+	// Service.getCollectionHeirarchy(req.params.pid); // current ollection pid
 
 	var data = {
 			facet_breadcrumb_trail: null,
