@@ -2,6 +2,11 @@
 <% include partials/title-banner %>
 
 <div id="main" class="content container">
+	<div id="collection-breadcrumbs">
+		<% if (collection_breadcrumb_trail) { %>
+    		<%- collection_breadcrumb_trail %>
+    	<% } %>
+	</div>
     <div id="facet-breadcrumbs">
     	<a href="<%= rootUrl %>">Start Over</a>
     	<% if (facet_breadcrumb_trail) { %>
@@ -13,10 +18,7 @@
 	      <div class="result-facets">
 	        <h4>Facets</h4>
 	        <hr>
-
-	        <!-- facets.ejs here -->
 	        <% include partials/facets %>
-
 	      </div>
 	    </div>
     </div>

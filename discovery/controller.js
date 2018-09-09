@@ -156,7 +156,7 @@ exports.renderCollection = function(req, res) {
 			data.pagination = Paginator.create(response.data.list, page, config.maxCollectionsPerPage, response.data.count, path);
 			data.facets = Facets.create(response.data.facets, config.rootUrl);
 			data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(reqFacets);
-			//data.collection_breadcrumb_trail = Facets.getCollectionBreadcrumbObject(collections);
+			data.collection_breadcrumb_trail = Facets.getCollectionBreadcrumbObject(collections);
 		}
 		else {
 			console.log(response.message);
