@@ -62,7 +62,7 @@ function createBreadcrumbLinks(data) {
     var html = '';
     for (i = 0; i < data.length; i++) {
 
-        html += '<span><a class="collection-link" href="javascript:document.location.href=openCollection(\'' + data[i].pid + '\');">' + data[i].name + '</a></span>';
+        html += '<a class="collection-link" href="javascript:document.location.href=openCollection(\'' + data[i].pid + '\');">' + data[i].name + '</a>';
     }
 
     return html;
