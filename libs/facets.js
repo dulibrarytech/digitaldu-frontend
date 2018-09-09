@@ -27,6 +27,10 @@ exports.getFacetBreadcrumbObject = function(selectedFacets) {
     return createBreadcrumbTrail(breadcrumbs);
 };
 
+exports.getCollectionBreadcrumbObject = function(collections) {
+
+};
+
 function createList(facet, data, baseUrl) {
     var i;
     var html = '';
@@ -50,5 +54,9 @@ function createBreadcrumbTrail(data) {
     }
 
     return html;
+};
+
+function createBreadcrumbLinks(data) {
+
 };
 
