@@ -54,7 +54,7 @@ function createBreadcrumbTrail(data) {
         //html += '<span><a  onclick="removeFacet(\'' + data[i].type + '\', \'' + data[i].name + '\');"><strong id="facet-breadcrumb-remove-link">X</strong></a>' + data[i].type + '&nbsp&nbsp<strong id="facet-breadcrumb-sidearrow"> > </strong>&nbsp&nbsp' + data[i].name + '</span>';   // test
     }
 
-    return html;
+    return data.length > 0 ? html : null;;
 };
 
 function createBreadcrumbLinks(data) {
@@ -65,6 +65,6 @@ function createBreadcrumbLinks(data) {
         html += '<a class="collection-link" href="javascript:document.location.href=openCollection(\'' + data[i].pid + '\');">' + data[i].name + '</a>';
     }
 
-    return html;
+    return data.length > 0 ? html : null;
 };
 
