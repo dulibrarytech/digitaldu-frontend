@@ -118,6 +118,13 @@ exports.renderRootCollection = function(req, res) {
  * Render the collections page, displaying items in collection
  */
 exports.renderCollection = function(req, res) {
+
+		console.log("TEST params into controller:", req.parms);
+	// TODO
+	// Get the open collections from the url
+	// Assign collections member in data object
+	// * Start with current open collection from params, get recursive parent pids here
+
 	var data = {
 			facet_breadcrumb_trail: null,
 			collection_breadcrumb_trail: null,

@@ -28,7 +28,8 @@ exports.getFacetBreadcrumbObject = function(selectedFacets) {
 };
 
 exports.getCollectionBreadcrumbObject = function(collections) {
-
+    // TODO validate object
+    return createBreadcrumbLinks(collections);
 };
 
 function createList(facet, data, baseUrl) {
@@ -57,6 +58,13 @@ function createBreadcrumbTrail(data) {
 };
 
 function createBreadcrumbLinks(data) {
+    var i;
+    var html = '';
+    for (i = 0; i < data.length; i++) {
 
+        html += '<span><a class="collection-link" href="javascript:document.location.href=openCollection(\'' + data[i].pid + '\');">' + data[i].name + '</a></span>';
+    }
+
+    return html;
 };
 
