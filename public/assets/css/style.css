@@ -1294,6 +1294,20 @@ div#viewer-message {
   z-index: -1;
 }
 
+div.collection-breadcrumbs {
+  font-size: 14px;
+  margin-left: 9px;
+}
+
+div.collection-breadcrumbs a {
+  text-decoration: none;
+}
+
+div.collection-breadcrumbs,
+div.collection-breadcrumbs a:visited {
+  color: #666666;
+}
+
 footer div#footer-links {
   margin: 0 1em 0 1em;
 }
