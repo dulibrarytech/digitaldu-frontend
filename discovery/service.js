@@ -576,6 +576,7 @@ var getParentData = function(pid, collections, callback) {
     collections.push({pid: response.data.pid, name: title, url: url});
 
     if(response.data.is_member_of_collection.indexOf("root") >= 0) {
+      collections.push({pid: config.topLevelCollectionPID, name: config.topLevelCollectionName, url: config.rootUrl});
       callback(collections.reverse());
     }
     else {

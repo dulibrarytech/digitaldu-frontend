@@ -411,9 +411,13 @@ exports.getCollectionBreadcrumbObject = function(collections) {
 };
 
 function createBreadcrumbLinks(data) {
-    var html = '<a class="collection-link" href="/">' + config.topLevelCollectionName + '</a>';
+    //var html = '<a class="collection-link" href="/">' + config.topLevelCollectionName + '</a>';
+    var html = "";
     for (var i = 0; i < data.length; i++) {
-        html += '&nbsp&nbsp<span>></span>&nbsp&nbsp<a class="collection-link" href="' + data[i].url + '">' + data[i].name + '</a>';
+    	if(i>0) {
+    		html += '&nbsp&nbsp<span>></span>&nbsp&nbsp';
+    	}
+        html += '<a class="collection-link" href="' + data[i].url + '">' + data[i].name + '</a>';
     }
     return data.length > 0 ? html : null;
 };

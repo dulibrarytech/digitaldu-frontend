@@ -245,8 +245,6 @@ exports.search = function(req, res) {
 		}
 	}
 
-	// TODO: Get page value from search query
-	// Update with ES pagination 
 	Service.searchIndex(query, type, facets, collection, page, function(response) {
 
 		var data = {
