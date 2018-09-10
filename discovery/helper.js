@@ -235,6 +235,9 @@ exports.createMetadataDisplayObject = function(result) {
 	return displayObj;
 }
 
+/* 
+ * TODO Move to Paginator lib
+ */
 exports.paginateResults = function(results, page) {
 	var index = page < 1 ? 0 : page-1;
 	var response = {}, maxResults = config.maxDisplayResults;
@@ -364,6 +367,9 @@ exports.getSearchResultDisplayFields = function(searchResult) {
     return fields;
 }
 
+/* 
+ * TODO Move to Facets lib
+ */
 exports.getFacetAggregationObject = function(facets) {
 	var facetAggregations = {}, field;
     for(var key in facets) {
@@ -377,6 +383,9 @@ exports.getFacetAggregationObject = function(facets) {
     return facetAggregations;
 }
 
+/* 
+ * TODO Move to Search lib
+ */
 exports.sortSearchResultObjects = function(objects) {
 	var titles = [], sorted = [];
 
@@ -397,5 +406,21 @@ exports.sortSearchResultObjects = function(objects) {
 
 	return sorted;
 }
+
+exports.getCollectionBreadcrumbObject = function(collectionPids) {
+    // TODO validate object
+    return createBreadcrumbLinks(collections);
+};
+
+function createBreadcrumbLinks(data) {
+    var i;
+    var html = '';
+    for (i = 0; i < data.length; i++) {
+
+        html += '<a class="collection-link" href="javascript:document.location.href=openCollection(\'' + data[i].pid + '\');">' + data[i].name + '</a>';
+    }
+
+    return data.length > 0 ? html : null;
+};
 
 

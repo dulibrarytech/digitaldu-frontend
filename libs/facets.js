@@ -27,11 +27,6 @@ exports.getFacetBreadcrumbObject = function(selectedFacets) {
     return createBreadcrumbTrail(breadcrumbs);
 };
 
-exports.getCollectionBreadcrumbObject = function(collections) {
-    // TODO validate object
-    return createBreadcrumbLinks(collections);
-};
-
 function createList(facet, data, baseUrl) {
     var i;
     var html = '';
@@ -52,17 +47,6 @@ function createBreadcrumbTrail(data) {
 
         html += '<span><a href="javascript:document.location.href=removeFacet(\'' + data[i].type + '\', \'' + data[i].name + '\');"><strong>X</strong></a>' + data[i].type + '&nbsp&nbsp<strong style="color: green"> > </strong>&nbsp&nbsp' + data[i].name + '</span>';   // good
         //html += '<span><a  onclick="removeFacet(\'' + data[i].type + '\', \'' + data[i].name + '\');"><strong id="facet-breadcrumb-remove-link">X</strong></a>' + data[i].type + '&nbsp&nbsp<strong id="facet-breadcrumb-sidearrow"> > </strong>&nbsp&nbsp' + data[i].name + '</span>';   // test
-    }
-
-    return data.length > 0 ? html : null;
-};
-
-function createBreadcrumbLinks(data) {
-    var i;
-    var html = '';
-    for (i = 0; i < data.length; i++) {
-
-        html += '<a class="collection-link" href="javascript:document.location.href=openCollection(\'' + data[i].pid + '\');">' + data[i].name + '</a>';
     }
 
     return data.length > 0 ? html : null;

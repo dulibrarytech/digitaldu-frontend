@@ -86,8 +86,6 @@ exports.renderRootCollection = function(req, res) {
 	},
 	page = req.query.page || 1;
 
-	Search.test(123);
-
 	// Get all root collections
 	Service.getTopLevelCollections(page, function(response) {
 
@@ -123,53 +121,50 @@ exports.renderRootCollection = function(req, res) {
  */
 exports.renderCollection = function(req, res) {
 
-		console.log("TEST params into controller:", req.parms);
-	// TODO
-	// Get the open collections from the url
-	// Assign collections member in data object
-	// * Start with current open collection from params, get recursive parent pids here
-	// Service.getCollectionHeirarchy(req.params.pid); // current ollection pid
+	Service.getCollectionHeirarchy(req.params.pid, function(collections) {
 
-	var data = {
+			console.log("TEST open collection pid:", req.params.pid);
+			console.log("TEST svc returns collection heirarchy:", collections);
+
+		var data = {
 			facet_breadcrumb_trail: null,
 			collection_breadcrumb_trail: null,
 			current_collection_title: "",
 			current_collection: "",
-			collections: [],
 			facets: {},
 			error: null,
 			pagination: {},
 			base_url: config.baseUrl,
 			rootUrl: config.rootUrl
-		},
-		pid = req.params.pid || "",
-		page = req.query.page || 1,
-		// path = config.rootUrl + "/collection/" + pid,
-		path = config.baseUrl + req._parsedOriginalUrl.path,
-		reqFacets = req.query.f || null;
+		};
+			
+		var	pid = req.params.pid || "",
+			page = req.query.page || 1,
+			path = config.baseUrl + req._parsedOriginalUrl.path,
+			reqFacets = req.query.f || null;
 
-	// Get all collections in this community
-	Service.getObjectsInCollection(pid, page, reqFacets, function(response) {
-		if(response.status) {
+		// Get all collections in this community
+		Service.getObjectsInCollection(pid, page, reqFacets, function(response) {
+			if(response.status) {
 
-			// Add collections and collection data	
-			data.collections = response.data.list;
-			data.current_collection = pid;
-			data.current_collection_title = response.data.title || "Untitled";
+				// Add collections and collection data	
+				data.collections = response.data.list;
+				data.current_collection = pid;
+				data.current_collection_title = response.data.title || "Untitled";
 
-			// Add view data
-			data.pagination = Paginator.create(response.data.list, page, config.maxCollectionsPerPage, response.data.count, path);
-			data.facets = Facets.create(response.data.facets, config.rootUrl);
-			data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(reqFacets);
-			data.collection_breadcrumb_trail = Facets.getCollectionBreadcrumbObject(collections);
-		}
-		else {
-			console.log(response.message);
-			data.error = "Could not retrieve collections.";
-			data.current_collection_title = "Error";
-		}
-
-		return res.render('collection', data);
+				// Add view data
+				data.pagination = Paginator.create(response.data.list, page, config.maxCollectionsPerPage, response.data.count, path);
+				data.facets = Facets.create(response.data.facets, config.rootUrl);
+				data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(reqFacets);
+				//data.collection_breadcrumb_trail = Helper.getCollectionBreadcrumbObject(collections);
+			}
+			else {
+				console.log(response.message);
+				data.error = "Could not retrieve collections.";
+				data.current_collection_title = "Error";
+			}
+			return res.render('collection', data);
+		});
 	});
 }
 

@@ -4,13 +4,12 @@ const es = require('../config/index');
 const fs = require('fs');
 const config = require('../config/config');
 const request  = require("request");
-//const Repository = require('../libs/repository');
 const Repository = require('../libs/repository');
 const Helper = require("./helper");
 
-
 /*
  * Create view model data object for display items
+ * TODO Move to helper
  *
  * @param object items  The items to include in the list
  */
@@ -269,6 +268,9 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
   });
 }
 
+/*
+ * TODO Move to search module
+ */
 exports.searchIndex = function(query, type, facets=null, collection=null, pageNum=1, callback) {
 
     // Build elasticsearch matchfields object for query: this object enables field specific searching
@@ -515,6 +517,9 @@ var getFacets = function (callback) {
 };
 exports.getFacets = getFacets;
 
+/*
+ * TODO Move to search module
+ */
 exports.searchFacets = function (query, facets, page, callback) {
     client.search({
             index: config.elasticsearchIndex,
@@ -549,4 +554,10 @@ exports.getDatastream = function(objectID, datastreamID, callback) {
 exports.getThumbnailPlaceholderStream = function(callback) {
   var rstream = fs.createReadStream(config.tnPlaceholderPath);
   callback(rstream, null);
+}
+
+exports.getCollectionHeirarchy = function(pid, callback) {
+  var testArr = ["1", "2"];
+
+  callback(testArr);
 }
