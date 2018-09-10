@@ -403,23 +403,18 @@ exports.sortSearchResultObjects = function(objects) {
 			}
 		}
 	}
-
 	return sorted;
 }
 
-exports.getCollectionBreadcrumbObject = function(collectionPids) {
-    // TODO validate object
+exports.getCollectionBreadcrumbObject = function(collections) {
     return createBreadcrumbLinks(collections);
 };
 
 function createBreadcrumbLinks(data) {
-    var i;
-    var html = '';
-    for (i = 0; i < data.length; i++) {
-
-        html += '<a class="collection-link" href="javascript:document.location.href=openCollection(\'' + data[i].pid + '\');">' + data[i].name + '</a>';
+    var html = '<a class="collection-link" href="/">' + config.topLevelCollectionName + '</a>';
+    for (var i = 0; i < data.length; i++) {
+        html += '<a class="collection-link" href="' + data[i].url + '">' + data[i].name + '</a>';
     }
-
     return data.length > 0 ? html : null;
 };
 

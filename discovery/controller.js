@@ -4,11 +4,9 @@ const async = require('async'),
     config = require('../config/config'),
     Helper = require('./helper.js'),
     Service = require('./service.js'),
-
     Viewer = require('../libs/viewer'),
     Facets = require('../libs/facets'),
     Paginator = require('../libs/paginator'),
-
     Search = require('../search/service');
 
 /*
@@ -122,10 +120,6 @@ exports.renderRootCollection = function(req, res) {
 exports.renderCollection = function(req, res) {
 
 	Service.getCollectionHeirarchy(req.params.pid, function(collections) {
-
-			console.log("TEST open collection pid:", req.params.pid);
-			console.log("TEST svc returns collection heirarchy:", collections);
-
 		var data = {
 			facet_breadcrumb_trail: null,
 			collection_breadcrumb_trail: null,
@@ -156,7 +150,8 @@ exports.renderCollection = function(req, res) {
 				data.pagination = Paginator.create(response.data.list, page, config.maxCollectionsPerPage, response.data.count, path);
 				data.facets = Facets.create(response.data.facets, config.rootUrl);
 				data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(reqFacets);
-				//data.collection_breadcrumb_trail = Helper.getCollectionBreadcrumbObject(collections);
+				data.collection_breadcrumb_trail = Helper.getCollectionBreadcrumbObject(collections);
+					console.log("TEST view bc's:", data.collection_breadcrumb_trail);
 			}
 			else {
 				console.log(response.message);

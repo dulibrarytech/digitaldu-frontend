@@ -565,17 +565,18 @@ exports.getCollectionHeirarchy = function(pid, callback) {
  */
 var getParentData = function(pid, collections, callback) {
   fetchObjectByPid(pid, function(response) {
-    var title = "";
+    var title = "",
+        url = config.rootUrl + "/collection/" + pid;
     if(typeof response.data.title == "object") {
       title = response.data.title[0];
     }
     else {
       title = response.data.title || "Untitled Collection";
     }
-    collections.push({pid: response.data.pid, name: title});
+    collections.push({pid: response.data.pid, name: title, url: url});
 
     if(response.data.is_member_of_collection.indexOf("root") >= 0) {
-      callback(collections);
+      callback(collections.reverse());
     }
     else {
       getParentData(response.data.is_member_of_collection, collections, callback);

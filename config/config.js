@@ -18,11 +18,8 @@ module.exports = {
     // Repository settings
     institutionPrefix: "codu",
     topLevelCollectionPID: "codu:root",
+    topLevelCollectionName: "Root Collection",
     collectionMimeType: "collection",
-
-    /*
-     * Begin application settings
-     */
 
     // Search results limit
     maxDisplayResults: 1000,
@@ -50,10 +47,6 @@ module.exports = {
 
     // Limit of facet results returned from a search
     facetLimit: 200,
-
-    /*
-     * End application settings
-     */
 
     /* 
      * Viewer to play audio files
