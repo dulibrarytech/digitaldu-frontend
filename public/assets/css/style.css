@@ -526,12 +526,7 @@ div#collection-grid:not(.homepage) dt {
   border-bottom-color: #e5e3e1;
 }
 
-/* Facet bloc */
-
 div#facets {
-/*  margin-top: 2.5em;
-  margin-right: 1em;
-  margin-left: 1em;*/
   margin: 2.5em 1em;
 }
 
@@ -560,7 +555,28 @@ div#facets > div.panel .facet-count {
   float: right;
 }
 
-div#facet-breadcrumbs span {
+div.facet-breadcrumbs {
+  margin: 28px 0 18px 9px;
+}
+
+div.facet-breadcrumbs a {
+  /*text-decoration: none;*/
+  color: inherit;
+  margin-right: 20px;
+}
+
+div.facet-breadcrumbs a.facet-breadcrumb {
+  background-color: #e5e3e1;
+  color: #444;
+  padding: 8px;
+  text-decoration: none;
+}
+
+div.facet-breadcrumbs a i {
+  margin: 0 5px;
+}
+
+div.facet-breadcrumbs span {
     background-color: #e5e3e1;
     color: #444;
     padding: 8px;
@@ -568,15 +584,15 @@ div#facet-breadcrumbs span {
     margin-left: 10px;
 }
 
-div#facet-breadcrumbs span a {
+div.facet-breadcrumbs span a {
   text-decoration: none;
 }
 
-div#facet-breadcrumbs span a strong {
+div.facet-breadcrumbs span a strong {
   color: red;
 }
 
-div#facet-breadcrumbs a {
+div.facet-breadcrumbs a {
     /* text-decoration: none; */
     color: inherit;
     margin-right: 20px;
@@ -637,27 +653,6 @@ div#facet-breadcrumbs a {
 #moving-image-facet-tn > img {
   right: 2px;
   position: relative;
-}
-
-div#facet-breadcrumbs {
-  margin: 20px 0 18px 9px;
-}
-
-div#facet-breadcrumbs a {
-  /*text-decoration: none;*/
-  color: inherit;
-  margin-right: 20px;
-}
-
-div#facet-breadcrumbs a.facet-breadcrumb {
-  background-color: #e5e3e1;
-  color: #444;
-  padding: 8px;
-  text-decoration: none;
-}
-
-div#facet-breadcrumbs a i {
-  margin: 0 5px;
 }
 
 button.accordion > h5 {
@@ -1295,8 +1290,8 @@ div#viewer-message {
 }
 
 div.collection-breadcrumbs {
-  font-size: 14px;
-  margin-left: 8px;
+  font-size: 13px;
+  margin-left: 10px;
 }
 
 div.collection-breadcrumbs a {
