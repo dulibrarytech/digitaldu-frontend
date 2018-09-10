@@ -151,7 +151,6 @@ exports.renderCollection = function(req, res) {
 				data.facets = Facets.create(response.data.facets, config.rootUrl);
 				data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(reqFacets);
 				data.collection_breadcrumb_trail = Helper.getCollectionBreadcrumbObject(collections);
-					console.log("TEST view bc's:", data.collection_breadcrumb_trail);
 			}
 			else {
 				console.log(response.message);
