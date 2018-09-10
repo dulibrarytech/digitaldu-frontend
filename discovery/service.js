@@ -514,7 +514,7 @@ var getFacets = function (callback) {
     }, function (error) {
         callback(error.body.error.reason);
     });
-};
+}
 exports.getFacets = getFacets;
 
 /*
@@ -557,7 +557,28 @@ exports.getThumbnailPlaceholderStream = function(callback) {
 }
 
 exports.getCollectionHeirarchy = function(pid, callback) {
-  var testArr = ["1", "2"];
+  getParentData(pid, [], callback);
+}
 
-  callback(testArr);
+/*
+ * Recursively trace the current collection's heirarchy.  Builds an array of object data, for the current object and its parent trace.  Terminates if the parent is [root]
+ */
+var getParentData = function(pid, collections, callback) {
+  fetchObjectByPid(pid, function(response) {
+    var title = "";
+    if(typeof response.data.title == "object") {
+      title = response.data.title[0];
+    }
+    else {
+      title = response.data.title || "Untitled Collection";
+    }
+    collections.push({pid: response.data.pid, name: title});
+
+    if(response.data.is_member_of_collection.indexOf("root") >= 0) {
+      callback(collections);
+    }
+    else {
+      getParentData(response.data.is_member_of_collection, collections, callback);
+    }
+  });
 }
