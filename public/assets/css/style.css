@@ -256,8 +256,6 @@ header#du-header {
   background-color: #8b2332;
 }
 
-
-
 /* Main page styles */
 
 div#main {
@@ -268,7 +266,7 @@ div#main {
 }
 
 div#main {
-  min-height:1274px;
+  /*min-height:1274px;*/
 }
 
 div#main.homepage {
