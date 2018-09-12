@@ -266,7 +266,7 @@ div#main {
 }
 
 div#main {
-  /*min-height:1274px;*/
+  min-height:1274px;
 }
 
 div#main.homepage {
