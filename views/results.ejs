@@ -3,7 +3,6 @@
 
   <div id="main" class="content container demo-test-view">
     <div class="facet-breadcrumbs">
-      <a href="<%= rootUrl %>">Start Over</a>
       <% if (facet_breadcrumb_trail) { %>
         <%- facet_breadcrumb_trail %>
       <% } %>
@@ -12,9 +11,7 @@
       <div class="result-facets">
         <h4>Limit Your Search</h4>
         <hr>
-
         <% include partials/facets %>
-
       </div>
     </div>
 
