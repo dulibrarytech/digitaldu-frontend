@@ -158,9 +158,7 @@ function getLargeImageViewer(objectData) {
 		viewer +=     'showNavigator: true,'
 		viewer +=     'tileSources: "' + config.cantaloupeUrl + '/iiif/2/' + objectData.pid + '"'
 		viewer += '});'
-		viewer += 'viewer.addHandler("tile-drawn", function() {'
-		viewer += 'document.getElementById("#title-text").style.color = "blue";'
-		viewer += '});</script>';
+		viewer += '</script>';
 	}
 	else {
 		viewer += 'Viewer is down temporarily.  Please check configuration';
