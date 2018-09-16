@@ -1,15 +1,8 @@
 'use strict';
 
-var config = require('../config/config');
 var Discovery = require('../discovery/controller');
 
 module.exports = function (app) {
-
-	// Root route to landing page
-    app.route('/')
-        .get(function(req, res) {
-        	res.redirect(config.rootUrl);
-    });
 
     // Temporary
     app.route('/islandora/object/:pid')

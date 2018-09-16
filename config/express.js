@@ -2,7 +2,8 @@
 
 var http = require('http'),
     express = require('express'),
-    bodyParser = require('body-parser')
+    bodyParser = require('body-parser'),
+    config = require('./config.js');
 
 module.exports = function () {
 
@@ -27,6 +28,12 @@ module.exports = function () {
     require('../discovery/routes.js')(app);
     require('../test/routes.js')(app);
     require('express-template-cache');
+
+    // Root route to landing page
+    app.route('/')
+        .get(function(req, res) {
+            res.redirect(config.rootUrl);
+    });
 
     return server;
 };
