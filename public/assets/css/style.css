@@ -1352,6 +1352,23 @@ footer .footer-column {
   font-size: 0.83em;
 }
 
+.info-content ul {
+  -webkit-padding-start: 0px;
+}
+
+.info-content li {
+  list-style: none;
+  margin-bottom: 6px;
+}
+
+.info-content a {
+  color: #666;
+}
+
+.info-content dl dd {
+  margin: 6px 0 10px 0;
+}
+
 @media screen and (min-color-index:0) and(-webkit-min-device-pixel-ratio:0)
 { @media {
     #searchform button {
