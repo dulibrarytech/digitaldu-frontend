@@ -80,7 +80,7 @@ exports.renderRootCollection = function(req, res) {
 		typeCount: {},
 		error: null,
 		base_url: config.baseUrl,
-		rootUrl: config.rootUrl
+		root_url: config.rootUrl
 	},
 	page = req.query.page || 1;
 
@@ -129,7 +129,7 @@ exports.renderCollection = function(req, res) {
 			error: null,
 			pagination: {},
 			base_url: config.baseUrl,
-			rootUrl: config.rootUrl
+			root_url: config.rootUrl
 		};
 			
 		var	pid = req.params.pid || "",
@@ -173,7 +173,7 @@ exports.renderObjectView = function(req, res) {
 		mods: null,
 		error: null,
 		base_url: config.baseUrl,
-		rootUrl: config.rootUrl
+		root_url: config.rootUrl
 	};
 
 	// Get the object data
@@ -254,7 +254,7 @@ exports.search = function(req, res) {
 			results: [],
 			pageData: null,
 			base_url: config.baseUrl,
-			rootUrl: config.rootUrl,
+			root_url: config.rootUrl,
 			collection_scope: "",
 			query: query
 		},

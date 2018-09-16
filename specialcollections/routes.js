@@ -3,7 +3,7 @@
 var config = require('../config/config');
 var data = {
 	base_url: config.baseUrl,
-	rootUrl: config.rootUrl
+	root_url: config.rootUrl
 };
 
 module.exports = function (app) {
