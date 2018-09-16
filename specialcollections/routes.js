@@ -21,6 +21,11 @@ module.exports = function (app) {
     .get(function(req, res) {
     	return res.render('static/faqs', data);
     });
+
+    app.route('/content/copyright-information')
+    .get(function(req, res) {
+    	return res.render('static/copyright-information', data);
+    });
 };
 
 

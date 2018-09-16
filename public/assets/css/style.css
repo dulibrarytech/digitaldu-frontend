@@ -1340,6 +1340,11 @@ footer .footer-column {
   padding: 7px 0;
 }
 
+div.info-content {
+    margin: 0 auto;
+    width: 90%;
+}
+
 .info-content h3 {
   font-size: 1.2em;
 }
