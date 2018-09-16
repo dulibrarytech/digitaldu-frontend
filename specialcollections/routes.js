@@ -1,13 +1,18 @@
 'use strict';
 
 var config = require('../config/config');
+var data = {
+	base_url: config.baseUrl,
+	rootUrl: config.rootUrl
+};
 
 module.exports = function (app) {
 
 	// Render the top level community view (landing page)
     app.route('/overview')
         .get(function(req, res) {
-        	return res.render('static/overview');
+        	console.log("D", data);
+        	return res.render('static/overview', data);
         });
 };
 

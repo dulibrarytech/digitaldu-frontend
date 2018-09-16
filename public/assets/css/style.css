@@ -1340,6 +1340,19 @@ footer .footer-column {
   padding: 7px 0;
 }
 
+.info-content h3 {
+  font-size: 1.2em;
+}
+
+.info-content h5,
+.info-content h6 {
+  color: #8b2332;
+}
+
+.info-content h6 {
+  font-size: 0.83em;
+}
+
 @media screen and (min-color-index:0) and(-webkit-min-device-pixel-ratio:0)
 { @media {
     #searchform button {
