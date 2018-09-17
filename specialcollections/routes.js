@@ -26,6 +26,21 @@ module.exports = function (app) {
     .get(function(req, res) {
     	return res.render('static/copyright-information', data);
     });
+
+    app.route('/services/consultation-and-training')
+    .get(function(req, res) {
+    	return res.render('static/consultation-and-training', data);
+    });
+
+    app.route('/services/digital-content-management')
+    .get(function(req, res) {
+    	return res.render('static/digital-content-management', data);
+    });
+
+    app.route('/help/glossary')
+    .get(function(req, res) {
+    	return res.render('static/glossary', data);
+    });
 };
 
 
