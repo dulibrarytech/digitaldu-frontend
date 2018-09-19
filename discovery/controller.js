@@ -91,7 +91,6 @@ exports.renderRootCollection = function(req, res) {
 		if(response.status) {
 			data.collections = response.data.list;
 			data.searchFields = config.searchFields;
-			//data.pagination = Paginator.create(response.data.list, page, config.maxCollectionsPerPage, response.data.count, config.rootUrl);
 		}
 		else {
 			console.log("Error:", response.message);
@@ -253,12 +252,12 @@ exports.search = function(req, res) {
 			facet_breadcrumb_trail: null,
 			results: [],
 			pageData: null,
+			page: req.query.page || 1,
 			base_url: config.baseUrl,
 			root_url: config.rootUrl,
 			collection_scope: "",
 			query: query
 		},
-		page = req.query.page || 1,
 		path = config.rootUrl + req.url.substring(req.url.indexOf('search')-1);
 
 		if(response.status) {
@@ -267,7 +266,7 @@ exports.search = function(req, res) {
 			data.results = response.data.results;
 			data.facets = Facets.create(response.data.facets, config.rootUrl);	// PROD
 			data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(facets);  // Param: the facets from the search request params
-			data.pagination = Paginator.create(response.data.results, page, config.maxResultsPerPage, response.data.count, path);
+			data.pagination = Paginator.create(response.data.results, data.page, config.maxResultsPerPage, response.data.count, path);
 		}
 		else {
 			console.error("Search Error: ", response.message);

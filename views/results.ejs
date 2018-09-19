@@ -40,7 +40,7 @@
                     <dd></dd>
                     </dl>
                     <dl class="search-result-data">
-                        <dt class="result-title"><%= i+1 %>.&nbsp&nbsp<a href="<%= root_url %>/object/<%= results[i].pid %>"><%= results[i].title %></a></dt>
+                        <dt class="result-title"><%= (i+1)+((page-1)*10) %>.&nbsp&nbsp<a href="<%= root_url %>/object/<%= results[i].pid %>"><%= results[i].title %></a></dt>
                             <dd></dd>
                         <!-- <dd class=""><a href="#">search result</a></dd> -->
                             <dt>Creator:</dt>
