@@ -267,6 +267,7 @@ div#main {
 
 div#main {
   min-height:1274px;
+  /*min-height:500px;*/
 }
 
 div#main.homepage {
@@ -274,7 +275,7 @@ div#main.homepage {
 }
 
 div#content-wrapper {
-  margin-top: 65px;
+  /*margin-top: 65px;*/
 }
 
 #logo-banner {

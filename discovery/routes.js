@@ -4,7 +4,6 @@ var Discovery = require('../discovery/controller');
 
 module.exports = function (app) {
 
-    // Temporary
     app.route('/islandora/object/:pid')
         .get(function(req, res) {
             res.redirect("/repository/object/" + req.params.pid);
@@ -25,10 +24,6 @@ module.exports = function (app) {
     // Render all object views (by content model or type)
     app.route('/repository/object/:pid')
     	.get(Discovery.renderObjectView);
-
-    // Search the discovery index
-    app.route('/repository/search')
-        .get(Discovery.search);
 
     // Search the discovery index
     app.route('/repository/facets')
