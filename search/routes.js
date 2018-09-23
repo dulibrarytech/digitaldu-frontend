@@ -1,6 +1,6 @@
 'use strict';
 
-var Search = require('../discovery/controller');
+var Search = require('../search/controller');
 
 module.exports = function (app) {
 

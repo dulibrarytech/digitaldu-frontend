@@ -1,8 +1,8 @@
+'use strict';
+
 /*
  * Helper functions for the Discovery module
  */
-
-'use strict';
 
 var config = require('../config/config');
 

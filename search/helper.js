@@ -1,3 +1,11 @@
+'use strict';
+
+/*
+ * Helper functions for the Search module
+ */
+
+var config = require('../config/config');
+
 exports.getFacetAggregationObject = function(facets) {
 	var facetAggregations = {}, field;
     for(var key in facets) {

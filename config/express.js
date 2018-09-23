@@ -27,6 +27,7 @@ module.exports = function () {
 
     // Add modules
     require('../discovery/routes.js')(app);
+    require('../search/routes.js')(app);
     require('../specialcollections/routes.js')(app);
     require('../test/routes.js')(app);
     
