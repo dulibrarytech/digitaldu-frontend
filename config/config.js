@@ -3,7 +3,7 @@
 module.exports = {
 
     host: process.env.APP_HOST,
-    rootRoute: "",
+    rootRoute: process.env.CLIENT_PATH,
     baseUrl: process.env.CLIENT_HOST,
     rootUrl: process.env.CLIENT_HOST + process.env.CLIENT_PATH,
 

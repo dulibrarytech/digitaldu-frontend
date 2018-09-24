@@ -64,10 +64,10 @@ var createItemList= function(items) {
 
     // Add collection or object path
     if(item.object_type && item.object_type == config.collectionMimeType) {
-      path = "/repository/collection";
+      path = config.rootRoute + "/collection";
     }
     else {
-      path = "/repository/object";
+      path = config.rootRoute + "/object";
     }
 
     // Pusg the current item to the list
