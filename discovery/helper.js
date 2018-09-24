@@ -6,6 +6,80 @@
 
 var config = require('../config/config');
 
+/*
+ * Create view model data object for display items
+ *
+ * @param object items  The items to include in the list
+ */
+ exports.createItemList = function(items) {
+  var itemList = [], tn, pid, title, description, display, path;
+  for(var item of items) {
+      
+    // Get the title and description data from the item
+    if(item.title && item.title != "") {
+      title = item.title || config.noTitlePlaceholder;
+      description = item.description || "";
+    }
+
+    // If the title field is absent from this item, try to get the title from the display record
+    else if(item.display_record && typeof item.display_record == 'string') {
+        try {
+          display = JSON.parse(item.display_record);
+        }
+        catch(e) {
+          console.log("Error: invalid display record JSON on object: " + item.pid);
+          continue;
+        }
+
+        title = display.title || config.noTitlePlaceholder;
+        description = display.description || display.abstract || "";
+    }
+
+    // Use the default values
+    else {
+      title = config.noTitlePlaceholder;
+      description = "";
+    }
+      
+    // This is a list of communities
+    if(item.pid) {
+      //tn = Repository.getDatastreamUrl("tn", item.pid);
+      tn = config.rootUrl + "/datastream/" + item.pid + "/tn";
+      pid = item.pid
+    }
+    // This is a list of objects
+    else if(item.mime_type) {
+      //tn = Repository.getDatastreamUrl("tn", item.pid);
+      tn = config.rootUrl + "/datastream/" + item.pid + "/tn";
+      pid = item.pid
+    }
+    // This is a list of collections
+    else {
+      //tn = Repository.getDatastreamUrl("tn", item.pid);
+      tn = config.rootUrl + "/datastream/" + item.pid + "/tn";
+      pid = item.id
+    }
+
+    // Add collection or object path
+    if(item.object_type && item.object_type == config.collectionMimeType) {
+      path = config.rootRoute + "/collection";
+    }
+    else {
+      path = config.rootRoute + "/object";
+    }
+
+    // Pusg the current item to the list
+    itemList.push({
+        pid: pid,
+        tn: tn,
+        title: title,
+        description: description,
+        path: path
+      });
+  }
+  return itemList;
+}
+
 exports.createSummaryDisplayObject = function(result) {
 	var displayObj = {},
 	    displayFields = config.summaryDisplay,

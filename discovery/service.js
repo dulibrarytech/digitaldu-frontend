@@ -8,81 +8,6 @@ const Repository = require('../libs/repository');
 const Helper = require("./helper");
 
 /*
- * Create view model data object for display items
- * TODO Move to helper
- *
- * @param object items  The items to include in the list
- */
-var createItemList= function(items) {
-  var itemList = [], tn, pid, title, description, display, path;
-  for(var item of items) {
-      
-    // Get the title and description data from the item
-    if(item.title && item.title != "") {
-      title = item.title || config.noTitlePlaceholder;
-      description = item.description || "";
-    }
-
-    // If the title field is absent from this item, try to get the title from the display record
-    else if(item.display_record && typeof item.display_record == 'string') {
-        try {
-          display = JSON.parse(item.display_record);
-        }
-        catch(e) {
-          console.log("Error: invalid display record JSON on object: " + item.pid);
-          continue;
-        }
-
-        title = display.title || config.noTitlePlaceholder;
-        description = display.description || display.abstract || "";
-    }
-
-    // Use the default values
-    else {
-      title = config.noTitlePlaceholder;
-      description = "";
-    }
-      
-    // This is a list of communities
-    if(item.pid) {
-      //tn = Repository.getDatastreamUrl("tn", item.pid);
-      tn = config.rootUrl + "/datastream/" + item.pid + "/tn";
-      pid = item.pid
-    }
-    // This is a list of objects
-    else if(item.mime_type) {
-      //tn = Repository.getDatastreamUrl("tn", item.pid);
-      tn = config.rootUrl + "/datastream/" + item.pid + "/tn";
-      pid = item.pid
-    }
-    // This is a list of collections
-    else {
-      //tn = Repository.getDatastreamUrl("tn", item.pid);
-      tn = config.rootUrl + "/datastream/" + item.pid + "/tn";
-      pid = item.id
-    }
-
-    // Add collection or object path
-    if(item.object_type && item.object_type == config.collectionMimeType) {
-      path = config.rootRoute + "/collection";
-    }
-    else {
-      path = config.rootRoute + "/object";
-    }
-
-    // Pusg the current item to the list
-    itemList.push({
-        pid: pid,
-        tn: tn,
-        title: title,
-        description: description,
-        path: path
-      });
-  }
-  return itemList;
-}
-
-/*
  * Create array of items for the collection view's object display
  */
 exports.getTopLevelCollections = function(pageNum=1, callback) {
@@ -96,7 +21,7 @@ exports.getTopLevelCollections = function(pageNum=1, callback) {
         count: 0
       }
       if(response && response.length > 0) {
-        var list = createItemList(JSON.parse(response));
+        var list = Helper.createItemList(JSON.parse(response));
         callback({status: true, data: list});
       }
       else {
@@ -137,7 +62,7 @@ exports.getTopLevelCollections = function(pageNum=1, callback) {
             var sorted = Helper.sortSearchResultObjects(results);
 
             collections.count = response.hits.total;
-            collections.list = createItemList(sorted);
+            collections.list = Helper.createItemList(sorted);
             callback({status: true, data: collections});
           }
         });
@@ -152,7 +77,7 @@ exports.getCollectionsInCommunity = function(communityID, callback) {
   })
   .then( response => {
       if(response) {
-        var list = createItemList(JSON.parse(response));
+        var list = Helper.createItemList(JSON.parse(response));
         callback({status: true, data: list});
       }
   });
@@ -177,7 +102,7 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
       if(response && response.length > 0) {
         collection.count = response.length;
 
-        var list = createItemList(JSON.parse(response));
+        var list = Helper.createItemList(JSON.parse(response));
         callback({status: true, data: list});
       }
       else {
@@ -247,7 +172,7 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
               results.push(index._source);
             }
 
-            collection.list = createItemList(results);
+            collection.list = Helper.createItemList(results);
             collection.facets = response.aggregations;
             collection.count = response.hits.total;
 
