@@ -309,37 +309,6 @@ exports.createMetadataDisplayObject = function(result) {
 	return displayObj;
 }
 
-/* 
- * TODO Move to Paginator lib
- */
-exports.paginateResults = function(results, page) {
-	var index = page < 1 ? 0 : page-1;
-	var response = {}, maxResults = config.maxDisplayResults;
-	var offset = index * maxResults;
-
-	response['results'] = [];
-	response['data'] = {};
-
-	for(var i=offset; i<(maxResults + offset); i++) {
-		if(typeof results[i] != 'undefined') {
-			response.results.push(results[i]);
-		}
-	}
-
-	if(response.results.length < 1) {
-		response.data['total'] = "";
-		response.data['pageTotal'] = "";
-		response.data['pageStart'] = "";
-	}
-	else {
-		response.data['total'] = results.length;
-		response.data['pageTotal'] = response.results.length + offset;
-		response.data['pageStart'] = offset + 1;
-	}
-
-	return response;
-}
-
 /*
  * Get the totals for all type facets, for the front page template (Matches the hard coded type facets)
  */

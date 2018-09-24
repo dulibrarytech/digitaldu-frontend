@@ -94,6 +94,34 @@ exports.create = function(items, page, maxItems, totalItems, path) {
 	return pagination;
 }
 
+exports.paginateResults = function(results, page) {
+	var index = page < 1 ? 0 : page-1;
+	var response = {}, maxResults = config.maxDisplayResults;
+	var offset = index * maxResults;
+
+	response['results'] = [];
+	response['data'] = {};
+
+	for(var i=offset; i<(maxResults + offset); i++) {
+		if(typeof results[i] != 'undefined') {
+			response.results.push(results[i]);
+		}
+	}
+
+	if(response.results.length < 1) {
+		response.data['total'] = "";
+		response.data['pageTotal'] = "";
+		response.data['pageStart'] = "";
+	}
+	else {
+		response.data['total'] = results.length;
+		response.data['pageTotal'] = response.results.length + offset;
+		response.data['pageStart'] = offset + 1;
+	}
+
+	return response;
+}
+
 var getButtons = function(pageItemCount, page, maxItems, totalItems) {
 	var buttons = {
 		prev: 0,
