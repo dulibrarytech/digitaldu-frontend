@@ -118,7 +118,7 @@ exports.renderRootCollection = function(req, res) {
  */
 exports.renderCollection = function(req, res) {
 
-	Service.getCollectionHeirarchy(req.params.pid, function(collections) {
+	Service.getCollectionHeirarchy(req.params.pid, function(parentCollections) {
 		var data = {
 			facet_breadcrumb_trail: null,
 			collection_breadcrumb_trail: null,
@@ -149,7 +149,7 @@ exports.renderCollection = function(req, res) {
 				data.pagination = Paginator.create(response.data.list, page, config.maxCollectionsPerPage, response.data.count, path);
 				data.facets = Facets.create(response.data.facets, config.rootUrl);
 				data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(reqFacets);
-				data.collection_breadcrumb_trail = Helper.getCollectionBreadcrumbObject(collections);
+				data.collection_breadcrumb_trail = Helper.getCollectionBreadcrumbObject(parentCollections);
 			}
 			else {
 				console.log(response.message);

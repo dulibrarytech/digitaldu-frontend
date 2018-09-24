@@ -7,7 +7,7 @@
 var config = require('../config/config');
 
 exports.getFacetAggregationObject = function(facets) {
-	var facetAggregations = {}, field;
+  var facetAggregations = {}, field;
     for(var key in facets) {
       field = {};
       field['field'] = facets[key] + ".keyword";

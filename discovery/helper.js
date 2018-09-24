@@ -354,4 +354,17 @@ function createBreadcrumbLinks(data) {
     return data.length > 0 ? html : null;
 };
 
+exports.getFacetAggregationObject = function(facets) {
+	var facetAggregations = {}, field;
+    for(var key in facets) {
+      field = {};
+      field['field'] = facets[key] + ".keyword";
+      field['size'] = config.facetLimit;
+      facetAggregations[key] = {
+        "terms": field
+      };
+    }
+    return facetAggregations;
+}
+
 
