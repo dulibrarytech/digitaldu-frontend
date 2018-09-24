@@ -150,6 +150,8 @@ exports.createMetadataDisplayObject = function(result) {
 	for(var key in displayRecord) {
 		tempStr = "";
 
+		// Is member of collections
+
 		// Title
 		if(key == "title") {
 			displayObj['Title'] = displayRecord[key];

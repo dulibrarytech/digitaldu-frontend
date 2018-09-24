@@ -177,7 +177,6 @@ exports.renderObjectView = function(req, res) {
 
 	// Get the object data
 	Service.fetchObjectByPid(req.params.pid, function(response) {
-
 		if(response.status) {
 				//console.log("TEST renderObjectView: fetchObject response", response.data);
 			var object;

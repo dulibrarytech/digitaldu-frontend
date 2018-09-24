@@ -70,7 +70,6 @@ exports.getTopLevelCollections = function(pageNum=1, callback) {
   });
 }
 
-// Obsolete
 exports.getCollectionsInCommunity = function(communityID, callback) {
   Repository.getCollections(communityID).catch(error => {
     callback({status: false, message: error, data: null});
@@ -273,16 +272,15 @@ exports.getThumbnailPlaceholderStream = function(callback) {
 }
 
 exports.getCollectionHeirarchy = function(pid, callback) {
-  getParentData(pid, [], callback);
+  getParentTrace(pid, [], callback);
 }
 
-/*
- * Recursively trace the current collection's heirarchy.  Builds an array of object data, for the current object and its parent trace.  Terminates if the parent is [root]
- */
-var getParentData = function(pid, collections, callback) {
+var getParentTrace = function(pid, collections, callback) {
   fetchObjectByPid(pid, function(response) {
     var title = "",
         url = config.rootUrl + "/collection/" + pid;
+
+    // There is > 1 title associated with this object, use the first one
     if(typeof response.data.title == "object") {
       title = response.data.title[0];
     }
@@ -291,12 +289,16 @@ var getParentData = function(pid, collections, callback) {
     }
     collections.push({pid: response.data.pid, name: title, url: url});
 
-    if(response.data.is_member_of_collection.indexOf("root") >= 0) {
+    // There is > 1 collection parents associated with this object.  Use the first one for trace
+    if(typeof response.data.is_member_of_collection == 'object') {
+      getParentTrace(response.data.is_member_of_collection[0], collections, callback);
+    }
+    else if(response.data.is_member_of_collection.indexOf("root") >= 0) {
       collections.push({pid: config.topLevelCollectionPID, name: config.topLevelCollectionName, url: config.rootUrl});
       callback(collections.reverse());
     }
     else {
-      getParentData(response.data.is_member_of_collection, collections, callback);
+      getParentTrace(response.data.is_member_of_collection, collections, callback);
     }
   });
 }
