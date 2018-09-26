@@ -202,7 +202,6 @@ exports.renderObjectView = function(req, res) {
 					// Get metadata
 					data.summary = Helper.createSummaryDisplayObject(object);
 					data.mods = Object.assign(data.mods, Helper.createMetadataDisplayObject(object));
-
 					return res.render('object', data);
 				});
 			}	
