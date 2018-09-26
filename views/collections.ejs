@@ -18,15 +18,10 @@
           <div id="sidebar">
             <h3>Browse by</h3>
             <hr>
-
             <% include partials/frontpage-facets %>
-
           </div>
         </div>
         <div class="content-col-9">
-
-        
-
         	<div id="collections">
 	            <h3>Collections</h3>
 	            <hr>
@@ -36,7 +31,6 @@
 		  		<% } else { %>
 
 		            <div id="collection-grid" class="homepage">
-		            
 						<% for (var i = 0; i < collections.length; i++) { %>
 							<dl class="item">
 								<dt>
@@ -54,14 +48,13 @@
 								</dd>
 							</dl>
 						<% } %>
-		           
 		          	</div>
+		          	
 	          	<% } %>
         	</div>
       	</div>
       </div>
     </div>
-
 </div><!-- #main -->
 
 <% include partials/footer %>

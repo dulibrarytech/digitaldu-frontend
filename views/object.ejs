@@ -32,11 +32,11 @@
 					<% if(typeof mods[key] == "object") { %>
 						<td>
 						<% for (var subkey in mods[key]) { %>
-							<p><%= mods[key][subkey] %></p>
+							<p><%- mods[key][subkey] %></p>
 						<% } %>
 						</td></tr>
 					<% } else { %>
-						<td><p><%= mods[key] %></p></td></tr>
+						<td><p><%- mods[key] %></p></td></tr>
 					<% } %>
 				  <% } %>
 	            </table>

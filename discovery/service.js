@@ -192,6 +192,41 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
   });
 }
 
+exports.getTitleString = function(pids, titles, callback) {
+  var pidArray = [], pid;
+  if(typeof pids == 'string') {
+    pidArray.push(pids);
+  }
+  else {
+    pidArray = pids;
+  }
+
+  // 
+  pid = pidArray[ titles.length ];
+      console.log("TEST have this pid", pid);
+  
+  // Get the title data for the current pid
+  fetchObjectByPid(pid, function (response) {
+      console.log("TEST have this response", response.data);
+    //titles.push(response.data.title[0]);
+    
+    // **** Push object with name and pid
+    titles.push({
+      name: response.data.title[0],
+      pid: pid
+    });
+
+    if(titles.length == pidArray.length) {
+      // Have found a title for each pid in the input array
+      callback(titles);
+    }
+    else {
+      // Get the title for the next pid in the pid array
+      getTitleString(pidArray, titles, callback);
+    }
+  });
+}
+
 var fetchObjectByPid = function(pid, callback) {
   var objectData = {
     pid: null
@@ -223,6 +258,7 @@ var fetchObjectByPid = function(pid, callback) {
       }
       else if(response.hits.total > 0) {
         objectData = response.hits.hits[0]._source;
+          console.log("TEST cb", callback);
         callback({status: true, data: objectData});
       }
       else {

@@ -147,9 +147,6 @@ exports.createMetadataDisplayObject = function(result) {
 		subjectType = "",
 		locationType = "";
 
-	// Is Member Of Collections
-	displayObj['In Collection'] = result.is_member_of_collection;
-
 	for(var key in displayRecord) {
 		tempStr = "";
 

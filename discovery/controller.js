@@ -178,7 +178,6 @@ exports.renderObjectView = function(req, res) {
 	// Get the object data
 	Service.fetchObjectByPid(req.params.pid, function(response) {
 		if(response.status) {
-				//console.log("TEST renderObjectView: fetchObject response", response.data);
 			var object;
 			if(response.data.pid) {
 				object = response.data;
@@ -186,24 +185,36 @@ exports.renderObjectView = function(req, res) {
 
 				// Get viewer
 				data.viewer = Viewer.getObjectViewer(object);
-				data.summary = Helper.createSummaryDisplayObject(object);
-				data.mods = Helper.createMetadataDisplayObject(object);
-
 				if(data.viewer == "") {
 					data.viewer = "Viewer is unavailable for this object."
 				}
+
+				// Get metadata
+				data.summary = Helper.createSummaryDisplayObject(object);
+				data.mods = Helper.createMetadataDisplayObject(object);
+
+				// Get titles of any collection parents
+				Service.getTitleString(object.is_member_of_collection, [], function(titleData) {
+					var titles = [];
+					for(var title of titleData) {
+						titles.push('<a href="' + config.rootUrl + '/collection/' + title.pid + '">' + title.name + '</a>');
+					}
+
+					data.mods['In Collections'] = titles;
+					return res.render('object', data);
+				});
 			}	
 			else {
 				console.error("Index error: ", response.message);
 				data.error = "Sorry, this item can not be displayed";
+				return res.render('object', data);
 			}
 		}
 		else {
 			console.error("Index error: ", response.message);
 			data.error = "Sorry, this item can not be displayed";
+			return res.render('object', data);
 		}
-	
-		return res.render('object', data);
 	});
 };
 
