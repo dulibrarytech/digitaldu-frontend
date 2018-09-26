@@ -1187,6 +1187,11 @@ table.data-table td:first-child {
    width: 20%;
 }
 
+table.data-table a,
+table.data-table a:visited {
+  color: #181818;
+}
+
 div#object-data h4 {
   font-size: 1.5em;
   margin-top: 25px;
