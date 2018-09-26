@@ -189,18 +189,20 @@ exports.renderObjectView = function(req, res) {
 					data.viewer = "Viewer is unavailable for this object."
 				}
 
-				// Get metadata
-				data.summary = Helper.createSummaryDisplayObject(object);
-				data.mods = Helper.createMetadataDisplayObject(object);
-
 				// Get titles of any collection parents
 				Service.getTitleString(object.is_member_of_collection, [], function(titleData) {
 					var titles = [];
 					for(var title of titleData) {
 						titles.push('<a href="' + config.rootUrl + '/collection/' + title.pid + '">' + title.name + '</a>');
 					}
+					data.mods = {
+						'In Collections': titles
+					}
 
-					data.mods['In Collections'] = titles;
+					// Get metadata
+					data.summary = Helper.createSummaryDisplayObject(object);
+					data.mods = Object.assign(data.mods, Helper.createMetadataDisplayObject(object));
+
 					return res.render('object', data);
 				});
 			}	
