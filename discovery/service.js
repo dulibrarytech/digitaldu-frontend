@@ -200,17 +200,10 @@ exports.getTitleString = function(pids, titles, callback) {
   else {
     pidArray = pids;
   }
-
-  // 
   pid = pidArray[ titles.length ];
-      console.log("TEST have this pid", pid);
   
   // Get the title data for the current pid
   fetchObjectByPid(pid, function (response) {
-      console.log("TEST have this response", response.data);
-    //titles.push(response.data.title[0]);
-    
-    // **** Push object with name and pid
     titles.push({
       name: response.data.title[0],
       pid: pid
@@ -258,7 +251,6 @@ var fetchObjectByPid = function(pid, callback) {
       }
       else if(response.hits.total > 0) {
         objectData = response.hits.hits[0]._source;
-          console.log("TEST cb", callback);
         callback({status: true, data: objectData});
       }
       else {
