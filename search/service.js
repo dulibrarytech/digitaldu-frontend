@@ -1,3 +1,10 @@
+ /**
+ * @file 
+ *
+ * Search module service functions
+ *
+ */
+
 'use strict';
 
 const es = require('../config/index');
@@ -7,8 +14,11 @@ const request  = require("request");
 const Repository = require('../libs/repository');
 const Helper = require("./helper");
 
-/*
- * TODO Move to search module
+/**
+ * 
+ *
+ * @param 
+ * @return 
  */
 exports.searchIndex = function(query, type, facets=null, collection=null, pageNum=1, callback) {
 
@@ -188,8 +198,11 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
   });
 }
 
-/*
- * TODO Move to search module
+/**
+ * 
+ *
+ * @param 
+ * @return 
  */
 exports.searchFacets = function (query, facets, page, callback) {
     client.search({

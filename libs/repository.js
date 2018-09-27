@@ -1,8 +1,13 @@
-'use strict'
-
-/*
- * DU Fedora interface functions
+ /**
+ * @file 
+ *
+ * Fedora repository api class
+ * Interface for the Fedora api
+ *
  */
+
+'use strict';
+
  
 const protocol = "http://",
 	  domain = "librepo01-vlp.du.edu:8080";
@@ -11,6 +16,12 @@ const config = require('../config/config');
 
 const request = require('request');
 
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
 exports.getFedoraDatastreamUrl = function(datastream, pid) {
 	var dsID = "";
 	datastream = datastream.toLowerCase();
@@ -47,32 +58,50 @@ exports.getFedoraDatastreamUrl = function(datastream, pid) {
 	return protocol + domain + "/fedora/objects/" + pid + "/datastreams/" + dsID + "/content";
 }
 
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
 exports.getDatastreamUrl = function(datastream, pid) {
-
-	// Temp
 	return this.getFedoraDatastreamUrl(datastream, pid);
-
-	// TODO local repo api
 }
 
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
 exports.getRootCollections = function() {
 	return new Promise(function(fulfill, reject) {
 		fulfill([]);
 	});
 }
 
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
 exports.getCollectionObjects = function(collectionID) {
 	return new Promise(function(fulfill, reject) {
 		fulfill([]);
 	});
 }
 
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
 exports.streamData = function(pid, dsid, callback) {
 
 	// Fedora
 	var url = this.getFedoraDatastreamUrl(dsid, pid);
-	// Repo
-	//var url = this.getDatastreamUrl(dsid, pid);
 
 	// Get the stream 
 	var rs = require('request-stream');

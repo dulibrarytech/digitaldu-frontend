@@ -25,12 +25,13 @@ module.exports = function () {
     app.set('views', './views');
     app.set('view engine', 'ejs');
 
-    // Add modules
+    // Add modules here
     require('../discovery/routes.js')(app);
     require('../search/routes.js')(app);
     require('../specialcollections/routes.js')(app);
     require('../test/routes.js')(app);
     
+    // Express dependencies
     require('express-template-cache');
 
     // Root route to landing page

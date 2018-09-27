@@ -1,14 +1,21 @@
-/*
- * Creates the view object containing the paginator data
+ /**
+ * @file 
+ *
+ * Paginator class
+ * Create pagination data objects for the view controllers
+ *
  */
+
+'use strict';
 
 const url = require('url');
 const config = require('../config/config');
 
-/*
- * TODO Will revise this code for less clunkiness
- * TODO Will add header comments
+/**
  * 
+ *
+ * @param 
+ * @return 
  */
 exports.create = function(items, page, maxItems, totalItems, path) {
 
@@ -94,6 +101,12 @@ exports.create = function(items, page, maxItems, totalItems, path) {
 	return pagination;
 }
 
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
 exports.paginateResults = function(results, page) {
 	var index = page < 1 ? 0 : page-1;
 	var response = {}, maxResults = config.maxDisplayResults;
@@ -122,6 +135,12 @@ exports.paginateResults = function(results, page) {
 	return response;
 }
 
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
 var getButtons = function(pageItemCount, page, maxItems, totalItems) {
 	var buttons = {
 		prev: 0,
@@ -151,8 +170,4 @@ var getButtons = function(pageItemCount, page, maxItems, totalItems) {
 	}
 
 	return buttons;
-}
-
-var getPageList = function() {
-
 }

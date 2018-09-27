@@ -1,4 +1,11 @@
-'use strict';
+ /**
+ * @file 
+ *
+ * Discovery view controller functions
+ *
+ */
+
+'use strict'
 
 const async = require('async'),
     config = require('../config/config'),
@@ -9,9 +16,6 @@ const async = require('async'),
     Paginator = require('../libs/paginator'),
     Search = require('../search/service');
 
-/*
- * Get facets for all data (public route)
- */
 exports.getFacets = function(req, res) {
     Service.getFacets(function (facets) {
         if(typeof facets == 'string') {
@@ -21,13 +25,9 @@ exports.getFacets = function(req, res) {
     });
 }
 
-/*
- * Not in use
- */
 exports.renderCommunitiesView = function(req, res) {
 	var data = {};
 
-	// Get all communities
 	Service.getTopLevelCollections(function(response) {
 			
 		data['base_url'] = config.baseUrl;
@@ -44,14 +44,10 @@ exports.renderCommunitiesView = function(req, res) {
 	});
 }
 
-/*
- * Not in use
- */
 exports.renderCommunity = function(req, res) {
 	var data = {},
 		id = req.params.id;
 
-	// Get all collections in this community
 	Service.getCollectionsInCommunity(id, function(response) {
 		data['base_url'] = config.baseUrl;
 		data['error'] = null;
@@ -67,10 +63,6 @@ exports.renderCommunity = function(req, res) {
 	});
 }
 
-/*
- * Get the root level collections, get facet data for all items
- * Render landing page view
- */
 exports.renderRootCollection = function(req, res) {
 	var data = {
 		collections: [],
@@ -104,6 +96,7 @@ exports.renderRootCollection = function(req, res) {
 			}
 			else {
 				data.facets = Facets.create(facets, config.rootUrl);
+
 				// Totals for the static type facets on the front page
 				data.typeCount = Helper.getTypeFacetTotalsObject(facets);
 			}
@@ -113,9 +106,6 @@ exports.renderRootCollection = function(req, res) {
 	});
 }
 
-/*
- * Render the collections page, displaying items in collection
- */
 exports.renderCollection = function(req, res) {
 
 	Service.getCollectionHeirarchy(req.params.pid, function(parentCollections) {
@@ -161,9 +151,6 @@ exports.renderCollection = function(req, res) {
 	});
 }
 
-/*
- * Render the object view page
- */
 exports.renderObjectView = function(req, res) {
 	var data = {
 		viewer: null,

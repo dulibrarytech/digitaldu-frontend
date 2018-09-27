@@ -1,3 +1,10 @@
+ /**
+ * @file 
+ *
+ * Discovery service functions
+ *
+ */
+
 'use strict';
 
 const es = require('../config/index');
@@ -7,8 +14,11 @@ const request  = require("request");
 const Repository = require('../libs/repository');
 const Helper = require("./helper");
 
-/*
- * Create array of items for the collection view's object display
+/**
+ * 
+ *
+ * @param 
+ * @return 
  */
 exports.getTopLevelCollections = function(pageNum=1, callback) {
   Repository.getRootCollections().catch(error => {
@@ -26,14 +36,11 @@ exports.getTopLevelCollections = function(pageNum=1, callback) {
       }
       else {
 
-        // No data from repository:
-        // Use the index to retrieve the top-level collection objects
+        // If there are no results from the Repository, use the index to retrieve the top-level collection objects
         var data = {  
           index: config.elasticsearchIndex,
           type: 'data',
           body: {
-            // from : (pageNum - 1) * config.maxCollectionsPerPage, 
-            // size : config.maxCollectionsPerPage,
             from: 0,
             size: 1000,
             query: {
@@ -63,6 +70,7 @@ exports.getTopLevelCollections = function(pageNum=1, callback) {
 
             collections.count = response.hits.total;
             collections.list = Helper.createItemList(sorted);
+
             callback({status: true, data: collections});
           }
         });
@@ -70,6 +78,12 @@ exports.getTopLevelCollections = function(pageNum=1, callback) {
   });
 }
 
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
 exports.getCollectionsInCommunity = function(communityID, callback) {
   Repository.getCollections(communityID).catch(error => {
     callback({status: false, message: error, data: null});
@@ -82,6 +96,12 @@ exports.getCollectionsInCommunity = function(communityID, callback) {
   });
 }
 
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
 exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, callback) {
   Repository.getCollectionObjects(collectionID).catch(error => {
     callback({status: false, message: error, data: null});
@@ -141,10 +161,6 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
             from : (pageNum - 1) * config.maxCollectionsPerPage,
             size : config.maxCollectionsPerPage,
             query: {
-                // "match": {
-                //   //"pid": "codu:*" 
-                //   "is_member_of_collection": collectionID.substring(config.institutionPrefix.length) 
-                // }
                 "bool": {
                   "must": matchFacetFields
                 }
@@ -192,6 +208,12 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
   });
 }
 
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
 exports.getTitleString = function(pids, titles, callback) {
   var pidArray = [], pid;
   if(typeof pids == 'string') {
@@ -220,6 +242,12 @@ exports.getTitleString = function(pids, titles, callback) {
   });
 }
 
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
 var fetchObjectByPid = function(pid, callback) {
   var objectData = {
     pid: null
@@ -260,6 +288,12 @@ var fetchObjectByPid = function(pid, callback) {
 }
 exports.fetchObjectByPid = fetchObjectByPid;
 
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
 var getFacets = function (callback) {
 
     // Build elasticsearch aggregations object from config facet list
@@ -288,21 +322,45 @@ var getFacets = function (callback) {
 }
 exports.getFacets = getFacets;
 
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
 exports.getDatastream = function(objectID, datastreamID, callback) {
   Repository.streamData(objectID, datastreamID, function(stream) {
     callback(stream);
   }) 
 }
 
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
 exports.getThumbnailPlaceholderStream = function(callback) {
   var rstream = fs.createReadStream(config.tnPlaceholderPath);
   callback(rstream, null);
 }
 
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
 exports.getCollectionHeirarchy = function(pid, callback) {
   getParentTrace(pid, [], callback);
 }
 
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
 var getParentTrace = function(pid, collections, callback) {
   fetchObjectByPid(pid, function(response) {
     var title = "",

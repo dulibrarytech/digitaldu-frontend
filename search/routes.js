@@ -1,3 +1,10 @@
+ /**
+ * @file 
+ *
+ * Search module router
+ *
+ */
+
 'use strict';
 
 var Search = require('../search/controller');

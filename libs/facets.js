@@ -1,5 +1,19 @@
+ /**
+ * @file 
+ *
+ * Facets class
+ * Create facet objects for the view controllers, and content to display facet data
+ *
+ */
+
 'use strict';
 
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
 exports.create = function(facets, baseUrl) {
     var facetObj = {};
     for(var key in facets) {
@@ -9,6 +23,12 @@ exports.create = function(facets, baseUrl) {
     return facetObj;
 };
 
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
 exports.getFacetBreadcrumbObject = function(selectedFacets) {
 
     var breadcrumbs = [], buckets;
@@ -27,6 +47,12 @@ exports.getFacetBreadcrumbObject = function(selectedFacets) {
     return createBreadcrumbTrail(breadcrumbs);
 };
 
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
 function createList(facet, data, baseUrl) {
     var i;
     var html = '';
@@ -40,6 +66,12 @@ function createList(facet, data, baseUrl) {
     return html;
 };
 
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
 function createBreadcrumbTrail(data) {
     var i;
     var html = '';

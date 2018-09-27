@@ -1,12 +1,23 @@
-'use strict'
+ /**
+ * @file 
+ *
+ * Viewer class
+ * Get viewer content for the object view templates
+ *
+ */
+
+'use strict';
+
 
 var config = require('../config/config');
 var Repository = require('./repository');
 
-/*
- * Viewer module
+/**
+ * 
+ *
+ * @param 
+ * @return 
  */
-
 exports.getObjectViewer = function(object, mimeType="") {
  	var viewer = "";
 
@@ -50,6 +61,12 @@ exports.getObjectViewer = function(object, mimeType="") {
  	return viewer;
 }
 
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
 function getAudioPlayer(objectData, type) {
 	var player = '<div id="audio-player" class="viewer-section">', tn, stream;
 	var extension = "mp3";
@@ -84,6 +101,12 @@ function getAudioPlayer(objectData, type) {
 	return player;
 }
 
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
 function getVideoViewer(objectData) {
 	var viewer = '<div id="video-viewer" class="viewer-section">', tn, stream, url;
 	var extension = "", datastreamID = "";
@@ -129,6 +152,12 @@ function getVideoViewer(objectData) {
 	return viewer;
 }
 
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
 function getSmallImageViewer(objectData) {
 	var viewer = '<div id="small-image-viewer" class="viewer-section">';
 
@@ -140,6 +169,12 @@ function getSmallImageViewer(objectData) {
 	return viewer;
 }
 
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
 function getLargeImageViewer(objectData) {
 	var viewer = '<div id="large-image-viewer" class="viewer-section">',
 		viewerImages = config.openseadragonImagePath;
@@ -168,6 +203,12 @@ function getLargeImageViewer(objectData) {
 	return viewer;
 }
 
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
 function getPDFViewer(objectData) {
 	var viewer = '<div id="pdf-viewer" class="viewer-section">';
 	var doc = config.baseUrl + "/repository/datastream/" + objectData.pid + "/OBJ";

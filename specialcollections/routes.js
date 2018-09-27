@@ -1,4 +1,9 @@
-'use strict';
+ /**
+ * @file 
+ *
+ * Specialcollections module router
+ *
+ */
 
 var config = require('../config/config');
 var data = {

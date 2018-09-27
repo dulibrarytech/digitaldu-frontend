@@ -1,15 +1,19 @@
-'use strict';
-
-/*
- * Helper functions for the Discovery module
+ /**
+ * @file 
+ *
+ * Discovery helper functions
+ *
  */
+
+'use strict'
 
 var config = require('../config/config');
 
-/*
+/**
  * Create view model data object for display items
  *
- * @param object items  The items to include in the list
+ * @param {object} items  The items to include in the list.  Item attributes must match index attributes.
+ * @return 
  */
  exports.createItemList = function(items) {
   var itemList = [], tn, pid, title, description, display, path;
@@ -47,12 +51,14 @@ var config = require('../config/config');
       tn = config.rootUrl + "/datastream/" + item.pid + "/tn";
       pid = item.pid
     }
+
     // This is a list of objects
     else if(item.mime_type) {
       //tn = Repository.getDatastreamUrl("tn", item.pid);
       tn = config.rootUrl + "/datastream/" + item.pid + "/tn";
       pid = item.pid
     }
+
     // This is a list of collections
     else {
       //tn = Repository.getDatastreamUrl("tn", item.pid);
@@ -68,7 +74,7 @@ var config = require('../config/config');
       path = config.rootRoute + "/object";
     }
 
-    // Pusg the current item to the list
+    // Push the current item to the list
     itemList.push({
         pid: pid,
         tn: tn,
@@ -80,6 +86,12 @@ var config = require('../config/config');
   return itemList;
 }
 
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
 exports.createSummaryDisplayObject = function(result) {
 	var displayObj = {},
 	    displayFields = config.summaryDisplay,
@@ -114,6 +126,12 @@ exports.createSummaryDisplayObject = function(result) {
 	return displayObj;
 }
 
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
 exports.createMetadataDisplayObject = function(result) {
 	var displayObj = {},
 	    displayFields = config.metadataDisplay,
@@ -309,8 +327,11 @@ exports.createMetadataDisplayObject = function(result) {
 	return displayObj;
 }
 
-/*
+ /**
  * Get the totals for all type facets, for the front page template (Matches the hard coded type facets)
+ *
+ * @param 
+ * @return 
  */
 exports.getTypeFacetTotalsObject = function(facets) {
 
@@ -325,8 +346,6 @@ exports.getTypeFacetTotalsObject = function(facets) {
 		mixedMaterial: 0,
 		threeDObject: 0
 	}
-
-	// TODO If necessary, normalize type fields here (ala Blacklight)
 
 	for(var facet of facets.Type.buckets) {
 		if(facet.key == "still image") {
@@ -361,6 +380,12 @@ exports.getTypeFacetTotalsObject = function(facets) {
 	return totals;
 }
 
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
 exports.sortSearchResultObjects = function(objects) {
 	var titles = [], sorted = [];
 
@@ -381,10 +406,22 @@ exports.sortSearchResultObjects = function(objects) {
 	return sorted;
 }
 
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
 exports.getCollectionBreadcrumbObject = function(collections) {
     return createBreadcrumbLinks(collections);
 };
 
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
 function createBreadcrumbLinks(data) {
     //var html = '<a class="collection-link" href="/">' + config.topLevelCollectionName + '</a>';
     var html = "";
@@ -397,6 +434,12 @@ function createBreadcrumbLinks(data) {
     return data.length > 0 ? html : null;
 };
 
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
 exports.getFacetAggregationObject = function(facets) {
 	var facetAggregations = {}, field;
     for(var key in facets) {

@@ -1,11 +1,20 @@
-'use strict';
-
-/*
- * Helper functions for the Search module
+ /**
+ * @file 
+ *
+ * Search module helper functions
+ *
  */
+
+'use strict';
 
 var config = require('../config/config');
 
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
 exports.getFacetAggregationObject = function(facets) {
   var facetAggregations = {}, field;
     for(var key in facets) {
@@ -19,6 +28,12 @@ exports.getFacetAggregationObject = function(facets) {
     return facetAggregations;
 }
 
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
 exports.getSearchResultDisplayFields = function(searchResult) {
   var fields = {
     title: "",

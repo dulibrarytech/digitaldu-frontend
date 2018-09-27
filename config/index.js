@@ -1,9 +1,9 @@
 'use strict'
 
 const config = require('../config/config');
+const elasticsearch = require('elasticsearch');
 
-var elasticsearch = require('elasticsearch');
-var client = new elasticsearch.Client( {  
+const client = new elasticsearch.Client( {  
   hosts: [
     config.elasticsearchHost + ':' + config.elasticsearchPort
   ]
@@ -17,7 +17,6 @@ client.cluster.health({},function(err,resp,status) {
 		console.log("Connected to Elasticsearch index: " + config.elasticsearchHost + ':' + config.elasticsearchPort);
 	}
 	else {
-		// Try local?
 		console.log("Error: Elasticsearch connection status is: " + status + " while contacting index on " + config.elasticsearchHost + ':' + config.elasticsearchPort);
 	}
 });

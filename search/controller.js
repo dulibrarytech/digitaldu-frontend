@@ -1,3 +1,10 @@
+ /**
+ * @file 
+ *
+ * Search results view controller.  This is the main search function for the () application
+ *
+ */
+
 'use strict';
 
 const async = require('async'),
@@ -6,9 +13,6 @@ const async = require('async'),
     Facets = require('../libs/facets'),
     Paginator = require('../libs/paginator');
 
-/*
- * Search the index, render the results view
- */
 exports.search = function(req, res) {
 
 	// Verify / sanitize

@@ -2,12 +2,13 @@
 
 module.exports = {
 
+    // Domain and paths
     host: process.env.APP_HOST,
     rootRoute: process.env.CLIENT_PATH,
     baseUrl: process.env.CLIENT_HOST,
     rootUrl: process.env.CLIENT_HOST + process.env.CLIENT_PATH,
 
-    // ENV settings
+    // External services
     elasticsearchHost: process.env.ELASTICSEARCH_HOST,
     elasticsearchPort: process.env.ELASTICSEARCH_PORT,
     elasticsearchIndex: process.env.ELASTICSEARCH_INDEX,
