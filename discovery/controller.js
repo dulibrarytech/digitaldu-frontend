@@ -210,12 +210,18 @@ exports.getDatastream = function(req, res) {
 	Service.getDatastream(pid, ds, function(stream, error) {
 		if(error) {
 			console.log(error);
-			Service.getThumbnailPlaceholderStream(function(stream, error) {
+
+			if(ds.toLowerCase() == "tn") {
+				Service.getThumbnailPlaceholderStream(function(stream, error) {
+					stream.pipe(res);
+				});
+			}
+			else {
 				stream.pipe(res);
-			});
+			}
 		}
 		else {
-			if(stream.headers['content-type'] == "text/plain") {
+			if(stream.headers['content-type'] == "text/plain" && ds.toLowerCase() == "tn") {
 				Service.getThumbnailPlaceholderStream(function(stream, error) {
 					stream.pipe(res);
 				});
