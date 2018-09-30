@@ -23,12 +23,12 @@ exports.getObjectViewer = function(object, mimeType="") {
 
  	// Get compuund object viewer
  	if(typeof object.type != 'undefined' && object.type == "compound") {
-
+ 		viewer = getCompoundObjectViewer(object);
  	}
 
  	// Get book viewer
  	else if(typeof object.type != 'undefined' && object.type == "book") {
-
+ 		viewer = getBookViewer(object);
  	}
 
  	// Get simple object viewer
@@ -36,8 +36,8 @@ exports.getObjectViewer = function(object, mimeType="") {
  		if(mimeType == "" && typeof object.mime_type != 'undefined') {
 	 		mimeType = object.mime_type;
 	 	}
-	 	console.log("Viewer receives object with mimetype:", mimeType);
 	 	
+	 	// Get viewer for object mime type:
 	 	switch(mimeType) {
 	 		case "audio/mpeg":
 	 		case "audio/x-wav":
@@ -236,3 +236,23 @@ function getPDFViewer(objectData) {
 
 	return viewer;
 }	
+
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
+function getCompoundObjectViewer(objectData) {
+
+}
+
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
+function getBookViewer(objectData) {
+
+}
