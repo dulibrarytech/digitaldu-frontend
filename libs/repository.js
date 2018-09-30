@@ -107,8 +107,7 @@ exports.streamData = function(pid, dsid, callback) {
 	var rs = require('request-stream');
 	rs(url, {}, function(err, res) {
 		if(err) {
-			console.log("Error: Could not open stream", err);
-			callback(null);
+			callback(null, "Could not open datastream. " + err + " Check connection to repository");
 		}
 		else {
 			callback(res);

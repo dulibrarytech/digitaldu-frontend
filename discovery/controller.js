@@ -26,13 +26,11 @@ exports.getFacets = function(req, res) {
 }
 
 exports.renderCommunitiesView = function(req, res) {
-	var data = {};
+	var data = {
+		base_url: config.baseUrl
+	};
 
 	Service.getTopLevelCollections(function(response) {
-			
-		data['base_url'] = config.baseUrl;
-		data['error'] = null;
-
 		if(response.status) {
 			data['collections'] = response.data;
 		}
@@ -45,13 +43,12 @@ exports.renderCommunitiesView = function(req, res) {
 }
 
 exports.renderCommunity = function(req, res) {
-	var data = {},
-		id = req.params.id;
+	var data = {
+		base_url: config.baseUrl
+	},
+	id = req.params.id;
 
 	Service.getCollectionsInCommunity(id, function(response) {
-		data['base_url'] = config.baseUrl;
-		data['error'] = null;
-
 		if(response.status) {
 			data['collections'] = response.data;
 		}
@@ -74,7 +71,7 @@ exports.renderRootCollection = function(req, res) {
 		base_url: config.baseUrl,
 		root_url: config.rootUrl
 	},
-	page = req.query.page || 1;
+	page = req.query.page || 0;	// Render all collecions, do not paginate
 
 	// Get all root collections
 	Service.getTopLevelCollections(page, function(response) {
@@ -212,7 +209,10 @@ exports.getDatastream = function(req, res) {
 
 	Service.getDatastream(pid, ds, function(stream, error) {
 		if(error) {
-			res.send(error);
+			console.log(error);
+			Service.getThumbnailPlaceholderStream(function(stream, error) {
+				stream.pipe(res);
+			});
 		}
 		else {
 			if(stream.headers['content-type'] == "text/plain") {

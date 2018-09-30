@@ -3,6 +3,10 @@
  *
  * Discovery service functions
  *
+ * @typedef {Object} Response
+ * @property {boolean} status Function has executed successfully, no local or remote errors
+ * @property {string} message A message to return to the caller
+ * @property {Object} data Object containing the return data
  */
 
 'use strict';
@@ -15,12 +19,17 @@ const Repository = require('../libs/repository');
 const Helper = require("./helper");
 
 /**
- * 
+ * Return a list of the root (or top) level collections
  *
- * @param 
- * @return 
+ * @param {number} pageNum If 0, return all root collections. If >= 1, use elasticsearch page results (TODO)
+ * @param {function} callback
+ *
+ * @typedef (Object) Response.data Collection data
+ * @property {number} count Number of root collections found
+ * @property {Array} list Array of collection objects
+ * @return {Response} 
  */
-exports.getTopLevelCollections = function(pageNum=1, callback) {
+exports.getTopLevelCollections = function(pageNum=0, callback) {
   Repository.getRootCollections().catch(error => {
     console.log(error);
     callback({status: false, message: error, data: null});
@@ -71,7 +80,7 @@ exports.getTopLevelCollections = function(pageNum=1, callback) {
             collections.count = response.hits.total;
             collections.list = Helper.createItemList(sorted);
 
-            callback({status: true, data: collections});
+            callback({status: true, message: "", data: collections});
           }
         });
       }
@@ -79,10 +88,14 @@ exports.getTopLevelCollections = function(pageNum=1, callback) {
 }
 
 /**
- * 
+ * Return a list of collections in the specified community
  *
- * @param 
- * @return 
+ * @param {number} communityID
+ * @param {function} callback
+ *
+ * @typedef (Object) Response.data 
+ * @property {Array} list List of collections in the community
+ * @return {Response} 
  */
 exports.getCollectionsInCommunity = function(communityID, callback) {
   Repository.getCollections(communityID).catch(error => {
@@ -91,7 +104,7 @@ exports.getCollectionsInCommunity = function(communityID, callback) {
   .then( response => {
       if(response) {
         var list = Helper.createItemList(JSON.parse(response));
-        callback({status: true, data: list});
+        callback({status: true, message: "", data: list});
       }
   });
 }
@@ -329,8 +342,15 @@ exports.getFacets = getFacets;
  * @return 
  */
 exports.getDatastream = function(objectID, datastreamID, callback) {
-  Repository.streamData(objectID, datastreamID, function(stream) {
-    callback(stream);
+  Repository.streamData(objectID, datastreamID, function(stream, error) {
+
+    // If stream is null, send error 
+    if(error) {
+      callback(null, error);
+    }
+    else {
+      callback(stream);
+    }
   }) 
 }
 
