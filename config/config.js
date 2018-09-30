@@ -15,12 +15,14 @@ module.exports = {
     cantaloupeUrl: process.env.CANTALOUPE_URL,
     cantaloupePort: process.env.CANTALOUPE_PORT,
 
-
     // Repository settings
     institutionPrefix: "codu",
     topLevelCollectionPID: "codu:root",
     topLevelCollectionName: "Root Collection",
     collectionMimeType: "collection",
+
+    // Search index name (type)
+    searchIndexName: "data",
 
     // Search results limit
     maxDisplayResults: 1000,

@@ -141,7 +141,7 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
     // Build elasticsearch query object.
     var data = {  
       index: config.elasticsearchIndex,
-      type: 'data',
+      type: config.searchIndexName,
       body: {
         from : (pageNum - 1) * config.maxResultsPerPage, 
         size : config.maxResultsPerPage,
@@ -207,7 +207,7 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
 exports.searchFacets = function (query, facets, page, callback) {
     client.search({
             index: config.elasticsearchIndex,
-            type: 'data',
+            type: config.searchIndexName,
             body: {
                 "query": {
                     "bool": {
