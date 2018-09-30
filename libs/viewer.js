@@ -21,41 +21,54 @@ var Repository = require('./repository');
 exports.getObjectViewer = function(object, mimeType="") {
  	var viewer = "";
 
- 	if(mimeType == "" && typeof object.mime_type != 'undefined') {
- 		mimeType = object.mime_type;
+ 	// Get compuund object viewer
+ 	if(typeof object.type != 'undefined' && object.type == "compound") {
+
  	}
- 	console.log("Viewer receives object with mimetype:", mimeType);
- 	
- 	switch(mimeType) {
- 		case "audio/mpeg":
- 		case "audio/x-wav":
- 			viewer = getAudioPlayer(object, mimeType);
- 			break;
 
- 		case "video/mp4":
- 		case "video/quicktime":
- 			viewer = getVideoViewer(object);
- 			break;
+ 	// Get book viewer
+ 	else if(typeof object.type != 'undefined' && object.type == "book") {
 
- 		case "image/png":
- 		case "image/jpeg":
- 			//viewer = getSmallImageViewer(object);
- 			viewer = getLargeImageViewer(object);
- 			break;
+ 	}
 
- 		case "image/tiff":
- 		case "image/jp2":
- 			viewer = getLargeImageViewer(object);
- 			break;
+ 	// Get simple object viewer
+ 	else {
+ 		if(mimeType == "" && typeof object.mime_type != 'undefined') {
+	 		mimeType = object.mime_type;
+	 	}
+	 	console.log("Viewer receives object with mimetype:", mimeType);
+	 	
+	 	switch(mimeType) {
+	 		case "audio/mpeg":
+	 		case "audio/x-wav":
+	 			viewer = getAudioPlayer(object, mimeType);
+	 			break;
 
- 		case "application/pdf":
- 			viewer = getPDFViewer(object);
- 			break;
+	 		case "video/mp4":
+	 		case "video/quicktime":
+	 			viewer = getVideoViewer(object);
+	 			break;
 
- 		default:
- 			console.log("Viewer error: invalid content model:", mimeType, "for pid:", object.pid);
- 			viewer = "";
- 			break;
+	 		case "image/png":
+	 		case "image/jpeg":
+	 			//viewer = getSmallImageViewer(object);
+	 			viewer = getLargeImageViewer(object);
+	 			break;
+
+	 		case "image/tiff":
+	 		case "image/jp2":
+	 			viewer = getLargeImageViewer(object);
+	 			break;
+
+	 		case "application/pdf":
+	 			viewer = getPDFViewer(object);
+	 			break;
+
+	 		default:
+	 			console.log("Viewer error: invalid content model:", mimeType, "for pid:", object.pid);
+	 			viewer = "";
+	 			break;
+	 	}
  	}
 
  	return viewer;
