@@ -102,6 +102,22 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
       });
     }
 
+    // Search result restriction settings
+    var restrictions = [];
+    // Do not show collection objects
+    restrictions.push({
+      "match": {
+        "object_type": "collection"
+      }
+    });
+    // Do not show objects that are children of compuond objects
+    restrictions.push({
+      "exists": {
+          "field": "is_child_of"
+      }
+    });
+
+
     // Build query data object.  If query is empty, search for all items that are not collections. 
     var queryObj = {};
     if(query != "" || facets) {
@@ -109,11 +125,7 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
         "bool": {
           "should": matchFields,
           "must": matchFacetFields,
-          "must_not": {
-            "match": {
-              "object_type": "collection"
-            }
-          },
+          "must_not": restrictions,
           "filter": {
             "bool": {
               "should": matchFields

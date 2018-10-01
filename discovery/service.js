@@ -166,6 +166,13 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
             }
         });
 
+        var restrictions = [];
+        restrictions.push({
+          "exists": {
+              "field": "is_child_of"
+          }
+        });
+
         // Use local index to find the collection children
         var data = {  
           index: config.elasticsearchIndex,
@@ -175,7 +182,8 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
             size : config.maxCollectionsPerPage,
             query: {
                 "bool": {
-                  "must": matchFacetFields
+                  "must": matchFacetFields,
+                  "must_not": restrictions
                 }
             },
             aggs: facetAggregations
