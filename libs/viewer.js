@@ -136,7 +136,7 @@ function getVideoViewer(objectData) {
 	else {
 		console.log("Error: Incorrect object mime type for object: " + objectData.pid);
 	}
-	stream = config.baseUrl + "/repository/datastream/" + objectData.pid + "/" + datastreamID;
+	stream = config.baseUrl + "/datastream/" + objectData.pid + "/" + datastreamID;
 
 	if(config.videoViewer == "videojs") {
 		viewer += '<video id="my-video" class="video-js" controls preload="auto" width="640" height="264" poster="' + tn + '" data-setup="{}"><source src="' + stream + '" type="video/mp4"><p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that<a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p></video>';
@@ -224,7 +224,7 @@ function getLargeImageViewer(objectData) {
  */
 function getPDFViewer(objectData) {
 	var viewer = '<div id="pdf-viewer" class="viewer-section">';
-	var doc = config.baseUrl + "/repository/datastream/" + objectData.pid + "/OBJ";
+	var doc = config.baseUrl + "/datastream/" + objectData.pid + "/OBJ";
 
 	if(config.pdfViewer == "browser") {
 		viewer += '<iframe class="viewer-content" src="' + doc + '" height="500px" type="application/pdf" ></iframe>';
@@ -244,7 +244,7 @@ function getPDFViewer(objectData) {
  * @return 
  */
 function getCompoundObjectViewer(objectData) {
-
+	return "<h2>COV</h2>";
 }
 
 /**
