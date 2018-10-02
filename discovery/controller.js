@@ -149,6 +149,15 @@ exports.renderCollection = function(req, res) {
 }
 
 exports.renderObjectView = function(req, res) {
+
+	var renderView = function(data) {
+		return res.render('object', data);
+	}
+
+	retrieveObject(req.params.pid, renderView);
+};
+
+var retrieveObject = function(pid, callback) {
 	var data = {
 		viewer: null,
 		object: null,
@@ -158,9 +167,8 @@ exports.renderObjectView = function(req, res) {
 		base_url: config.baseUrl,
 		root_url: config.rootUrl
 	};
-
 	// Get the object data
-	Service.fetchObjectByPid(req.params.pid, function(response) {
+	Service.fetchObjectByPid(pid, function(response) {
 		if(response.status) {
 			var object;
 			if(response.data.pid) {
@@ -186,22 +194,22 @@ exports.renderObjectView = function(req, res) {
 					// Get metadata
 					data.summary = Helper.createSummaryDisplayObject(object);
 					data.mods = Object.assign(data.mods, Helper.createMetadataDisplayObject(object));
-					return res.render('object', data);
+					callback(data);
 				});
 			}	
 			else {
 				console.error("Index error: ", response.message);
 				data.error = "Sorry, this item can not be displayed";
-				return res.render('object', data);
+				callback(data);
 			}
 		}
 		else {
 			console.error("Index error: ", response.message);
 			data.error = "Sorry, this item can not be displayed";
-			return res.render('object', data);
+			callback(data);
 		}
 	});
-};
+}
 
 exports.getDatastream = function(req, res) {
 	var ds = req.params.datastream || "",
