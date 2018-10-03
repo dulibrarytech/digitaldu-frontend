@@ -80,6 +80,16 @@ exports.getObjectViewer = function(object, mimeType="") {
  * @param 
  * @return 
  */
+function getCompoundObjectViewer(objects, index) {
+	
+}
+
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
 function getAudioPlayer(objectData, type) {
 	var player = '<div id="audio-player" class="viewer-section">', tn, stream;
 	var extension = "mp3";

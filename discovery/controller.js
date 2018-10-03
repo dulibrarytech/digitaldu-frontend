@@ -150,14 +150,6 @@ exports.renderCollection = function(req, res) {
 
 exports.renderObjectView = function(req, res) {
 
-	var renderView = function(data) {
-		return res.render('object', data);
-	}
-
-	retrieveObject(req.params.pid, renderView);
-};
-
-var retrieveObject = function(pid, callback) {
 	var data = {
 		viewer: null,
 		object: null,
@@ -167,12 +159,50 @@ var retrieveObject = function(pid, callback) {
 		base_url: config.baseUrl,
 		root_url: config.rootUrl
 	};
-	// Get the object data
-	Service.fetchObjectByPid(pid, function(response) {
-		if(response.status) {
-			var object;
-			if(response.data.pid) {
-				object = response.data;
+
+	let regex = /[a-zA-Z]*[:_][0-9]*/;
+	if(!req.params.pid || /[a-zA-Z]*[:_][0-9]*/.test(req.params.pid) === false) {
+		return res.sendStatus(400);
+	}
+
+	const renderView = function(data) {
+		return res.render('object', data);
+	};
+
+	Service.fetchObjectByPid(req.params.pid, function(response) {
+		if(response.error) {
+			data.error = "Object not found";
+			renderView(data);
+		}
+		else {
+			var index = null;
+			if(req.params.index && parseInt(req.params.index)) {
+				// Have an index, check for children objects
+				index = parseInt(req.params.index);
+
+				Service.getChildObjects(req.params.pid, function(response) {
+					if(response.error) {
+						data.error = "Object not found";
+						renderView(data);
+					}
+					else {
+						let children = response.data || [];
+
+						if(response.data.type == "compound") {
+							data.viewer = Viewer.getCompoundObjectViewer(children, index);
+						}
+						else {
+							data.viewer = "Viewer is unavailable for object type " + response.data.type;
+						}
+
+						data.mods = Object.assign(data.mods, Helper.createMetadataDisplayObject(children[index-1] || []));
+					}
+					renderView(data);
+				});
+			}
+			else {
+				// Have the object, render it
+				let object = response.data;
 				data.object = object;
 
 				// Get viewer
@@ -194,22 +224,70 @@ var retrieveObject = function(pid, callback) {
 					// Get metadata
 					data.summary = Helper.createSummaryDisplayObject(object);
 					data.mods = Object.assign(data.mods, Helper.createMetadataDisplayObject(object));
-					callback(data);
+					renderView(data);
 				});
-			}	
-			else {
-				console.error("Index error: ", response.message);
-				data.error = "Sorry, this item can not be displayed";
-				callback(data);
 			}
 		}
-		else {
-			console.error("Index error: ", response.message);
-			data.error = "Sorry, this item can not be displayed";
-			callback(data);
-		}
 	});
-}
+};
+
+// var retrieveObject = function(pid, callback) {
+// 	var data = {
+// 		viewer: null,
+// 		object: null,
+// 		summary: null,
+// 		mods: null,
+// 		error: null,
+// 		base_url: config.baseUrl,
+// 		root_url: config.rootUrl
+// 	};
+
+// 	// Get the object data
+// 	Service.fetchObjectByPid(pid, function(response) {
+// 		if(response.status) {
+// 			var object;
+// 			if(response.data.pid) {
+
+// 				// If compound object, get the index param.  Retrieve the pid of the child object at specified index
+
+// 				object = response.data;
+// 				data.object = object;
+
+// 				// Get viewer
+// 				data.viewer = Viewer.getObjectViewer(object);
+// 				if(data.viewer == "") {
+// 					data.viewer = "Viewer is unavailable for this object."
+// 				}
+
+// 				// Get titles of any collection parents
+// 				Service.getTitleString(object.is_member_of_collection, [], function(titleData) {
+// 					var titles = [];
+// 					for(var title of titleData) {
+// 						titles.push('<a href="' + config.rootUrl + '/collection/' + title.pid + '">' + title.name + '</a>');
+// 					}
+// 					data.mods = {
+// 						'In Collections': titles
+// 					}
+
+// 					// Get metadata
+// 					data.summary = Helper.createSummaryDisplayObject(object);
+// 					data.mods = Object.assign(data.mods, Helper.createMetadataDisplayObject(object));
+// 					callback(data);
+// 				});
+// 			}	
+// 			else {
+// 				console.error("Index error: ", response.message);
+// 				data.error = "Sorry, this item can not be displayed";
+// 				callback(data);
+// 			}
+// 		}
+// 		else {
+// 			console.error("Index error: ", response.message);
+// 			data.error = "Sorry, this item can not be displayed";
+// 			callback(data);
+// 		}
+// 	});
+// }
 
 exports.getDatastream = function(req, res) {
 	var ds = req.params.datastream || "",

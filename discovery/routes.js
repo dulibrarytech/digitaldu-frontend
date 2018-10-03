@@ -28,6 +28,9 @@ module.exports = function (app) {
     app.route('/object/:pid')
     	.get(Discovery.renderObjectView);
 
+    app.route('/object/:pid/:index')
+        .get(Discovery.renderObjectView);
+
     app.route('/facets')
         .get(Discovery.getFacets);
 
