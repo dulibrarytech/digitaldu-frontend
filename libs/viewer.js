@@ -81,7 +81,7 @@ exports.getObjectViewer = function(object, mimeType="") {
  * @return 
  */
 function getCompoundObjectViewer(objects, index) {
-	
+	console.log("TEST getCOV");
 }
 
 /**

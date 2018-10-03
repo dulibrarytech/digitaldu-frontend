@@ -170,8 +170,9 @@ exports.renderObjectView = function(req, res) {
 	};
 
 	Service.fetchObjectByPid(req.params.pid, function(response) {
-		if(response.error) {
-			data.error = "Object not found";
+			console.log("TEST fobp response:", response);
+		if(response.status === false) {
+			data.error = response.message;
 			renderView(data);
 		}
 		else {
@@ -181,13 +182,12 @@ exports.renderObjectView = function(req, res) {
 				index = parseInt(req.params.index);
 
 				Service.getChildObjects(req.params.pid, function(response) {
-					if(response.error) {
+					if(response.status === false || response.data.length == 0) {
 						data.error = "Object not found";
-						renderView(data);
 					}
 					else {
-						let children = response.data || [];
-
+						let children = response.data || [],
+							object = children[index-1];
 						if(response.data.type == "compound") {
 							data.viewer = Viewer.getCompoundObjectViewer(children, index);
 						}
@@ -195,7 +195,9 @@ exports.renderObjectView = function(req, res) {
 							data.viewer = "Viewer is unavailable for object type " + response.data.type;
 						}
 
-						data.mods = Object.assign(data.mods, Helper.createMetadataDisplayObject(children[index-1] || []));
+						data.summary = Helper.createSummaryDisplayObject(object);
+						data.mods = Object.assign(data.mods, Helper.createMetadataDisplayObject(object));
+							console.log("TEST mods for child", data.mods);
 					}
 					renderView(data);
 				});
@@ -224,6 +226,7 @@ exports.renderObjectView = function(req, res) {
 					// Get metadata
 					data.summary = Helper.createSummaryDisplayObject(object);
 					data.mods = Object.assign(data.mods, Helper.createMetadataDisplayObject(object));
+						console.log("TEST mods for parent", data.mods);
 					renderView(data);
 				});
 			}

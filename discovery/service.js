@@ -303,14 +303,14 @@ var fetchObjectByPid = function(pid, callback) {
         callback({status: true, data: objectData});
       }
       else {
-        callback({status: true, message: "Item not found", data: {}});
+        callback({status: false, message: "Object not found", data: {}});
       }
   });
 }
 exports.fetchObjectByPid = fetchObjectByPid;
 
 /**
- * 
+ * TODO move to search service
  *
  * @param 
  * @return 
@@ -415,4 +415,14 @@ var getParentTrace = function(pid, collections, callback) {
       getParentTrace(response.data.is_member_of_collection, collections, callback);
     }
   });
+}
+
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
+exports.getChildObjects = function(pid, callback) {
+  callback({status: true, message: "", data: []});
 }
