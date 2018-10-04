@@ -154,7 +154,7 @@ exports.renderObjectView = function(req, res) {
 		viewer: null,
 		object: null,
 		summary: null,
-		mods: null,
+		mods: {},
 		error: null,
 		base_url: config.baseUrl,
 		root_url: config.rootUrl
@@ -170,16 +170,15 @@ exports.renderObjectView = function(req, res) {
 	};
 
 	Service.fetchObjectByPid(req.params.pid, function(response) {
-			console.log("TEST fobp response:", response);
 		if(response.status === false) {
 			data.error = response.message;
 			renderView(data);
 		}
 		else {
-			var index = null;
+
+			// Have an index, check for children objects
 			if(req.params.index && parseInt(req.params.index)) {
-				// Have an index, check for children objects
-				index = parseInt(req.params.index);
+				var index = parseInt(req.params.index);
 
 				Service.getChildObjects(req.params.pid, function(response) {
 					if(response.status === false || response.data.length == 0) {
@@ -197,13 +196,14 @@ exports.renderObjectView = function(req, res) {
 
 						data.summary = Helper.createSummaryDisplayObject(object);
 						data.mods = Object.assign(data.mods, Helper.createMetadataDisplayObject(object));
-							console.log("TEST mods for child", data.mods);
 					}
 					renderView(data);
 				});
 			}
+
+			// Have the object, render it
 			else {
-				// Have the object, render it
+				
 				let object = response.data;
 				data.object = object;
 
@@ -215,18 +215,21 @@ exports.renderObjectView = function(req, res) {
 
 				// Get titles of any collection parents
 				Service.getTitleString(object.is_member_of_collection, [], function(titleData) {
+
+					// Add the titles of the parent collections to the mods display, if any
 					var titles = [];
 					for(var title of titleData) {
 						titles.push('<a href="' + config.rootUrl + '/collection/' + title.pid + '">' + title.name + '</a>');
 					}
-					data.mods = {
-						'In Collections': titles
+					if(titles.length > 0) {
+						data.mods = {
+							'In Collections': titles
+						}
 					}
 
-					// Get metadata
+					// Add summary data and object metadata to the mods display
 					data.summary = Helper.createSummaryDisplayObject(object);
 					data.mods = Object.assign(data.mods, Helper.createMetadataDisplayObject(object));
-						console.log("TEST mods for parent", data.mods);
 					renderView(data);
 				});
 			}

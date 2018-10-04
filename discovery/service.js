@@ -247,18 +247,23 @@ exports.getTitleString = function(pids, titles, callback) {
   
   // Get the title data for the current pid
   fetchObjectByPid(pid, function (response) {
-    titles.push({
-      name: response.data.title[0],
-      pid: pid
-    });
+    if(response.status) {
+      titles.push({
+        name: response.data.title[0],
+        pid: pid
+      });
 
-    if(titles.length == pidArray.length) {
-      // Have found a title for each pid in the input array
-      callback(titles);
+      if(titles.length == pidArray.length) {
+        // Have found a title for each pid in the input array
+        callback(titles);
+      }
+      else {
+        // Get the title for the next pid in the pid array
+        getTitleString(pidArray, titles, callback);
+      }
     }
     else {
-      // Get the title for the next pid in the pid array
-      getTitleString(pidArray, titles, callback);
+      callback(titles);
     }
   });
 }
