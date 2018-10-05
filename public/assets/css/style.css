@@ -985,11 +985,11 @@ div.paginator-pages span a + a {
   border-right-style: none;
   border-left-style: none;
   position: relative;
-  top: 2px;
+  top: 0px;
   right: 8px;
   padding: 9px;
   width: 18%;
-  height: 38px;
+  height: 100%;
 }
 
 #searchform button:hover {
@@ -1006,10 +1006,11 @@ select#search-type {
   border-radius: 0;
   width: 18%;
   padding-left: 0.6em;
-  height: 38px;
+  height: 100%;
   background-color: #e5e3e1;
   position: relative;
   left: 1px;
+  bottom: 2px;
 }
 
 .search-results > h3 {
@@ -1022,12 +1023,13 @@ div#search-results {
 }
 
 div#searchform input {
-  height: 26px;
+  height: 70%;
   border-style: none;
   padding-left: 10px;
   width: 60%;
   position: relative;
   right: 4px;
+  bottom: 2px;
 }
 
 div.slider-section {
@@ -1389,6 +1391,6 @@ div.info-content {
 
     select#search-type {
         top: -1px;
-        border-radius: none;
+        border-radius: 0;
     }
 }}
