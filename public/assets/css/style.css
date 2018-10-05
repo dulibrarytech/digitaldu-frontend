@@ -1003,6 +1003,7 @@ div.paginator-pages span a + a {
 
 select#search-type {
   border-style: none;
+  border-radius: 0;
   width: 18%;
   padding-left: 0.6em;
   height: 38px;
