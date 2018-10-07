@@ -431,3 +431,18 @@ var getParentTrace = function(pid, collections, callback) {
 exports.getChildObjects = function(pid, callback) {
   callback({status: true, message: "", data: []});
 }
+
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
+exports.isParentObject = function(object) {
+  var isParent = false;
+  if(object.type == "compunnd" ||
+      object.type == "book") {
+    isParent = true;
+  }
+  return isParent;
+}
