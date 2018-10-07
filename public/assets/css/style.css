@@ -978,6 +978,11 @@ div.paginator-pages span a + a {
   top: 178px;
 }
 
+#searchform form {
+  height: 40px;
+  position: relative;
+}
+
 #searchform button {
   background-color: #8b2332;
   border-bottom-style: none;
