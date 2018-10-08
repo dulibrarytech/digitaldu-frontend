@@ -176,124 +176,77 @@ exports.renderObjectView = function(req, res) {
 		}
 		else {
 
-			// Have an index, check for children objects
-			if(req.params.index && parseInt(req.params.index)) {
-				var index = parseInt(req.params.index);
+			var object = response.data,
+				index = req.params.index && isNaN(parseInt(req.params.index)) ? req.params.index : 0;
 
-				Service.getChildObjects(req.params.pid, function(response) {
-					if(response.status === false || response.data.length == 0) {
-						data.error = "Object not found";
+			// Render a parent object with child objects
+			if(Service.isParentObject(object) || index > 0) {
+
+				Service.retrieveChildren(object, function(error, children){
+					if(error) {
+						data.error = error;
 					}
 					else {
-						let children = response.data || [],
-							object = children[index-1];
-						if(response.data.type == "compound") {
-							data.viewer = Viewer.getCompoundObjectViewer(children, index);
+						let activeChild = children[index-1];
+						switch(response.data.type) {
+							case "compound":
+								data.viewer = getCompoundObjectViewer(parent, children, index);
+								break;
+							case "book":
+								//data.viewer = getBookViewer(parent, children, index);
+								break;	
+							default:
+								data.error = "Object not found";
+								break;
 						}
-						else {
-							data.viewer = "Viewer is unavailable for object type " + response.data.type;
-						}
-
-						data.summary = Helper.createSummaryDisplayObject(object);
-						data.mods = Object.assign(data.mods, Helper.createMetadataDisplayObject(object));
+						data.summary = Helper.createSummaryDisplayObject(activeChild);
+						data.mods = Helper.createMetadataDisplayObject(activeChild);
 					}
 					renderView(data);
 				});
 			}
 
-			// Have the object, render it
+			// Render singular object
 			else {
-				
-				let object = response.data;
-				data.object = object;
-
-				// Get viewer
-				data.viewer = Viewer.getObjectViewer(object);
-				if(data.viewer == "") {
-					data.viewer = "Viewer is unavailable for this object."
-				}
-
-				// Get titles of any collection parents
-				Service.getTitleString(object.is_member_of_collection, [], function(titleData) {
-
-					// Add the titles of the parent collections to the mods display, if any
-					var titles = [];
-					for(var title of titleData) {
-						titles.push('<a href="' + config.rootUrl + '/collection/' + title.pid + '">' + title.name + '</a>');
-					}
-					if(titles.length > 0) {
-						data.mods = {
-							'In Collections': titles
-						}
-					}
-
-					// Add summary data and object metadata to the mods display
-					data.summary = Helper.createSummaryDisplayObject(object);
-					data.mods = Object.assign(data.mods, Helper.createMetadataDisplayObject(object));
+				// Can't lookup index of a non-parent object
+				if(index > 0) {
+					data.error = "Object not found";
 					renderView(data);
-				});
+				}
+				else {
+					let object = response.data;
+					data.object = object;
+
+					// Get viewer
+					data.viewer = Viewer.getObjectViewer(object);
+					if(data.viewer == "") {
+						data.viewer = "Viewer is unavailable for this object."
+					}
+
+					// Get titles of any collection parents
+					Service.getTitleString(object.is_member_of_collection, [], function(titleData) {
+
+						// Add the titles of the parent collections to the mods display, if any
+						var titles = [];
+						for(var title of titleData) {
+							titles.push('<a href="' + config.rootUrl + '/collection/' + title.pid + '">' + title.name + '</a>');
+						}
+						if(titles.length > 0) {
+							data.mods = {
+								'In Collections': titles
+							}
+						}
+
+						// Add summary data and object metadata to the mods display
+						data.summary = Helper.createSummaryDisplayObject(object);
+						data.mods = Object.assign(data.mods, Helper.createMetadataDisplayObject(object));
+						renderView(data);
+					});
+				}
 			}
 		}
 	});
 };
-
-// var retrieveObject = function(pid, callback) {
-// 	var data = {
-// 		viewer: null,
-// 		object: null,
-// 		summary: null,
-// 		mods: null,
-// 		error: null,
-// 		base_url: config.baseUrl,
-// 		root_url: config.rootUrl
-// 	};
-
-// 	// Get the object data
-// 	Service.fetchObjectByPid(pid, function(response) {
-// 		if(response.status) {
-// 			var object;
-// 			if(response.data.pid) {
-
-// 				// If compound object, get the index param.  Retrieve the pid of the child object at specified index
-
-// 				object = response.data;
-// 				data.object = object;
-
-// 				// Get viewer
-// 				data.viewer = Viewer.getObjectViewer(object);
-// 				if(data.viewer == "") {
-// 					data.viewer = "Viewer is unavailable for this object."
-// 				}
-
-// 				// Get titles of any collection parents
-// 				Service.getTitleString(object.is_member_of_collection, [], function(titleData) {
-// 					var titles = [];
-// 					for(var title of titleData) {
-// 						titles.push('<a href="' + config.rootUrl + '/collection/' + title.pid + '">' + title.name + '</a>');
-// 					}
-// 					data.mods = {
-// 						'In Collections': titles
-// 					}
-
-// 					// Get metadata
-// 					data.summary = Helper.createSummaryDisplayObject(object);
-// 					data.mods = Object.assign(data.mods, Helper.createMetadataDisplayObject(object));
-// 					callback(data);
-// 				});
-// 			}	
-// 			else {
-// 				console.error("Index error: ", response.message);
-// 				data.error = "Sorry, this item can not be displayed";
-// 				callback(data);
-// 			}
-// 		}
-// 		else {
-// 			console.error("Index error: ", response.message);
-// 			data.error = "Sorry, this item can not be displayed";
-// 			callback(data);
-// 		}
-// 	});
-// }
 
 exports.getDatastream = function(req, res) {
 	var ds = req.params.datastream || "",
