@@ -38,8 +38,8 @@ exports.getObjectViewer = function(object, mimeType="") {
 
  		case "image/png":
  		case "image/jpeg":
- 			viewer = getSmallImageViewer(object);
- 			//viewer = getLargeImageViewer(object);
+ 			//viewer = getSmallImageViewer(object);
+ 			viewer = getLargeImageViewer(object);
  			break;
 
  		case "image/tiff":
