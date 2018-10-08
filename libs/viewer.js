@@ -20,55 +20,41 @@ var Repository = require('./repository');
  */
 exports.getObjectViewer = function(object, mimeType="") {
  	var viewer = "";
-
- 	// Get compuund object viewer
- 	if(typeof object.type != 'undefined' && object.type == "compound") {
- 		viewer = getCompoundObjectViewer(object);
+	if(mimeType == "" && typeof object.mime_type != 'undefined') {
+ 		mimeType = object.mime_type;
  	}
+ 	
+ 	// Get viewer for object mime type:
+ 	switch(mimeType) {
+ 		case "audio/mpeg":
+ 		case "audio/x-wav":
+ 			viewer = getAudioPlayer(object, mimeType);
+ 			break;
 
- 	// Get book viewer
- 	else if(typeof object.type != 'undefined' && object.type == "book") {
- 		viewer = getBookViewer(object);
- 	}
+ 		case "video/mp4":
+ 		case "video/quicktime":
+ 			viewer = getVideoViewer(object);
+ 			break;
 
- 	// Get simple object viewer
- 	else {
- 		if(mimeType == "" && typeof object.mime_type != 'undefined') {
-	 		mimeType = object.mime_type;
-	 	}
-	 	
-	 	// Get viewer for object mime type:
-	 	switch(mimeType) {
-	 		case "audio/mpeg":
-	 		case "audio/x-wav":
-	 			viewer = getAudioPlayer(object, mimeType);
-	 			break;
+ 		case "image/png":
+ 		case "image/jpeg":
+ 			viewer = getSmallImageViewer(object);
+ 			//viewer = getLargeImageViewer(object);
+ 			break;
 
-	 		case "video/mp4":
-	 		case "video/quicktime":
-	 			viewer = getVideoViewer(object);
-	 			break;
+ 		case "image/tiff":
+ 		case "image/jp2":
+ 			viewer = getLargeImageViewer(object);
+ 			break;
 
-	 		case "image/png":
-	 		case "image/jpeg":
-	 			//viewer = getSmallImageViewer(object);
-	 			viewer = getLargeImageViewer(object);
-	 			break;
+ 		case "application/pdf":
+ 			viewer = getPDFViewer(object);
+ 			break;
 
-	 		case "image/tiff":
-	 		case "image/jp2":
-	 			viewer = getLargeImageViewer(object);
-	 			break;
-
-	 		case "application/pdf":
-	 			viewer = getPDFViewer(object);
-	 			break;
-
-	 		default:
-	 			console.log("Viewer error: invalid content model:", mimeType, "for pid:", object.pid);
-	 			viewer = "";
-	 			break;
-	 	}
+ 		default:
+ 			console.log("Viewer error: invalid content model:", mimeType, "for pid:", object.pid);
+ 			viewer = "";
+ 			break;
  	}
 
  	return viewer;
@@ -186,7 +172,7 @@ function getSmallImageViewer(objectData) {
 
 	var image = Repository.getDatastreamUrl("jpg", objectData.pid);
 
-	viewer += '<div id="viewer-content-wrapper"><img class="viewer-content" src="' + image + '"/></div>';
+	viewer += '<div id="viewer-content-wrapper" class="small-image"><img class="viewer-content" src="' + image + '"/></div>';
 	viewer += '</div>';
 
 	return viewer;
