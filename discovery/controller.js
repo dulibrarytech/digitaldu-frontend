@@ -177,10 +177,10 @@ exports.renderObjectView = function(req, res) {
 		else {
 
 			var object = response.data,
-				index = req.params.index && isNaN(parseInt(req.params.index)) ? req.params.index : 0;
-
+				index = req.params.index && isNaN(parseInt(req.params.index)) === false ? req.params.index : 0;
+					
 			// Render a parent object with child objects
-			if(Service.isParentObject(object) || index > 0) {
+			if(Service.isParentObject(object) && index > 0) {
 
 				Service.retrieveChildren(object, function(error, children){
 					if(error) {

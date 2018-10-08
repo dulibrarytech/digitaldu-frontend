@@ -395,6 +395,7 @@ exports.getCollectionHeirarchy = function(pid, callback) {
  * @return 
  */
 var getParentTrace = function(pid, collections, callback) {
+
   fetchObjectByPid(pid, function(response) {
     var title = "",
         url = config.rootUrl + "/collection/" + pid;
@@ -428,8 +429,13 @@ var getParentTrace = function(pid, collections, callback) {
  * @param 
  * @return 
  */
-exports.getChildObjects = function(pid, callback) {
-  callback({status: true, message: "", data: []});
+exports.isParentObject = function(object) {
+  var isParent = false;
+  if(object.type == "compunnd" ||
+      object.type == "book") {
+    isParent = true;
+  }
+  return isParent;
 }
 
 /**
@@ -438,11 +444,6 @@ exports.getChildObjects = function(pid, callback) {
  * @param 
  * @return 
  */
-exports.isParentObject = function(object) {
-  var isParent = false;
-  if(object.type == "compunnd" ||
-      object.type == "book") {
-    isParent = true;
-  }
-  return isParent;
+exports.retrieveChildren = function(object) {
+  return object.children || [];
 }
