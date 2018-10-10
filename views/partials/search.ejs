@@ -1,6 +1,6 @@
-<div id="searchform">
+<div class="searchform">
   <form method="get" action="<%= root_url %>/search">
-    <select id="search-type" name="type">
+    <select name="type">
       <option value="all">All</option>
       <% for (var i = 0; i < searchFields.length; i++) { %>
         <% for (var key in searchFields[i]) { %>

@@ -2,46 +2,32 @@
 <html lang="en">
 <head>
     <meta http-equiv="Pragma" content="no-cache">
-    <title>Special Collections @ DU | University of Denver</title>
+    <title>Special Collections @ DU</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+   <!--  <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
     <link rel="stylesheet" href="<%- base_url %>/assets/css/style.css">
-    <link rel="stylesheet" href="<%- base_url %>/assets/css/responsive.css?v=2.1">
+    <link rel="stylesheet" href="<%- base_url %>/assets/css/responsive.css">
+    <link rel="stylesheet" href="<%- base_url %>/assets/css/temp.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
-    <link href="//vjs.zencdn.net/5.8.8/video-js.css" rel="stylesheet"><!-- video.js viewer -->
+    <link href="http://vjs.zencdn.net/5.8.8/video-js.css" rel="stylesheet"><!-- video.js viewer -->
 
-    <!-- Google Analytics -->
-    <script>
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-        ga('create', 'UA-66288115-2', 'auto');
-        ga('send', 'pageview');
-    </script>
-    <!-- End Google Analytics -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="<%- base_url %>/libs/jwplayer_du/jwplayer-du.js"></script><!-- jwplayers viewer -->
+    <script src="<%- base_url %>/libs/openseadragon/openseadragon.min.js"></script><!-- openseadragon viewer -->
 </head>
-<body class="">
+<body>
 
-<header id="du-header" class="header">
-	<div id="du-red-header-inner">
-    <span id="du-logo">
-      <a href="http://www.du.edu/index.html" title="University of Denver Home Page" target="_blank"><img src="//www.du.edu/_resources/images/nav/logo2.gif" alt="University of Denver" /></a>
-    </span> 
+<div id="wrapper">
 
-    <!-- TEMP -->
-    <span class="maintenance"><br><br><strong>&nbsp;THIS SITE IS CURRENTLY UNDER MAINTENANCE. PLEASE EXCUSE ANY ISSUES IN APPEARANCE AND IN FUNCTIONALITY.</strong></span>
+    <header id="du-header" class="header">
+      <div id="du-red-header-inner">
+        <span id="du-logo">
+          <a href="http://www.du.edu/index.html" title="University of Denver Home Page" target="_blank"><img src="//www.du.edu/_resources/images/nav/logo2.gif" alt="University of Denver" /></a>
+        </span> 
+        <span id="app-title"></span>
+      </div>
+    </header>
 
-    <span id="app-title"></span>
-  </div>
-
-  <style>
-    .maintenance {
-     background-color: #8b2332;
-     height: 50px;
-     padding: 4px;
-     margin-left: 5px;
-     color: white;
-    }
-  </style>
-</header>
+        <div id="main-container" class="bottom-page-margin">

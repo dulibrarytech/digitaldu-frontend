@@ -6,7 +6,7 @@
   }
 
   .logo h1 {
-    font-size: 5em;
+    font-size: 80px;
   }
 
   div#collection-grid.homepage dl.item  > dt {
@@ -19,6 +19,10 @@
 }
 
 @media only screen and (min-width: 1750px) and (max-width: 1879px) {
+  .logo h1 {
+    font-size: 75px;
+  }
+
   div.banner-logo {
     width: 72%;
   }
@@ -38,7 +42,7 @@
   }
 
   .logo h1 {
-    font-size: 4.5em;
+    font-size: 73px;
   }
 
   div#collection-grid dl.item  > dt {
@@ -75,7 +79,7 @@
   }
 
   .logo h1 {
-    font-size: 4.5em;
+    font-size: 73px;
   }
 
   div#collection-grid dl.item  > dt {
@@ -133,7 +137,7 @@
 
 @media only screen and (min-width: 1350px) and (max-width: 1499px) {
   .logo h1 {
-    font-size: 4.5em;
+    font-size: 58px;
   }
 
   div#collection-grid.homepage dl.item > dt {
@@ -146,12 +150,13 @@
 }
 
 @media only screen and (min-width: 1250px) and (max-width: 1349px) {
+
   div#collection-grid.homepage dl.item  > dt {
     height: 162px;
   }
 
   .logo h1 {
-    font-size: 4em;
+    font-size: 54px;
   }
 
   footer .footer-column {
@@ -160,6 +165,9 @@
 }
 
 @media only screen and (min-width: 1250px) and (max-width: 1499px) { 
+  div.banner {
+    height: 375px;
+  }
 
   .container {
       margin: auto;
@@ -208,12 +216,9 @@
     height: 290px;
   }
 
-  div#searchform {
-    width: 50%;
-  }
-
-  div#searchform input {
-    width: 59%;
+  div.searchform {
+   /* width: 50%;*/
+    top: 146px;
   }
 
   div#collection-grid {
@@ -254,7 +259,7 @@
   }
 
   .facet-name {
-    margin-left: 14px;
+    left: 14px;
   }
 
   .facet-count {
@@ -325,13 +330,16 @@
 }
 
 @media only screen and (max-width: 1249px) { 
+  div.banner {
+    height: 375px;
+  }
 
   .logo h1 {
-    font-size: 4em;
+    font-size: 48px;
   }
 
   .container {
-    width: 100%;
+    width: 90%;
   }
 
   .content-col-3 {
@@ -342,8 +350,12 @@
     width: 70.999999%;
   }
 
+  .welcomeBox .title1 {
+    font-size: 42px;
+  }
+
   div#collection-grid.homepage dl.item > dt {
-    height: 232px;
+    /*height: 208px;*/
   }
 
   div#results-grid .item-thumb img {
@@ -351,7 +363,7 @@
   }
 
   div.banner-logo {
-    width: 100%;
+    width: 94%;
   }
 
   h3.item-title a {
@@ -371,12 +383,9 @@
     height: 290px;
   }
 
-  div#searchform {
-    width: 60%;
-  }
-
-  div#searchform input {
-    width: 59%;
+  div.searchform {
+    width: 50%;
+    top: 148px;
   }
 
   div.slider-section > div {
@@ -384,7 +393,7 @@
   }
 
   div#collection-grid {
-    margin-left: 0px;
+    margin-left: 14px;
   }
 
   img.small-tn-row {
@@ -408,12 +417,17 @@
     margin: 2.5em 0px;
   }
 
-  .facet-name {
-    margin-left: 10px;
+  #facets ul {
+      font-size: 13px;
+  }
+
+  .facet-thumbnail > img {
+      width: 24px;
+      height: 22px;
   }
 
   .facet-count {
-    margin-right: 18px;
+    margin-right: 9px;
   }
 
   div#facets > div.panel {
@@ -427,5 +441,77 @@
 
   footer .footer-column {
     width: 21.5%;
+  }
+}
+
+@media only screen and (min-width: 849px) and (max-width: 1099px) {
+  .welcomeBox .title1 {
+      font-size: 33px;
+  }
+
+  .welcomeBox .description {
+    font-size: 0.9em;
+  }
+
+  #facets ul {
+      font-size: 11px;
+  }
+
+  .facet-count {
+    margin-right: 16px;
+  }
+
+  .facet-thumbnail > img {
+      width: 17px;
+      height: 17px;
+  }
+
+  div#facets > div.panel {
+      padding: 4px;
+  }
+
+  .facet-name {
+    left: 7px;
+  }
+}
+
+@media only screen and (min-width: 999px) and (max-width: 1099px) {
+  div#facets > div.panel {
+      padding: 11px;
+  }
+
+  .facet-name {
+      left: 14px;
+  }
+}
+
+@media only screen and (max-width: 849px) {
+  .welcomeBox .title1 {
+    font-size: 29px;
+  }
+
+  .welcomeBox .description {
+    font-size: 0.9em;
+  }
+
+  .facet-name {
+      left: 7px;
+  }
+
+  .facet-count {
+    margin-right: 9px;
+  }
+
+  #facets ul {
+      font-size: 8px;
+  }
+
+  .facet-thumbnail > img {
+      width: 14px;
+      height: 14px;
+  }
+
+  div#facets > div.panel {
+      padding: 4px;
   }
 }

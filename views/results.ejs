@@ -1,12 +1,14 @@
 <% include partials/header %>
 <% include partials/title-banner %>
 
-  <div id="main" class="content container demo-test-view">
-    <div class="facet-breadcrumbs">
-      <% if (facet_breadcrumb_trail) { %>
-        <%- facet_breadcrumb_trail %>
-      <% } %>
-    </div>
+<!--   <div id="main" class="content container demo-test-view"> -->
+  <div class="facet-breadcrumbs">
+    <% if (facet_breadcrumb_trail) { %>
+      <%- facet_breadcrumb_trail %>
+    <% } %>
+  </div>
+
+  <div class="row container results-display bottom-page-margin">
     <div id="result-facets-wrapper" class="content-col-3 sidebar">
       <div class="result-facets">
         <h4>Limit Your Search</h4>
