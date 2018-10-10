@@ -216,6 +216,11 @@ button:hover {
   margin-bottom: 80px;
 }
 
+.no-top-bottom-margin {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
 div#wrapper {
   background: white;
   min-height: 600px;
@@ -384,11 +389,15 @@ div.banner-search button {
 }
 
 div.site-text {
-  margin-top: 7vw;
+  margin-top: 4vw;
 }
 
 div.home-content {
-	
+	margin-top: 2vw;
+}
+
+div.home-content .content-col-9 {
+  margin-left: 30px;
 }
 
 div.content hr {
@@ -396,8 +405,8 @@ div.content hr {
   color: #a5a3a1;
 }
 
-div#main .content-col-9 {
-  margin-left: 30px;
+div.collection .content-col-9 {
+ /* margin-left: 30px;*/
 } 
 
 div#title-banner {
@@ -749,7 +758,7 @@ div#collection-grid {
 }
 
 div#search-results-wrapper {
-  margin-left: 40px;
+ /* margin-left: 40px;*/
 }
 
 div#search-results-wrapper h4 {
@@ -768,6 +777,10 @@ div.results-display h4 {
   font-size: 1.2em;
   margin-top: 0;
   margin-bottom: 0;
+}
+
+div.results-display .content-col-9 {
+  margin-left: 40px;
 }
 
 div#results-grid {
@@ -897,7 +910,7 @@ dt.result-title a {
 }
 
 /*div.result-facets h4*/
-div#main h4 {
+div.collection h4 {
   font-size: 1.2em;
 }
 

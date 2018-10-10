@@ -1,7 +1,7 @@
 <% include partials/header %>
 <% include partials/title-banner %>
 
-<div id="main" class="content container">
+<div class="content container results-display no-top-bottom-margin">
 	<div class="collection-breadcrumbs">
 		<% if (collection_breadcrumb_trail) { %>
     		<%- collection_breadcrumb_trail %>
@@ -23,7 +23,7 @@
     </div>
 
     <div class="content-col-9">
-        	<div id="collections">
+        	<div>
 	            <h4><%= current_collection_title %></h4>
 	            <hr>
 
