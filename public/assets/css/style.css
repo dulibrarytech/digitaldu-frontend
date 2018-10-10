@@ -388,15 +388,15 @@ div.banner-search button {
     text-align: left;
 }
 
-div.site-text {
+section.site-text {
   margin-top: 4vw;
 }
 
-div.home-content {
+section.home-content {
 	margin-top: 2vw;
 }
 
-div.home-content .content-col-9 {
+section.home-content .content-col-9 {
   margin-left: 30px;
 }
 

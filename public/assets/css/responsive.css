@@ -281,7 +281,7 @@
 
 @media only screen and (min-width: 1350px) and (max-width: 1499px) {
   .logo h1 {
-    font-size: 4em;
+    font-size: 60px;
   }
 
   div#viewer-section {
@@ -304,7 +304,7 @@
 
 @media only screen and (min-width: 1250px) and (max-width: 1349px) {
   .logo h1 {
-    font-size: 4em;
+    font-size: 55px;
   }
 
   div#viewer-section {
