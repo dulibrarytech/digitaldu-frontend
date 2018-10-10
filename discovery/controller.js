@@ -220,7 +220,7 @@ exports.renderObjectView = function(req, res) {
 					// Get viewer
 					data.viewer = Viewer.getObjectViewer(object);
 					if(data.viewer == "") {
-						data.viewer = "Viewer is unavailable for this object."
+						data.error = "Viewer is unavailable for this object.";
 					}
 
 					// Get titles of any collection parents
