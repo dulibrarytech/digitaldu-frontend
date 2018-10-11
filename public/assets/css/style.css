@@ -268,7 +268,7 @@ div.banner {
 
 div.banner-logo {
     margin: 0 auto;
-    width: 65%;
+    width: 100%;
     height: 90px;
     position: relative;
     top: 94px;
@@ -1330,6 +1330,7 @@ div.info-content {
     .searchform select {
         top: -1px;
         border-radius: 0;
+        -webkit-appearance: none;
     }
 }}
 
