@@ -24,7 +24,7 @@
   }
 
   div.banner-logo {
-    width: 72%;
+    width: 100%;
   }
 
   div#collection-grid dl.item  > dt {
@@ -38,7 +38,7 @@
 
 @media only screen and (min-width: 1700px) and (max-width: 1749px) { 
   div.banner-logo {
-   /* width: 55%;*/
+   width: 100%;
   }
 
   .logo h1 {
@@ -107,7 +107,7 @@
   }
 
   div.banner-logo {
-    width: 77%;
+    width: 100%;
   }
 
   img.lg-tn-row {
@@ -190,7 +190,7 @@
   }
 
   div.banner-logo {
-    width: 80%;
+    width: 100%;
   }
 
   span#site-title {
@@ -357,7 +357,7 @@
   }
 
   div.banner-logo {
-    width: 94%;
+    width: 100%;
   }
 
   h3.item-title a {
