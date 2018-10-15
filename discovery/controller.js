@@ -14,6 +14,7 @@ const async = require('async'),
     Viewer = require('../libs/viewer'),
     Facets = require('../libs/facets'),
     Paginator = require('../libs/paginator'),
+    Metadata = require('../libs/metadata'),
     Search = require('../search/service');
 
 exports.getFacets = function(req, res) {
@@ -180,7 +181,7 @@ exports.renderObjectView = function(req, res) {
 				index = req.params.index && isNaN(parseInt(req.params.index)) === false ? req.params.index : 0;
 					
 			// Render a parent object with child objects
-			if(Service.isParentObject(object) && index > 0) {
+			if(Helper.isParentObject(object) && index > 0) {
 
 				Service.retrieveChildren(object, function(error, children){
 					if(error) {
@@ -190,7 +191,7 @@ exports.renderObjectView = function(req, res) {
 						let activeChild = children[index-1];
 						switch(response.data.type) {
 							case "compound":
-								data.viewer = getCompoundObjectViewer(parent, children, index);
+								data.viewer = Viewer.getCompoundObjectViewer(parent, children, index);
 								break;
 							case "book":
 								//data.viewer = getBookViewer(parent, children, index);
@@ -199,8 +200,8 @@ exports.renderObjectView = function(req, res) {
 								data.error = "Object not found";
 								break;
 						}
-						data.summary = Helper.createSummaryDisplayObject(activeChild);
-						data.mods = Helper.createMetadataDisplayObject(activeChild);
+						data.summary = Metadata.createSummaryDisplayObject(activeChild);
+						data.mods = Metadata.createMetadataDisplayObject(activeChild);
 					}
 					renderView(data);
 				});
@@ -238,8 +239,8 @@ exports.renderObjectView = function(req, res) {
 						}
 
 						// Add summary data and object metadata to the mods display
-						data.summary = Helper.createSummaryDisplayObject(object);
-						data.mods = Object.assign(data.mods, Helper.createMetadataDisplayObject(object));
+						data.summary = Metadata.createSummaryDisplayObject(object);
+						data.mods = Object.assign(data.mods, Metadata.createMetadataDisplayObject(object));
 						renderView(data);
 					});
 				}

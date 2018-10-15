@@ -429,21 +429,6 @@ var getParentTrace = function(pid, collections, callback) {
  * @param 
  * @return 
  */
-exports.isParentObject = function(object) {
-  var isParent = false;
-  if(object.type == "compunnd" ||
-      object.type == "book") {
-    isParent = true;
-  }
-  return isParent;
-}
-
-/**
- * 
- *
- * @param 
- * @return 
- */
-exports.retrieveChildren = function(object) {
-  return object.children || [];
+exports.retrieveChildren = function(object, callback) {
+  callback(object.children || []);
 }
