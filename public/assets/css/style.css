@@ -773,8 +773,9 @@ div#search-results-wrapper > h4 span {
   font-weight: normal;
 }
 
-div.results-display {
+.results-display {
   margin-top: 40px;
+  display: flex;
 }
 
 div.results-display h4 {
@@ -1236,7 +1237,8 @@ div#viewer-message {
 
 div.collection-breadcrumbs {
   font-size: 13px;
-  margin-left: 10px;
+  margin-top: 20px;
+  padding-left: 20px;
 }
 
 div.collection-breadcrumbs a {

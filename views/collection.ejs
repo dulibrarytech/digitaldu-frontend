@@ -1,17 +1,18 @@
 <% include partials/header %>
 <% include partials/title-banner %>
 
+<div class="collection-breadcrumbs container">
+	<% if (collection_breadcrumb_trail) { %>
+		<%- collection_breadcrumb_trail %>
+	<% } %>
+</div>
+<div class="facet-breadcrumbs container">
+	<% if (facet_breadcrumb_trail) { %>
+		<%- facet_breadcrumb_trail %>
+	<% } %>
+</div>
+
 <div class="content container results-display no-top-bottom-margin">
-	<div class="collection-breadcrumbs">
-		<% if (collection_breadcrumb_trail) { %>
-    		<%- collection_breadcrumb_trail %>
-    	<% } %>
-	</div>
-    <div class="facet-breadcrumbs">
-    	<% if (facet_breadcrumb_trail) { %>
-    		<%- facet_breadcrumb_trail %>
-    	<% } %>
-    </div>
     <div class="content-col-3">
 	    <div id="result-facets-wrapper" class="sidebar">
 	      <div class="result-facets">
