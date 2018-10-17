@@ -1,0 +1,95 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "universalviewer@beta",
+        "scope": null,
+        "escapedName": "universalviewer",
+        "name": "universalviewer",
+        "rawSpec": "beta",
+        "spec": "beta",
+        "type": "tag"
+      },
+      "/home/jeff/Dev/Projects/digital-du"
+    ]
+  ],
+  "_from": "universalviewer@beta",
+  "_hasShrinkwrap": false,
+  "_id": "universalviewer@3.0.25",
+  "_inCache": true,
+  "_location": "/universalviewer",
+  "_nodeVersion": "10.4.0",
+  "_npmOperationalInternal": {
+    "host": "s3://npm-registry-packages",
+    "tmp": "tmp/universalviewer_3.0.25_1534147079603_0.7144120847959516"
+  },
+  "_npmUser": {
+    "name": "edsilv",
+    "email": "e.silverton@gmail.com"
+  },
+  "_npmVersion": "3.10.8",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "universalviewer@beta",
+    "scope": null,
+    "escapedName": "universalviewer",
+    "name": "universalviewer",
+    "rawSpec": "beta",
+    "spec": "beta",
+    "type": "tag"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/universalviewer/-/universalviewer-3.0.25.tgz",
+  "_shasum": "da81f4432b094deae944d15198f46ce27db6d34f",
+  "_shrinkwrap": null,
+  "_spec": "universalviewer@beta",
+  "_where": "/home/jeff/Dev/Projects/digital-du",
+  "author": {
+    "name": "@edsilv"
+  },
+  "bugs": {
+    "url": "https://github.com/universalviewer/universalviewer/issues"
+  },
+  "dependencies": {},
+  "description": "The Universal Viewer is a community-developed open source project on a mission to help you share your content with the world.",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+    "shasum": "da81f4432b094deae944d15198f46ce27db6d34f",
+    "tarball": "https://registry.npmjs.org/universalviewer/-/universalviewer-3.0.25.tgz",
+    "integrity": "sha512-pxCvPUxyNvDF0Fm/vDK0LC1oxCT+8EY2MOJnQUL6OOPbzGGui32ys3y3SHe3Qlpzhowz2xzgUhZYmZZqpyAo1g==",
+    "fileCount": 103,
+    "unpackedSize": 8843607,
+    "npm-signature": "-----BEGIN PGP SIGNATURE-----\r\nVersion: OpenPGP.js v3.0.4\r\nComment: https://openpgpjs.org\r\n\r\nwsFcBAEBCAAQBQJbcToICRA9TVsSAnZWagAAm/8P/iCOI96jn7ZitIzvzRwX\nhC76meDsMoTqbVLGbY9uFIh9H6JiVe92hGRdX9d8t/FIxLkLBPDXGFOgaWLv\nLDYMbxHH/Oq206X6aumVztjdZ8w/JAG5fRdiqrdNctHpeQ+wnQwzfa83/Vzx\nBsveRBuqNThTkDpXDjrG9trknY45+5v92Sg99gn8sJGnmwLUEth/SMHrAHb1\nvZkgyE+yLk0sJxd42SpcTitMpbDq2JQw9FxChjtYO3xC16kud6n+WqsGWYLc\nyz/rUpxsru5NoLxx6D7HBzASeBuLPspojlYHfXHCCwWeCs9P5/jqVUuD+Wd7\nMi7025XrX58+dpkHclIYsVC705thItKbgI8Bo4bNpRa/bh3/PkbcbdITVK2d\npXfgZFo9MyeaA1OAD9lEktrCdmp/UGHmEC5Pv32mda/FBqC8r5z3goXNN45r\nXtkl9+Fk1W6TjB0Ss5AVB3hiOIzOp5acTFxJALwZQqbGFaZ0gwXEjHRb6Yl8\nDAJY2BrrGxVWCKIwXySaObiWTgJE82OcgW8CcbL9kjjvDIGfbtSrS+xehKGl\nbpPrh+Fg+Gx7emOtTmeO5EqiKnNVrQN3LBlshh8/oalK61KOjG2/f1xsqVIK\nCV6CJEapw5AgzXaXZuxZSowRlHJwDax908O0vCHIj7RjGkmdfOE9uyOwF3E9\nzsXF\r\n=Tiz6\r\n-----END PGP SIGNATURE-----\r\n"
+  },
+  "homepage": "https://github.com/universalviewer/universalviewer",
+  "keywords": [
+    "IIIF",
+    "viewer",
+    "3D",
+    "OpenSeadragon",
+    "PDF"
+  ],
+  "license": "MIT",
+  "maintainers": [
+    {
+      "name": "edsilv",
+      "email": "e.silverton@gmail.com"
+    }
+  ],
+  "name": "universalviewer",
+  "optionalDependencies": {},
+  "readme": "This repo serves the dual function of being the UV examples page hosted on gh-pages and the location of the distribution build of the UV published to npm.",
+  "readmeFilename": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/universalviewer/examples.git"
+  },
+  "scripts": {
+    "version": "echo { \"version\": \"%npm_package_version%\" } > ./uv/info.json"
+  },
+  "version": "3.0.25"
+}
