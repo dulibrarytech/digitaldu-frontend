@@ -7,12 +7,12 @@
 
 'use strict';
 
-const es = require('../config/index');
-const fs = require('fs');
-const config = require('../config/config');
-const request  = require("request");
-const Repository = require('../libs/repository');
-const Helper = require("./helper");
+const es = require('../config/index'),
+      fs = require('fs'),
+      config = require('../config/config'),
+      request  = require("request"),
+      Repository = require('../libs/repository'),
+      Helper = require("./helper");
 
 /**
  * 
@@ -22,25 +22,25 @@ const Helper = require("./helper");
  */
 exports.searchIndex = function(query, type, facets=null, collection=null, pageNum=1, callback) {
 
-    // Build elasticsearch matchfields object for query: this object enables field specific searching
-    var field = { match: "" };
-    var matchFields = [], results = [];
-    var queryType;
+    var field = { match: "" },
+        matchFields = [], matchFacetFields = [], results = [], restrictions = [],
+        queryObj = {},
+        queryType;
 
-    // This is a string literal search if the query is contained by parentheses.  Use 'match_phrase'
+    // This is a string literal search if the query is contained by parentheses.  Use 'match_phrase'.  Must match the entire query
     if(query[0] == '"' && query[ query.length-1 ] == '"') {
-      query = query.replace(/"/g, '');
+      query = query.replace(/"/g, '');  
       queryType = "match_phrase";
     }
 
-    // This is a wildcard search.  Use 'wildcard'
+    // This is a wildcard search.  Use 'wildcard'.  Perform an Elasticsearch wildcard query
     else if(query.indexOf('*') >= 0) {
       queryType = "wildcard";
     }
 
-    // This is a regular term search.  Use 'match'  Query will be tokenized searched with an AND operator
+    // This is a regular term search.  Use 'match'.  Will match any word in the query with weighted results.  Closest matches or multiple word matches have higher weight
     else  {
-      var qtemp = query;
+      let qtemp = query;
       query = {
         "query": qtemp,
         "operator": "and"
@@ -48,37 +48,33 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
       queryType = "match";
     }
 
-    // Search specified field (type) (if a searchfield is selected)
+    // If an array of fields is passed in, search in all of the fields that are present
     if(Array.isArray(type)) {
-        //query = "*" + query + "*";
         type.forEach(function(type) {
-          var q = {}, tempObj = {};
+          let q = {}, tempObj = {};
 
           type = config.searchFieldNamespace + type;
           q[type] = query;
-
           tempObj[queryType] = q;
           matchFields.push(tempObj);
-        })
+        });
     }
 
-    // Search all available fields (searchfield == All)
+    // Search a single field
     else {
+        let q = {}, tempObj = {};
 
-        var q = {}, tempObj = {};
         q[type] = query;
-
         tempObj[queryType] = q;
         matchFields.push(tempObj);
     }
 
-    // If facet data is present, add it to the search
-    var matchFacetFields = [];
+    // If facets are present, add them to the search
     if(facets) {
       var indexKey, count=0;
       for(var key in facets) {
         for(var index of facets[key]) {
-          var q = {};
+          let q = {};
           count++;
 
           // Get the index key from the config facet list, using the stored facet name
@@ -87,7 +83,7 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
           // Add to the main ES query object
           q[indexKey] = index;
           matchFacetFields.push({
-            "match_phrase": q
+            "match_phrase": q 
           });
         }
       }
@@ -102,14 +98,13 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
       });
     }
 
-    // Search result restriction settings
-    var restrictions = [];
     // Do not show collection objects
     restrictions.push({
       "match": {
         "object_type": "collection"
       }
     });
+
     // Do not show objects that are children of compuond objects
     restrictions.push({
       "exists": {
@@ -117,9 +112,7 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
       }
     });
 
-
-    // Build query data object.  If query is empty, search for all items that are not collections. 
-    var queryObj = {};
+    // Querystring and facet search
     if(query != "" || facets) {
       queryObj = {
         "bool": {
@@ -134,6 +127,8 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
         }
       }
     }
+
+    // If empty querystring, search for all items that are not collections
     else {
       queryObj = {
         "bool": {
@@ -147,10 +142,10 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
       }
     }
 
-    // Build elasticsearch aggregations object from config facet list.
+    // Get elasticsearch aggregations object 
     var facetAggregations = Helper.getFacetAggregationObject(config.facets);
 
-    // Build elasticsearch query object.
+    // Create elasticsearch query object
     var data = {  
       index: config.elasticsearchIndex,
       type: config.searchIndexName,
@@ -162,27 +157,26 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
       }
     }
 
-    // Query the index.
+    // Query the index
     es.search(data, function (error, response, status) {
-
       var responseData = {};
+
       if (error){
         callback({status: false, message: error, data: null});
       }
       else {
 
-        // Return the aggs for the facet display
+        // Return the aggregation results for the facet display
         responseData['facets'] = response.aggregations;
         responseData['count'] = response.hits.total;
 
         try {
 
-          // Build the search results objects
+          // Create the search results objects
           var results = [], tn, resultData;
           for(var result of response.hits.hits) {
 
             // Get the thumbnail
-            //tn = Repository.getDatastreamUrl("tn", result._source.pid.replace('_', ':'));
             tn = config.rootUrl + "/datastream/" + result._source.pid.replace('_', ':') + "/tn";
 
             // Get the title and description data for the result listing
@@ -198,9 +192,8 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
             });
           }
 
-          // Add results array
+          // Add the results array, send the response
           responseData['results'] = results;
-
           callback({status: true, data: responseData});
         }
         catch (e) {
