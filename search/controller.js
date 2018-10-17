@@ -27,16 +27,28 @@ exports.search = function(req, res) {
 		query = '*';
 	}
 
-	// "Search field selection": If "search all", build array of types from config settings.  If type search, 'type'is passed into search function as a string.
+	// Get the search type
 	if(typeVal.toLowerCase() == 'all') {
-		type = [];
-		for(var field of config.searchFields) {
-			for(var key in field) {
-				type.push(field[key]);
+
+		// Non-scoped search: Use fulltect search fields
+		if(config.fulltextMetadataSearch === true) {
+			type = config.metadataKeywordFields;
+		}
+
+		// Non-scoped search: Search in all of the fields in the search type dropdown
+		else {
+			type = [];
+			for(var field of config.keywordFields) {
+				for(var key in field) {
+					type.push(field[key]);
+				}
 			}
 		}
 	}
+
+	// Scoped search.  Use the selected type in the search type dropdown
 	else {
+		
 		for(var field of config.searchFields) {
 			for(var key in field) {
 				if(key == typeVal) {

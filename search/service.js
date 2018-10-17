@@ -111,7 +111,7 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
           "field": "is_child_of"
       }
     });
-
+      console.log("TEST matchF", matchFields);
     // Querystring and facet search
     if(query != "" || facets) {
       queryObj = {

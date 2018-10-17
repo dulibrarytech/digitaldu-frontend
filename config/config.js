@@ -42,6 +42,9 @@ module.exports = {
     // Namespace path to the indexed search fields, if the fields are not in top-level of item index object.  Include ALL periods
     searchFieldNamespace: "",
 
+    // Search in the specified metadata keyword fields.  These fields will not appear in the Search Type selections.  Search All is not scoped to the selections that appear in the Search Type list.  
+    fulltextMetadataSearch: true,
+
     // Will appear in the view, if an item has no title information
     noTitlePlaceholder: "Untitled",
 
@@ -78,7 +81,53 @@ module.exports = {
     openseadragonImagePath: "/libs/openseadragon/images/",
 
     /*
-     * List of fields to search.  These will appear in 'Search Type' dropdown list
+     * Fields for fulltext search (search all)
+     * 
+     */ 
+    metadataKeywordFields: [
+        "display_record.abstract",
+        "display_record.accessCondition",
+        "display_record.classification",
+        "display_record.genre",
+        "display_record.identifier",
+        "display_record.language",
+        "display_record.location.url",
+        "display_record.name.namePart",
+        "display_record.name.role",
+        "display_record.note",
+        "display_record.originInfo.copyrightDate",
+        "display_record.originInfo.d_captured",
+        "display_record.originInfo.d_created",
+        // "display_record.originInfo.d_issued",    // Check index schema, no date format specified.  Throws error
+        "display_record.originInfo.frequency",
+        "display_record.originInfo.place",
+        "display_record.originInfo.publisher",
+        "display_record.physicalDescription.digitalOrigin",
+        "display_record.physicalDescription.extent",
+        "display_record.physicalDescription.form",
+        "display_record.physicalDescription.internetMediaType",
+        "display_record.physicalDescription.note",
+        "display_record.subject.city",
+        "display_record.subject.citySection",
+        "display_record.subject.continent",
+        "display_record.subject.country",
+        "display_record.subject.county",
+        "display_record.subject.genre",
+        "display_record.subject.geographic",
+        "display_record.subject.namePart",
+        "display_record.subject.occupation",
+        "display_record.subject.region",
+        "display_record.subject.role",
+        "display_record.subject.temporal",
+        "display_record.subject.topic",
+        "display_record.tableOfContents",
+        "display_record.targetAudience",
+        "display_record.title",
+        "display_record.typeOfResource"
+    ],
+
+    /*
+     * Fields for scoped search.  These will appear in 'Search Type' dropdown list
      * "Search type name": Index field to search"
      */ 
     searchFields: [
