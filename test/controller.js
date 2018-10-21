@@ -16,8 +16,7 @@ exports.testViewer = function(req, res) {
 		base_url: config.baseUrl
 	};
 
-	var viewer = Viewer.getObjectViewer({mime_type: "image/tiff", pid: "codu:58211"}, "image/tiff");
-	data['viewer'] = viewer;
+	data['manifest'] = {test: "manifest"};
 
 	// Build viewer, render test.html
 	res.render("test", data);

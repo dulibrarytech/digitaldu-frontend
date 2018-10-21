@@ -1,10 +1,32 @@
-<% include partials/header %>
+<% include partials/headerUV %>
 
-<h2>Test</h2>
+<!-- <div style="margin-top: 100px">
+	<h2>Test</h2> -->
 
-<!-- <iframe src="http://www.pdf995.com/samples/pdf.pdf" width="400" height="400" type="application/pdf" /> -->
-<iframe src="http://localhost:9006/repository/datastream/codu:65237/OBJ" width="400" height="400" type="application/pdf" />
+    <title>UV Hello World</title>
+    <style>
+        #uv {
+            width: 800px;
+            height: 600px;
+        }
+    </style>
 
-<h6>OK</h6>
+    
+    <div id="uv" class="uv" style="margin-top: 100px"></div>
 
-<% include partials/footer %>
+    <script>
+        window.addEventListener('uvLoaded', function (e) {
+            createUV('#uv', {
+                iiifResourceUri: 'http://wellcomelibrary.org/iiif/b18035723/manifest',
+                configUri: '<%- base_url %>/libs/universalviewer/uv-config.json'
+            }, new UV.URLDataProvider());
+            console.log("UV ADDED");
+        }, false);
+    </script>
+
+    
+
+<!--  	<h6>OK</h6>
+</div> -->
+
+<% include partials/footerUV %> 
