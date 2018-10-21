@@ -232,23 +232,3 @@ function getPDFViewer(objectData) {
 
 	return viewer;
 }	
-
-/**
- * 
- *
- * @param 
- * @return 
- */
-function getCompoundObjectViewer(objectData) {
-	return "<h2>COV</h2>";
-}
-
-/**
- * 
- *
- * @param 
- * @return 
- */
-function getBookViewer(objectData) {
-
-}

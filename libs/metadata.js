@@ -1,8 +1,8 @@
  /**
  * @file 
  *
- * Viewer class
- * Get viewer content for the object view templates
+ * Object Metadata Display class
+ * Generate data for the object template metadata displays
  *
  */
 
