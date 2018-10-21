@@ -22,7 +22,6 @@ module.exports = function () {
     app.use(bodyParser.json());
 
     app.use(express.static('./public'));
-    app.use(express.static('./public/libs/universalviewer'));
     app.set('views', './views');
     app.set('view engine', 'ejs');
 
