@@ -8,15 +8,20 @@ const async = require('async'),
 
     Viewer = require('../libs/viewer'),
     Facets = require('../libs/facets'),
-    Paginator = require('../libs/paginator');
+    Paginator = require('../libs/paginator'),
+    IIIF = require('../libs/IIIF');
 
-exports.testViewer = function(req, res) {
+exports.testUVViewer = function(req, res) {
 
 	var data = {
 		base_url: config.baseUrl
 	};
 
-	data['manifest'] = {test: "manifest"};
+	let object = {}, children = [];
+
+	object
+
+	data['manifest'] = IIIF.getManifest(object, children);
 
 	// Build viewer, render test.html
 	res.render("test", data);

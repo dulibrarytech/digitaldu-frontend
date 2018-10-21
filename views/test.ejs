@@ -1,8 +1,5 @@
 <% include partials/headerUV %>
 
-<!-- <div style="margin-top: 100px">
-	<h2>Test</h2> -->
-
     <title>UV Hello World</title>
     <style>
         #uv {
@@ -17,16 +14,11 @@
     <script>
         window.addEventListener('uvLoaded', function (e) {
             createUV('#uv', {
-                iiifResourceUri: 'http://wellcomelibrary.org/iiif/b18035723/manifest',
-                configUri: '<%- base_url %>/libs/universalviewer/uv-config.json'
+                iiifResourceUri: '<% manifest %>',
+                configUri: '<%- base_url %>/libs/universalviewer/uv-config.json',
+                root: '../../libs/universalviewer/uv'
             }, new UV.URLDataProvider());
-            console.log("UV ADDED");
         }, false);
     </script>
-
-    
-
-<!--  	<h6>OK</h6>
-</div> -->
 
 <% include partials/footerUV %> 
