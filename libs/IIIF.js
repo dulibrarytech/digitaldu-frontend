@@ -67,7 +67,7 @@ exports.getManifest = function(container, images, callback) {
 			canvas = {};
 
 		for(var index in data) {
-			imageData = data[index];
+			imageData = JSON.parse(data[index]);
 
 			canvas["@id"] = config.IIIFUrl + "/iiif/" + container.pid + "/canvas/c" + index;
 			canvas["@type"] = "sc:Canvas";
@@ -84,37 +84,9 @@ exports.getManifest = function(container, images, callback) {
 			resourceObject["@type"] = images[index].type; 
 			resourceObject["format"] = images[index].format; 
 
-			serviceObject["@context"] = "http://iiif.io/api/image/2/context.json";
-			serviceObject["id"] = config.cantaloupeUrl + "/iiif/2/" + container.pid;
-			serviceObject["profile"] = [];
-			serviceObject.profile.push("http://iiif.io/api/image/2/level2.json");
-
-			profileObject["formats"] = ["jpg", "tif", "gif", "png"];	// TODO Get formats array based on image type  getFormatArray(image.type);
-			profileObject["maxArea"] = 400000000,
-			profileObject["qualities"] = ["bitonal", "default", "gray", "color"];
-			profileObject["supports"] = [
-				"regionByPx",
-				"sizeByW",
-				"sizeByWhListed",
-				"cors",
-				"regionSquare",
-				"sizeAboveFull",
-				"canonicalLinkHeader",
-				"sizeByConfinedWh",
-				"sizeByPct",
-				"jsonldMediaType",
-				"regionByPct",
-				"rotationArbitrary",
-				"sizeByH",
-				"baseUriRedirect",
-				"rotationBy90s",
-				"profileLinkHeader",
-				"sizeByForcedWh",
-				"sizeByWh",
-				"mirroring"
-			];
-
-			serviceObject.profile.push(profileObject);
+			serviceObject["@context"] = imageData["@context"];
+			serviceObject["@id"] = imageData["@id"];
+			serviceObject["profile"] = imageData.profile;
 
 			resourceObject["service"] = serviceObject;
 			resourceObject["height"] = imageData.height;
