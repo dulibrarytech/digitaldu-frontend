@@ -21,6 +21,9 @@ module.exports = {
     topLevelCollectionName: "Root Collection",
     collectionMimeType: "collection",
 
+    // IIIF
+    IIIFUrl: process.env.IIIF_URL,
+
     // Search index name (type)
     searchIndexName: "data",
 
