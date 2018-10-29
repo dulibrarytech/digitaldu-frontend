@@ -12,6 +12,7 @@ const async = require('async'),
     Helper = require('./helper.js'),
     Service = require('./service.js'),
     Viewer = require('../libs/viewer'),
+    CompoundViewer = require('../libs/compound-viewer'),
     Facets = require('../libs/facets'),
     Paginator = require('../libs/paginator'),
     Metadata = require('../libs/metadata'),
@@ -179,32 +180,27 @@ exports.renderObjectView = function(req, res) {
 
 			var object = response.data,
 				index = req.params.index && isNaN(parseInt(req.params.index)) === false ? req.params.index : 0;
-					
-			// Render a parent object with child objects
-			if(Helper.isParentObject(object) && index > 0) {
+					console.log("TEST fetched object", object);
 
-				Service.retrieveChildren(object, function(error, children){
-					if(error) {
-						data.error = error;
-					}
-					else {
-						let activeChild = children[index-1];
-						switch(response.data.type) {
-							case "compound":
-								data.viewer = Viewer.getCompoundObjectViewer(parent, children, index);
-								break;
-							case "book":
-								//data.viewer = getBookViewer(parent, children, index);
-								break;	
-							default:
-								data.error = "Object not found";
-								break;
-						}
-						data.summary = Metadata.createSummaryDisplayObject(activeChild);
-						data.mods = Metadata.createMetadataDisplayObject(activeChild);
-					}
-					renderView(data);
-				});
+			// Render a parent object with child objects
+			if(Helper.isParentObject(object)) {
+				switch(object.object_type) {
+					case "compound":
+						data.viewer = Viewer.getIIIFObjectViewer(object, index); // the payload, uv object... will contact discovery iiif endpoint for the manifest
+							console.log("TEST compound viewer:", data.viewer);
+						break;
+					case "book":
+						//data.viewer = CompoundViewer.getBookViewer(...);
+						break;	
+					default:
+						data.error = "Object not found";
+						break;
+				}
+
+				data.summary = Metadata.createSummaryDisplayObject(object);
+				data.mods = Metadata.createMetadataDisplayObject(object);
+
+				renderView(data);
 			}
 
 			// Render singular object
@@ -276,5 +272,12 @@ exports.getDatastream = function(req, res) {
 				stream.pipe(res);
 			}
 		}
+	});
+}
+
+exports.getIIIFManifest = function(req, res) {
+	let pid = req.params.pid || "";
+	Service.getManifestObject(pid, function(manifest) {
+		res.send(JSON.stringify(manifest));
 	});
 }

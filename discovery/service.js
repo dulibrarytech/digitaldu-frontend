@@ -17,6 +17,7 @@ const config = require('../config/config');
 const request  = require("request");
 const Repository = require('../libs/repository');
 const Helper = require("./helper");
+const IIIF = require("../libs/IIIF");
 
 /**
  * Return a list of the root (or top) level collections
@@ -431,4 +432,72 @@ var getParentTrace = function(pid, collections, callback) {
  */
 exports.retrieveChildren = function(object, callback) {
   callback(object.children || []);
+}
+
+exports.getManifestObject = function(pid, callback) {
+  var object = {}, children = [];
+
+  fetchObjectByPid(pid, function(response) {
+
+    if(response.status) {
+      // Create object for IIIF lib
+      // var object = {
+      //   title: response.title,
+      //   metadata: {
+      //     "Title:": response.title,
+      //     "Creator": response.creator
+      //   }
+      // };
+
+      // Create children array for IIIF lib
+      // var children = [];
+      // for(var key in response.children) {
+      //   children.push({
+      //     label: response.children[key].title,
+      //     sequence: response.children[key].sequence,
+      //     description: response.children[key].description,
+      //     format: response.children[key].mimeType,
+      //     resourceID: response.children[key].url
+      //   });
+      // }
+
+      // IIIF.getManifest(object, children, function(manifest) {
+      //   callback(manifest);
+      // });
+    }
+    else {
+      //callback({});
+    }
+  });
+
+  // Test data
+  object = {
+    title: "Title string",
+    sequenceID: "codu:59239",
+    description: "Description string",
+    metadata: {
+      "Title:": "Title string",
+      "Creator": "Creator string"
+    }
+  };
+  children.push({
+      label: "Image 1",
+      sequence: "1",
+      description: "Image 1 description",
+      format: "image/jp2",
+      type: "Still Image",
+      resourceID: "codu:70031"
+  });
+  children.push({
+    label: "Image 2",
+      sequence: "2",
+      description: "Image 2 description",
+      format: "image/jp2",
+      type: "Still Image",
+      resourceID: "codu:70039"
+  });
+
+  IIIF.getManifest(object, children, function(manifest) {
+    callback(manifest);
+  });
 }

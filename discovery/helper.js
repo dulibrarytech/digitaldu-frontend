@@ -219,12 +219,8 @@ exports.getFacetAggregationObject = function(facets) {
  * @return 
  */
 exports.isParentObject = function(object) {
-  var isParent = false;
-  if(object.type == "compunnd" ||
-      object.type == "book") {
-    isParent = true;
-  }
-  return isParent;
+    console.log("TEST ochdef", typeof object.children);
+  return typeof object.children != 'undefined';
 }
 
 

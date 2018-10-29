@@ -22,7 +22,7 @@ exports.getManifest = function(container, images, callback) {
 
 	// Set container object info fields
 	manifest["@context"] = "http://iiif.io/api/presentation/2/context.json";	// OK (standard)
-	manifest["@id"] = config.IIIFUrl + "/iiif/" + container.pid + "/manifest";	// OK  IF url is [speccoll/iiif/]
+	manifest["@id"] = config.IIIFUrl + "/iiif/" + container.sequenceID + "/manifest";	// OK  IF url is [speccoll/iiif/]
 	manifest["@type"] = "sc:Manifest";	// OK standard
 	manifest["label"] = container.title;	// OK
 
@@ -49,7 +49,7 @@ exports.getManifest = function(container, images, callback) {
 
 	// One sequence, multiple canvases
 	let sequence = {
-		"@id": config.IIIFUrl + "/iiif/" + container.pid + "/sequence/s0",
+		"@id": config.IIIFUrl + "/iiif/" + container.sequenceID + "/sequence/s0",
 		"@type": "sc:Sequence",
 		"label": "Sequence s0",
 		"canvases": []
@@ -58,29 +58,31 @@ exports.getManifest = function(container, images, callback) {
 
 	// Build a canvas object for each image
 	getImageData(images, [], function(error, data) {
-		var imageData, 
+		let imageData, 
 			imageDataObject = {}, 
 			resourceObject = {}, 
 			serviceObject = {},
 			profileObject = {},
 			canvases = [], 
-			canvas = {};
+			canvas = {
+				images: []
+			};
 
 		for(var index in data) {
 			imageData = JSON.parse(data[index]);
 
-			canvas["@id"] = config.IIIFUrl + "/iiif/" + container.pid + "/canvas/c" + index;
+			canvas["@id"] = config.IIIFUrl + "/iiif/" + container.sequenceID + "/canvas/c" + index;
 			canvas["@type"] = "sc:Canvas";
 			canvas["label"] = "Canvas c" + index;
 			canvas["height"] = imageData.height;
 			canvas["width"] = imageData.width;
 
 			imageDataObject["@context"] = "http://iiif.io/api/presentation/2/context.json";
-			imageDataObject["@id"] = config.IIIFUrl + "/iiif/" + container.pid + "/image/i" + index;
+			imageDataObject["@id"] = config.IIIFUrl + "/iiif/" + container.sequenceID + "/image/i" + index;
 			imageDataObject["@type"] =  "oa:Annotation";
 			imageDataObject["motivation"] = "";
 
-			resourceObject["@id"] = config.cantaloupeUrl + "/iiif/2/" + container.pid + "/full/full/0/default.jpg";
+			resourceObject["@id"] = config.cantaloupeUrl + "/iiif/2/" + container.sequenceID + "/full/full/0/default.jpg";
 			resourceObject["@type"] = images[index].type; 
 			resourceObject["format"] = images[index].format; 
 
@@ -95,10 +97,10 @@ exports.getManifest = function(container, images, callback) {
 			imageDataObject["resource"] = resourceObject;
 			imageDataObject["on"] = canvas["@id"];
 
-			canvas["images"] = [];
 			canvas.images.push(imageDataObject);
 			canvases.push(canvas);
 		}
+			console.log("TEST camvas images", canvas.images);
 		manifest.sequences[0].canvases = canvases;
 
 		// Structures

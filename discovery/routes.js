@@ -41,6 +41,9 @@ module.exports = function (app) {
         .get(function(req, res) {
             res.redirect("/datastream/" + req.params.pid + "/" + req.params.datastream);
     });
+
+    app.route('/iiif/:pid/manifest')
+        .get(Discovery.getIIIFManifest);
 };
 
 
