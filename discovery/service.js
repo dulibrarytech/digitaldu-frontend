@@ -439,10 +439,13 @@ exports.getManifestObject = function(pid, callback) {
 
   fetchObjectByPid(pid, function(response) {
     if(response.status) {
+        console.log("TEST object in", response.data);
       // Create object for IIIF
       var object = response.data,
       container = {
+        containerID: object.pid,
         title: object.title,
+        description: object.description,
         metadata: {
           "Title:": object.title,
           "Creator": object.creator

@@ -19,10 +19,10 @@ const 	config = require('../config/config'),
  */
 exports.getManifest = function(container, images, callback) {
 	var manifest = {};
-
+		console.log("TEST container in", container);
 	// Set container object info fields
 	manifest["@context"] = "http://iiif.io/api/presentation/2/context.json";	// OK (standard)
-	manifest["@id"] = config.IIIFUrl + "/iiif/" + container.sequenceID + "/manifest";	// OK  IF url is [speccoll/iiif/]
+	manifest["@id"] = config.IIIFUrl + "/" + container.containerID + "/manifest";	// OK  IF url is [speccoll/iiif/]
 	manifest["@type"] = "sc:Manifest";	// OK standard
 	manifest["label"] = container.title;	// OK
 
@@ -49,7 +49,7 @@ exports.getManifest = function(container, images, callback) {
 
 	// One sequence, multiple canvases
 	let sequence = {
-		"@id": config.IIIFUrl + "/iiif/" + container.sequenceID + "/sequence/s0",
+		"@id": config.IIIFUrl + "/" + container.containerID + "/sequence/s0",
 		"@type": "sc:Sequence",
 		"label": "Sequence s0",
 		"canvases": []
@@ -76,18 +76,18 @@ exports.getManifest = function(container, images, callback) {
 			resourceObject = {};
 			serviceObject = {};
 
-			canvas["@id"] = config.IIIFUrl + "/iiif/" + container.sequenceID + "/canvas/c" + index;
+			canvas["@id"] = config.IIIFUrl + "/" + container.containerID + "/canvas/c" + index;
 			canvas["@type"] = "sc:Canvas";
-			canvas["label"] = "Canvas c" + index;
+			canvas["label"] = imageData.label;
 			canvas["height"] = imageData.height;
 			canvas["width"] = imageData.width;
 
 			imageDataObject["@context"] = "http://iiif.io/api/presentation/2/context.json";
-			imageDataObject["@id"] = config.IIIFUrl + "/iiif/" + container.sequenceID + "/image/i" + index;
+			imageDataObject["@id"] = config.IIIFUrl + "/" + container.containerID + "/image/i" + index;
 			imageDataObject["@type"] =  "oa:Annotation";
 			imageDataObject["motivation"] = "";
 
-			resourceObject["@id"] = config.cantaloupeUrl + "/iiif/2/" + container.sequenceID + "/full/full/0/default.jpg";
+			resourceObject["@id"] = config.cantaloupeUrl + "/iiif/2/" + container.containerID + "/full/full/0/default.jpg";
 			resourceObject["@type"] = images[index].type; 
 			resourceObject["format"] = images[index].format; 
 
