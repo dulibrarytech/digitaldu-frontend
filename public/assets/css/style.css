@@ -221,6 +221,11 @@ button:hover {
   margin-bottom: 0 !important;
 }
 
+#uv {
+  width: 800px;
+  height: 600px;
+}
+
 div#wrapper {
   background: white;
   min-height: 600px;

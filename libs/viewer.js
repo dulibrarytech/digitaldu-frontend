@@ -66,8 +66,18 @@ exports.getObjectViewer = function(object, mimeType="") {
  * @param 
  * @return 
  */
-function getCompoundObjectViewer(objects, index) {
-	console.log("TEST getCOV");
+exports.getIIIFObjectViewer = function(object, index=null) {
+	let viewer = '<div id="uv" class="uv" style="margin-top: 100px"></div>';
+		viewer += '<script>';
+		viewer += 'window.addEventListener("uvLoaded", function (e) {';
+		viewer += 'createUV("#uv", {';
+		viewer += 'iiifResourceUri: "' + config.IIIFUrl + '/' + object.pid + '/manifest",';
+		viewer += 'configUri: "' + config.baseUrl + '/libs/universalviewer/uv-config.json",';
+		viewer += 'root: "../../libs/universalviewer/uv",';
+		viewer += '}, new UV.URLDataProvider());';
+		viewer += '}, false);';
+		viewer += '</script>';
+	return viewer;
 }
 
 /**
@@ -201,6 +211,7 @@ function getLargeImageViewer(objectData) {
 		viewer +=     'immediateRender: true,'
 		viewer +=     'showNavigator: true,'
 		viewer +=     'tileSources: "' + config.cantaloupeUrl + '/iiif/2/' + objectData.pid + '"'
+		//viewer +=     'tileSources: "' + config.IIIFImageServerPath + '/' + objectData.pid + '"'
 		viewer += '});'
 		viewer += '</script>';
 	}
