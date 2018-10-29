@@ -219,7 +219,6 @@ exports.getFacetAggregationObject = function(facets) {
  * @return 
  */
 exports.isParentObject = function(object) {
-    console.log("TEST ochdef", typeof object.children);
   return typeof object.children != 'undefined';
 }
 

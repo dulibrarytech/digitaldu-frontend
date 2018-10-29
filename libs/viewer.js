@@ -67,7 +67,7 @@ exports.getObjectViewer = function(object, mimeType="") {
  * @return 
  */
 exports.getIIIFObjectViewer = function(object, index=null) {
-	let viewer = '<div id="uv" class="uv" style="margin-top: 100px"></div>';
+	let viewer = '<div id="uv" class="uv"></div>';
 		viewer += '<script>';
 		viewer += 'window.addEventListener("uvLoaded", function (e) {';
 		viewer += 'createUV("#uv", {';

@@ -180,14 +180,12 @@ exports.renderObjectView = function(req, res) {
 
 			var object = response.data,
 				index = req.params.index && isNaN(parseInt(req.params.index)) === false ? req.params.index : 0;
-					console.log("TEST fetched object", object);
 
 			// Render a parent object with child objects
 			if(Helper.isParentObject(object)) {
 				switch(object.object_type) {
 					case "compound":
 						data.viewer = Viewer.getIIIFObjectViewer(object, index); // the payload, uv object... will contact discovery iiif endpoint for the manifest
-							console.log("TEST compound viewer:", data.viewer);
 						break;
 					case "book":
 						//data.viewer = CompoundViewer.getBookViewer(...);

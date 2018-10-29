@@ -59,17 +59,22 @@ exports.getManifest = function(container, images, callback) {
 	// Build a canvas object for each image
 	getImageData(images, [], function(error, data) {
 		let imageData, 
-			imageDataObject = {}, 
-			resourceObject = {}, 
-			serviceObject = {},
-			profileObject = {},
+			imageDataObject, 
+			resourceObject, 
+			serviceObject,
 			canvases = [], 
-			canvas = {
-				images: []
-			};
+			canvas;
 
 		for(var index in data) {
 			imageData = JSON.parse(data[index]);
+
+			// Reset the containers
+			canvas = {
+				images: []
+			};
+			imageDataObject = {};
+			resourceObject = {};
+			serviceObject = {};
 
 			canvas["@id"] = config.IIIFUrl + "/iiif/" + container.sequenceID + "/canvas/c" + index;
 			canvas["@type"] = "sc:Canvas";
@@ -100,7 +105,7 @@ exports.getManifest = function(container, images, callback) {
 			canvas.images.push(imageDataObject);
 			canvases.push(canvas);
 		}
-			console.log("TEST camvas images", canvas.images);
+
 		manifest.sequences[0].canvases = canvases;
 
 		// Structures

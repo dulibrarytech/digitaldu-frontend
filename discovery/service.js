@@ -438,66 +438,36 @@ exports.getManifestObject = function(pid, callback) {
   var object = {}, children = [];
 
   fetchObjectByPid(pid, function(response) {
-
     if(response.status) {
-      // Create object for IIIF lib
-      // var object = {
-      //   title: response.title,
-      //   metadata: {
-      //     "Title:": response.title,
-      //     "Creator": response.creator
-      //   }
-      // };
+      // Create object for IIIF
+      var object = response.data,
+      container = {
+        title: object.title,
+        metadata: {
+          "Title:": object.title,
+          "Creator": object.creator
+        }
+      };
 
-      // Create children array for IIIF lib
-      // var children = [];
-      // for(var key in response.children) {
-      //   children.push({
-      //     label: response.children[key].title,
-      //     sequence: response.children[key].sequence,
-      //     description: response.children[key].description,
-      //     format: response.children[key].mimeType,
-      //     resourceID: response.children[key].url
-      //   });
-      // }
+      // Create children array for IIIF
+      var children = [];
+      for(var key in object.children) {
+        children.push({
+          label: object.children[key].title,
+          sequence: object.children[key].sequence,
+          description: object.children[key].description,
+          format: object.children[key].mimeType,
+          type: object.children[key].type,
+          resourceID: object.children[key].url
+        });
+      }
 
-      // IIIF.getManifest(object, children, function(manifest) {
-      //   callback(manifest);
-      // });
+      IIIF.getManifest(container, children, function(manifest) {
+        callback(manifest);
+      });
     }
     else {
-      //callback({});
+      callback(response.message);
     }
-  });
-
-  // Test data
-  object = {
-    title: "Title string",
-    sequenceID: "codu:59239",
-    description: "Description string",
-    metadata: {
-      "Title:": "Title string",
-      "Creator": "Creator string"
-    }
-  };
-  children.push({
-      label: "Image 1",
-      sequence: "1",
-      description: "Image 1 description",
-      format: "image/jp2",
-      type: "Still Image",
-      resourceID: "codu:70031"
-  });
-  children.push({
-    label: "Image 2",
-      sequence: "2",
-      description: "Image 2 description",
-      format: "image/jp2",
-      type: "Still Image",
-      resourceID: "codu:70039"
-  });
-
-  IIIF.getManifest(object, children, function(manifest) {
-    callback(manifest);
   });
 }
