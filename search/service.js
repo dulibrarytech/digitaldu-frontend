@@ -209,7 +209,6 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
  * @return 
  */
 exports.searchFacets = function (query, facets, page, callback) {
-    console.log("TEST"); 
     client.search({
             index: config.elasticsearchIndex,
             type: config.searchIndexName,

@@ -32,8 +32,7 @@ const IIIF = require("../libs/IIIF");
  */
 exports.getTopLevelCollections = function(pageNum=0, callback) {
   Repository.getRootCollections().catch(error => {
-    console.log(error);
-    callback({status: false, message: error, data: null});
+    callback(error, null);
   })
   .then( response => {
       var collections = {
@@ -42,7 +41,8 @@ exports.getTopLevelCollections = function(pageNum=0, callback) {
       }
       if(response && response.length > 0) {
         var list = Helper.createItemList(JSON.parse(response));
-        callback({status: true, data: list});
+
+        callback(null, list);
       }
       else {
 
@@ -64,8 +64,8 @@ exports.getTopLevelCollections = function(pageNum=0, callback) {
         // Query the index for root collection members
         es.search(data, function (error, response, status) {
           var responseData = {};
-          if (error){
-            callback({status: false, message: error, data: null});
+          if(error){
+            callback(error, null);
           }
           else {
             var results = [];
@@ -77,11 +77,10 @@ exports.getTopLevelCollections = function(pageNum=0, callback) {
 
             // Sort the results by title string in alphabetic order
             var sorted = Helper.sortSearchResultObjects(results);
-
             collections.count = response.hits.total;
             collections.list = Helper.createItemList(sorted);
 
-            callback({status: true, message: "", data: collections});
+            callback(null, collections);
           }
         });
       }
@@ -100,12 +99,15 @@ exports.getTopLevelCollections = function(pageNum=0, callback) {
  */
 exports.getCollectionsInCommunity = function(communityID, callback) {
   Repository.getCollections(communityID).catch(error => {
-    callback({status: false, message: error, data: null});
+    callback(error, null);
   })
   .then( response => {
       if(response) {
         var list = Helper.createItemList(JSON.parse(response));
-        callback({status: true, message: "", data: list});
+        callback(null, list);
+      }
+      else {
+        callback("Error retrieving collections", null);
       }
   });
 }
@@ -118,7 +120,7 @@ exports.getCollectionsInCommunity = function(communityID, callback) {
  */
 exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, callback) {
   Repository.getCollectionObjects(collectionID).catch(error => {
-    callback({status: false, message: error, data: null});
+    callback(error, null);
   })
   .then( response => {
       var collection = {
@@ -134,9 +136,8 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
       // Validate repository response
       if(response && response.length > 0) {
         collection.count = response.length;
-
         var list = Helper.createItemList(JSON.parse(response));
-        callback({status: true, data: list});
+        callback(null, list);
       }
       else {
 
@@ -196,10 +197,10 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
 
           var responseData = {};
           if (error){
-            callback({status: false, message: error, data: null});
+            callback(error, null);
           }
           else if(data.body.from > response.hits.total) {
-            callback({status: false, message: "Invalid page number", data: null});
+            callback("Invalid page number", null);
           }
           else {
             var results = [];
@@ -214,14 +215,14 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
             collection.count = response.hits.total;
 
             // Get this collection's title
-            fetchObjectByPid(collectionID, function(response) {
-              if(response.status) {
-                collection.title = response.data.title;
-                callback({status: true, data: collection});
+            fetchObjectByPid(collectionID, function(error, object) {
+              if(error) {
+                collection.title = "";
+                callback(error, []);
               }
               else {
-                collection.title = "";
-                callback({status: false, message: response.message, data: []});
+                collection.title = response.title;
+                callback(null, collection);
               }
             });
           }
@@ -247,8 +248,11 @@ exports.getTitleString = function(pids, titles, callback) {
   pid = pidArray[ titles.length ];
   
   // Get the title data for the current pid
-  fetchObjectByPid(pid, function (response) {
-    if(response.status) {
+  fetchObjectByPid(pid, function (error, response) {
+    if(error) {
+      callback(error, titles);
+    }
+    else {
       titles.push({
         name: response.data.title[0],
         pid: pid
@@ -256,15 +260,12 @@ exports.getTitleString = function(pids, titles, callback) {
 
       if(titles.length == pidArray.length) {
         // Have found a title for each pid in the input array
-        callback(titles);
+        callback(null, titles);
       }
       else {
         // Get the title for the next pid in the pid array
         getTitleString(pidArray, titles, callback);
       }
-    }
-    else {
-      callback(titles);
     }
   });
 }
@@ -302,14 +303,14 @@ var fetchObjectByPid = function(pid, callback) {
       }
   }, function (error, response) {
       if(error) {
-        callback({status: false, message: error, data: null});
+        callback(error, null);
       }
       else if(response.hits.total > 0) {
         objectData = response.hits.hits[0]._source;
-        callback({status: true, data: objectData});
+        callback(null, objectData);
       }
       else {
-        callback({status: false, message: "Object not found", data: {}});
+        callback("Object not found", {});
       }
   });
 }
@@ -342,9 +343,9 @@ var getFacets = function (callback) {
             "aggregations": aggs
         }
     }).then(function (body) {
-        callback(body.aggregations);
+        callback(null, body.aggregations);
     }, function (error) {
-        callback(error.body.error.reason);
+        callback(error.body.error.reason, null);
     });
 }
 exports.getFacets = getFacets;
@@ -397,29 +398,29 @@ exports.getCollectionHeirarchy = function(pid, callback) {
  */
 var getParentTrace = function(pid, collections, callback) {
 
-  fetchObjectByPid(pid, function(response) {
+  fetchObjectByPid(pid, function(error, response) {
     var title = "",
         url = config.rootUrl + "/collection/" + pid;
 
     // There is > 1 title associated with this object, use the first one
-    if(typeof response.data.title == "object") {
-      title = response.data.title[0];
+    if(typeof response.title == "object") {
+      title = response.title[0];
     }
     else {
-      title = response.data.title || "Untitled Collection";
+      title = response.title || "Untitled Collection";
     }
-    collections.push({pid: response.data.pid, name: title, url: url});
+    collections.push({pid: response.pid, name: title, url: url});
 
     // There is > 1 collection parents associated with this object.  Use the first one for trace
-    if(typeof response.data.is_member_of_collection == 'object') {
-      getParentTrace(response.data.is_member_of_collection[0], collections, callback);
+    if(typeof response.is_member_of_collection == 'object') {
+      getParentTrace(response.is_member_of_collection[0], collections, callback);
     }
-    else if(response.data.is_member_of_collection.indexOf("root") >= 0) {
+    else if(response.is_member_of_collection.indexOf("root") >= 0) {
       collections.push({pid: config.topLevelCollectionPID, name: config.topLevelCollectionName, url: config.rootUrl});
       callback(collections.reverse());
     }
     else {
-      getParentTrace(response.data.is_member_of_collection, collections, callback);
+      getParentTrace(response.is_member_of_collection, collections, callback);
     }
   });
 }
@@ -437,11 +438,13 @@ exports.retrieveChildren = function(object, callback) {
 exports.getManifestObject = function(pid, callback) {
   var object = {}, children = [];
 
-  fetchObjectByPid(pid, function(response) {
-    if(response.status) {
-        console.log("TEST object in", response.data);
+  fetchObjectByPid(pid, function(error, response) {
+    if(error) {
+      callback(error, JSON.stringify({}));
+    }
+    else {
       // Create object for IIIF
-      var object = response.data,
+      var object = response,
       container = {
         containerID: object.pid,
         title: object.title,
@@ -466,11 +469,8 @@ exports.getManifestObject = function(pid, callback) {
       }
 
       IIIF.getManifest(container, children, function(manifest) {
-        callback(manifest);
+        callback(null, manifest);
       });
-    }
-    else {
-      callback(response.message);
     }
   });
 }
