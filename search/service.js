@@ -52,18 +52,17 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
     if(Array.isArray(type)) {
         type.forEach(function(type) {
           let q = {}, tempObj = {};
-
           type = config.searchFieldNamespace + type;
           q[type] = query;
           tempObj[queryType] = q;
           matchFields.push(tempObj);
         });
+          //console.log("TEST", matchFields); // <-- use multi match
     }
 
     // Search a single field
     else {
         let q = {}, tempObj = {};
-
         q[type] = query;
         tempObj[queryType] = q;
         matchFields.push(tempObj);
@@ -120,8 +119,8 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
           "must": matchFacetFields,
           "must_not": restrictions,
           "filter": {
-            "bool": {
-              "should": matchFields
+            "bool": {  // Why using this bool?
+              "should": matchFields   // must here?  
             }
           }
         }
@@ -194,10 +193,10 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
 
           // Add the results array, send the response
           responseData['results'] = results;
-          callback({status: true, data: responseData});
+          callback(null, responseData);
         }
-        catch (e) {
-          callback({status: false, message: e, data: responseData});
+        catch(error) {
+          callback(error, {});
         }
       }
   });
@@ -210,6 +209,7 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
  * @return 
  */
 exports.searchFacets = function (query, facets, page, callback) {
+    console.log("TEST"); 
     client.search({
             index: config.elasticsearchIndex,
             type: config.searchIndexName,
@@ -228,8 +228,8 @@ exports.searchFacets = function (query, facets, page, callback) {
             }
         }
     ).then(function (body) {
-        callback(body);
+        callback(null, body);
     }, function (error) {
-        callback(error);
+        callback(error, {});
     });
 };

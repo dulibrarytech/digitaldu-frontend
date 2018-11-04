@@ -58,7 +58,8 @@ exports.search = function(req, res) {
 		}
 	}
 
-	Service.searchIndex(query, type, facets, collection, page, function(response) {
+	//Service.searchIndex(query, type, facets, collection, page, function(response) {
+	Service.searchIndex(query, type, facets, collection, page, function(error, response) {
 
 		var data = {
 			error: null,
@@ -74,18 +75,16 @@ exports.search = function(req, res) {
 		},
 		path = config.rootUrl + req.url.substring(req.url.indexOf('search')-1);
 
-		if(response.status) {
-
-			// Get data for the view
-			data.results = response.data.results;
-			data.facets = Facets.create(response.data.facets, config.rootUrl);	// PROD
-			data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(facets);  // Param: the facets from the search request params
-			data.pagination = Paginator.create(response.data.results, data.page, config.maxResultsPerPage, response.data.count, path);
+		if(error) {
+			console.error("Search Error: ", error);
+			data.results = null;
+			data.error = error;
 		}
 		else {
-			console.error("Search Error: ", response.message);
-			data.results = null;
-			data.error = response.message;
+			data.results = response.results;
+			data.facets = Facets.create(response.facets, config.rootUrl);	// PROD
+			data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(facets);  // Param: the facets from the search request params
+			data.pagination = Paginator.create(response.results, data.page, config.maxResultsPerPage, response.count, path);
 		}
 
 		return res.render('results', data);
