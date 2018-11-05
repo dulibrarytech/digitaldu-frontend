@@ -197,7 +197,6 @@ exports.renderObjectView = function(req, res) {
 
 				data.summary = Metadata.createSummaryDisplayObject(object);
 				data.mods = Metadata.createMetadataDisplayObject(object);
-
 				renderView(data);
 			}
 
@@ -219,13 +218,13 @@ exports.renderObjectView = function(req, res) {
 					}
 
 					// Get titles of any collection parents
-					Service.getTitleString(object.is_member_of_collection, [], function(error, data) {
+					Service.getTitleString(object.is_member_of_collection, [], function(error, titleData) {
 						if(error) {
 							console.log(error);
 						}
 						// Add the titles of the parent collections to the mods display, if any
 						let titles = [];
-						for(var title of data) {
+						for(var title of titleData) {
 							titles.push('<a href="' + config.rootUrl + '/collection/' + title.pid + '">' + title.name + '</a>');
 						}
 						if(titles.length > 0) {
@@ -249,12 +248,12 @@ exports.getDatastream = function(req, res) {
 	var ds = req.params.datastream || "",
 		pid = req.params.pid || "";
 
-	Service.getDatastream(pid, ds, function(stream, error) {
+	Service.getDatastream(pid, ds, function(error, stream) {
 		if(error) {
 			console.log(error);
-
 			if(ds.toLowerCase() == "tn") {
-				Service.getThumbnailPlaceholderStream(function(stream, error) {
+				Service.getThumbnailPlaceholderStream(function(error, stream) {
+					// TODO hndle error
 					stream.pipe(res);
 				});
 			}
@@ -264,7 +263,8 @@ exports.getDatastream = function(req, res) {
 		}
 		else {
 			if(stream.headers['content-type'] == "text/plain" && ds.toLowerCase() == "tn") {
-				Service.getThumbnailPlaceholderStream(function(stream, error) {
+				Service.getThumbnailPlaceholderStream(function(error, stream) {
+					// TODO hndle error
 					stream.pipe(res);
 				});
 			}

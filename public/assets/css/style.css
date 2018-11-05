@@ -1328,6 +1328,10 @@ div.info-content {
   margin: 6px 0 10px 0;
 }
 
+.uv .rightPanel .top .title {
+  visibility: hidden;
+}
+
 @media screen and (min-color-index:0) and(-webkit-min-device-pixel-ratio:0)
 { @media {
     .searchform button {

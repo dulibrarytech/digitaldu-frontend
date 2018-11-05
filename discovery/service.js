@@ -254,7 +254,7 @@ exports.getTitleString = function(pids, titles, callback) {
     }
     else {
       titles.push({
-        name: response.data.title[0],
+        name: response.title[0],
         pid: pid
       });
 
@@ -357,14 +357,14 @@ exports.getFacets = getFacets;
  * @return 
  */
 exports.getDatastream = function(objectID, datastreamID, callback) {
-  Repository.streamData(objectID, datastreamID, function(stream, error) {
+  Repository.streamData(objectID, datastreamID, function(error, stream) {
 
     // If stream is null, send error 
     if(error) {
-      callback(null, error);
+      callback(error, null);
     }
     else {
-      callback(stream);
+      callback(null, stream);
     }
   }) 
 }
@@ -377,7 +377,8 @@ exports.getDatastream = function(objectID, datastreamID, callback) {
  */
 exports.getThumbnailPlaceholderStream = function(callback) {
   var rstream = fs.createReadStream(config.tnPlaceholderPath);
-  callback(rstream, null);
+    console.log("TEST pl stream", rstream);
+  callback(null, rstream);
 }
 
 /**
@@ -443,14 +444,15 @@ exports.getManifestObject = function(pid, callback) {
       callback(error, JSON.stringify({}));
     }
     else {
+        console.log("TEST object is", response);
       // Create object for IIIF
       var object = response,
       container = {
         containerID: object.pid,
         title: object.title,
-        description: object.description,
+        description: object.abstract,
         metadata: {
-          "Title:": object.title,
+          "Title": object.title,
           "Creator": object.creator
         }
       };

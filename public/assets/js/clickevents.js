@@ -3,7 +3,6 @@ var i;
 console.log("ADD", coll);
 for (i = 0; i < coll.length; i++) {
     coll[i].addEventListener("click", function() {
-      console.log("CL");
         this.classList.toggle("active");
         // var content = this.nextElementSibling;
         var content = document.getElementById("mods-display");

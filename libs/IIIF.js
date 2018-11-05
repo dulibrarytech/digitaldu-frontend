@@ -19,7 +19,7 @@ const 	config = require('../config/config'),
  */
 exports.getManifest = function(container, images, callback) {
 	var manifest = {};
-		console.log("TEST container in", container);
+		console.log("TEST images in", images);
 	// Set container object info fields
 	manifest["@context"] = "http://iiif.io/api/presentation/2/context.json";	// OK (standard)
 	manifest["@id"] = config.IIIFUrl + "/" + container.containerID + "/manifest";	// OK  IF url is [speccoll/iiif/]
@@ -66,8 +66,8 @@ exports.getManifest = function(container, images, callback) {
 			canvas;
 
 		for(var index in data) {
-			imageData = JSON.parse(data[index]);
-
+			imageData = data[index];
+				
 			// Reset the containers
 			canvas = {
 				images: []
@@ -78,7 +78,7 @@ exports.getManifest = function(container, images, callback) {
 
 			canvas["@id"] = config.IIIFUrl + "/" + container.containerID + "/canvas/c" + index;
 			canvas["@type"] = "sc:Canvas";
-			canvas["label"] = imageData.label;
+			canvas["label"] = images[index].label;
 			canvas["height"] = imageData.height;
 			canvas["width"] = imageData.width;
 
@@ -124,6 +124,7 @@ var getImageData = function(images, data=[], callback) {
 			url = config.cantaloupeUrl + "/iiif/2/" + image.resourceID;
 
 		request(url, function(error, response, body) {
+				console.log("TEST body", url);
 			if(error) {
 				callback(error, []);
 			}
@@ -132,7 +133,7 @@ var getImageData = function(images, data=[], callback) {
 				getImageData(images, data, callback);
 			}
 			else {
-				data.push(body);
+				data.push(JSON.parse(body));
 				getImageData(images, data, callback);
 			}
 		});
