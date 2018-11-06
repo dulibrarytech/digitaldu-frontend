@@ -73,7 +73,7 @@ exports.getIIIFObjectViewer = function(object, index=null) {
 		viewer += 'createUV("#uv", {';
 		viewer += 'iiifResourceUri: "' + config.IIIFUrl + '/' + object.pid + '/manifest",';
 		viewer += 'configUri: "' + config.baseUrl + '/libs/universalviewer/uv-config.json",';
-		viewer += 'root: "../../libs/universalviewer/uv",';
+		viewer += 'root: "../../' + config.rootRoute + 'libs/universalviewer/uv",';
 		viewer += '}, new UV.URLDataProvider());';
 		viewer += '}, false);';
 		viewer += '</script>';
