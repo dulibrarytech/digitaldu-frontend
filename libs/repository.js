@@ -1,9 +1,8 @@
  /**
  * @file 
  *
- * Fedora repository api class
- * Interface for the Fedora api
- *
+ * Fedora Repository Interface 
+ * 
  */
 
 'use strict';
@@ -107,10 +106,10 @@ exports.streamData = function(pid, dsid, callback) {
 	var rs = require('request-stream');
 	rs(url, {}, function(err, res) {
 		if(err) {
-			callback(null, "Could not open datastream. " + err + " Check connection to repository");
+			callback("Could not open datastream. " + err + " Check connection to repository", null);
 		}
 		else {
-			callback(res);
+			callback(null, res);
 		}
 	});
 }

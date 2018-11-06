@@ -19,7 +19,6 @@ const 	config = require('../config/config'),
  */
 exports.getManifest = function(container, images, callback) {
 	var manifest = {};
-		console.log("TEST images in", images);
 	// Set container object info fields
 	manifest["@context"] = "http://iiif.io/api/presentation/2/context.json";	// OK (standard)
 	manifest["@id"] = config.IIIFUrl + "/" + container.containerID + "/manifest";	// OK  IF url is [speccoll/iiif/]
@@ -124,7 +123,6 @@ var getImageData = function(images, data=[], callback) {
 			url = config.cantaloupeUrl + "/iiif/2/" + image.resourceID;
 
 		request(url, function(error, response, body) {
-				console.log("TEST body", url);
 			if(error) {
 				callback(error, []);
 			}

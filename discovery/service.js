@@ -377,7 +377,6 @@ exports.getDatastream = function(objectID, datastreamID, callback) {
  */
 exports.getThumbnailPlaceholderStream = function(callback) {
   var rstream = fs.createReadStream(config.tnPlaceholderPath);
-    console.log("TEST pl stream", rstream);
   callback(null, rstream);
 }
 
@@ -444,7 +443,7 @@ exports.getManifestObject = function(pid, callback) {
       callback(error, JSON.stringify({}));
     }
     else {
-        console.log("TEST object is", response);
+
       // Create object for IIIF
       var object = response,
       container = {
@@ -464,8 +463,8 @@ exports.getManifestObject = function(pid, callback) {
           label: object.children[key].title,
           sequence: object.children[key].sequence,
           description: object.children[key].description,
-          format: object.children[key].mimeType,
-          type: object.children[key].type,
+          format: object.children[key].mimetype,
+          type: object.children[key].type || "No type specified",
           resourceID: object.children[key].url
         });
       }

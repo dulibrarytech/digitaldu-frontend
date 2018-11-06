@@ -1332,6 +1332,18 @@ div.info-content {
   visibility: hidden;
 }
 
+.uv .leftPanel .views .thumbsView .thumbs .thumb.oneCol .wrap {
+  float: none !important;
+}
+
+.uv .leftPanel .views .thumbsView .thumbs .thumb.oneCol .label {
+  width: auto !important; 
+}
+
+.uv .leftPanel .top .title {
+  color: white;
+}
+
 @media screen and (min-color-index:0) and(-webkit-min-device-pixel-ratio:0)
 { @media {
     .searchform button {
