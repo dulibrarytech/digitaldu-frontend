@@ -776,6 +776,8 @@ div#search-results-wrapper h4 {
 
 div#search-results-wrapper > h4 span {
   font-weight: normal;
+  margin-left: 15px;
+  font-size: 16px;
 }
 
 .results-display {

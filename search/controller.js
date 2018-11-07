@@ -28,6 +28,7 @@ exports.search = function(req, res) {
 	}
 
 	// Get the search type
+	// TODO move to helper function
 	if(typeVal.toLowerCase() == 'all') {
 
 		// Non-scoped search: Use fulltect search fields
@@ -61,6 +62,20 @@ exports.search = function(req, res) {
 	//Service.searchIndex(query, type, facets, collection, page, function(response) {
 	Service.searchIndex(query, type, facets, collection, page, function(error, response) {
 
+		// Get the string for 'Results for' on the template
+		let queryData = " ";
+		if(req.query.q == "" && facets) {
+			for(let key in facets) {
+				for(let index in facets[key]) {
+					queryData += (" " + facets[key][index]);
+				}
+				queryData += ";";
+			}
+		}
+		else {
+			queryData = query;
+		}
+
 		var data = {
 			error: null,
 			facets: {},
@@ -71,7 +86,7 @@ exports.search = function(req, res) {
 			base_url: config.baseUrl,
 			root_url: config.rootUrl,
 			collection_scope: "",
-			query: query
+			query: queryData
 		},
 		path = config.rootUrl + req.url.substring(req.url.indexOf('search')-1);
 
