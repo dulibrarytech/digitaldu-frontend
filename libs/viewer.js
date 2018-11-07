@@ -72,7 +72,7 @@ exports.getIIIFObjectViewer = function(object, index=null) {
 		viewer += 'window.addEventListener("uvLoaded", function (e) {';
 		viewer += 'createUV("#uv", {';
 		viewer += 'iiifResourceUri: "' + config.IIIFUrl + '/' + object.pid + '/manifest",';
-		viewer += 'configUri: "' + config.baseUrl + '/libs/universalviewer/uv-config.json",';
+		viewer += 'configUri: "' + config.rootUrl + '/libs/universalviewer/uv-config.json",';
 		viewer += 'root: "../..' + config.rootRoute + '/libs/universalviewer/uv",';
 		viewer += '}, new UV.URLDataProvider());';
 		viewer += '}, false);';
@@ -100,7 +100,7 @@ function getAudioPlayer(objectData, type) {
 	else if(config.audioPlayer == "jwplayer") {
 		// JWPlayer needs a filename in the path.  
 		stream += "/file_name_spoof." + extension;
-		player += '<script src="' + config.baseUrl + '/libs/jwplayer_du/jwplayer-du.js"></script>';
+		player += '<script src="' + config.rootUrl + '/libs/jwplayer_du/jwplayer-du.js"></script>';
 		player += '<div id="mediaplayer" class="viewer-content">Loading JW Player...</div>';
 		player += '</div>';
 		player += '<script>jwplayer("mediaplayer").setup({'
@@ -142,7 +142,7 @@ function getVideoViewer(objectData) {
 	else {
 		console.log("Error: Incorrect object mime type for object: " + objectData.pid);
 	}
-	stream = config.baseUrl + "/datastream/" + objectData.pid + "/" + datastreamID;
+	stream = config.rootUrl + "/datastream/" + objectData.pid + "/" + datastreamID;
 
 	if(config.videoViewer == "videojs") {
 		viewer += '<video id="my-video" class="video-js" controls preload="auto" width="640" height="264" poster="' + tn + '" data-setup="{}"><source src="' + stream + '" type="video/mp4"><p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that<a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p></video>';
@@ -151,7 +151,7 @@ function getVideoViewer(objectData) {
 	else if(config.videoViewer == "jwplayer") {
 		// JWPlayer needs a filename in the path.  
 		url += "/file_name_spoof." + extension;
-		viewer += '<script src="' + config.baseUrl + '/libs/jwplayer_du/jwplayer-du.js"></script>';
+		viewer += '<script src="' + config.rootUrl + '/libs/jwplayer_du/jwplayer-du.js"></script>';
 		viewer += '<div id="mediaplayer" class="viewer-content">Loading JW Player...</div>';
 		viewer += '</div>';
 		viewer += '<script>jwplayer("mediaplayer").setup({'
@@ -204,10 +204,10 @@ function getLargeImageViewer(objectData) {
 
 		viewer += '<div id="viewer-content-wrapper"><div id="openseadragon1" class="viewer-content" style="width: 96%; margin: 0 auto"><span id="large-image-viewer-loading"></span></div>';
 		viewer += '</div>';
-		viewer += '<script src="' + config.baseUrl + '/libs/openseadragon/openseadragon.min.js"></script>';
+		viewer += '<script src="' + config.rootUrl + '/libs/openseadragon/openseadragon.min.js"></script>';
 		viewer += '<script>var viewer = OpenSeadragon({'
 		viewer +=     'id: "openseadragon1",'
-		viewer +=     'prefixUrl: "' + config.baseUrl + viewerImages + '",'
+		viewer +=     'prefixUrl: "' + config.rootUrl + viewerImages + '",'
 		viewer +=     'immediateRender: true,'
 		viewer +=     'showNavigator: true,'
 		viewer +=     'tileSources: "' + config.cantaloupeUrl + '/iiif/2/' + objectData.pid + '"'
@@ -231,7 +231,7 @@ function getLargeImageViewer(objectData) {
  */
 function getPDFViewer(objectData) {
 	var viewer = '<div id="pdf-viewer" class="viewer-section">';
-	var doc = config.baseUrl + "/datastream/" + objectData.pid + "/OBJ";
+	var doc = config.rootUrl + "/datastream/" + objectData.pid + "/OBJ";
 
 	if(config.pdfViewer == "browser") {
 		viewer += '<iframe class="viewer-content" src="' + doc + '" height="500px" type="application/pdf" ></iframe>';
