@@ -221,7 +221,7 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
                 callback(error, []);
               }
               else {
-                collection.title = response.title;
+                collection.title = object.title[0];
                 callback(null, collection);
               }
             });
