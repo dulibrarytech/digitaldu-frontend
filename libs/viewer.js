@@ -199,7 +199,6 @@ function getLargeImageViewer(objectData) {
 		viewerImages = config.openseadragonImagePath;
 
 	viewer += "<span id='display-message' >Loading image, please wait...</span>";
-
 	if(config.largeImageViewer == "openseadragon") {
 
 		viewer += '<div id="viewer-content-wrapper"><div id="openseadragon1" class="viewer-content" style="width: 96%; margin: 0 auto"><span id="large-image-viewer-loading"></span></div>';
@@ -211,8 +210,8 @@ function getLargeImageViewer(objectData) {
 		viewer +=     'immediateRender: true,'
 		viewer +=     'showNavigator: true,'
 		viewer +=     'tileSources: "' + config.cantaloupeUrl + '/iiif/2/' + objectData.pid + '"'
-		//viewer +=     'tileSources: "' + config.IIIFImageServerPath + '/' + objectData.pid + '"'
 		viewer += '});'
+		viewer += 'viewer.addHandler("tile-loaded", function(event) {document.getElementById("display-message").style.display = "none"})'
 		viewer += '</script>';
 	}
 	else {
