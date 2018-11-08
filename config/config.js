@@ -9,6 +9,7 @@ module.exports = {
     rootUrl: process.env.CLIENT_HOST + process.env.CLIENT_PATH,
 
     // External services
+    repositoryUrl: process.env.REPOSITORY,
     elasticsearchHost: process.env.ELASTICSEARCH_HOST,
     elasticsearchPort: process.env.ELASTICSEARCH_PORT,
     elasticsearchIndex: process.env.ELASTICSEARCH_INDEX,

@@ -7,13 +7,10 @@
 
 'use strict';
 
- 
-const protocol = "http://",
-	  domain = "librepo01-vlp.du.edu:8080";
+const config = require('../config/config'),
+	  request = require('request');
 
-const config = require('../config/config');
-
-const request = require('request');
+const host = config.repositoryUrl;
 
 /**
  * 
@@ -54,7 +51,7 @@ exports.getFedoraDatastreamUrl = function(datastream, pid) {
 			break;
 	}
 
-	return protocol + domain + "/fedora/objects/" + pid + "/datastreams/" + dsID + "/content";
+	return host + "/fedora/objects/" + pid + "/datastreams/" + dsID + "/content";
 }
 
 /**
