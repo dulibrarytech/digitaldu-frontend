@@ -31,28 +31,32 @@
             
             <hr>
             <% include partials/paginator %>
-            <div id="result-list" class="content">
-              <% for (var i = 0; i < results.length; i++) { %>
+              <% if(results.length > 0) { %>
+                <div id="result-list" class="content">
+                <% for (var i = 0; i < results.length; i++) { %>
 
-                <div class="search-result">
-                    <dl class="search-result-tn">
-                        <dt>
-                            <a href="<%= root_url %>/object/<%= results[i].pid %>" title="<%= results[i].title %>"><img src="<%= results[i].tn %>" alt="<%= results[i].title %>" /></a>            
-                        </dt>
-                    <dd></dd>
-                    </dl>
-                    <dl class="search-result-data">
-                        <dt class="result-title"><%= (i+1)+((page-1)*10) %>.&nbsp&nbsp<a href="<%= root_url %>/object/<%= results[i].pid %>"><%= results[i].title %></a></dt>
+                  <div class="search-result">
+                      <dl class="search-result-tn">
+                          <dt>
+                              <a href="<%= root_url %>/object/<%= results[i].pid %>" title="<%= results[i].title %>"><img src="<%= results[i].tn %>" alt="<%= results[i].title %>" /></a>            
+                          </dt>
+                      <dd></dd>
+                      </dl>
+                      <dl class="search-result-data">
+                          <dt class="result-title"><%= (i+1)+((page-1)*10) %>.&nbsp&nbsp<a href="<%= root_url %>/object/<%= results[i].pid %>"><%= results[i].title %></a></dt>
                             <dd></dd>
-                        <!-- <dd class=""><a href="#">search result</a></dd> -->
                             <dt>Creator:</dt>
                             <dd><%= results[i].creator %></dd>
                             <dt>Description:</dt>
                             <dd id="result-description"><%= results[i].abstract %></dd>
-                    </dl>
-                </div>
+                      </dl>
+                  </div>
 
-              <% } %>  
+                <% } %>  
+            <% } else { %>
+              <span>No results found</span>
+            <% } %>
+            
           </div>
           <% include partials/paginator %>
         <% } %>
