@@ -9,13 +9,15 @@
   </div>
 
   <div class="row container results-display bottom-page-margin">
-    <div id="result-facets-wrapper" class="content-col-3 sidebar">
-      <div class="result-facets">
-        <h4>Limit Your Search</h4>
-        <hr>
-        <% include partials/facets %>
+    <% if(results.length > 0) { %>
+      <div id="result-facets-wrapper" class="content-col-3 sidebar">
+        <div class="result-facets">
+          <h4>Limit Your Search</h4>
+          <hr>
+          <% include partials/facets %>
+        </div>
       </div>
-    </div>
+    <% } %>
 
     <div id="search-results-wrapper" class="content-col-9">
 
@@ -56,7 +58,7 @@
             <% } else { %>
               <span>No results found</span>
             <% } %>
-            
+
           </div>
           <% include partials/paginator %>
         <% } %>

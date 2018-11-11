@@ -13,15 +13,17 @@
 </div>
 
 <div class="content container results-display no-top-bottom-margin">
-    <div class="content-col-3">
-	    <div id="result-facets-wrapper" class="sidebar">
-	      <div class="result-facets">
-	        <h4>Facets</h4>
-	        <hr>
-	        <% include partials/facets %>
-	      </div>
+	<% if(error == null) { %>
+	    <div class="content-col-3">
+		    <div id="result-facets-wrapper" class="sidebar">
+		      <div class="result-facets">
+		        <h4>Facets</h4>
+		        <hr>
+		        <% include partials/facets %>
+		      </div>
+		    </div>
 	    </div>
-    </div>
+    <% } %>
 
     <div class="content-col-9">
         	<div>
