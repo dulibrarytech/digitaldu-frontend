@@ -139,7 +139,7 @@ module.exports = {
     	{"Creator": "creator"},
     	{"Subject": "subject"},
         {"Type": "type"},
-        {"Description": "modsDescription"}
+        {"Description": "abstract"}
     ],
 
     /*
