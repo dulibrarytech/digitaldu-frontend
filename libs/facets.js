@@ -19,7 +19,6 @@ exports.create = function(facets, baseUrl) {
     for(var key in facets) {
         facetObj[key] = createList(key, facets[key].buckets, baseUrl);
     }
-
     return facetObj;
 };
 

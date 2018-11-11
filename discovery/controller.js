@@ -131,7 +131,7 @@ exports.renderCollection = function(req, res) {
 		Service.getObjectsInCollection(pid, page, reqFacets, function(error, response) {
 			if(error) {
 				console.log(error);
-				data.error = "Could not retrieve collections.";
+				data.error = "Could not open collection.";
 				data.current_collection_title = "Error";
 			}
 			else {

@@ -220,6 +220,9 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
                 collection.title = "";
                 callback(error, []);
               }
+              else if(object.object_type != "collection") {
+                callback("Invalid collection: " + object.pid, []);
+              }
               else {
                 collection.title = object.title[0];
                 callback(null, collection);
