@@ -919,6 +919,7 @@ dt.result-title,
 dt.result-title a {
   color: #181818;
   font-size: 18px;
+  line-height: 25px;
 }
 
 /*div.result-facets h4*/
