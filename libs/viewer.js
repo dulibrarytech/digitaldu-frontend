@@ -89,12 +89,12 @@ exports.getIIIFObjectViewer = function(object, index=null) {
 function getAudioPlayer(objectData, type) {
 	var player = '<div id="audio-player" class="viewer-section">', tn, stream;
 	var extension = "mp3";
-
+		console.log("TEST obj data for audio", objectData);
 	tn = config.rootUrl + "/datastream/" + objectData.pid + "/tn";
 	stream = config.rootUrl + "/datastream/" + objectData.pid + "/mp3";
 
 	if(config.audioPlayer == "browser") {
-		player += '<div id="viewer-content-wrapper"><audio controlsList="nodownload" controls><source src="' + stream + '" type="audio/mpeg"></audio></div>';
+		player += '<div id="viewer-content-wrapper"><audio controlsList="nodownload" controls><source src="' + stream + '" type="' + objectData.mime_type + '"></audio></div>';
 		player += '</div>';
 	}
 	else if(config.audioPlayer == "jwplayer") {
