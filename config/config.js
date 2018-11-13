@@ -177,5 +177,29 @@ module.exports = {
         "Language": "language",
         "Access Condition": "accessCondition",
         "Subject": "subject"
+    },
+
+    /*
+     * Mime Types for each object type
+     * Object type determines which viewer is used for each mime type
+     */
+    mimeTypes: {
+        "audio": ["audio/mpeg", "audio/x-wav"],
+        "video": ["video/mp4", "video/quicktime"],
+        "smallImage": ["image/png", "image/jpg", "image/jpeg"],
+        "largeImage": ["image/tiff", "image/jp2"],
+        "pdf": ["application/pdf"]
+    },
+
+    /*
+     * IIIF Object Types
+     * Type labels to appear in the IIIF manifest, for each object type
+     */
+    IIIFObjectTypes: {
+        "audio": "dctypes:Sound",
+        "video": "dctypes:MovingImage",
+        "smallImage": "dctypes:Image",
+        "largeImage": "dctypes:Image",
+        "pdf": "foaf:Document"
     }
 };
