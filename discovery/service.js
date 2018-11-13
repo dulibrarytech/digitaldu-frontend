@@ -461,14 +461,26 @@ exports.getManifestObject = function(pid, callback) {
 
       // Create children array for IIIF
       var children = [];
-      for(var key in object.children) {
+      if(Helper.isParentObject(object)) {
+        for(var key in object.children) {
+          children.push({
+            label: object.children[key].title,
+            sequence: object.children[key].sequence,
+            description: object.children[key].description,
+            format: object.children[key].mimetype,
+            type: Helper.getIIIFObjectType(object.children[key].mimetype) || "",
+            resourceID: object.children[key].url
+          });
+        }
+      }
+      else {
         children.push({
-          label: object.children[key].title,
-          sequence: object.children[key].sequence,
-          description: object.children[key].description,
-          format: object.children[key].mimetype,
-          type: object.children[key].type || "No type specified",
-          resourceID: object.children[key].url
+          label: object.title,
+          sequence: "1",
+          description: object.abstract,
+          format: object.mime_type,
+          type: object.type,
+          resourceID: object.pid
         });
       }
 

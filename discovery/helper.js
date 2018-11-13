@@ -222,4 +222,24 @@ exports.isParentObject = function(object) {
   return typeof object.children != 'undefined';
 }
 
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
+exports.getIIIFObjectType = function(mimeType) {
+  let objectTypes = config.IIIFObjectTypes, 
+      mimeTypes = config.mimeTypes,
+      objectType = null;
+
+  for(var key in mimeTypes) {
+    if(mimeTypes[key].includes(mimeType)) {
+      objectType = objectTypes[key];
+    }
+  }
+
+  return objectType;
+}
+
 
