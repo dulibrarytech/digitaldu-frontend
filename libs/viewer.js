@@ -23,31 +23,34 @@ exports.getObjectViewer = function(object, mimeType="") {
 	if(mimeType == "" && typeof object.mime_type != 'undefined') {
  		mimeType = object.mime_type;
  	}
- 	
+
+ 	var dataType = null;
+ 	for(var key in config.mimeTypes) {
+ 		if(config.mimeTypes[key].includes(mimeType)) {
+ 			dataType = key;
+ 		}
+ 	}
+
  	// Get viewer for object mime type:
- 	switch(mimeType) {
- 		case "audio/mpeg":
- 		case "audio/x-wav":
+ 	switch(dataType) {
+ 		case "audio":
  			viewer = getAudioPlayer(object, mimeType);
  			break;
 
- 		case "video/mp4":
- 		case "video/quicktime":
+ 		case "video":
  			viewer = getVideoViewer(object);
  			break;
 
- 		case "image/png":
- 		case "image/jpeg":
+ 		case "smallImage":
  			//viewer = getSmallImageViewer(object);
  			viewer = getLargeImageViewer(object);
  			break;
 
- 		case "image/tiff":
- 		case "image/jp2":
+ 		case "largeImage":
  			viewer = getLargeImageViewer(object);
  			break;
 
- 		case "application/pdf":
+ 		case "pdf":
  			viewer = getPDFViewer(object);
  			break;
 
@@ -89,7 +92,7 @@ exports.getIIIFObjectViewer = function(object, index=null) {
 function getAudioPlayer(objectData, type) {
 	var player = '<div id="audio-player" class="viewer-section">', tn, stream;
 	var extension = "mp3";
-		console.log("TEST obj data for audio", objectData);
+
 	tn = config.rootUrl + "/datastream/" + objectData.pid + "/tn";
 	stream = config.rootUrl + "/datastream/" + objectData.pid + "/mp3";
 
