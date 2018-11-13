@@ -17,7 +17,7 @@ const 	config = require('../config/config'),
  * @param 
  * @return 
  */
-exports.getManifest = function(container, images, callback) {
+exports.getManifest = function(container, objects, callback) {
 	var manifest = {};
 	// Set container object info fields
 	manifest["@context"] = "http://iiif.io/api/presentation/2/context.json";	// OK (standard)
@@ -56,7 +56,7 @@ exports.getManifest = function(container, images, callback) {
 	manifest.sequences.push(sequence);
 
 	// Build a canvas object for each image
-	getImageData(images, [], function(error, data) {
+	getImageData(objects, [], function(error, data) {
 		let imageData, 
 			imageDataObject, 
 			resourceObject, 
@@ -77,7 +77,7 @@ exports.getManifest = function(container, images, callback) {
 
 			canvas["@id"] = config.IIIFUrl + "/" + container.containerID + "/canvas/c" + index;
 			canvas["@type"] = "sc:Canvas";
-			canvas["label"] = images[index].label;
+			canvas["label"] = objects[index].label;
 			canvas["height"] = imageData.height;
 			canvas["width"] = imageData.width;
 
@@ -87,8 +87,8 @@ exports.getManifest = function(container, images, callback) {
 			imageDataObject["motivation"] = "";
 
 			resourceObject["@id"] = config.cantaloupeUrl + "/iiif/2/" + container.containerID + "/full/full/0/default.jpg";
-			resourceObject["@type"] = images[index].type; 
-			resourceObject["format"] = images[index].format; 
+			resourceObject["@type"] = objects[index].type; 
+			resourceObject["format"] = objects[index].format; 
 
 			serviceObject["@context"] = imageData["@context"];
 			serviceObject["@id"] = imageData["@id"];
