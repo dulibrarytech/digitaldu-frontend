@@ -180,12 +180,28 @@ module.exports = {
     },
 
     /*
+     * Register datastreams here.  These may not all be available
+     * Available datastreams are defined in the Repository interface
+     */
+     datastreams: {
+        "tn": "thumbnail",
+        "jpg": ["image/jpeg", "image/jpg"],
+        "tiff": ["image/tiff"],
+        "mp3": ["audio/mp3", "audio/mpeg"],
+        "mp4": ["video/mp4"],
+        "mov": ["video/mov"],
+        "quicktime": ["video/quicktime"],
+        "pdf": ["application/pdf"]
+     }
+
+    /*
      * Mime Types for each object type
      * Object type determines which viewer is used for each mime type
+     * Keys are not changeable by user
      */
     mimeTypes: {
-        "audio": ["audio/mpeg", "audio/x-wav"],
-        "video": ["video/mp4", "video/quicktime"],
+        "audio": ["audio/mpeg", "audio/x-wav", "audio/mp3"],
+        "video": ["video/mp4", "video/quicktime", "video/mov"],
         "smallImage": ["image/png", "image/jpg", "image/jpeg"],
         "largeImage": ["image/tiff", "image/jp2"],
         "pdf": ["application/pdf"]
@@ -194,6 +210,7 @@ module.exports = {
     /*
      * IIIF Object Types
      * Type labels to appear in the IIIF manifest, for each object type
+     * Keys are not changeable by user
      */
     IIIFObjectTypes: {
         "audio": "dctypes:Sound",
