@@ -242,4 +242,24 @@ exports.getIIIFObjectType = function(mimeType) {
   return objectType;
 }
 
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
+exports.getDsType = function(mimeType) {
+  let datastreams = config.datastreams,
+      datastream = "",
+      objectType = null;
+
+  for(var key in datastreams) {
+    if(datastreams[key].includes(mimeType)) {
+      datastream = key;
+    }
+  }
+
+  return datastream;
+}
+
 

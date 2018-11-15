@@ -361,15 +361,13 @@ exports.getFacets = getFacets;
  */
 exports.getDatastream = function(objectID, datastreamID, callback) {
   Repository.streamData(objectID, datastreamID, function(error, stream) {
-
-    // If stream is null, send error 
     if(error) {
       callback(error, null);
     }
     else {
       callback(null, stream);
     }
-  }) 
+  }); 
 }
 
 /**
@@ -440,7 +438,6 @@ exports.retrieveChildren = function(object, callback) {
 
 exports.getManifestObject = function(pid, callback) {
   var object = {}, children = [];
-
   fetchObjectByPid(pid, function(error, response) {
     if(error) {
       callback(error, JSON.stringify({}));
@@ -465,11 +462,13 @@ exports.getManifestObject = function(pid, callback) {
         for(var key in object.children) {
           children.push({
             label: object.children[key].title,
-            sequence: object.children[key].sequence,
+            sequence: object.children[key].sequence || key,
             description: object.children[key].description,
             format: object.children[key].mimetype,
             type: Helper.getIIIFObjectType(object.children[key].mimetype) || "",
-            resourceID: object.children[key].url
+            resourceID: object.children[key].url,
+            resourceUrl: config.rootUrl + "/datastream/" + object.children[key].url + "/" + Helper.getDsType(object.children[key].mimetype),   // Can assign the child 'url' value directly here, if it is a url.  In that case, will need a separate thumbnail url
+            thumbnailUrl: config.rootUrl + "/datastream/" + object.children[key].url + "/" + Helper.getDsType("thumbnail")
           });
         }
       }
@@ -480,11 +479,14 @@ exports.getManifestObject = function(pid, callback) {
           description: object.abstract,
           format: object.mime_type,
           type: object.type,
-          resourceID: object.pid
+          resourceID: object.pid,
+          resourceUrl: config.rootUrl + "/datastream/" + object.children[key].url + "/" + Helper.getDsType(object.mime_type),
+          thumbnailUrl: config.rootUrl + "/datastream/" + object.children[key].url + "/" + Helper.getDsType("thumbnail")
         });
       }
 
-      IIIF.getManifest(container, children, function(manifest) {
+      IIIF.getManifest(container, children, function(error, manifest) {
+        // TODO handle the error
         callback(null, manifest);
       });
     }

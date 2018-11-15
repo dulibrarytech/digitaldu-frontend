@@ -42,6 +42,7 @@ exports.getManifest = function(container, objects, callback) {
 	});
 	manifest['license'] = "https://creativecommons.org/licenses/by/3.0/";
 	manifest['logo'] = "https://www.du.edu/_resources/images/nav/logo2.gif";
+	manifest['mediaSequences'] = [];
 	manifest['sequences'] = [];
 	manifest['structures'] = []; 	// push the selectable structures object
 	manifest['thumbnail'] = {};    // If used... Get thumbnail url somewhere.  Leave empty for testing
@@ -55,85 +56,203 @@ exports.getManifest = function(container, objects, callback) {
 	}
 	manifest.sequences.push(sequence);
 
-	// Build a canvas object for each image
-	getImageData(objects, [], function(error, data) {
-		let imageData, 
-			imageDataObject, 
-			resourceObject, 
-			serviceObject,
-			canvases = [], 
-			canvas;
+	var object;
 
-		for(var index in data) {
-			imageData = data[index];
-				
-			// Reset the containers
-			canvas = {
-				images: []
-			};
-			imageDataObject = {};
-			resourceObject = {};
-			serviceObject = {};
+	var images = [],
+		imageData, 
+		imageDataObject, 
+		resourceObject, 
+		serviceObject,
+		canvases = [], 
+		canvas;
 
-			canvas["@id"] = config.IIIFUrl + "/" + container.containerID + "/canvas/c" + index;
-			canvas["@type"] = "sc:Canvas";
-			canvas["label"] = objects[index].label;
-			canvas["height"] = imageData.height;
-			canvas["width"] = imageData.width;
+	var elements = [],
+		element = {},
+		thumbnail;
 
-			imageDataObject["@context"] = "http://iiif.io/api/presentation/2/context.json";
-			imageDataObject["@id"] = config.IIIFUrl + "/" + container.containerID + "/image/i" + index;
-			imageDataObject["@type"] =  "oa:Annotation";
-			imageDataObject["motivation"] = "";
+	// Iterates for each object in children
+	for(var object of objects) {
 
-			resourceObject["@id"] = config.cantaloupeUrl + "/iiif/2/" + container.containerID + "/full/full/0/default.jpg";
-			resourceObject["@type"] = objects[index].type; 
-			resourceObject["format"] = objects[index].format; 
+		// Objects [] keeps in step with data []
+		if(object.type == config.IIIFObjectTypes["smallImage"] || object.type == config.IIIFObjectTypes["largeImage"]) {
+			images.push(object);
+			elements.push({});	// To keep in step with the sequences array.  No media sequence elements are required for an image object
 
-			serviceObject["@context"] = imageData["@context"];
-			serviceObject["@id"] = imageData["@id"];
-			serviceObject["profile"] = imageData.profile;
-
-			resourceObject["service"] = serviceObject;
-			resourceObject["height"] = imageData.height;
-			resourceObject["width"] = imageData.width;
-
-			imageDataObject["resource"] = resourceObject;
-			imageDataObject["on"] = canvas["@id"];
-
-			canvas.images.push(imageDataObject);
-			canvases.push(canvas);
+			canvases.push(getImageCanvas(container, object));
 		}
+		else if(object.type == config.IIIFObjectTypes["audio"] || object.type == config.IIIFObjectTypes["video"]) {
+			// Define the media sequence object if it has not been defined yet
+			if(manifest.mediaSequences.length == 0) {
+				manifest.mediaSequences.push({
+					"@id" : config.IIIFUrl + "/" + container.containerID + "/xsequence/s0",
+					"@type" : "ixif:MediaSequence",
+					"label" : "XSequence 0",
+					"elements": []
+				});
+			}
 
-		manifest.sequences[0].canvases = canvases;
+			element = getObjectElement(object);
+			elements.push(element);
 
-		// Structures
-		callback(manifest);
- 	});
+			thumbnail = getThumbnailCanvas(container, object);
+			canvases.push(thumbnail);
+
+		}
+		else if(object.type == config.IIIFObjectTypes["pdf"]) {
+
+		}
+		else {
+			console.log("Invalid IIIF object type");
+			continue;
+		}
+	}
+
+	getImageData(images, [], function(error, data) {
+		if(error) {
+			callback(error, manifest);
+		}
+		else if(data.length == 0) {
+			callback("Could not retrieve image data from IIIF server", manifest);
+		}
+		else {
+			let imageData;
+			for(let canvas of canvases) {
+				if(typeof canvas.images[0].resource.service != "undefined" && canvas.images[0].resource.service.profile != "undefined") {
+					imageData = data.shift();
+					canvas.height = imageData.height;
+					canvas.width = imageData.width;
+					canvas.images[0].resource.height = imageData.height;
+					canvas.images[0].resource.width = imageData.width;
+					canvas.images[0].resource.service["@context"] = imageData["@context"];
+					canvas.images[0].resource.service.profile = imageData.profile;
+				}
+			}
+
+			manifest.sequences[0].canvases = canvases;
+			if(manifest.mediaSequences.length > 0) {
+				manifest.mediaSequences[0].elements = elements;
+			}
+
+			callback(null, manifest);
+		}
+	});
 }
 
-var getImageData = function(images, data=[], callback) {
+var getImageData = function(objects, data=[], callback) {
 	let index = data.length;
 	
-	if(index == images.length) {
+	if(index == objects.length) {
 		callback(null, data);
 	}
 	else {
-		let image = images[index],
-			url = config.cantaloupeUrl + "/iiif/2/" + image.resourceID;
+		let object = objects[index],
+			url = config.cantaloupeUrl + "/iiif/2/" + object.resourceID;
 
-		request(url, function(error, response, body) {
-			if(error) {
-				callback(error, []);
-			}
-			else if(body[0] != '{') {	// TODO: find a better way to verify the object
-				data.push({});
-				getImageData(images, data, callback);
-			}
-			else {
-				data.push(JSON.parse(body));
-				getImageData(images, data, callback);
-			}
-		});
+		if(object.type == config.IIIFObjectTypes["smallImage"] || object.type == config.IIIFObjectTypes["largeImage"]) {
+			request(url, function(error, response, body) {
+					console.log("TEST gid response", body);
+				if(error) {
+					callback(error, []);
+				}
+				else if(body[0] != '{') {	// TODO: find a better way to verify the object
+					data.push({});
+					getImageData(objects, data, callback);
+				}
+				else {
+					data.push(JSON.parse(body));
+					getImageData(objects, data, callback);
+				}
+			});
+		}	
+		else {
+			// Not requesting external data for non image objects, at this point
+			data.push({});
+			getImageData(objects, data, callback);
+		}
 	}
+}
+
+var getObjectElement = function(object) {
+	// Create the rendering data
+	let rendering = {};
+	rendering['@id'] = object.resourceUrl;
+	rendering['format'] = object.format;
+
+	// Push the mediaSequence element
+	let element = {};
+	element["@id"] = object.resourceUrl = "#identity";
+	element["@type"] = object.type;
+	element["format"] = object.format; 
+	element["label"] = object.label;
+	element["metadata"] = [];
+	element["thumbnail"] = object.thumbnailUrl;
+	element["rendering"] = rendering;
+
+	return element;
+}
+
+var getThumbnailCanvas = function(container, object) {
+	let canvas = {
+		images: []
+	},
+	image = {},
+	resource = {};
+
+	resource["@id"] = object.thumbnailUrl;
+	resource["@type"] = config.IIIFObjectTypes["smallImage"];
+	resource["height"] = config.IIIFThumbnailHeight;	// config.IIIF.ThumbnailWidth
+	resource["width"] = config.IIIFThumbnailWidth;
+
+	image["@id"] = object.thumbnailUrl;
+	image["@type"] = "oa:Annotation";
+	image["motivation"] = "sc:painting";
+	image["resource"] = resource;
+
+	canvas["@id"] = config.IIIFUrl + "/" + container.containerID + "/canvas/c" + object.sequence;
+	canvas["@type"] = "sc:Canvas";
+	canvas["label"] = "Placeholder Image";
+	canvas["thumbnail"] = object.thumbnailUrl;
+	canvas["height"] = config.IIIFThumbnailHeight;
+	canvas["width"] = config.IIIFThumbnailWidth;
+	image["on"] = canvas["@id"];
+	canvas.images.push(image);
+
+	return canvas;
+}
+
+var getImageCanvas = function(container, object) {
+	let canvas = {},
+	image = {},
+	resource = {},
+	service = {};
+		console.log("TEST obj seq", object.sequence);
+	canvas["@id"] = config.IIIFUrl + "/" + container.containerID + "/canvas/c" + object.sequence;
+	canvas["@type"] = "sc:Canvas";
+	canvas["label"] = object.label;
+	canvas["height"] = "";
+	canvas["width"] = "";
+	canvas['images'] = [];
+
+	image["@context"] = "http://iiif.io/api/presentation/2/context.json";
+	image["@id"] = config.IIIFUrl + "/" + container.containerID + "/image/i" + object.sequence;
+	image["@type"] =  "oa:Annotation";
+	image["motivation"] = "";
+
+	resource["@id"] = config.cantaloupeUrl + "/iiif/2/" + container.containerID + "/full/full/0/default.jpg";
+	resource["@type"] = object.type; 
+	resource["format"] = object.format; 
+
+	service["@context"] = "";
+	service["@id"] = config.cantaloupeUrl + "/iiif/2/" + object.resourceID;		// If using the entire url here, just insert it
+	service["profile"] = [];
+
+	resource["service"] = service;
+	resource["height"] = "";
+	resource["width"] = "";
+
+	image["resource"] = resource;
+	image["on"] = canvas["@id"];
+
+	canvas.images.push(image);
+	return canvas;
 }

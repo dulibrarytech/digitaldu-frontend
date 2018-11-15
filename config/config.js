@@ -192,7 +192,7 @@ module.exports = {
         "mov": ["video/mov"],
         "quicktime": ["video/quicktime"],
         "pdf": ["application/pdf"]
-     }
+     },
 
     /*
      * Mime Types for each object type
@@ -218,5 +218,8 @@ module.exports = {
         "smallImage": "dctypes:Image",
         "largeImage": "dctypes:Image",
         "pdf": "foaf:Document"
-    }
+    },
+
+    IIIFThumbnailWidth: "600",
+    IIIFThumbnailHeight: "600"
 };
