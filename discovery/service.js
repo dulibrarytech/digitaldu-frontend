@@ -487,7 +487,12 @@ exports.getManifestObject = function(pid, callback) {
 
       IIIF.getManifest(container, children, function(error, manifest) {
         // TODO handle the error
-        callback(null, manifest);
+        if(error) {
+          callback(error, []);
+        }
+        else {
+          callback(null, manifest);
+        }
       });
     }
   });

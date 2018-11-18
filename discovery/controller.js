@@ -278,9 +278,12 @@ exports.getDatastream = function(req, res) {
 exports.getIIIFManifest = function(req, res) {
 	let pid = req.params.pid || "";
 	Service.getManifestObject(pid, function(error, manifest) {
-
-		// TODO handle error
-
-		res.send(JSON.stringify(manifest));
+		if(error) {
+			console.log(error);
+			res.sendStatus(500);
+		}
+		else {
+			res.send(JSON.stringify(manifest));
+		}
 	});
 }

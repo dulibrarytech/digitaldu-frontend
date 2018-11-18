@@ -1,7 +1,7 @@
  /**
  * @file 
  *
- * IIIF Interface Functions
+ * IIIF Functions
  *
  */
 
@@ -19,13 +19,13 @@ const 	config = require('../config/config'),
  */
 exports.getManifest = function(container, objects, callback) {
 	var manifest = {};
-	// Set container object info fields
+
+	// Define the manifest
 	manifest["@context"] = "http://iiif.io/api/presentation/2/context.json";	// OK (standard)
 	manifest["@id"] = config.IIIFUrl + "/" + container.containerID + "/manifest";	// OK  IF url is [speccoll/iiif/]
 	manifest["@type"] = "sc:Manifest";	// OK standard
 	manifest["label"] = container.title;	// OK
 
-	// Set container object metadata for viewer display
 	manifest['metadata'] = [];
 	for(var key in container.metadata) {
 		manifest.metadata.push({
@@ -34,12 +34,12 @@ exports.getManifest = function(container, objects, callback) {
 		});
 	}
 
-	// Container object data
 	manifest['description'] = [];  // Push one description object, use container.description
 	manifest.description.push({
 		"@value": container.description,
 		"@language": "en"
 	});
+
 	manifest['license'] = "https://creativecommons.org/licenses/by/3.0/";
 	manifest['logo'] = "https://www.du.edu/_resources/images/nav/logo2.gif";
 	manifest['mediaSequences'] = [];
@@ -47,7 +47,7 @@ exports.getManifest = function(container, objects, callback) {
 	manifest['structures'] = []; 	// push the selectable structures object
 	manifest['thumbnail'] = {};    // If used... Get thumbnail url somewhere.  Leave empty for testing
 
-	// One sequence, multiple canvases
+	// Define the sequence.  At this time only one sequence can be defined
 	let sequence = {
 		"@id": config.IIIFUrl + "/" + container.containerID + "/sequence/s0",
 		"@type": "sc:Sequence",
@@ -56,24 +56,17 @@ exports.getManifest = function(container, objects, callback) {
 	}
 	manifest.sequences.push(sequence);
 
-	var object;
-
-	var images = [],
+	var object,
+	    images = [],
 		imageData, 
-		imageDataObject, 
-		resourceObject, 
-		serviceObject,
 		canvases = [], 
-		canvas;
-
-	var elements = [],
+		canvas,
+	    elements = [],
 		element = {},
 		thumbnail;
 
-	// Iterates for each object in children
+	// Define the canvas objects.  Create a mediaSequence object if a/v or pdf items are present.  For each of these, insert an element object
 	for(var object of objects) {
-
-		// Objects [] keeps in step with data []
 		if(object.type == config.IIIFObjectTypes["smallImage"] || object.type == config.IIIFObjectTypes["largeImage"]) {
 			images.push(object);
 			elements.push({});	// To keep in step with the sequences array.  No media sequence elements are required for an image object
@@ -93,7 +86,6 @@ exports.getManifest = function(container, objects, callback) {
 
 			element = getObjectElement(object);
 			elements.push(element);
-
 			thumbnail = getThumbnailCanvas(container, object);
 			canvases.push(thumbnail);
 
@@ -107,6 +99,7 @@ exports.getManifest = function(container, objects, callback) {
 		}
 	}
 
+	// Get the image data for the item from the iiif server, if any images are present in this manifest.
 	getImageData(images, [], function(error, data) {
 		if(error) {
 			callback(error, manifest);
@@ -127,7 +120,7 @@ exports.getManifest = function(container, objects, callback) {
 					canvas.images[0].resource.service.profile = imageData.profile;
 				}
 			}
-
+				console.log("TEST canvasses:", canvasses);
 			manifest.sequences[0].canvases = canvases;
 			if(manifest.mediaSequences.length > 0) {
 				manifest.mediaSequences[0].elements = elements;
@@ -148,27 +141,19 @@ var getImageData = function(objects, data=[], callback) {
 		let object = objects[index],
 			url = config.cantaloupeUrl + "/iiif/2/" + object.resourceID;
 
-		if(object.type == config.IIIFObjectTypes["smallImage"] || object.type == config.IIIFObjectTypes["largeImage"]) {
-			request(url, function(error, response, body) {
-					console.log("TEST gid response", body);
-				if(error) {
-					callback(error, []);
-				}
-				else if(body[0] != '{') {	// TODO: find a better way to verify the object
-					data.push({});
-					getImageData(objects, data, callback);
-				}
-				else {
-					data.push(JSON.parse(body));
-					getImageData(objects, data, callback);
-				}
-			});
-		}	
-		else {
-			// Not requesting external data for non image objects, at this point
-			data.push({});
-			getImageData(objects, data, callback);
-		}
+		request(url, function(error, response, body) {
+			if(error) {
+				callback(error, []);
+			}
+			else if(body[0] != '{') {	// TODO: find a better way to verify the object
+				data.push({});
+				getImageData(objects, data, callback);
+			}
+			else {
+				data.push(JSON.parse(body));
+				getImageData(objects, data, callback);
+			}
+		});
 	}
 }
 
