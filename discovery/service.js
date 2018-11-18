@@ -459,6 +459,7 @@ exports.getManifestObject = function(pid, callback) {
       // Create children array for IIIF
       var children = [];
       if(Helper.isParentObject(object)) {
+        console.log("TEST IS COMPOUND")
         for(var key in object.children) {
           children.push({
             label: object.children[key].title,
@@ -473,6 +474,7 @@ exports.getManifestObject = function(pid, callback) {
         }
       }
       else {
+          console.log("TEST IS SINGLE")
         children.push({
           label: object.title,
           sequence: "1",
@@ -484,7 +486,8 @@ exports.getManifestObject = function(pid, callback) {
           thumbnailUrl: config.rootUrl + "/datastream/" + object.children[key].url + "/" + Helper.getDsType("thumbnail")
         });
       }
-
+        console.log("TEST container:", container);
+        console.log("TEST children:", children);
       IIIF.getManifest(container, children, function(error, manifest) {
         // TODO handle the error
         if(error) {

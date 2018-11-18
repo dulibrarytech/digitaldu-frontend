@@ -42,7 +42,6 @@ exports.getManifest = function(container, objects, callback) {
 
 	manifest['license'] = "https://creativecommons.org/licenses/by/3.0/";
 	manifest['logo'] = "https://www.du.edu/_resources/images/nav/logo2.gif";
-	manifest['mediaSequences'] = [];
 	manifest['sequences'] = [];
 	manifest['structures'] = []; 	// push the selectable structures object
 	manifest['thumbnail'] = {};    // If used... Get thumbnail url somewhere.  Leave empty for testing
@@ -75,7 +74,8 @@ exports.getManifest = function(container, objects, callback) {
 		}
 		else if(object.type == config.IIIFObjectTypes["audio"] || object.type == config.IIIFObjectTypes["video"]) {
 			// Define the media sequence object if it has not been defined yet
-			if(manifest.mediaSequences.length == 0) {
+			if(typeof manifest.mediaSequences == "undefined") {
+				manifest["mediaSequences"] = [];
 				manifest.mediaSequences.push({
 					"@id" : config.IIIFUrl + "/" + container.containerID + "/xsequence/s0",
 					"@type" : "ixif:MediaSequence",
@@ -104,28 +104,26 @@ exports.getManifest = function(container, objects, callback) {
 		if(error) {
 			callback(error, manifest);
 		}
-		else if(data.length == 0) {
-			callback("Could not retrieve image data from IIIF server", manifest);
-		}
 		else {
-			let imageData;
-			for(let canvas of canvases) {
-				if(typeof canvas.images[0].resource.service != "undefined" && canvas.images[0].resource.service.profile != "undefined") {
-					imageData = data.shift();
-					canvas.height = imageData.height;
-					canvas.width = imageData.width;
-					canvas.images[0].resource.height = imageData.height;
-					canvas.images[0].resource.width = imageData.width;
-					canvas.images[0].resource.service["@context"] = imageData["@context"];
-					canvas.images[0].resource.service.profile = imageData.profile;
+			if(images.length > 0) {
+				let imageData;
+				for(let canvas of canvases) {
+					if(typeof canvas.images[0].resource.service != "undefined" && canvas.images[0].resource.service.profile != "undefined") {
+						imageData = data.shift();
+						canvas.height = imageData.height;
+						canvas.width = imageData.width;
+						canvas.images[0].resource.height = imageData.height;
+						canvas.images[0].resource.width = imageData.width;
+						canvas.images[0].resource.service["@context"] = imageData["@context"];
+						canvas.images[0].resource.service.profile = imageData.profile;
+					}
 				}
 			}
-				console.log("TEST canvasses:", canvasses);
+
 			manifest.sequences[0].canvases = canvases;
-			if(manifest.mediaSequences.length > 0) {
+			if(typeof manifest.mediaSequences != "undefined") {
 				manifest.mediaSequences[0].elements = elements;
 			}
-
 			callback(null, manifest);
 		}
 	});

@@ -187,7 +187,7 @@ module.exports = {
         "tn": "thumbnail",
         "jpg": ["image/jpeg", "image/jpg"],
         "tiff": ["image/tiff"],
-        "mp3": ["audio/mp3", "audio/mpeg"],
+        "mp3": ["audio/mp3", "audio/mpeg", "audio/x-wav"],
         "mp4": ["video/mp4"],
         "mov": ["video/mov"],
         "quicktime": ["video/quicktime"],
