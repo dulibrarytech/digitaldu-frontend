@@ -447,7 +447,7 @@ exports.getManifestObject = function(pid, callback) {
       // Create object for IIIF
       var object = response,
       container = {
-        containerID: object.pid,
+        resourceID: object.pid,
         title: object.title,
         description: object.abstract,
         metadata: {
@@ -459,7 +459,7 @@ exports.getManifestObject = function(pid, callback) {
       // Create children array for IIIF
       var children = [];
       if(Helper.isParentObject(object)) {
-        console.log("TEST IS COMPOUND")
+          console.log("TEST IS COMPOUND")
         for(var key in object.children) {
           children.push({
             label: object.children[key].title,
@@ -486,8 +486,7 @@ exports.getManifestObject = function(pid, callback) {
           thumbnailUrl: config.rootUrl + "/datastream/" + object.children[key].url + "/" + Helper.getDsType("thumbnail")
         });
       }
-        console.log("TEST container:", container);
-        console.log("TEST children:", children);
+
       IIIF.getManifest(container, children, function(error, manifest) {
         // TODO handle the error
         if(error) {

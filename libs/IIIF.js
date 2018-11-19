@@ -22,7 +22,7 @@ exports.getManifest = function(container, objects, callback) {
 
 	// Define the manifest
 	manifest["@context"] = "http://iiif.io/api/presentation/2/context.json";	// OK (standard)
-	manifest["@id"] = config.IIIFUrl + "/" + container.containerID + "/manifest";	// OK  IF url is [speccoll/iiif/]
+	manifest["@id"] = config.IIIFUrl + "/" + container.resourceID + "/manifest";	// OK  IF url is [speccoll/iiif/]
 	manifest["@type"] = "sc:Manifest";	// OK standard
 	manifest["label"] = container.title;	// OK
 
@@ -48,7 +48,7 @@ exports.getManifest = function(container, objects, callback) {
 
 	// Define the sequence.  At this time only one sequence can be defined
 	let sequence = {
-		"@id": config.IIIFUrl + "/" + container.containerID + "/sequence/s0",
+		"@id": config.IIIFUrl + "/" + container.resourceID + "/sequence/s0",
 		"@type": "sc:Sequence",
 		"label": "Sequence s0",
 		"canvases": []
@@ -77,7 +77,7 @@ exports.getManifest = function(container, objects, callback) {
 			if(typeof manifest.mediaSequences == "undefined") {
 				manifest["mediaSequences"] = [];
 				manifest.mediaSequences.push({
-					"@id" : config.IIIFUrl + "/" + container.containerID + "/xsequence/s0",
+					"@id" : config.IIIFUrl + "/" + container.resourceID + "/xsequence/s0",
 					"@type" : "ixif:MediaSequence",
 					"label" : "XSequence 0",
 					"elements": []
@@ -163,7 +163,7 @@ var getObjectElement = function(object) {
 
 	// Push the mediaSequence element
 	let element = {};
-	element["@id"] = object.resourceUrl = "#identity";
+	element["@id"] = object.resourceUrl += "#identity";
 	element["@type"] = object.type;
 	element["format"] = object.format; 
 	element["label"] = object.label;
@@ -191,7 +191,7 @@ var getThumbnailCanvas = function(container, object) {
 	image["motivation"] = "sc:painting";
 	image["resource"] = resource;
 
-	canvas["@id"] = config.IIIFUrl + "/" + container.containerID + "/canvas/c" + object.sequence;
+	canvas["@id"] = config.IIIFUrl + "/" + container.resourceID + "/canvas/c" + object.sequence;
 	canvas["@type"] = "sc:Canvas";
 	canvas["label"] = "Placeholder Image";
 	canvas["thumbnail"] = object.thumbnailUrl;
@@ -209,7 +209,7 @@ var getImageCanvas = function(container, object) {
 	resource = {},
 	service = {};
 		console.log("TEST obj seq", object.sequence);
-	canvas["@id"] = config.IIIFUrl + "/" + container.containerID + "/canvas/c" + object.sequence;
+	canvas["@id"] = config.IIIFUrl + "/" + container.resourceID + "/canvas/c" + object.sequence;
 	canvas["@type"] = "sc:Canvas";
 	canvas["label"] = object.label;
 	canvas["height"] = "";
@@ -217,11 +217,11 @@ var getImageCanvas = function(container, object) {
 	canvas['images'] = [];
 
 	image["@context"] = "http://iiif.io/api/presentation/2/context.json";
-	image["@id"] = config.IIIFUrl + "/" + container.containerID + "/image/i" + object.sequence;
+	image["@id"] = config.IIIFUrl + "/" + container.resourceID + "/image/i" + object.sequence;
 	image["@type"] =  "oa:Annotation";
 	image["motivation"] = "";
 
-	resource["@id"] = config.cantaloupeUrl + "/iiif/2/" + container.containerID + "/full/full/0/default.jpg";
+	resource["@id"] = config.cantaloupeUrl + "/iiif/2/" + container.resourceID + "/full/full/0/default.jpg";
 	resource["@type"] = object.type; 
 	resource["format"] = object.format; 
 
