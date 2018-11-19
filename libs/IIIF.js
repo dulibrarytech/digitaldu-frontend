@@ -47,13 +47,12 @@ exports.getManifest = function(container, objects, callback) {
 	manifest['thumbnail'] = {};    // If used... Get thumbnail url somewhere.  Leave empty for testing
 
 	// Define the sequence.  At this time only one sequence can be defined
-	let sequence = {
+	manifest.sequences.push({
 		"@id": config.IIIFUrl + "/" + container.resourceID + "/sequence/s0",
 		"@type": "sc:Sequence",
 		"label": "Sequence s0",
 		"canvases": []
-	}
-	manifest.sequences.push(sequence);
+	});
 
 	var object,
 	    images = [],
@@ -88,10 +87,8 @@ exports.getManifest = function(container, objects, callback) {
 				});
 			}
 
-			element = getObjectElement(object);
-			elements.push(element);
-			thumbnail = getThumbnailCanvas(container, object);
-			canvases.push(thumbnail);
+			elements.push(getObjectElement(object));
+			canvases.push(getThumbnailCanvas(container, object));
 
 		}
 		else {
@@ -209,7 +206,7 @@ var getImageCanvas = function(container, object) {
 	image = {},
 	resource = {},
 	service = {};
-		console.log("TEST obj seq", object.sequence);
+
 	canvas["@id"] = config.IIIFUrl + "/" + container.resourceID + "/canvas/c" + object.sequence;
 	canvas["@type"] = "sc:Canvas";
 	canvas["label"] = object.label;
