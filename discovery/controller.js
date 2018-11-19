@@ -278,13 +278,6 @@ exports.getDatastream = function(req, res) {
 exports.getIIIFManifest = function(req, res) {
 	let pid = req.params.pid || "";
 	Service.getManifestObject(pid, function(error, manifest) {
-			console.log("TEST manifest object generated:", manifest);
-			console.log("TEST manifest error:", error);
-			if(manifest.length > 0) {
-				console.log("TEST manifest object canvases generated:", manifest.sequences[0].canvases[0]);
-				console.log("TEST manifest object images generated:", manifest.sequences[0].canvases[0].images);
-				console.log("TEST manifest object service generated:", manifest.sequences[0].canvases[0].images[0].resource.service);
-			}
 		if(error) {
 			console.log(error);
 			res.sendStatus(500);

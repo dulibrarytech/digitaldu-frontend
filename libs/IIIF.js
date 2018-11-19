@@ -66,13 +66,17 @@ exports.getManifest = function(container, objects, callback) {
 
 	// Define the canvas objects.  Create a mediaSequence object if a/v or pdf items are present.  For each of these, insert an element object
 	for(var object of objects) {
-		if(object.type == config.IIIFObjectTypes["smallImage"] || object.type == config.IIIFObjectTypes["largeImage"]) {
+		if(object.type == config.IIIFObjectTypes["smallImage"] || 
+		   object.type == config.IIIFObjectTypes["largeImage"]) {
+
 			images.push(object);
 			elements.push({});	// To keep in step with the sequences array.  No media sequence elements are required for an image object
-
 			canvases.push(getImageCanvas(container, object));
 		}
-		else if(object.type == config.IIIFObjectTypes["audio"] || object.type == config.IIIFObjectTypes["video"]) {
+		else if(object.type == config.IIIFObjectTypes["audio"] || 
+				object.type == config.IIIFObjectTypes["video"] || 
+				object.type == config.IIIFObjectTypes["pdf"]) {
+
 			// Define the media sequence object if it has not been defined yet
 			if(typeof manifest.mediaSequences == "undefined") {
 				manifest["mediaSequences"] = [];
@@ -88,9 +92,6 @@ exports.getManifest = function(container, objects, callback) {
 			elements.push(element);
 			thumbnail = getThumbnailCanvas(container, object);
 			canvases.push(thumbnail);
-
-		}
-		else if(object.type == config.IIIFObjectTypes["pdf"]) {
 
 		}
 		else {
