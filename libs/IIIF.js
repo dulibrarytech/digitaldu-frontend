@@ -18,7 +18,8 @@ const 	config = require('../config/config'),
  * @return 
  */
 exports.getManifest = function(container, objects, callback) {
-	var manifest = {};
+	var manifest = {},
+		mediaSequences = [];
 
 	// Define the manifest
 	manifest["@context"] = "http://iiif.io/api/presentation/2/context.json";	// OK (standard)
@@ -54,6 +55,13 @@ exports.getManifest = function(container, objects, callback) {
 		"canvases": []
 	});
 
+	mediaSequences.push({
+		"@id" : config.IIIFUrl + "/" + container.resourceID + "/xsequence/s0",
+		"@type" : "ixif:MediaSequence",
+		"label" : "XSequence 0",
+		"elements": []
+	});
+
 	var object,
 	    images = [],
 		imageData, 
@@ -69,27 +77,17 @@ exports.getManifest = function(container, objects, callback) {
 		   object.type == config.IIIFObjectTypes["largeImage"]) {
 
 			images.push(object);
-			elements.push({});	// To keep in step with the sequences array.  No media sequence elements are required for an image object
 			canvases.push(getImageCanvas(container, object));
 		}
 		else if(object.type == config.IIIFObjectTypes["audio"] || 
-				object.type == config.IIIFObjectTypes["video"] || 
-				object.type == config.IIIFObjectTypes["pdf"]) {
-
-			// Define the media sequence object if it has not been defined yet
-			if(typeof manifest.mediaSequences == "undefined") {
-				manifest["mediaSequences"] = [];
-				manifest.mediaSequences.push({
-					"@id" : config.IIIFUrl + "/" + container.resourceID + "/xsequence/s0",
-					"@type" : "ixif:MediaSequence",
-					"label" : "XSequence 0",
-					"elements": []
-				});
-			}
+				object.type == config.IIIFObjectTypes["video"]) {
 
 			elements.push(getObjectElement(object));
 			canvases.push(getThumbnailCanvas(container, object));
 
+		}
+		else if(object.type == config.IIIFObjectTypes["pdf"]) {
+			canvases.push(getPDFCanvas(container, object));
 		}
 		else {
 			console.log("Invalid IIIF object type");
@@ -114,13 +112,16 @@ exports.getManifest = function(container, objects, callback) {
 						canvas.images[0].resource.width = imageData.width;
 						canvas.images[0].resource.service["@context"] = imageData["@context"];
 						canvas.images[0].resource.service.profile = imageData.profile;
+
+						// set service and profile data in corresponding elements[] element
+						// This is set for the index of which the image canvas appears in the canvas array
 					}
 				}
 			}
-
 			manifest.sequences[0].canvases = canvases;
-			if(typeof manifest.mediaSequences != "undefined") {
-				manifest.mediaSequences[0].elements = elements;
+			if(elements.length > 0) {
+				mediaSequences[0].elements = elements;
+				manifest["mediaSequences"] = mediaSequences;
 			}
 			callback(null, manifest);
 		}
@@ -153,15 +154,20 @@ var getImageData = function(objects, data=[], callback) {
 	}
 }
 
+var getImageElement = function(object) {
+	// The element array has a resources [].
+	// create service object, has empty profile array
+	// create a resource element, attach the service object, push to service.resources []
+}
+
 var getObjectElement = function(object) {
 	// Create the rendering data
 	let rendering = {};
 	rendering['@id'] = object.resourceUrl;
 	rendering['format'] = object.format;
 
-	// Push the mediaSequence element
 	let element = {};
-	element["@id"] = object.resourceUrl += "#identity";
+	element["@id"] = object.resourceUrl;
 	element["@type"] = object.type;
 	element["format"] = object.format; 
 	element["label"] = object.label;
@@ -169,7 +175,60 @@ var getObjectElement = function(object) {
 	element["thumbnail"] = object.thumbnailUrl;
 	element["rendering"] = rendering;
 
+	element.metadata.push({
+		title: object.label,
+		description: object.description
+	});
+
 	return element;
+}
+
+var getPDFElement = function(object) {
+	let element = {};
+	element["@id"] = object.resourceUrl;
+	element["@type"] = object.type;
+	element["format"] = object.format; 
+	element["label"] = object.label;
+	element["metadata"] = [];
+	element["thumbnail"] = object.thumbnailUrl;
+
+	element.metadata.push({
+		title: object.label,
+		description: object.description
+	});
+
+	return element;
+}
+
+var getPDFCanvas = function(container, object) {
+	let canvas = {},
+		content = {},
+		items = {};
+
+	canvas["@id"] = config.IIIFUrl + "/" + container.resourceID + "/canvas/c" + object.sequence;
+	canvas["@type"] = "Canvas";
+	canvas["thumbnail"] = object.thumbnailUrl;
+	canvas["content"] = [];
+
+	content["@id"] = config.IIIFUrl + "/" + container.resourceID + "/annotationpage/ap" + object.sequence;
+	content["@type"] = "AnnotationPage";
+	content["items"] = [];
+
+	items["@id"] = config.IIIFUrl + "/" + container.resourceID + "/annotation/a" + object.sequence;
+	items["@type"] = "Annotation";
+	items["motivation"] = "painting";
+	items["body"] = {
+		id: object.resourceUrl,
+		type: "PDF",
+		format: object.format,
+		label: object.label
+	};
+	items["target"] = config.IIIFUrl + "/" + container.resourceID + "/canvas/c" + object.sequence;
+
+	content.items.push(items);
+	canvas.content.push(content);
+
+	return canvas;
 }
 
 var getThumbnailCanvas = function(container, object) {
@@ -181,7 +240,7 @@ var getThumbnailCanvas = function(container, object) {
 
 	resource["@id"] = object.thumbnailUrl;
 	resource["@type"] = config.IIIFObjectTypes["smallImage"];
-	resource["height"] = config.IIIFThumbnailHeight;	// config.IIIF.ThumbnailWidth
+	resource["height"] = config.IIIFThumbnailHeight;
 	resource["width"] = config.IIIFThumbnailWidth;
 
 	image["@id"] = object.thumbnailUrl;

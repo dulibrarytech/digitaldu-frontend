@@ -452,14 +452,14 @@ exports.getManifestObject = function(pid, callback) {
         description: object.abstract,
         metadata: {
           "Title": object.title,
-          "Creator": object.creator
+          "Creator": object.creator,
+          "Description": object.description
         }
       };
 
       // Create children array for IIIF
       var children = [];
       if(Helper.isParentObject(object)) {
-          console.log("TEST IS COMPOUND")
         for(var key in object.children) {
           children.push({
             label: object.children[key].title,
@@ -468,13 +468,12 @@ exports.getManifestObject = function(pid, callback) {
             format: object.children[key].mimetype,
             type: Helper.getIIIFObjectType(object.children[key].mimetype) || "",
             resourceID: object.children[key].url,
-            resourceUrl: config.rootUrl + "/datastream/" + object.children[key].url + "/" + Helper.getDsType(object.children[key].mimetype),   // Can assign the child 'url' value directly here, if it is a url.  In that case, will need a separate thumbnail url
+            resourceUrl: config.rootUrl + "/datastream/" + object.children[key].url + "/" + Helper.getDsType(object.children[key].mimetype),
             thumbnailUrl: config.rootUrl + "/datastream/" + object.children[key].url + "/" + Helper.getDsType("thumbnail")
           });
         }
       }
       else {
-          console.log("TEST IS SINGLE")
         children.push({
           label: object.title,
           sequence: "1",

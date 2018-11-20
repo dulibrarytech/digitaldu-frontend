@@ -264,7 +264,7 @@ exports.getDatastream = function(req, res) {
 		else {
 			if(stream.headers['content-type'] == "text/plain" && ds.toLowerCase() == "tn") {
 				Service.getThumbnailPlaceholderStream(function(error, stream) {
-					// TODO hndle error
+					// TODO handle error
 					stream.pipe(res);
 				});
 			}

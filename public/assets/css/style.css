@@ -1072,7 +1072,7 @@ div#viewer-section {
 
 div#viewer-wrapper {
   margin: 0 auto;
-  width: 800px;
+  width: 1000px;
 }
 
 div#large-image-viewer {
@@ -1331,6 +1331,10 @@ div.info-content {
   margin: 6px 0 10px 0;
 }
 
+#uv {
+  width: 1000px;
+}
+
 .uv .rightPanel .top .title {
   visibility: hidden;
 }
@@ -1345,6 +1349,10 @@ div.info-content {
 
 .uv .leftPanel .top .title {
   color: white;
+}
+
+.uv .pdfContainer {
+  height: 490px !important;
 }
 
 @media screen and (min-color-index:0) and(-webkit-min-device-pixel-ratio:0)
