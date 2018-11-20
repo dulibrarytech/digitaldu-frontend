@@ -1351,8 +1351,8 @@ div.info-content {
   color: white;
 }
 
-.uv .pdfContainer {
-  height: 490px !important;
+.uv .content {
+  padding: 0px;
 }
 
 @media screen and (min-color-index:0) and(-webkit-min-device-pixel-ratio:0)
