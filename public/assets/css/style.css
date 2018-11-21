@@ -1072,7 +1072,7 @@ div#viewer-section {
 
 div#viewer-wrapper {
   margin: 0 auto;
-  width: 1000px;
+  width: 98%;
 }
 
 div#large-image-viewer {
@@ -1332,7 +1332,8 @@ div.info-content {
 }
 
 #uv {
-  width: 1000px;
+  width: 100%;
+  height: 800px;
 }
 
 .uv .rightPanel .top .title {
@@ -1353,6 +1354,12 @@ div.info-content {
 
 .uv .content {
   padding: 0px;
+}
+
+#uv .btn-primary, #uv .overlay .close {
+    color: #fff;
+    background-color: #8b2332;
+    border-color: #8b2332;
 }
 
 @media screen and (min-color-index:0) and(-webkit-min-device-pixel-ratio:0)
