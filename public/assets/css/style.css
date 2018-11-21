@@ -1077,6 +1077,8 @@ div#viewer-wrapper {
 
 div#large-image-viewer {
   text-align: center;
+  width: 70%;
+  margin: 0 auto;
 }
 
 div#large-image-viewer #display-message {
@@ -1182,6 +1184,11 @@ div#mediaplayer {
   /*top: 68px;*/
 }
 
+div#audio-player {
+    width: 60%;
+    margin: 0 auto;
+}
+
 div#audio-player > div#mediaplayer_wrapper,
 div#audio-player > div#mediaplayer {
   height: 360px !important;
@@ -1224,6 +1231,11 @@ div#audio-player > div#viewer-content-wrapper {
 
 div#audio-player > div#viewer-content-wrapper > audio {
   width: 100%;
+}
+
+div#pdf-viewer {
+  width: 80%;
+  margin: 0 auto;
 }
 
 div#pdf-viewer > iframe {
