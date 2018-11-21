@@ -1382,6 +1382,11 @@ div.info-content {
   max-height: 660px;
 }
 
+#uv .mainPanel .main {
+  margin-top: 30px;
+  padding-left: 12px;
+}
+
 @media screen and (min-color-index:0) and(-webkit-min-device-pixel-ratio:0)
 { @media {
     .searchform button {
