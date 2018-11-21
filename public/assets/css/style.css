@@ -1378,6 +1378,10 @@ div.info-content {
   width: 100% !important;
 }
 
+#uv #content .container > div {
+  max-height: 660px;
+}
+
 @media screen and (min-color-index:0) and(-webkit-min-device-pixel-ratio:0)
 { @media {
     .searchform button {
