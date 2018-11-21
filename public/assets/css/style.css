@@ -1374,6 +1374,10 @@ div.info-content {
     border-color: #8b2332;
 }
 
+#uv #content .container {
+  width: 100% !important;
+}
+
 @media screen and (min-color-index:0) and(-webkit-min-device-pixel-ratio:0)
 { @media {
     .searchform button {
