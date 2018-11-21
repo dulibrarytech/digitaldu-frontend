@@ -127,7 +127,7 @@
   }
 
   div#viewer-wrapper {
-    width: 50%;
+    /*width: 50%;*/
   }
 
   footer .footer-column {
@@ -261,7 +261,7 @@
   }
 
   div#viewer-wrapper {
-    width: 50%;
+    /*width: 50%;*/
   }
 }
 
@@ -275,7 +275,7 @@
   }
 
   div#viewer-wrapper {
-    width: 56%;
+    /*width: 56%;*/
   }
 
   div#collection-grid.homepage dl.item > dt {
@@ -302,7 +302,7 @@
   }
 
   div#viewer-wrapper {
-    width: 61%;
+    /*width: 61%;*/
   }
 
   div#collection-grid.homepage div.item-thumb {
