@@ -35,11 +35,13 @@ exports.getObjectViewer = function(object, mimeType="") {
  	switch(dataType) {
  		case "audio":
  			//viewer = getAudioPlayer(object, mimeType);
+ 			// TODO get kaltura viewer
  			viewer = this.getIIIFObjectViewer(object);
  			break;
 
  		case "video":
  			//viewer = getVideoViewer(object);
+ 			// TODO get kaltura viewer
  			viewer = this.getIIIFObjectViewer(object);
  			break;
 

@@ -163,10 +163,10 @@ exports.renderObjectView = function(req, res) {
 		root_url: config.rootUrl
 	};
 
-	let regex = /[a-zA-Z]*[:_][0-9]*/;
-	if(!req.params.pid || /[a-zA-Z]*[:_][0-9]*/.test(req.params.pid) === false) {
-		return res.sendStatus(400);
-	}
+	// let regex = /[a-zA-Z]*[:_][0-9]*/;
+	// if(!req.params.pid || /[a-zA-Z]*[:_][0-9]*/.test(req.params.pid) === false) {
+	// 	return res.sendStatus(400);
+	// }
 
 	const renderView = function(data) {
 		return res.render('object', data);
