@@ -479,10 +479,10 @@ exports.getManifestObject = function(pid, callback) {
           sequence: "1",
           description: object.abstract,
           format: object.mime_type,
-          type: object.type,
+          type: Helper.getIIIFObjectType(object.mime_type) || "",
           resourceID: object.pid,
-          resourceUrl: config.rootUrl + "/datastream/" + object.children[key].url + "/" + Helper.getDsType(object.mime_type),
-          thumbnailUrl: config.rootUrl + "/datastream/" + object.children[key].url + "/" + Helper.getDsType("thumbnail")
+          resourceUrl: config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType(object.mime_type),
+          thumbnailUrl: config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType("thumbnail")
         });
       }
 

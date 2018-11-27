@@ -43,11 +43,13 @@ exports.getObjectViewer = function(object, mimeType="") {
 
  		case "smallImage":
  			//viewer = getSmallImageViewer(object);
- 			viewer = getLargeImageViewer(object);
+ 			//viewer = getLargeImageViewer(object);
+ 			viewer = this.getIIIFObjectViewer(object);
  			break;
 
  		case "largeImage":
- 			viewer = getLargeImageViewer(object);
+ 			//viewer = getLargeImageViewer(object);
+ 			viewer = this.getIIIFObjectViewer(object);
  			break;
 
  		case "pdf":
