@@ -34,11 +34,13 @@ exports.getObjectViewer = function(object, mimeType="") {
  	// Get viewer for object mime type:
  	switch(dataType) {
  		case "audio":
- 			viewer = getAudioPlayer(object, mimeType);
+ 			//viewer = getAudioPlayer(object, mimeType);
+ 			viewer = this.getIIIFObjectViewer(object);
  			break;
 
  		case "video":
- 			viewer = getVideoViewer(object);
+ 			//viewer = getVideoViewer(object);
+ 			viewer = this.getIIIFObjectViewer(object);
  			break;
 
  		case "smallImage":

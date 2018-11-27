@@ -1378,7 +1378,8 @@ div.info-content {
   width: 100% !important;
 }
 
-#uv #content .container > div {
+#uv #content .container > div,
+#uv #content .container video {
   max-height: 660px;
 }
 

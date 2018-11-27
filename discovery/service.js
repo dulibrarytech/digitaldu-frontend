@@ -452,8 +452,7 @@ exports.getManifestObject = function(pid, callback) {
         description: object.abstract,
         metadata: {
           "Title": object.title,
-          "Creator": object.creator,
-          "Description": object.description
+          "Creator": object.creator
         }
       };
 
