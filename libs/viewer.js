@@ -53,7 +53,8 @@ exports.getObjectViewer = function(object, mimeType="") {
  			break;
 
  		case "pdf":
- 			viewer = getPDFViewer(object);
+ 			//viewer = getPDFViewer(object);
+ 			viewer = this.getIIIFObjectViewer(object);
  			break;
 
  		default:
