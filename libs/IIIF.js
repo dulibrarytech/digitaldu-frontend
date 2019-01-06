@@ -23,7 +23,7 @@ exports.getManifest = function(container, objects, callback) {
 
 	// Define the manifest
 	manifest["@context"] = "http://iiif.io/api/presentation/2/context.json";	// OK (standard)
-	manifest["@id"] = config.IIIFUrl + "/" + container.resourceID + "/manifest";	// OK  IF url is [speccoll/iiif/]
+	manifest["@id"] = config.IIIFUrl + "/" + container.resourceID + "/manifest";	// OK  
 	manifest["@type"] = "sc:Manifest";	// OK standard
 	manifest["label"] = container.title;	// OK
 
@@ -41,22 +41,22 @@ exports.getManifest = function(container, objects, callback) {
 		"@language": "en"
 	});
 
-	manifest['license'] = "https://creativecommons.org/licenses/by/3.0/";
-	manifest['logo'] = "https://www.du.edu/_resources/images/nav/logo2.gif";
+	manifest['license'] = "https://creativecommons.org/licenses/by/3.0/";	// OK  
+	manifest['logo'] = "https://www.du.edu/_resources/images/nav/logo2.gif";	// INPUT THIS
 	manifest['sequences'] = [];
 	manifest['structures'] = []; 	// push the selectable structures object
 	manifest['thumbnail'] = {};    // If used... Get thumbnail url somewhere.  Leave empty for testing
 
 	// Define the sequence.  At this time only one sequence can be defined
 	manifest.sequences.push({
-		"@id": config.IIIFUrl + "/" + container.resourceID + "/sequence/s0",
+		"@id": config.IIIFUrl + "/" + container.resourceID + "/sequence/s0",	// OK  
 		"@type": "sc:Sequence",
 		"label": "Sequence s0",
 		"canvases": []
 	});
 
 	mediaSequences.push({
-		"@id" : config.IIIFUrl + "/" + container.resourceID + "/xsequence/s0",
+		"@id" : config.IIIFUrl + "/" + container.resourceID + "/xsequence/s0",	// OK  
 		"@type" : "ixif:MediaSequence",
 		"label" : "XSequence 0",
 		"elements": []
@@ -73,9 +73,11 @@ exports.getManifest = function(container, objects, callback) {
 
 	// Define the canvas objects.  Create a mediaSequence object if a/v or pdf items are present.  For each of these, insert an element object
 	for(var object of objects) {
-		if(object.type == config.IIIFObjectTypes["smallImage"] || 
-		   object.type == config.IIIFObjectTypes["largeImage"]) {
-
+		if(object.type == config.IIIFObjectTypes["largeImage"]) {
+			images.push(object);
+			canvases.push(getImageCanvas(container, object));
+		}
+		else if(object.type == config.IIIFObjectTypes["smallImage"]) {
 			images.push(object);
 			canvases.push(getImageCanvas(container, object));
 		}
@@ -136,7 +138,8 @@ var getImageData = function(objects, data=[], callback) {
 	}
 	else {
 		let object = objects[index],
-			url = config.cantaloupeUrl + "/iiif/2/" + object.resourceID;
+			url = config.cantaloupeUrl + "/iiif/2/" + object.resourceID; 	// *** INPUT the path to each child, same as with the tn's ***
+			//url = 
 
 		request(url, function(error, response, body) {
 			if(error) {
@@ -260,6 +263,9 @@ var getThumbnailCanvas = function(container, object) {
 	return canvas;
 }
 
+/*
+ * Retrieving image tile data from IIIF image server
+ */
 var getImageCanvas = function(container, object) {
 	let canvas = {},
 	image = {},
@@ -278,12 +284,14 @@ var getImageCanvas = function(container, object) {
 	image["@type"] =  "oa:Annotation";
 	image["motivation"] = "";
 
-	resource["@id"] = config.cantaloupeUrl + "/iiif/2/" + container.resourceID + "/full/full/0/default.jpg";
+	resource["@id"] = object.resourceUrl;
+	//resource["@id"] = 
 	resource["@type"] = object.type; 
 	resource["format"] = object.format; 
 
 	service["@context"] = "";
-	service["@id"] = config.cantaloupeUrl + "/iiif/2/" + object.resourceID;		// If using the entire url here, just insert it
+	service["@id"] = config.cantaloupeUrl + "/iiif/2/" + object.resourceID;	
+	//service["@id"] = 
 	service["profile"] = [];
 
 	resource["service"] = service;

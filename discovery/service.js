@@ -457,9 +457,23 @@ exports.getManifestObject = function(pid, callback) {
       };
 
       // Create children array for IIIF
-      var children = [];
+      var children = [], resourceUrl;
+
+      // Compound objects
       if(Helper.isParentObject(object)) {
         for(var key in object.children) {
+
+          // Use iiif server 
+          if(object.children[key].mimetype == "image/tiff") {
+            resourceUrl = config.cantaloupeUrl + "/iiif/2/" + container.resourceID + "/full/full/0/default.jpg";
+          }
+
+          // Use repository datastream
+          else {
+            resourceUrl = config.rootUrl + "/datastream/" + object.children[key].url + "/" + Helper.getDsType(object.children[key].mimetype);
+          }
+
+          // Add the data
           children.push({
             label: object.children[key].title,
             sequence: object.children[key].sequence || key,
@@ -467,12 +481,26 @@ exports.getManifestObject = function(pid, callback) {
             format: object.children[key].mimetype,
             type: Helper.getIIIFObjectType(object.children[key].mimetype) || "",
             resourceID: object.children[key].url,
-            resourceUrl: config.rootUrl + "/datastream/" + object.children[key].url + "/" + Helper.getDsType(object.children[key].mimetype),
+            resourceUrl: resourceUrl,
             thumbnailUrl: config.rootUrl + "/datastream/" + object.children[key].url + "/" + Helper.getDsType("thumbnail")
           });
         }
       }
+
+      // Single objects
       else {
+
+        // Use iiif server
+        if(object.mime_type == "image/tiff") {
+          resourceUrl = config.cantaloupeUrl + "/iiif/2/" + container.resourceID + "/full/full/0/default.jpg";
+        }
+
+        // Use repository datastream
+        else {
+          resourceUrl = config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType(object.mime_type);
+        }
+
+        // Add the data
         children.push({
           label: object.title,
           sequence: "1",
@@ -480,7 +508,7 @@ exports.getManifestObject = function(pid, callback) {
           format: object.mime_type,
           type: Helper.getIIIFObjectType(object.mime_type) || "",
           resourceID: object.pid,
-          resourceUrl: config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType(object.mime_type),
+          resourceUrl: resourceUrl,
           thumbnailUrl: config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType("thumbnail")
         });
       }
