@@ -138,7 +138,7 @@ var getImageData = function(objects, data=[], callback) {
 	}
 	else {
 		let object = objects[index],
-			url = config.cantaloupeUrl + "/iiif/2/" + object.resourceID; 	// *** INPUT the path to each child, same as with the tn's ***
+			url = config.IIIFServerUrl + "/iiif/2/" + object.resourceID; 	// *** INPUT the path to each child, same as with the tn's ***
 			//url = 
 
 		request(url, function(error, response, body) {
@@ -290,7 +290,7 @@ var getImageCanvas = function(container, object) {
 	resource["format"] = object.format; 
 
 	service["@context"] = "";
-	service["@id"] = config.cantaloupeUrl + "/iiif/2/" + object.resourceID;	
+	service["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID;	
 	//service["@id"] = 
 	service["profile"] = [];
 

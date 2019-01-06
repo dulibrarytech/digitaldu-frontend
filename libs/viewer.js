@@ -219,7 +219,7 @@ function getLargeImageViewer(objectData) {
 		viewer +=     'prefixUrl: "' + config.rootUrl + viewerImages + '",'
 		viewer +=     'immediateRender: true,'
 		viewer +=     'showNavigator: true,'
-		viewer +=     'tileSources: "' + config.cantaloupeUrl + '/iiif/2/' + objectData.pid + '"'
+		viewer +=     'tileSources: "' + config.IIIFServerUrl + '/iiif/2/' + objectData.pid + '"'
 		viewer += '});'
 		viewer += 'viewer.addHandler("tile-loaded", function(event) {document.getElementById("display-message").style.display = "none"})'
 		viewer += '</script>';

@@ -465,7 +465,7 @@ exports.getManifestObject = function(pid, callback) {
 
           // Use iiif server 
           if(object.children[key].mimetype == "image/tiff") {
-            resourceUrl = config.cantaloupeUrl + "/iiif/2/" + container.resourceID + "/full/full/0/default.jpg";
+            resourceUrl = config.IIIFServerUrl + "/iiif/2/" + container.resourceID + "/full/full/0/default.jpg";
           }
 
           // Use repository datastream
@@ -492,7 +492,7 @@ exports.getManifestObject = function(pid, callback) {
 
         // Use iiif server
         if(object.mime_type == "image/tiff") {
-          resourceUrl = config.cantaloupeUrl + "/iiif/2/" + container.resourceID + "/full/full/0/default.jpg";
+          resourceUrl = config.IIIFServerUrl + "/iiif/2/" + container.resourceID + "/full/full/0/default.jpg";
         }
 
         // Use repository datastream

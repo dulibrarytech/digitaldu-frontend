@@ -13,7 +13,7 @@ module.exports = {
     elasticsearchHost: process.env.ELASTICSEARCH_HOST,
     elasticsearchPort: process.env.ELASTICSEARCH_PORT,
     elasticsearchIndex: process.env.ELASTICSEARCH_INDEX,
-    cantaloupeUrl: process.env.CANTALOUPE_URL,
+    IIIFServerUrl: process.env.CANTALOUPE_URL,
     cantaloupePort: process.env.CANTALOUPE_PORT,
 
     // Repository settings
