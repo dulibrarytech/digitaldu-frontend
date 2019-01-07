@@ -250,7 +250,7 @@
       padding-right: 2px;
   }
 
-  .facets ul {
+  div.facets ul {
       font-size: 10px;
   }
 
@@ -281,7 +281,7 @@
       padding-right: 0px;
   }
 
-  .facets ul {
+  div.facets ul {
       font-size: 11px;
   }
 
@@ -306,7 +306,7 @@
       margin: 2.5em 0;
   }
 
-  .facets ul {
+  div.facets ul {
       font-size: 13px;
   }
 }
@@ -325,7 +325,7 @@
       height: 24px;
   }
 
-  .facets ul {
+  div.facets ul {
       font-size: 13px;
   }
 }

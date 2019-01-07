@@ -184,10 +184,13 @@ main {
 
 .panel {
     padding: 0 18px;
-    display: none;
     background-color: white;
     overflow: hidden;
     color: #181818;
+}
+
+.panel-collapsed {
+  display: none;
 }
 
 .active, .collapsible:hover {
@@ -486,17 +489,47 @@ div.facets .facet-count > div {
     padding-right: 7px;
 }
 
-div.facets .list-group {
-  border-style: solid;
-    border-width: 1px;
-    border-color: #e5e3e1;
-    border-bottom-left-radius: .25rem;
-    border-bottom-right-radius: .25rem;
+div.facets .list-group-item {
+    padding: 0.4rem 1.25rem;
+    border: none;
 }
 
-div.facets .list-group-item {
-  padding: 0.4rem 1.25rem;
-  border: none;
+div.facets .panel {
+    margin-bottom: 0.5em;
+    margin-top: -0.5em;
+    border-top-style:none;
+    padding: 1em;
+}
+
+div.facets .panel {
+    max-height: 327px;
+    overflow-y: scroll;
+    padding: 10px 8px;
+}
+
+div.facets .panel span {
+    display: inline-block;
+}
+
+div.facets .panel span.facet-name {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+div.facets ul {
+    font-size: 14px;
+    list-style: none;
+    padding: 5px 10px;
+}
+
+div.facets .static-facets {
+    overflow-y: hidden;
+    max-height: 350px;
+}
+
+div.facets .static-facets ul {
+    padding: 5px 0;
 }
 
 .facet-caret {
@@ -525,60 +558,36 @@ div.facets .list-group-item {
 
 .facet-count {
     color: #757371;
+    float: right;
 }
 
 .fixed-facets .facet-count {
     margin-top: 5px;
 }
 
-.facets ul {
-    font-size: 14px;
-}
-
-.facet-panel {
-    max-height: 327px;
-    overflow-y: scroll;
-}
-
-.facet-panel span {
-    display: inline-block;
-}
-
-.facet-panel span.facet-name {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-}
-
-/* kludge */
-/*#moving-image-facet-tn > img {
-  right: 2px;
-  position: relative;
-}*/
-
 button.accordion > h5 {
-  margin: 0;
-  float: left;
-  font-size: 16px;
+    margin: 0;
+    float: left;
+    font-size: 16px;
 }
 
 button.accordion > i {
-  float: right;
+    float: right;
 }
 
 button.accordion,
 div.panel {
-  background-color: white;
-  border-style: solid;
-  border-width: 1px;
-  border-color: #c5c3c1;
-  border-radius: 2px;
+    background-color: white;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #c5c3c1;
+    border-radius: 2px;
 }
 
 button.accordion {
-  font-size: 18px;
-  margin-bottom: 0.5em;
-  background-color: #e5e3e1;
+    font-size: 18px;
+    margin-bottom: 0.5em;
+    background-color: #e5e3e1;
 }
 /* End facet section */
 
@@ -588,12 +597,12 @@ div.facet-breadcrumbs {
 }
 
 div.facet-breadcrumbs a {
-  border: none;
-  background: #e5e3e1;
-  padding: 6px 12px;
-  margin: 0 auto 5px auto;
-  color: #222;
-  white-space: normal;
+    border: none;
+    background: #e5e3e1;
+    padding: 6px 12px;
+    margin: 0 auto 5px auto;
+    color: #222;
+    white-space: normal;
 }
 
 div#viewer-section {
@@ -610,21 +619,21 @@ div.viewer-wrapper {
 }
 
 div.viewer-wrapper div {
-  padding: 0;
+    padding: 0;
 }
 
 div#content {
-  min-height: 600px;
+    min-height: 600px;
 
 }
 
 /* Begin collection grid section */
 div#home-collections {
-   margin: 0;
+    margin: 0;
 }
 
 div#home-collections div.collection-thumb {
-  margin-bottom: 45px;
+    margin-bottom: 45px;
 }
 
 div#home-collections div {
@@ -635,8 +644,12 @@ div#home-collections > h4 {
     font-size: 1em;
 }
 
+div#home-collections .item-thumb {
+    /*height: 250px;*/
+}
+
 div#collections dl.item > dt {
-  border-bottom-style: solid;
+    border-bottom-style: solid;
     border-bottom-color: #e5e3e1;
     /*height: 200px;*/
 }
@@ -646,16 +659,11 @@ div#collections .item-thumb {
 }
 
 div#collections .row:not(:first-child) {
-  margin-top: 2vw;
+    margin-top: 2vw;
     border-top-style: solid;
     border-top-width: 1px;
     border-top-color: #e5e3e1;
 }
-
-
-
-
-
 
 div.collection-breadcrumbs {
   font-size: 13px;
