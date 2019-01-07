@@ -1,554 +1,336 @@
-/* Responsive styles */
-
-@media only screen and (min-width: 1750px) {
-  div.banner-logo {
-    width: 100%;
-  }
-
+/* Extra small devices (phones, up to 479px) */
+@media screen and (max-width: 479px) {
   .logo h1 {
-    font-size: 80px;
+    font-size: 2.4em;
   }
 
-  div#collection-grid.homepage dl.item  > dt {
-    height: 283px;
+  div#hero-banner {
+    background-size: initial;
   }
 
-  footer .footer-column {
-    width: 23.5%;
+  div#hero-banner .logo {
+      top: 80px;
   }
-}
 
-@media only screen and (min-width: 1750px) and (max-width: 1879px) {
-  .logo h1 {
-    font-size: 75px;
+  div.logo h1 {
+    min-height: 138px;
   }
 
-  div.banner-logo {
-    width: 100%;
+  div.intro-text {
+      margin-top: 48px;
   }
 
-  div#collection-grid dl.item  > dt {
-   /* height: 140px;*/
-  }
-
-  footer .footer-column {
-    width: 23.5%;
-  }
-}
-
-@media only screen and (min-width: 1700px) and (max-width: 1749px) { 
-  div.banner-logo {
-   width: 100%;
-  }
-
-  .logo h1 {
-    font-size: 73px;
-  }
-
-  div#collection-grid dl.item  > dt {
-    /*height: 105px;*/
-  }
-
-  div#collection-grid.homepage dl.item  > dt {
-    height: 277px;
-  }
-
-  div.slider-section > div {
-    width: 98%;
-  }
-
-  img.lg-tn-row {
-      width: 195px;
-  }
-
-  footer .footer-column {
-    width: 23%;
-  }
-}
-
-@media only screen and (min-width: 1500px) and (max-width: 1699px) { 
-
-  .container {
-      margin: auto;
-      /*width: 82%;*/
-      width: 89%;
-  }
-
-  .content-col-3 {
-    width: 20.999999%;
-  }
-
-  .logo h1 {
-    font-size: 73px;
-  }
-
-  div#collection-grid dl.item  > dt {
-    /*height: 105px;*/
-  }
-
-  div#collection-grid.homepage dl.item  > dt {
-    height: 277px;
-  }
-
-  .item-title a {
-    font-size: 16px;
-  }
-  
-  div.slider-section > div {
-    width: 95%;
-  }
-
-  div#searchform {
-    width: 47%;
-  }
-
-  div#searchform input {
-    width: 60%;
-  }
-
-  div.banner-logo {
-    width: 100%;
-  }
-
-  img.lg-tn-row {
-      width: 175px;
-  }
-
-  .facet-count {
-    margin-right: 20px;
-  }
-
-  div#collection-grid {
-    margin-left: 23px;
-  }
-
-  div#viewer-section {
-    /*height: 395px;*/
-  }
-
-  div#viewer-wrapper {
-    width: 50%;
-  }
-
-  footer .footer-column {
-    width: 23%;
-  }
-}
-
-@media only screen and (min-width: 1250px) and (max-width: 1349px) {
-
-  div#collection-grid.homepage dl.item  > dt {
-    height: 162px;
-  }
-
-  .logo h1 {
-    font-size: 63px;
-  }
-
-  footer .footer-column {
-    width: 22.5%;
-  }
-}
-
-@media only screen and (min-width: 1250px) and (max-width: 1499px) { 
-  div.banner {
-    height: 375px;
-  }
-
-  .container {
-      margin: auto;
-      width: 83%;
-      width: 91%;
-  }
-
-  div#metadata-section .container {
-    width: 75%;
-  }
-
-  .content-col-9 {
-    width: 71.999999%;
-  }
-
-  div#results-grid .item-thumb img {
-    width: 85%;
-  }
-
-  div#collection-grid dl.item  > dt {
-    /*height: 92px;*/
-  }
-
-  div#collection-grid.homepage dl.item  > dt {
-    height: 214px;
-  }
-
-  .item-title a {
-    font-size: 13px;
-  }
-
-  div#banner-box {
-      width: 490px;
-  }
-
-  div.banner-logo {
-    width: 100%;
-  }
-
-  span#site-title {
-/*    font-size: 20px;
-    top: 0.93em;*/
-  }
-
-  div#banner-text {
-    height: 290px;
-  }
-
-  div.searchform {
-   /* width: 50%;*/
-    top: 146px;
-  }
-
-  div#collection-grid {
-    margin-left: 12px;
-  }
-
-  div.slider-section > div {
-    width: 97%;
-  }
-
-  img.small-tn-row {
-    width: 90px;
-  }
-
-  img.lg-tn-row {
-      width: 152px;
-  }
-
-  div#results-grid .item-thumb {
-    height: 120px;
-  }
-
-  div#results-grid .item-title {
-    font-size: 13px;
-  }
-
-  .accordion {
-    padding: 7px;
-  }
-
-  div.collection-thumb > img {
-    width: 84%;
-  }
-
-  div#facets {
-    font-size: 15px;
-    margin: 2.5em 0px;
-  }
-
-  .facet-name {
-    left: 14px;
-  }
-
-  .facet-count {
-    margin-right: 18px;
-  }
-
-  div#facets > div.panel {
-    padding: 14px;
-  }
-
-  div#viewer-section {
-    /*height: 395px;*/
-  }
-
-  div#viewer-wrapper {
-    width: 50%;
-  }
-}
-
-@media only screen and (min-width: 1350px) and (max-width: 1499px) {
-  .logo h1 {
-    font-size: 63px;
-  }
-
-  div#viewer-section {
-    /*height: 395px;*/
-  }
-
-  div#viewer-wrapper {
-    width: 56%;
-  }
-
-  div#collection-grid.homepage dl.item > dt {
-    height: 253px;
-  }
-
-  footer {
-    font-size: 13px;
-    padding: 4.5em 1em 1em 5em;
-  }
-
-  footer .footer-column {
-    width: 22.5%;
-  }
-}
-
-@media only screen and (min-width: 1250px) and (max-width: 1349px) {
-  .logo h1 {
-    font-size: 63px;
-  }
-
-  div#viewer-section {
-    /*height: 395px;*/
-  }
-
-  div#viewer-wrapper {
-    width: 61%;
-  }
-
-  div#collection-grid.homepage div.item-thumb {
-    /*height: 158px;*/
-  }
-
-  div#collection-grid.homepage dl.item > dt {
-    height: 230px;
-  }
-
-  footer {
-    font-size: 12px;
-    padding: 3em 1em 1em 5em;
-  }
-}
-
-@media only screen and (max-width: 1249px) { 
-  .maintenance {
-    font-size: 12px !important;
-  }
-
-  div.banner {
-    height: 375px;
-  }
-
-  .logo h1 {
-    font-size: 48px;
-  }
-
-  .container {
-    width: 90%;
-  }
-
-  .content-col-3 {
-    width: 20.999999%;
-  }
-
-  .content-col-9 {
-    width: 70.999999%;
+  .wide-container {
+    width: 88%;
   }
 
   .welcomeBox .title1 {
-    font-size: 42px;
+      font-size: 30px;
+    }
+
+    .welcomeBox .description {
+      font-size: 0.95em;
+    }
+
+  .section {
+      margin-top: 40px;
   }
 
-  div#collection-grid.homepage dl.item > dt {
-    /*height: 208px;*/
+  .searchform {
+    top: 65px;
+    width: 80%;
   }
 
-  div#results-grid .item-thumb img {
-    width: 78%;
-  }
-
-  div.banner-logo {
+  /* Stack the search form elements */
+  .form-group {
     width: 100%;
+    margin-bottom: 0;
   }
 
-  h3.item-title a {
-    font-size: 13px;
+  div#sidebar {
+    padding: 0;
   }
 
-  div#banner-box {
-      width: 490px;
-  }
-
-  span#site-title {
-/*    font-size: 20px;
-    top: 0.93em;*/
-  }
-
-  div#banner-text {
-    height: 290px;
-  }
-
-  div.searchform {
-    width: 50%;
-    top: 148px;
-  }
-
-  div.slider-section > div {
-    width: 98%;
-  }
-
-  div#collection-grid {
-    margin-left: 14px;
-  }
-
-  img.small-tn-row {
-    width: 84px;
-  }
-
-  div#results-grid .item-thumb {
-    height: 120px;
-  }
-
-  div#results-grid .item-thumb img {
-    width: 89%;
-  }
-
-  div.collection-thumb > img {
-    width: 79%;
-  }
-
-  div#facets {
-    font-size: 14px;
-    margin: 2.5em 0px;
-  }
-
-  #facets ul {
+  div.facets ul {
       font-size: 13px;
   }
 
-  .facet-thumbnail > img {
-      width: 24px;
-      height: 22px;
+/*  .facet-name {
+    left: 15px;
+  }*/
+
+  .title-text h1 {
+      margin: 0;
   }
 
-  .facet-count {
-    margin-right: 9px;
+  .sm-title {
+      font-size: 13px;
+    }
+
+    .title {
+      font-size: 18px;
+    }
+
+    .title-text {
+      left: 5vw;
+    }
+}
+
+@media screen and (max-width: 575px) {
+  div#collections > .row > div:not(:first-child) dl.item {
+      margin-top: 80px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+  body {
+    font-size: 14px;
   }
 
-  div#facets > div.panel {
-    padding: 12px;
+  div.banner-search {
+    right: 0;
+    margin-top: 20px;
   }
 
-  footer {
-    font-size: 12px;
-    padding: 3em 1em 1em 5em;
+  div.banner-search > form {
+      float: none;
+      margin: 0 auto; 
+      width: 79%;
   }
 
-  footer .footer-column {
-    width: 21.5%;
+  div#title-banner {
+      height: 180px;
+    }
+
+    div#search-results-wrapper {
+      margin-top: 45px;
+    }
+
+    div.collections-wrapper {
+      margin-top: 40px;
+    }
+}
+
+/* Super Small devices */
+@media (min-width: 320px) and (max-width: 479px) {
+  div.banner-search > form {
+      width: 90%;
+  }
+
+  div#title-banner {
+      height: 160px;
   }
 }
 
-@media only screen and (min-width: 1100px) and (max-width: 1249px) {
+/* Small devices (phones, up to 575px) */
+@media (min-width: 480px) and (max-width: 575px) {
   .logo h1 {
-    font-size: 60px;
+    font-size: 2.5em;
+  }
+
+  div.logo h1 {
+    min-height: 153px;
+  }
+
+  div.intro-text {
+      margin-top: 90px;
   }
 
   .welcomeBox .title1 {
-    font-size: 40px;
+      font-size: 38px;
+    }
+
+  .section {
+      margin-top: 50px;
   }
 
-  section.home-content .content-col-9 {
-    margin-left: 12px;
+  .searchform {
+    top: 60px;
+    width: 90%;
   }
 
-  div#collection-grid {
-    margin-left: 7px;
+  .searchform input {
+    padding: 15px 7px;
+  }
+
+  .search-element {
+      height: 40px;
+  }
+
+  .wide-container {
+    width: 78%;
   }
 }
 
-@media only screen and (min-width: 849px) and (max-width: 1099px) {
+@media (min-width: 576px) and (max-width: 767px) {
   .logo h1 {
-    font-size: 52px;
+    font-size: 2.6em;
+  }
+
+  div.intro-text {
+      margin-top: 86px;
   }
 
   .welcomeBox .title1 {
-      font-size: 32px;
+      font-size: 31px;
+    }
+
+    .welcomeBox .description {
+      font-size: 0.9em;
+    }
+
+  .section {
+      margin-top: 50px;
   }
 
-  .welcomeBox .description {
-    font-size: 0.9em;
+  .searchform {
+      width: 80%;
   }
 
-  section.home-content .content-col-9 {
-    margin-left: 9px;
+  .search-element {
+      height: 40px;
   }
 
-  div#collection-grid {
-      margin-left: 2px;
+  .wide-container {
+    width: 85%;
   }
 
-  #facets ul {
-      font-size: 11px;
+  .item-title a {
+    font-size: 14px;
+  }
+}
+/* Small devices (tablets, 768px and up) */
+@media (min-width: 768px) and (max-width: 991px) {
+  div.section h3 {
+    font-size: 1.3em;
   }
 
-  .facet-count {
-    margin-right: 16px;
+  .logo h1 {
+    font-size: 2.85em;
+  }
+
+  div.intro-text {
+      margin-top: 100px;
+  }
+
+  .wide-container {
+    width: 95%;
+  }
+
+  .welcomeBox .title1 {
+      font-size: 37px;
+    }
+
+    .welcomeBox .description {
+      font-size: 0.9em;
+    }
+
+  .section {
+      margin-top: 70px;
+  }
+
+  .searchform {
+    width: 60%;
+  }
+
+  .search-element {
+      height: 40px;
+  }
+
+  div#sidebar {
+      padding: 0;
   }
 
   .facet-thumbnail > img {
       width: 17px;
-      height: 17px;
+      height: 18px;
   }
 
-  div#facets > div.panel {
-      padding: 4px;
+  div.facets .facet-count > div {
+      padding-right: 2px;
   }
 
-  .facet-name {
-    left: 7px;
-  }
-}
-
-@media only screen and (min-width: 999px) and (max-width: 1099px) {
-  div#facets > div.panel {
-      padding: 11px;
+  .facets ul {
+      font-size: 10px;
   }
 
-  .facet-name {
-      left: 14px;
+  .item-title a {
+    font-size: 12px;
   }
 }
-
-@media only screen and (min-width: 768px) and (max-width: 849px) {
-
+/* tablets/desktops and up ----------- */
+@media (min-width: 992px) and (max-width: 1223px) {
   .logo h1 {
-    font-size: 48px;
+    font-size: 3.4em;
   }
 
-  .welcomeBox .title1 {
-    font-size: 28px;
+  div#sidebar {
+      padding: 0;
   }
 
-  .welcomeBox .description {
-    font-size: 0.9em;
-  }
-
-  section.home-content .content-col-9 {
-    margin-left: 3px;
-  }
-
-  div#collection-grid {
-      margin-left: 2px;
-  }
-
-  .facet-name {
-      left: 7px;
-  }
-
-  .facet-count {
-    margin-right: 9px;
-  }
-
-  #facets ul {
-      font-size: 8px;
+  .wide-container {
+    width: 93%;
   }
 
   .facet-thumbnail > img {
-      width: 14px;
-      height: 14px;
+      width: 22px;
+      height: 20px;
   }
 
-  div#facets > div.panel {
-      padding: 4px;
+  div.facets .facet-count > div {
+      padding-right: 0px;
   }
+
+  .facets ul {
+      font-size: 11px;
+  }
+
+  .item-title a {
+    font-size: 13px;
+  }
+}
+/* Desktops and laptops ----------- */
+@media only screen and (min-width : 1224px) {
+/* Styles */
+  .logo h1 {
+    font-size: 4.4em;
+  }
+
+  div.home-facets {
+      margin: 2.5em 1em;
+  }
+}
+
+@media (min-width: 1224px) and (max-width: 1399px) {
+  div.home-facets {
+      margin: 2.5em 0;
+  }
+
+  .facets ul {
+      font-size: 13px;
+  }
+}
+
+@media (min-width: 1400px) and (max-width: 1699px) {
+  div.home-facets {
+      margin: 2.5em 1.5em;
+  }
+
+  div#sidebar {
+      padding: 0;
+  }
+
+  .facet-thumbnail > img {
+      width: 24px;
+      height: 24px;
+  }
+
+  .facets ul {
+      font-size: 13px;
+  }
+}
+
+/* Large screens ----------- */
+@media only screen  and (min-width : 1824px) {
+/* Styles */
 }
