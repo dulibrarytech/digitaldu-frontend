@@ -460,6 +460,7 @@ div.paginator {
 div.paginator a {
     text-decoration: none;
     color: inherit;
+    line-height: 30px;
 }
 
 div.paginator > span {
@@ -787,11 +788,15 @@ div#search-results-wrapper > h4 span {
 }
 
 div.search-results {
-
+  margin-top: 60px;
 }
 
 div.search-results > h3 {
   font-size: 1.23em;
+}
+
+div.search-results div.search-result:not(:first-child) {
+  margin-top: 45px;
 }
 
 div.search-result {
@@ -836,7 +841,7 @@ div.search-result-data {
 }
 
 div.search-result-data dt {
-  margin-top: 15px;
+  /*margin-top: 15px;*/
 }
 
 div.search-result-data dd {

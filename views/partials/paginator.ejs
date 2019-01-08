@@ -1,6 +1,6 @@
 <div class="paginator row">
 
-	<div class="paginator-nav col-md-6">
+	<div class="paginator-nav col-lg-5 col-md-6">
   	<span><% if(pagination.buttons.prev > 0) { %><< <a href="<%= pagination.path.prev %>">Previous</a> | <% } %>
 
   	<% if(pagination.totalHits > 0) { %>
@@ -10,7 +10,7 @@
   	<% if(pagination.buttons.next > 0) { %> | <a href="<%= pagination.path.next %>">Next</a> >><% } %></span>
   	</div>
 
-  	<div class="paginator-pages col-md-6">
+  	<div class="paginator-pages col-lg-5 col-md-6">
 		<% if(pagination.firstPage > 0) { %>
 			<span>
 				<% for(var i=pagination.firstPage; i<=pagination.lastPage; i++) { %>

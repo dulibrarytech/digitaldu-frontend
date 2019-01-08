@@ -118,6 +118,20 @@
   }
 }
 
+@media screen and (max-width: 991px) {
+
+}
+
+@media screen and (max-width: 1223px) {
+  div.paginator {
+    margin: 35px 0 0 0;
+  }
+
+  .content {
+    width: 95%;
+  }
+}
+
 /* Super Small devices */
 @media (min-width: 320px) and (max-width: 479px) {
   div.banner-search > form {
