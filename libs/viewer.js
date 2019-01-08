@@ -23,32 +23,42 @@ exports.getObjectViewer = function(object, mimeType="") {
 	if(mimeType == "" && typeof object.mime_type != 'undefined') {
  		mimeType = object.mime_type;
  	}
- 	
+
+ 	var dataType = null;
+ 	for(var key in config.mimeTypes) {
+ 		if(config.mimeTypes[key].includes(mimeType)) {
+ 			dataType = key;
+ 		}
+ 	}
+
  	// Get viewer for object mime type:
- 	switch(mimeType) {
- 		case "audio/mpeg":
- 		case "audio/x-wav":
- 			viewer = getAudioPlayer(object, mimeType);
+ 	switch(dataType) {
+ 		case "audio":
+ 			//viewer = getAudioPlayer(object, mimeType);
+ 			// TODO get kaltura viewer
+ 			viewer = this.getIIIFObjectViewer(object);
  			break;
 
- 		case "video/mp4":
- 		case "video/quicktime":
- 			viewer = getVideoViewer(object);
+ 		case "video":
+ 			//viewer = getVideoViewer(object);
+ 			// TODO get kaltura viewer
+ 			viewer = this.getIIIFObjectViewer(object);
  			break;
 
- 		case "image/png":
- 		case "image/jpeg":
+ 		case "smallImage":
  			//viewer = getSmallImageViewer(object);
- 			viewer = getLargeImageViewer(object);
+ 			//viewer = getLargeImageViewer(object);
+ 			viewer = this.getIIIFObjectViewer(object);
  			break;
 
- 		case "image/tiff":
- 		case "image/jp2":
- 			viewer = getLargeImageViewer(object);
+ 		case "largeImage":
+ 			//viewer = getLargeImageViewer(object);
+ 			viewer = this.getIIIFObjectViewer(object);
  			break;
 
- 		case "application/pdf":
- 			viewer = getPDFViewer(object);
+ 		case "pdf":
+ 			//viewer = getPDFViewer(object);
+ 			viewer = this.getIIIFObjectViewer(object);
  			break;
 
  		default:
@@ -89,7 +99,7 @@ exports.getIIIFObjectViewer = function(object, index=null) {
 function getAudioPlayer(objectData, type) {
 	var player = '<div id="audio-player" class="viewer-section">', tn, stream;
 	var extension = "mp3";
-		console.log("TEST obj data for audio", objectData);
+
 	tn = config.rootUrl + "/datastream/" + objectData.pid + "/tn";
 	stream = config.rootUrl + "/datastream/" + objectData.pid + "/mp3";
 
@@ -209,7 +219,7 @@ function getLargeImageViewer(objectData) {
 		viewer +=     'prefixUrl: "' + config.rootUrl + viewerImages + '",'
 		viewer +=     'immediateRender: true,'
 		viewer +=     'showNavigator: true,'
-		viewer +=     'tileSources: "' + config.cantaloupeUrl + '/iiif/2/' + objectData.pid + '"'
+		viewer +=     'tileSources: "' + config.IIIFServerUrl + '/iiif/2/' + objectData.pid + '"'
 		viewer += '});'
 		viewer += 'viewer.addHandler("tile-loaded", function(event) {document.getElementById("display-message").style.display = "none"})'
 		viewer += '</script>';

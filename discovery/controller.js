@@ -163,10 +163,10 @@ exports.renderObjectView = function(req, res) {
 		root_url: config.rootUrl
 	};
 
-	let regex = /[a-zA-Z]*[:_][0-9]*/;
-	if(!req.params.pid || /[a-zA-Z]*[:_][0-9]*/.test(req.params.pid) === false) {
-		return res.sendStatus(400);
-	}
+	// let regex = /[a-zA-Z]*[:_][0-9]*/;
+	// if(!req.params.pid || /[a-zA-Z]*[:_][0-9]*/.test(req.params.pid) === false) {
+	// 	return res.sendStatus(400);
+	// }
 
 	const renderView = function(data) {
 		return res.render('object', data);
@@ -264,7 +264,7 @@ exports.getDatastream = function(req, res) {
 		else {
 			if(stream.headers['content-type'] == "text/plain" && ds.toLowerCase() == "tn") {
 				Service.getThumbnailPlaceholderStream(function(error, stream) {
-					// TODO hndle error
+					// TODO handle error
 					stream.pipe(res);
 				});
 			}
@@ -278,9 +278,12 @@ exports.getDatastream = function(req, res) {
 exports.getIIIFManifest = function(req, res) {
 	let pid = req.params.pid || "";
 	Service.getManifestObject(pid, function(error, manifest) {
-
-		// TODO handle error
-
-		res.send(JSON.stringify(manifest));
+		if(error) {
+			console.log(error);
+			res.sendStatus(500);
+		}
+		else {
+			res.send(JSON.stringify(manifest));
+		}
 	});
 }

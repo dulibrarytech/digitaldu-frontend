@@ -13,7 +13,7 @@ module.exports = {
     elasticsearchHost: process.env.ELASTICSEARCH_HOST,
     elasticsearchPort: process.env.ELASTICSEARCH_PORT,
     elasticsearchIndex: process.env.ELASTICSEARCH_INDEX,
-    cantaloupeUrl: process.env.CANTALOUPE_URL,
+    IIIFServerUrl: process.env.CANTALOUPE_URL,
     cantaloupePort: process.env.CANTALOUPE_PORT,
 
     // Repository settings
@@ -177,5 +177,49 @@ module.exports = {
         "Language": "language",
         "Access Condition": "accessCondition",
         "Subject": "subject"
-    }
+    },
+
+    /*
+     * Register datastreams here.  These may not all be available
+     * Available datastreams are defined in the Repository interface
+     */
+     datastreams: {
+        "tn": "thumbnail",
+        "jpg": ["image/jpeg", "image/jpg"],
+        "tiff": ["image/tiff"],
+        "mp3": ["audio/mp3", "audio/mpeg", "audio/x-wav"],
+        "mp4": ["video/mp4"],
+        "mov": ["video/mov"],
+        "quicktime": ["video/quicktime"],
+        "pdf": ["application/pdf"]
+     },
+
+    /*
+     * Mime Types for each object type
+     * Object type determines which viewer is used for each mime type
+     * Keys are not changeable by user
+     */
+    mimeTypes: {
+        "audio": ["audio/mpeg", "audio/x-wav", "audio/mp3"],
+        "video": ["video/mp4", "video/quicktime", "video/mov"],
+        "smallImage": ["image/png", "image/jpg", "image/jpeg"],
+        "largeImage": ["image/tiff", "image/jp2"],
+        "pdf": ["application/pdf"]
+    },
+
+    /*
+     * IIIF Object Types
+     * Type labels to appear in the IIIF manifest, for each object type
+     * Keys are not changeable by user
+     */
+    IIIFObjectTypes: {
+        "audio": "dctypes:Sound",
+        "video": "dctypes:MovingImage",
+        "smallImage": "dctypes:Image",
+        "largeImage": "dctypes:Image",
+        "pdf": "foaf:Document"
+    },
+
+    IIIFThumbnailWidth: "600",
+    IIIFThumbnailHeight: "600"
 };

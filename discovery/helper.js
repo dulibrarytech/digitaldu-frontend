@@ -221,4 +221,44 @@ exports.isParentObject = function(object) {
   return typeof object.children != 'undefined';
 }
 
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
+exports.getIIIFObjectType = function(mimeType) {
+  let objectTypes = config.IIIFObjectTypes, 
+      mimeTypes = config.mimeTypes,
+      objectType = null;
+
+  for(var key in mimeTypes) {
+    if(mimeTypes[key].includes(mimeType)) {
+      objectType = objectTypes[key];
+    }
+  }
+
+  return objectType;
+}
+
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
+exports.getDsType = function(mimeType) {
+  let datastreams = config.datastreams,
+      datastream = "",
+      objectType = null;
+
+  for(var key in datastreams) {
+    if(datastreams[key].includes(mimeType)) {
+      datastream = key;
+    }
+  }
+
+  return datastream;
+}
+
 

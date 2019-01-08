@@ -361,15 +361,13 @@ exports.getFacets = getFacets;
  */
 exports.getDatastream = function(objectID, datastreamID, callback) {
   Repository.streamData(objectID, datastreamID, function(error, stream) {
-
-    // If stream is null, send error 
     if(error) {
       callback(error, null);
     }
     else {
       callback(null, stream);
     }
-  }) 
+  }); 
 }
 
 /**
@@ -440,7 +438,6 @@ exports.retrieveChildren = function(object, callback) {
 
 exports.getManifestObject = function(pid, callback) {
   var object = {}, children = [];
-
   fetchObjectByPid(pid, function(error, response) {
     if(error) {
       callback(error, JSON.stringify({}));
@@ -450,7 +447,7 @@ exports.getManifestObject = function(pid, callback) {
       // Create object for IIIF
       var object = response,
       container = {
-        containerID: object.pid,
+        resourceID: object.pid,
         title: object.title,
         description: object.abstract,
         metadata: {
@@ -460,20 +457,70 @@ exports.getManifestObject = function(pid, callback) {
       };
 
       // Create children array for IIIF
-      var children = [];
-      for(var key in object.children) {
+      var children = [], resourceUrl;
+
+      // Compound objects
+      if(Helper.isParentObject(object)) {
+        for(var key in object.children) {
+
+          // Use iiif server 
+          if(object.children[key].mimetype == "image/tiff") {
+            resourceUrl = config.IIIFServerUrl + "/iiif/2/" + container.resourceID + "/full/full/0/default.jpg";
+          }
+
+          // Use repository datastream
+          else {
+            resourceUrl = config.rootUrl + "/datastream/" + object.children[key].url + "/" + Helper.getDsType(object.children[key].mimetype);
+          }
+
+          // Add the data
+          children.push({
+            label: object.children[key].title,
+            sequence: object.children[key].sequence || key,
+            description: object.children[key].description,
+            format: object.children[key].mimetype,
+            type: Helper.getIIIFObjectType(object.children[key].mimetype) || "",
+            resourceID: object.children[key].url,
+            resourceUrl: resourceUrl,
+            thumbnailUrl: config.rootUrl + "/datastream/" + object.children[key].url + "/" + Helper.getDsType("thumbnail")
+          });
+        }
+      }
+
+      // Single objects
+      else {
+
+        // Use iiif server
+        if(object.mime_type == "image/tiff") {
+          resourceUrl = config.IIIFServerUrl + "/iiif/2/" + container.resourceID + "/full/full/0/default.jpg";
+        }
+
+        // Use repository datastream
+        else {
+          resourceUrl = config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType(object.mime_type);
+        }
+
+        // Add the data
         children.push({
-          label: object.children[key].title,
-          sequence: object.children[key].sequence,
-          description: object.children[key].description,
-          format: object.children[key].mimetype,
-          type: object.children[key].type || "No type specified",
-          resourceID: object.children[key].url
+          label: object.title,
+          sequence: "1",
+          description: object.abstract,
+          format: object.mime_type,
+          type: Helper.getIIIFObjectType(object.mime_type) || "",
+          resourceID: object.pid,
+          resourceUrl: resourceUrl,
+          thumbnailUrl: config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType("thumbnail")
         });
       }
 
-      IIIF.getManifest(container, children, function(manifest) {
-        callback(null, manifest);
+      IIIF.getManifest(container, children, function(error, manifest) {
+        // TODO handle the error
+        if(error) {
+          callback(error, []);
+        }
+        else {
+          callback(null, manifest);
+        }
       });
     }
   });
