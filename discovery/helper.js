@@ -182,7 +182,6 @@ exports.getCollectionBreadcrumbObject = function(collections) {
  * @return 
  */
 function createBreadcrumbLinks(data) {
-    //var html = '<a class="collection-link" href="/">' + config.topLevelCollectionName + '</a>';
     var html = "";
     for (var i = 0; i < data.length; i++) {
     	if(i>0) {
