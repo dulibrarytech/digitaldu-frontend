@@ -48,7 +48,7 @@
   }
 
   div#sidebar {
-      padding: 0;
+    padding: 0;
   }
 
   div.facets ul {
@@ -65,46 +65,31 @@
 
   .sm-title {
       font-size: 13px;
-  }
+    }
 
-  .title {
+    .title {
       font-size: 18px;
-  }
+    }
 
-  .title-text {
+    .title-text {
       left: 5vw;
-  }
-
-  div#search-options {
-      min-width: 20%;
-      width: inherit;
-  }
-
-  div#search-box {
-      min-width: 60%;
-      width: inherit;
-  }
-
-  div#search-submit {
-      min-width: 20%;
-      width: inherit;
-  }
+    }
 }
 
 @media screen and (max-width: 575px) {
   div#collections > .row > div:not(:first-child) dl.item {
       margin-top: 80px;
-  }
+    }
 }
 
 @media screen and (max-width: 767px) {
   body {
-      font-size: 14px;
+    font-size: 14px;
   }
 
   div.banner-search {
-      right: 0;
-      margin-top: 20px;
+    right: 0;
+    margin-top: 20px;
   }
 
   div.banner-search > form {
@@ -114,7 +99,7 @@
   }
 
   div#title-banner {
-      height: 180px;
+    height: 180px;
   }
 
   div#search-results-wrapper {
@@ -217,10 +202,6 @@
   .item-title a {
     font-size: 14px;
   }
-
-  #page-content {
-    margin-top: 40px;
-  }
 }
 /* Small devices (tablets, 768px and up) */
 @media (min-width: 768px) and (max-width: 991px) {
@@ -321,7 +302,7 @@
   }
 
   div.facets .panel {
-      padding: 10px 4px;
+      padding: 10px 6px;
   }
 }
 /* Desktops and laptops ----------- */

@@ -453,40 +453,39 @@ div#sidebar {
   padding: 0 15px;
 }
 
-div.paginator-wrapper {
-  margin: 0 0 30px 0;
-  line-height: 2em;
-}
+
 
 div.paginator {
-  padding-left: 0;
-    padding-right: 0;
-    font-size: 15px;
+  margin: 35px 0 0 30px;
 }
 
 div.paginator a {
-    text-decoration: none;
-    color: inherit;
+  text-decoration: none;
+  color: inherit;
 }
 
 div.paginator > span {
-    color: #555351;
+  color: #555351;
 }
 
 div.paginator > span > strong {
     color: #181818;
 }
 
-span.paginator-pages {
-/*    position: relative;
+div.paginator-pages {
+ /* margin-top: 10px;*/
+    position: relative;
     left: 340px;
-    bottom: 16px;*/
+    bottom: 16px;
 }
 
-span.paginator-pages a {
-    color: inherit;
+div.paginator-pages a {
+  color: inherit;
   text-decoration: none;
-  margin-left: 9px;
+}
+
+div.paginator-pages span a + a {
+  margin-left: 10px;
 }
 
 /* Begin facet section */
@@ -597,7 +596,7 @@ div.facet-breadcrumbs {
     width: 80%;
 }
 
-div.facet-breadcrumbs a {
+div.facet-breadcrumbs span {
     border: none;
     background: #e5e3e1;
     padding: 6px 12px;
@@ -649,6 +648,15 @@ div#home-collections .item-thumb {
     /*height: 250px;*/
 }
 
+div#collections {
+    margin: 20px 0 0 15px;
+}
+
+div#collections dl.item {
+    max-width: 200px;
+    max-height: 200px;
+}
+
 div#collections dl.item > dt {
     border-bottom-style: solid;
     border-bottom-color: #e5e3e1;
@@ -667,14 +675,14 @@ div#collections .row:not(:first-child) {
 }
 
 div.collection-breadcrumbs {
-  font-size: 13px;
-  padding-left: 20px;
-  margin: 20px auto 0 auto;
-  width: 80%;
+    font-size: 13px;
+    padding-left: 20px;
+    margin: 20px auto 0 auto;
+    width: 80%;
 }
 
 div.collection-breadcrumbs a {
-  text-decoration: none;
+    text-decoration: none;
 }
 
 div.collection-breadcrumbs,
