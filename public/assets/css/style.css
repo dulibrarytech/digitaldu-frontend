@@ -72,7 +72,7 @@ header {
 }
 
 main {
-  padding-bottom: 100px;
+  padding-bottom: 300px;
 }
 
 .col-md-1-nostack {
@@ -450,22 +450,20 @@ div#search-submit {
 }
 
 div#sidebar {
-  padding: 0 15px;
+    padding: 0 15px;
 }
 
-
-
 div.paginator {
-  margin: 35px 0 0 30px;
+    margin: 35px 0 0 30px;
 }
 
 div.paginator a {
-  text-decoration: none;
-  color: inherit;
+    text-decoration: none;
+    color: inherit;
 }
 
 div.paginator > span {
-  color: #555351;
+    color: #555351;
 }
 
 div.paginator > span > strong {
@@ -474,18 +472,22 @@ div.paginator > span > strong {
 
 div.paginator-pages {
  /* margin-top: 10px;*/
-    position: relative;
+/*    position: relative;
     left: 340px;
-    bottom: 16px;
+    bottom: 16px;*/
 }
 
 div.paginator-pages a {
-  color: inherit;
-  text-decoration: none;
+    color: inherit;
+    text-decoration: none;
 }
 
 div.paginator-pages span a + a {
-  margin-left: 10px;
+    margin-left: 10px;
+}
+
+div.paginator-nav {
+    margin-bottom: 15px;
 }
 
 /* Begin facet section */
@@ -554,6 +556,7 @@ div.facets .static-facets {
 .facet-name a {
     text-decoration: none;
     color: #222;
+    line-height: 15px;
 }
 
 .facet-count {
@@ -668,7 +671,7 @@ div#collections .item-thumb {
 }
 
 div#collections .row:not(:first-child) {
-    margin-top: 2vw;
+    margin-top: 4vw;
     border-top-style: solid;
     border-top-width: 1px;
     border-top-color: #e5e3e1;
@@ -703,7 +706,7 @@ div.collection-breadcrumbs a:visited {
     font-size: 16px;
 }
 .item {
-    margin: 20px 0;
+    margin: 20px auto;
     text-align: center;
 }
 .item dd {
@@ -950,56 +953,60 @@ div.metadata-content {
 /* End object data section */
 
 footer {
-  background: #8b2332;
+    background: #8b2332;
 /*  height: 200px;*/
-  padding: 50px 0 25px 0;
+    padding: 50px 0 25px 0;
 }
 
 .footer-wrapper {
-  margin-left: 12vw;
+    margin-left: 12vw;
 }
 
 footer div#footer-links {
-  margin: 0 1em 0 1em;
+    margin: 0 1em 0 1em;
 }
 
 footer a,
 footer ul,
 .footer-link-list label  {
-  color: #e5e3e1;
-  text-decoration: none;
+    color: #e5e3e1;
+    text-decoration: none;
 }
 
 footer ul {
-  padding-left: 0;
+    padding-left: 0;
 }
 
 footer a {
-  font-weight: normal;
+    font-weight: normal;
 }
 
 footer label {
-  font-weight: bold;
-  text-transform: uppercase;
-  margin-left: 0px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-left: 0px;
 }
 
 footer .footer-column {
 /*  width: 25%;
   min-height: 200px;*/
-  background-color: inherit;
+    background-color: inherit;
 /*  float:left;*/
   /*margin-left: 20px;*/
 }
 
 .footer-link-list {
-  width: 95%;
-  margin: 0 auto;
+    width: 95%;
+    margin: 0 auto;
 }
 
 .footer-link-list ul li {
-  /*list-style-type: none;*/
-  padding: 7px 0;
+    /*list-style-type: none;*/
+    padding: 7px 0;
+}
+
+.footer-link-list label {
+    text-decoration: underline;
 }
 
 /* Scrollbar width */

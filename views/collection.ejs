@@ -18,17 +18,17 @@
 </div>
 
 <div class="row no-side-margin section content results-display">
-	<div class="col-md-3 col-sm-4">
+	<div class="col-md-3">
 		<% if(error == null) { %>
 			<div class="result-facets">
-				<h4>Facets</h4>
+				<h4>Filter By</h4>
 				<hr>
 				<% include partials/facets %>
 			</div>
 		<% } %>
 	</div>
 
-	<div class="col-md-9 .col-sm-8 collections-wrapper">
+	<div class="col-md-9 collections-wrapper">
 		<h4><%= current_collection_title %></h4>
 	    <hr>
 	    <% if(error) { %>

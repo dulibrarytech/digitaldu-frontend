@@ -1,24 +1,28 @@
-<div class="paginator">
-  <span><% if(pagination.buttons.prev > 0) { %><< <a href="<%= pagination.path.prev %>">Previous</a> | <% } %>
+<div class="paginator row">
 
-  <% if(pagination.totalHits > 0) { %>
+	<div class="paginator-nav col-md-6">
+  	<span><% if(pagination.buttons.prev > 0) { %><< <a href="<%= pagination.path.prev %>">Previous</a> | <% } %>
+
+  	<% if(pagination.totalHits > 0) { %>
   	<strong><%= pagination.beginCount %> - <%= pagination.pageHits %></strong> of <strong><%= pagination.totalHits %></strong>
-  <% } %>
+  	<% } %>
 
-  <% if(pagination.buttons.next > 0) { %> | <a href="<%= pagination.path.next %>">Next</a> >><% } %></span>
-</div>
-<div class="paginator-pages">
-	<% if(pagination.firstPage > 0) { %>
-		<span>
-			<% for(var i=pagination.firstPage; i<=pagination.lastPage; i++) { %>
-				<a href="<%= pagination.path.current %>page=<%= i %>">
-					<% if(pagination.page == i) { %>
-						<strong class="highlight-text"><%= i %></strong>
-					<% } else { %>
-						<%= i %>
-					<% } %>
-				</a>
-			<% } %>
-		</span>
-	<% } %>
+  	<% if(pagination.buttons.next > 0) { %> | <a href="<%= pagination.path.next %>">Next</a> >><% } %></span>
+  	</div>
+
+  	<div class="paginator-pages col-md-6">
+		<% if(pagination.firstPage > 0) { %>
+			<span>
+				<% for(var i=pagination.firstPage; i<=pagination.lastPage; i++) { %>
+					<a href="<%= pagination.path.current %>page=<%= i %>">
+						<% if(pagination.page == i) { %>
+							<strong class="highlight-text"><%= i %></strong>
+						<% } else { %>
+							<%= i %>
+						<% } %>
+					</a>
+				<% } %>
+			</span>
+		<% } %>
+	</div>
 </div>

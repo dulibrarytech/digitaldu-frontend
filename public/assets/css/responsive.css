@@ -41,7 +41,6 @@
     width: 80%;
   }
 
-  /* Stack the search form elements */
   .form-group {
     width: 100%;
     margin-bottom: 0;
@@ -55,41 +54,41 @@
       font-size: 13px;
   }
 
-/*  .facet-name {
-    left: 15px;
-  }*/
-
   .title-text h1 {
       margin: 0;
   }
 
   .sm-title {
-      font-size: 13px;
-    }
+    font-size: 13px;
+  }
 
-    .title {
-      font-size: 18px;
-    }
+  .title {
+    font-size: 18px;
+  }
 
-    .title-text {
-      left: 5vw;
-    }
+  .title-text {
+    left: 5vw;
+  }
 }
 
 @media screen and (max-width: 575px) {
   div#collections > .row > div:not(:first-child) dl.item {
       margin-top: 80px;
-    }
+  }
+
+  div#collections .row:not(:first-child) {
+      border-top-style: none;
+  }
 }
 
 @media screen and (max-width: 767px) {
   body {
-    font-size: 14px;
+      font-size: 14px;
   }
 
   div.banner-search {
-    right: 0;
-    margin-top: 20px;
+      right: 0;
+      margin-top: 20px;
   }
 
   div.banner-search > form {
@@ -112,6 +111,10 @@
 
   div.facets .panel {
     padding: 10px 16px;
+  }
+
+  div#collections .row:not(:first-child) {
+    margin-top: 8vw;
   }
 }
 
