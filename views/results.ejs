@@ -2,68 +2,61 @@
 <% include partials/title-banner %>
 
 <!--   <div id="main" class="content container demo-test-view"> -->
-  <div class="facet-breadcrumbs">
-    <% if (facet_breadcrumb_trail) { %>
-      <%- facet_breadcrumb_trail %>
-    <% } %>
-  </div>
+<div class="facet-breadcrumbs">
+  <% if (facet_breadcrumb_trail) { %>
+    <%- facet_breadcrumb_trail %>
+  <% } %>
+</div>
 
-  <div class="row container results-display bottom-page-margin">
-    <% if(results.length > 0) { %>
-      <div id="result-facets-wrapper" class="content-col-3 sidebar">
-        <div class="result-facets">
-          <h4>Limit Your Search</h4>
-          <hr>
-          <% include partials/facets %>
-        </div>
-      </div>
-    <% } %>
+<div class="row no-side-margin section content">
+  <div class="col-md-3">
+    <div class="result-facets facets">
+      <h4>Limit Your Search</h4>
+      <hr>
+      <% include partials/facets %>
 
-    <div id="search-results-wrapper" class="content-col-9">
-
-      <% if(query.length >= 0) { %>
-          <h4>Results for: <span><%- query %></span></h4>
-      <% } %>
-
-      <div class="search-results">
-
-        <% if(error) { %>
-          <h5><%- error %></h5>
-        <% } else { %>
-            
-            <hr>
-            <% include partials/paginator %>
-              <% if(results.length > 0) { %>
-                <div id="result-list" class="content">
-                <% for (var i = 0; i < results.length; i++) { %>
-
-                  <div class="search-result">
-                      <dl class="search-result-tn">
-                          <dt>
-                              <a href="<%= root_url %>/object/<%= results[i].pid %>" title="<%= results[i].title %>"><img src="<%= results[i].tn %>" alt="<%= results[i].title %>" /></a>            
-                          </dt>
-                      <dd></dd>
-                      </dl>
-                      <dl class="search-result-data">
-                          <dt class="result-title"><%= (i+1)+((page-1)*10) %>.&nbsp&nbsp<a href="<%= root_url %>/object/<%= results[i].pid %>"><%= results[i].title %></a></dt>
-                            <dd></dd>
-                            <dt>Creator:</dt>
-                            <dd><%= results[i].creator %></dd>
-                            <dt>Description:</dt>
-                            <dd id="result-description"><%= results[i].abstract %></dd>
-                      </dl>
-                  </div>
-
-                <% } %>  
-            <% } else { %>
-              <span>No results found</span>
-            <% } %>
-
-          </div>
-          <% include partials/paginator %>
-        <% } %>
-      </div>
     </div>
   </div>
+
+  <div id="search-results-wrapper" class="col-md-9">
+    <% if(query.length >= 0) { %>
+      <h4>Results for: <span><%- query %></span></h4>
+    <% } %>
+
+    <% if(error) { %>
+      <h5><%- error %></h5>
+    <% } else { %>
+
+      <hr>
+      <% include partials/paginator %>
+
+      <div class="search-results container">
+        <% if(results.length > 0) { %>
+          <% for (var i = 0; i < results.length; i++) { %>
+
+            <div class="row search-result">
+              <div class="col-md-9 search-result-data">
+                <dl>
+                  <dt class="result-title"><%= (i+1)+((page-1)*10) %>.&nbsp&nbsp<a href="<%= root_url %>/object/<%= results[i].pid %>"><%= results[i].title %></a></dt>
+                    <dd></dd>
+                    <dt>Creator:</dt>
+                    <dd><%= results[i].creator %></dd>
+                    <dt>Description:</dt>
+                    <dd class="result-description"><%= results[i].abstract %></dd>
+                </dl>
+              </div>
+              <div class="col-md-3 search-result-tn">
+                  <a href="<%= root_url %>/object/<%= results[i].pid %>" title="<%= results[i].title %>"><img src="<%= results[i].tn %>" alt="<%= results[i].title %>"/></a>            
+              </div>
+            </div>
+
+          <% } %>
+        <% } else { %>
+          <span>No results found</span>
+        <% } %>
+      </div>
+    <% } %>
+  </div>
+</div>
 
 <% include partials/footer %>

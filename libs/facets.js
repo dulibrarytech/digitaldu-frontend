@@ -55,7 +55,7 @@ exports.getFacetBreadcrumbObject = function(selectedFacets) {
 function createList(facet, data, baseUrl) {
     var i;
     var html = '';
-    html += '<div class="panel facet-panel"><ul>';
+    html += '<div class="panel facet-panel panel-collapsed"><ul>';
     for (i = 0; i < data.length; i++) {
         if(data[i].key != "") {
             html += '<li><span class="facet-name"><a href="javascript:document.location.href=selectFacet(\'' + facet + '\', \'' + data[i].key + '\', \'' + baseUrl + '\');">' + data[i].key + '</a></span><span class="facet-count">(' + data[i].doc_count + ')</span></li>';
@@ -75,9 +75,7 @@ function createBreadcrumbTrail(data) {
     var i;
     var html = '';
     for (i = 0; i < data.length; i++) {
-
         html += '<span><a href="javascript:document.location.href=removeFacet(\'' + data[i].type + '\', \'' + data[i].name + '\');"><strong>X</strong></a>' + data[i].type + '&nbsp&nbsp<strong style="color: green"> > </strong>&nbsp&nbsp' + data[i].name + '</span>';   // good
-        //html += '<span><a  onclick="removeFacet(\'' + data[i].type + '\', \'' + data[i].name + '\');"><strong id="facet-breadcrumb-remove-link">X</strong></a>' + data[i].type + '&nbsp&nbsp<strong id="facet-breadcrumb-sidearrow"> > </strong>&nbsp&nbsp' + data[i].name + '</span>';   // test
     }
 
     return data.length > 0 ? html : null;

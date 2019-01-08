@@ -1,61 +1,53 @@
 <% include partials/header %>
-
 <% include partials/banner %>
 
-<div class="container content">
-	<section class="container site-text">
-        <div class="row content">
-            <article class="col-lg-12 welcomeBox">
-                <p class="title1"><span>Welcome</span> to Special Collections @ DU</p>
-                <hr>
-                <p class="description">This site collects, preserves, and disseminates digital assets of historical or significant interest to the University Libraries and the University of Denver community. The repository contains printed materials, audiovisual content, and ephemera reflecting the history of the University, the history of the Jewish community in Denver and the Rocky Mountain region, and areas of research and academic strength at the University of Denver.</p>
-            </article>
-        </div>
-    </section>
+<div class="row no-side-margin section intro-text">
+    <div class="col-md-12 welcomeBox">
+        <p class="title1"><span>Welcome</span> to Digital Collections @ DU</p>
+        <hr>
+        <p class="description">This site collects, preserves, and disseminates digital assets of historical or significant interest to the University Libraries and the University of Denver community. The repository contains printed materials, audiovisual content, and ephemera reflecting the history of the University, the history of the Jewish community in Denver and the Rocky Mountain region, and areas of research and academic strength at the University of Denver.</p>
+    </div>
+</div>
 
-    <section class="row home-content results-display">
-	    <article class="content-col-3">
-	      <div id="sidebar">
-	        <h3>Browse by</h3>
-	        <hr>
-	        <% include partials/frontpage-facets %>
-	      </div>
-	    </article>
+<div class="row no-side-margin section content">
+	<div id="sidebar" class="col-md-3 .col-sm-4">
+		<h3>Browse by</h3>
+		<hr>
+		<% include partials/frontpage-facets %>
+	</div>
 
-	    <article class="content-col-9">
-	    	<div id="collections">
-	            <h3>Collections</h3>
-	            <hr>
+	<div id="page-content" class="col-md-9 .col-sm-8">
+		<div id="home-collections">
+			<h3>Collections</h3>
+			<hr>
 
-	            <% if(error) { %>
-		  			<h5><%- error %></h5>
-		  		<% } else { %>
+			<% if(error) { %>
+	  			<h5><%- error %></h5>
+	  		<% } else { %>
 
-		            <div id="collection-grid" class="homepage">
-						<% for (var i = 0; i < collections.length; i++) { %>
+				<div class="row">
+					<% for (var i = 0; i < collections.length; i++) { %>
+						<div class="col-sm-3 collection-thumb">
 							<dl class="item">
 								<dt>
 									<a href="<%= root_url %>/collection/<%= collections[i].pid %>">
 			            				<div class="item-thumb">
-									  		<!-- <img src="<%= collections[i].tn %>" alt="Thumb Image"> -->
 									  		<img src="<%= root_url %>/datastream/<%= collections[i].pid %>/TN" alt="Thumb Image">
 										</div>
 									</a>
 								</dt>
 								<dd>
 									<div class="item-details">
-									  	<h3 class="item-title"><a target="_blank" href="<%= root_url %>/collection/<%= collections[i].pid %>"><%= collections[i].title %></a></h3>
+									  	<h3 class="item-title"><a href="<%= root_url %>/collection/<%= collections[i].pid %>"><%= collections[i].title %></a></h3>
 									</div>
 								</dd>
 							</dl>
-						<% } %>
-		          	</div>
-		          	
-	          	<% } %>
-	    	</div>
-	  	</article>
-  	</section>
-
+						</div>
+					<% } %>
+				</div>
+			<% } %>
+		</div>
+	</div>
 </div>
 
 <% include partials/footer %>

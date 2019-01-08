@@ -1,48 +1,57 @@
 <% include partials/header %>
 <% include partials/title-banner %>
 
-<div class="collection-breadcrumbs container">
-	<% if (collection_breadcrumb_trail) { %>
-		<%- collection_breadcrumb_trail %>
-	<% } %>
-</div>
-<div class="facet-breadcrumbs container">
-	<% if (facet_breadcrumb_trail) { %>
-		<%- facet_breadcrumb_trail %>
-	<% } %>
+<div class="row collection-breadcrumbs">
+	<div class="col-md-12">
+		<% if (collection_breadcrumb_trail) { %>
+			<%- collection_breadcrumb_trail %>
+		<% } %>
+	</div>
 </div>
 
-<div class="content container results-display no-top-bottom-margin">
-	<% if(error == null) { %>
-	    <div class="content-col-3">
-		    <div id="result-facets-wrapper" class="sidebar">
-		      <div class="result-facets">
-		        <h4>Facets</h4>
-		        <hr>
-		        <% include partials/facets %>
-		      </div>
-		    </div>
-	    </div>
-    <% } %>
+<div class="row facet-breadcrumbs">
+	<div class="col-md-12">
+		<% if (facet_breadcrumb_trail) { %>
+			<%- facet_breadcrumb_trail %>
+		<% } %>
+	</div>
+</div>
 
-    <div class="content-col-9">
-        	<div>
-	            <h4><%= current_collection_title %></h4>
-	            <hr>
+<div class="row no-side-margin section content results-display">
+	<div class="col-md-3">
+		<% if(error == null) { %>
+			<div class="result-facets">
+				<h4>Filter By</h4>
+				<hr>
+				<% include partials/facets %>
+			</div>
+		<% } %>
+	</div>
 
-	            <% if(error) { %>
-		  			<h5><%- error %></h5>
-		  		<% } else { %>
+	<div class="col-md-9 collections-wrapper">
+		<h4><%= current_collection_title %></h4>
+	    <hr>
+	    <% if(error) { %>
+  			<h5><%- error %></h5>
+  		<% } else { %>
 
-			  		<% include partials/paginator %>
+  			<% include partials/paginator %>
 
-		            <div id="collection-grid">
-						<% for (var i = 0; i < collections.length; i++) { %>
+  			<div id="collections">
+  				<div class="row">
+	  				<% for (var i = 0; i < collections.length; i++) { %>
+	  					
+	  					<% if( (i % 4 == 0) && i != 0) { %>
+	  						</div>
+	  						<div class="row">
+	  					<% } %>
+
+	  					<div class="col-sm-3">
 							<dl class="item">
 								<dt>
 									<a href="<%= base_url %><%= collections[i].path %>/<%= collections[i].pid %>">
 			            				<div class="item-thumb">
-									  		<img src="<%= collections[i].tn %>" alt="Thumb Image">
+									  		<img src="<%= collections[i].tn %>" alt="<%= collections[i].title %>">
 										</div>
 									</a>
 								</dt>
@@ -52,12 +61,17 @@
 									</div>
 								</dd>
 							</dl>
-						<% } %>
-		          	</div>
-	          	<% } %>
-        	</div>
-      	</div>
-  </div>
+						</div>
+
+	  				<% } %>
+	  			</div>
+
+	    	</div>
+
+
+	    <% } %>
+	</div>
+</div>
 
 <% include partials/footer %>
 

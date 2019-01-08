@@ -1,15 +1,17 @@
 <div id="title-banner">
-    <div class="container">
-    	<div class="title-text col-sm-6 cul">
-            <a class="sm-title" href="<%= root_url %>">University Libraries</a>
-            <h1><a class="title" href="<%= root_url %>">SPECIAL COLLECTIONS <span class="highlight-text">@ DU</span></a></h1>
-        </div>
+    <div class="banner-content content">
+        <div class="row">
+            <div class="col-md-8 title-text">
+                <a class="sm-title" href="<%= root_url %>">University Libraries</a>
+                <h1><a class="title" href="<%= root_url %>">SPECIAL COLLECTIONS <span class="highlight-text">@ DU</span></a></h1>
+            </div>
 
-        <div class="banner-search">
-        	<form method="get" action="<%= root_url %>/search">
-                <input type="text" name="q" placeholder="Search Keyword(s)" />
-                <button type="submit"><i class="fas fa-search"></i></button>
-            </form>
-    	</div>
+            <div class="col-md-4 banner-search">
+                <form method="get" action="<%= root_url %>/search">
+                    <input type="text" name="q" placeholder="Search Keyword(s)"/>
+                    <button type="submit"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
