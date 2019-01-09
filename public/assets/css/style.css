@@ -48,6 +48,7 @@ h3 {
 
 h4 {
   font-size: 1.1em;
+  font-weight: bold;
   -webkit-margin-after: 0px;
 }
 
@@ -130,7 +131,7 @@ main {
 }
 
 .no-side-margin {
-  margin-right: 0;
+    margin-right: 0;
     margin-left: 0;
 }
 
@@ -139,7 +140,7 @@ main {
 }
 
 .logo h1 {
-  font-family: "Montserrat";
+    font-family: "Montserrat";
     color: white;
     font-weight: bolder;
     font-size: 4vw;
@@ -149,6 +150,10 @@ main {
 .title {
     font-weight: 400;
     font-style: normal;
+}
+
+.title span {
+  white-space: normal !important;
 }
 
 .sm-title {
@@ -209,6 +214,8 @@ main {
 
 .row {
   display: flex;
+  margin-right: 0;
+    margin-left: 0;
 }
 
 .bottom-page-margin {
@@ -232,11 +239,6 @@ main {
 .highlight-text {
   color: #8b2332;
   border-color: #8b2332;
-}
-
-#uv {
-    width: 800px;
-   height: 600px;
 }
 
 div#main-wrapper {
@@ -487,10 +489,6 @@ div.paginator-pages span a + a {
     margin-left: 10px;
 }
 
-div.paginator-nav {
-    margin-bottom: 15px;
-}
-
 /* Begin facet section */
 div.home-facets {
     margin: 2.5em 0.5em;
@@ -607,6 +605,10 @@ div.facet-breadcrumbs span {
     margin: 0 auto 5px auto;
     color: #222;
     white-space: normal;
+}
+
+div.facet-breadcrumbs span:not(:first-child) {
+    margin-left: 10px;
 }
 
 div#viewer-section {
@@ -951,11 +953,55 @@ div.mods-display {
 
 div.metadata-content {
     padding: 0 18px;
-   /* display: none;*/
+    display: none;
     overflow: hidden;
-    /*background-color: #f1f1f1;*/
 }
 /* End object data section */
+
+#uv {
+  width: 100%;
+  height: 800px;
+}
+
+.uv .rightPanel .top .title {
+  visibility: hidden;
+}
+
+.uv .leftPanel .views .thumbsView .thumbs .thumb.oneCol .wrap {
+  float: none !important;
+}
+
+.uv .leftPanel .views .thumbsView .thumbs .thumb.oneCol .label {
+  width: auto !important; 
+}
+
+.uv .leftPanel .top .title {
+  color: white;
+}
+
+.uv .content {
+  padding: 0px;
+}
+
+#uv .btn-primary, #uv .overlay .close {
+    color: #fff;
+    background-color: #8b2332;
+    border-color: #8b2332;
+}
+
+#uv #content .container {
+  width: 100% !important;
+}
+
+#uv #content .container > div,
+#uv #content .container video {
+  max-height: 660px;
+}
+
+#uv .mainPanel .main {
+  margin-top: 30px;
+  padding-left: 12px;
+}
 
 footer {
     background: #8b2332;

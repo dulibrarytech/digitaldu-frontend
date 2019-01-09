@@ -6,45 +6,51 @@
     <h5><%- error %></h5>
   <% } %>
 
-  <div id="viewer-wrapper">
-    <%- viewer %>
+  <div class="viewer-wrapper row">
+    <div class="col-md-12">
+      <%- viewer %>
+    </div>
   </div>
 </div>
 
 <div id="metadata-section">
-  <div id="object-options">
+
+  <div class="object-options">
     <div class="container">
-      <span>
-        <button class="collapsible">View Details</button>
-        <button id="file-download" disabled>Download Item</button>
-      </span>
+        <span>
+          <button class="collapsible">View Details</button>
+          <button id="file-download" disabled>Download Item</button>
+        </span>
     </div>
   </div>
 
   <div class="container">
-    <div id="mods-display" class="metadata-content">
-        <table class="data-table">
+    <div class="table-responsive mods-display metadata-content ">
+        <table class="table data-table">
           <% for (var key in mods) { %>
-			<tr><td><%= key %></td>
-			<% if(typeof mods[key] == "object") { %>
-				<td>
-				<% for (var subkey in mods[key]) { %>
-					<p><%- mods[key][subkey] %></p>
-				<% } %>
-				</td></tr>
-			<% } else { %>
-				<td><p><%- mods[key] %></p></td></tr>
-			<% } %>
-		  <% } %>
+            <tr><td><%= key %></td>
+            <% if(typeof mods[key] == "object") { %>
+              <td>
+              <% for (var subkey in mods[key]) { %>
+                <p><%- mods[key][subkey] %></p>
+            <% } %>
+            </td></tr>
+            <% } else { %>
+              <td><p><%- mods[key] %></p></td></tr>
+            <% } %>
+          <% } %>
         </table>
-    </div>
-    <div id="object-data">
-      <% for (var key in summary) { %>
-		<h3><%= key %></h3>
-		<p><%= summary[key] %></p>
-	  <% } %>
+      </div>
     </div>
   </div>
+
+  <div class="object-data container">
+    <% for (var key in summary) { %>
+      <h3><%= key %></h3>
+      <p><%= summary[key] %></p>
+    <% } %>
+  </div>
+
 </div>
 
 <% include partials/footer %>

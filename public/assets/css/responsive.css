@@ -67,7 +67,7 @@
   }
 
   .title-text {
-    left: 5vw;
+    left: 0;
   }
 }
 
@@ -116,6 +116,10 @@
   div#collections .row:not(:first-child) {
     margin-top: 8vw;
   }
+
+  div.paginator-nav {
+    margin-bottom: 15px;
+  }
 }
 
 @media screen and (max-width: 991px) {
@@ -140,6 +144,22 @@
 
   div#title-banner {
       height: 160px;
+  }
+
+  div#uv {
+    height: 450px;
+  }
+
+  div#viewer {
+    height: 450px;
+  }
+
+  div.openseadragon-canvas canvas {
+    bottom: 120px;
+  }
+
+  div#metadata-section .container {
+    width: 95%;
   }
 }
 
@@ -180,6 +200,18 @@
 
   .wide-container {
     width: 78%;
+  }
+
+  div#uv {
+    height: 600px;
+  }
+
+  div#viewer {
+    height: 600px;
+  }
+
+  div.openseadragon-canvas canvas {
+    bottom: 50px;
   }
 }
 
