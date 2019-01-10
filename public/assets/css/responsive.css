@@ -154,6 +154,10 @@
     height: 450px;
   }
 
+  div#uv #content .container {
+    bottom: 60px;
+  }
+
   div.openseadragon-canvas canvas {
     bottom: 120px;
   }

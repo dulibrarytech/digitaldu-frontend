@@ -654,23 +654,22 @@ div#home-collections .item-thumb {
     /*height: 250px;*/
 }
 
+div#collections div.collection-thumb {
+  margin-bottom: 60px;
+}
+
 div#collections {
     margin: 20px 0 0 15px;
 }
 
 div#collections dl.item {
-    max-width: 200px;
-    max-height: 200px;
+/*    max-width: 200px;
+    max-height: 200px;*/
 }
 
 div#collections dl.item > dt {
     border-bottom-style: solid;
     border-bottom-color: #e5e3e1;
-    /*height: 200px;*/
-}
-
-div#collections .item-thumb {
-  /*height: 200px;*/
 }
 
 div#collections .row:not(:first-child) {
