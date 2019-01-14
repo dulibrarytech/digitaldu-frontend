@@ -69,6 +69,21 @@
   .title-text {
     left: 0;
   }
+
+  div.metadata-content {
+    padding: 0;
+  }
+
+  div#metadata-section div.container {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  div.mods-display {
+    overflow: auto;
+  }
+  table.data-table td {
+    padding: 12px 6px;
+  }
 }
 
 @media screen and (max-width: 575px) {
@@ -147,7 +162,7 @@
   }
 
   div#uv {
-    height: 450px;
+    height: 600px;
   }
 
   div#viewer {

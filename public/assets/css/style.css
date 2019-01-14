@@ -1000,6 +1000,7 @@ div.metadata-content {
 #uv .mainPanel .main {
   margin-top: 30px;
   padding-left: 12px;
+  height:auto !important;
 }
 
 footer {
