@@ -1007,6 +1007,7 @@ footer {
     background: #8b2332;
 /*  height: 200px;*/
     padding: 50px 0 25px 0;
+    overflow: hidden;
 }
 
 .footer-wrapper {
@@ -1096,7 +1097,7 @@ footer .footer-column {
 
 @media (min-width: 1200px) {
   .container {
-    max-width: 1330px;
+    /*max-width: 1330px;*/
   }
 }
 
