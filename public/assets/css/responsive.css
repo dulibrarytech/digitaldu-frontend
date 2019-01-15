@@ -143,6 +143,15 @@
     border-top-width: 1px;
     border-top-color: #e5e3e1;
   }
+/*
+  #uv {
+    height: 670px;
+  }
+
+  .uv .mainPanel .container > div {
+    height: 377px !important;
+    margin-top: 44.5px !important;
+  }*/
 }
 
 @media screen and (max-width: 991px) {
@@ -169,8 +178,8 @@
       height: 160px;
   }
 
-  div#uv {
-    height: 600px;
+  div#uv, div.uv {
+    height: 500px;
   }
 
   div#viewer {

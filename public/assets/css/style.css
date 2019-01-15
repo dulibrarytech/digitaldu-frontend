@@ -983,6 +983,10 @@ div.metadata-content {
   padding: 0px;
 }
 
+.uv .mainPanel .title {
+  overflow: initial !important;
+}
+
 #uv .btn-primary, #uv .overlay .close {
     color: #fff;
     background-color: #8b2332;
