@@ -815,18 +815,18 @@ dl.search-result-data {
 /*  float: left;
   width: 90%;*/
   border-bottom-style: solid;
-    border-width: 2px;
-    border-color: #c5c3c1;
-    padding-top: 1em;
-    overflow: hidden;
-    min-height: 225px;
+  border-width: 2px;
+  border-color: #c5c3c1;
+  padding-top: 1em;
+  overflow: hidden;
+  min-height: 225px;
 }
 
 div.search-result-tn {
   border-radius: 5px;
   width: 200px;
-    height: 200px;
-    margin: 0 auto;
+  height: 200px;
+  margin: 0 auto;
 }
 
 div.search-result-tn a img {
@@ -848,6 +848,7 @@ div.search-result-data dt {
 div.search-result-data dd {
   margin-left: 10px;
   padding-top: 10px;
+  line-height: 17px;
 }
 
 dt.result-title,
@@ -951,9 +952,9 @@ div.mods-display {
 }
 
 div.metadata-content {
-    padding: 0 18px;
-    display: none;
-    overflow: hidden;
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
 }
 /* End object data section */
 

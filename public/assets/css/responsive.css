@@ -135,6 +135,14 @@
   div.paginator-nav {
     margin-bottom: 15px;
   }
+
+  div.search-results div.search-result:not(:first-child) {
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top-style: solid;
+    border-top-width: 1px;
+    border-top-color: #e5e3e1;
+  }
 }
 
 @media screen and (max-width: 991px) {
