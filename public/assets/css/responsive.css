@@ -88,7 +88,7 @@
 
 @media screen and (max-width: 575px) {
   div#collections > .row > div:not(:first-child) dl.item {
-      margin-top: 80px;
+      margin-top: 50px;
   }
 
   div#collections .row:not(:first-child) {

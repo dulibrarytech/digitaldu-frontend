@@ -485,7 +485,7 @@ div.paginator-pages a {
     text-decoration: none;
 }
 
-div.paginator-pages span a + a {
+div.paginator-pages a + a {
     margin-left: 10px;
 }
 
@@ -654,12 +654,19 @@ div#home-collections .item-thumb {
     /*height: 250px;*/
 }
 
+div#collections .item-thumb {
+    max-height: 200px;
+    max-width: 200px;
+    /* align-content: center; */
+    margin: 20px auto;
+}
+
 div#collections div.collection-thumb {
-  margin-bottom: 60px;
+  margin-bottom: 15px;
 }
 
 div#collections {
-    margin: 20px 0 0 15px;
+    margin: 50px 0 0 15px;
 }
 
 div#collections dl.item {
@@ -1081,6 +1088,25 @@ footer .footer-column {
     background: #c5c3c1; 
 }
 
+/* IE all versions */
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+   .searchform input {
+      padding: 0 15px;
+  }
+}
+
+/* Safari all versions  */
+@media screen and (min-color-index:0) and(-webkit-min-device-pixel-ratio:0)
+{ @media {
+    div.banner-search button {
+      bottom: 1px;
+    }
+
+    .searchform input {
+      padding: 15px 10px 10px 10px;
+    }
+}}
+
 /* Containers */
 @media (min-width: 576px) {
   .container {
@@ -1112,3 +1138,4 @@ footer .footer-column {
   }
 }
 /* End containers */
+
