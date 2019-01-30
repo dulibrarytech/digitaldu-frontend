@@ -333,7 +333,7 @@ var IIIFComponents;
             if (visible !== "false") {
                 $wrap.addClass('loading');
                 var src = $thumb.attr('data-src');
-                var $img = $('<img class="thumbImage" src="' + src + '" />');
+                var $img = $('<img class="thumbImage" alt="Thumbnail" src="' + src + '" />');
                 // fade in on load.
                 $img.hide().load(function () {
                     $(this).fadeIn(fadeDuration, function () {

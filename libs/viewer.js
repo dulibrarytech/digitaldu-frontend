@@ -192,7 +192,7 @@ function getSmallImageViewer(objectData) {
 
 	var image = Repository.getDatastreamUrl("jpg", objectData.pid);
 
-	viewer += '<div id="viewer-content-wrapper" class="small-image"><img class="viewer-content" src="' + image + '"/></div>';
+	viewer += '<div id="viewer-content-wrapper" class="small-image"><img class="viewer-content" alt="Viewer Content" src="' + image + '"/></div>';
 	viewer += '</div>';
 
 	return viewer;

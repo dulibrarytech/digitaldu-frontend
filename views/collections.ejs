@@ -29,18 +29,18 @@
 					<% for (var i = 0; i < collections.length; i++) { %>
 						<div class="col-sm-3 collection-thumb">
 							<dl class="item">
-								<dt>
-									<a href="<%= root_url %>/collection/<%= collections[i].pid %>">
-			            				<div class="item-thumb">
-									  		<img src="<%= root_url %>/datastream/<%= collections[i].pid %>/TN" alt="Thumb Image">
+								<a href="<%= root_url %>/collection/<%= collections[i].pid %>">
+									<dt>
+										<div class="item-thumb">
+											<img src="<%= root_url %>/datastream/<%= collections[i].pid %>/TN" alt="<%= collections[i].title %>">
 										</div>
-									</a>
-								</dt>
-								<dd>
-									<div class="item-details">
-									  	<h3 class="item-title"><a href="<%= root_url %>/collection/<%= collections[i].pid %>"><%= collections[i].title %></a></h3>
-									</div>
-								</dd>
+									</dt>
+									<dd>
+										<div class="item-details">
+											<h3 class="item-title"><%= collections[i].title %></h3>
+										</div>
+									</dd>
+								</a>
 							</dl>
 						</div>
 					<% } %>

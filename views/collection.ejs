@@ -48,18 +48,18 @@
 
 	  					<div class="col-sm-3 collection-thumb">
 							<dl class="item">
-								<dt>
-									<a href="<%= base_url %><%= collections[i].path %>/<%= collections[i].pid %>">
-			            				<div class="item-thumb">
-									  		<img src="<%= collections[i].tn %>" alt="<%= collections[i].title %>">
+								<a href="<%= base_url %><%= collections[i].path %>/<%= collections[i].pid %>">
+									<dt>
+										<div class="item-thumb">
+											<img src="<%= collections[i].tn %>" alt="<%= collections[i].title %>">
 										</div>
-									</a>
-								</dt>
-								<dd>
-									<div class="item-details">
-									  	<h3 class="item-title"><a href="<%= base_url %><%= collections[i].path %>/<%= collections[i].pid %>"><%= collections[i].title %></a></h3>
-									</div>
-								</dd>
+									</dt>
+									<dd>
+										<div class="item-details">
+											<h3 class="item-title"><%= collections[i].title %></h3>
+										</div>
+									</dd>
+								</a>
 							</dl>
 						</div>
 
