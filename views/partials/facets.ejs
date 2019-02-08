@@ -1,7 +1,7 @@
 <div class="facets">
 	<!-- dynamic facet list -->
 	<% for(var key in facets) { %>	
-	  <button class="accordion">
+	  <button class="accordion" alt="<%= key %>">
 	    <h5><%= key %></h5><i class="fas fa-caret-right facet-caret"></i>
 	  </button>
 	  <%- facets[key] %>

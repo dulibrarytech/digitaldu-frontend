@@ -243,7 +243,7 @@ function getPDFViewer(objectData) {
 	var doc = config.rootUrl + "/datastream/" + objectData.pid + "/OBJ";
 
 	if(config.pdfViewer == "browser") {
-		viewer += '<iframe class="viewer-content" src="' + doc + '" height="500px" type="application/pdf" ></iframe>';
+		viewer += '<iframe class="viewer-content" src="' + doc + '" height="500px" type="application/pdf" >This is iframe content.</iframe>';
 		viewer += '</div>';
 	}
 	else {

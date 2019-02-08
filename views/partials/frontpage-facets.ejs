@@ -1,5 +1,5 @@
 <div class="facets home-facets">
-  <button id="type-facet" class="accordion active">
+  <button id="type-facet" alt="Type" class="accordion active">
     <h5>Type</h5><i class="fas fa-caret-down facet-caret"></i>
   </button>
 
@@ -75,7 +75,7 @@
   <!-- dynamic facet list -->
   <% for(var key in facets) { %>
     <% if(key != 'Type' && key != 'type') { %>
-      <button class="accordion">
+      <button class="accordion" alt="<%= key %>">
         <h5><%= key %></h5><i class="fas fa-caret-right facet-caret"></i>
       </button>
       <%- facets[key] %>
