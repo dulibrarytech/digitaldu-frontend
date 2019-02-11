@@ -79,10 +79,21 @@ module.exports = {
 
     /* 
      * Viewer to display large image files (tiff, jp2)
-     * [browser | [openseadragon]]
+     * [browser | openseadragon | universalviewer]
      */
-    largeImageViewer: "openseadragon",
+    largeImageViewer: "universalviewer",
+
+    /*
+     * Openseadragon viewer settings
+     */
     openseadragonImagePath: "/libs/openseadragon/images/",
+
+    /*
+     * Kaltura viewer settings
+     */
+    kalturaUI_ID: "41433862",
+    kalturaPartnerID: "2357732",
+    kalturaUniqueObjectID: "kaltura_du_12345"
 
     /*
      * Fields for fulltext search (search all)

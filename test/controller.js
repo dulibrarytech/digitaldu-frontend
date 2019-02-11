@@ -3,8 +3,8 @@
 const async = require('async'),
 
     config = require('../config/config'),
-    Helper = require('../discovery/helper.js'),
-    Service = require('../discovery/service.js'),
+    DiscHelper = require('../discovery/helper.js'),
+    DiscService = require('../discovery/service.js'),
 
     Viewer = require('../libs/viewer'),
     Facets = require('../libs/facets'),
@@ -54,6 +54,13 @@ exports.testUVViewer = function(req, res) {
 	// });
 
 	// Build viewer, render test.html
-	res.render("test", data);
+	res.render("test_UV", data);
+}
+
+exports.testKalturaViewer = function(req, res) {
+	console.log("TEST test kal viewer");
+	var data = {};
+
+	res.render("test_kaltura", data);
 }
 

@@ -52,8 +52,7 @@ exports.getObjectViewer = function(object, mimeType="") {
  			break;
 
  		case "largeImage":
- 			//viewer = getLargeImageViewer(object);
- 			viewer = this.getIIIFObjectViewer(object);
+ 			viewer = this.getLargeImageViewer(object);
  			break;
 
  		case "pdf":
@@ -76,7 +75,7 @@ exports.getObjectViewer = function(object, mimeType="") {
  * @param 
  * @return 
  */
-exports.getIIIFObjectViewer = function(object, index=null) {
+function getIIIFObjectViewer(object, index=null) {
 	let viewer = '<div id="uv" class="uv"></div>';
 		viewer += '<script>';
 		viewer += 'window.addEventListener("uvLoaded", function (e) {';
@@ -205,30 +204,31 @@ function getSmallImageViewer(objectData) {
  * @return 
  */
 function getLargeImageViewer(objectData) {
-	var viewer = '<div id="large-image-viewer" class="viewer-section">',
-		viewerImages = config.openseadragonImagePath;
-
-	viewer += "<span id='display-message' >Loading image, please wait...</span>";
+	var viewer = "";
 	if(config.largeImageViewer == "openseadragon") {
-
+		viewer += "<span id='display-message' >Loading image, please wait...</span>";
+		viewer += '<div id="large-image-viewer" class="viewer-section">'
 		viewer += '<div id="viewer-content-wrapper"><div id="openseadragon1" class="viewer-content" style="width: 96%; margin: 0 auto"><span id="large-image-viewer-loading"></span></div>';
 		viewer += '</div>';
 		viewer += '<script src="' + config.rootUrl + '/libs/openseadragon/openseadragon.min.js"></script>';
 		viewer += '<script>var viewer = OpenSeadragon({'
 		viewer +=     'id: "openseadragon1",'
-		viewer +=     'prefixUrl: "' + config.rootUrl + viewerImages + '",'
+		viewer +=     'prefixUrl: "' + config.rootUrl + config.openseadragonImagePath + '",'
 		viewer +=     'immediateRender: true,'
 		viewer +=     'showNavigator: true,'
 		viewer +=     'tileSources: "' + config.IIIFServerUrl + '/iiif/2/' + objectData.pid + '"'
 		viewer += '});'
 		viewer += 'viewer.addHandler("tile-loaded", function(event) {document.getElementById("display-message").style.display = "none"})'
 		viewer += '</script>';
+		viewer += '</div>';
+	}
+	if(config.largeImageViewer == "universalviewer") {
+		viewer += this.getIIIFObjectViewer(object);
 	}
 	else {
 		viewer += 'Viewer is down temporarily.  Please check configuration';
 	}
 
-	viewer += '</div>';
 	return viewer;
 }
 
