@@ -93,7 +93,7 @@ module.exports = {
      */
     kalturaUI_ID: "41433862",
     kalturaPartnerID: "2357732",
-    kalturaUniqueObjectID: "kaltura_du_12345"
+    kalturaUniqueObjectID: "kaltura_du_12345",
 
     /*
      * Fields for fulltext search (search all)
