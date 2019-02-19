@@ -12,13 +12,14 @@ const async = require('async'),
     IIIF = require('../libs/IIIF');
 
 exports.testUVViewer = function(req, res) {
+	console.log("TEST test universalviewer");
 
 	var data = {
 		base_url: config.baseUrl,
 		pid: "codu:59239"
 	};
 
-	let object = {}, children = [];
+	var object = {}, children = [];
 
 	object = {
 		title: "Title string",
@@ -58,8 +59,20 @@ exports.testUVViewer = function(req, res) {
 }
 
 exports.testKalturaViewer = function(req, res) {
-	console.log("TEST test kal viewer");
-	var data = {};
+	console.log("TEST test kaltura viewer");
+
+	var object = {
+		pid: "12345",
+		mime_type: "video/mp4"
+	}
+
+	var viewer = Viewer.getObjectViewer(object);
+		console.log("TEST viewer: ", viewer);
+
+	var data = {
+		viewer: viewer,
+		root_url: config.rootUrl
+	};
 
 	res.render("test_kaltura", data);
 }
