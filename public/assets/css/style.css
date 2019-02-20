@@ -971,6 +971,10 @@ div.metadata-content {
   height: 800px;
 }
 
+.uv {
+  overflow: hidden;
+}
+
 .uv .rightPanel .top .title {
   visibility: hidden;
 }
@@ -1013,7 +1017,7 @@ div.metadata-content {
 #uv .mainPanel .main {
   margin-top: 30px;
   padding-left: 12px;
-  height:auto !important;
+  /*height:auto !important;*/
 }
 
 footer {
