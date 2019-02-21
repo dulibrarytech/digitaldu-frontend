@@ -709,6 +709,9 @@ div.collection-breadcrumbs a:visited {
     margin: 0;
     padding: 0;
 }
+.collection-thumb .item-title {
+  font-size: 13px;
+}
 .item-title a {
     color: #222;
     text-decoration: none;

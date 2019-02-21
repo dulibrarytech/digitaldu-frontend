@@ -1193,7 +1193,7 @@ var IIIFComponents;
             var type = data.type.toString().toLowerCase();
             switch (type) {
                 case 'image':
-                    $mediaElement = $('<img class="anno" src="' + data.source + '" />');
+                    $mediaElement = $('<img class="anno" alt="Media Element" src="' + data.source + '" />');
                     break;
                 case 'video':
                     $mediaElement = $('<video class="anno" />');
