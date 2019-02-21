@@ -2,19 +2,19 @@
 
 const async = require('async'),
 
-    config = require('../config/config'),
-    Helper = require('../discovery/helper.js'),
-    Service = require('../discovery/service.js'),
+config = require('../config/config'),
+DiscHelper = require('../discovery/helper.js'),
+DiscService = require('../discovery/service.js'),
 
-    Viewer = require('../libs/viewer'),
-    Facets = require('../libs/facets'),
-    Paginator = require('../libs/paginator'),
-    IIIF = require('../libs/IIIF');
+Viewer = require('../libs/viewer'),
+Facets = require('../libs/facets'),
+Paginator = require('../libs/paginator'),
+IIIF = require('../libs/IIIF');
 
 exports.testUVViewer = function(req, res) {
 
 	var data = {
-		base_url: config.baseUrl,
+		root_url: config.rootUrl,
 		pid: "codu:59239"
 	};
 
@@ -54,6 +54,16 @@ exports.testUVViewer = function(req, res) {
 	// });
 
 	// Build viewer, render test.html
-	res.render("test", data);
+	res.render("test_UV", data);
+}
+
+exports.testKalturaViewer = function(req, res) {
+	var data = {
+		root_url: config.rootUrl
+	};
+
+	console.log("TEST test kal viewer", data);
+
+	res.render("test_kaltura", data);
 }
 

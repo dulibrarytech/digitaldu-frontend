@@ -11,13 +11,14 @@ const client = new elasticsearch.Client( {
 
 client.cluster.health({},function(err,resp,status) {  
 	if(err) {
-		console.log("Elasticsearch connection error:", err);
+		console.log("Elastic connection error:", err);
 	}
 	else if(status == 200 && resp) {
-		console.log("Connected to Elasticsearch index: " + config.elasticsearchHost + ':' + config.elasticsearchPort);
+		console.log("Connected to Elastic cluster: " + config.elasticsearchHost + ':' + config.elasticsearchPort);
+		console.log("Using Elastic index: " + config.elasticsearchIndex);
 	}
 	else {
-		console.log("Error: Elasticsearch connection status is: " + status + " while contacting index on " + config.elasticsearchHost + ':' + config.elasticsearchPort);
+		console.log("Error: Elastic connection status is: " + status + " while contacting index on " + config.elasticsearchHost + ':' + config.elasticsearchPort);
 	}
 });
 

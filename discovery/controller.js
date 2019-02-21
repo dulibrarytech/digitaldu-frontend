@@ -32,7 +32,7 @@ exports.getFacets = function(req, res) {
 
 exports.renderCommunitiesView = function(req, res) {
 	var data = {
-		base_url: config.baseUrl
+		root_url: config.rootUrl
 	};
 
 	Service.getTopLevelCollections(function(error, response) {
@@ -50,7 +50,7 @@ exports.renderCommunitiesView = function(req, res) {
 
 exports.renderCommunity = function(req, res) {
 	var data = {
-		base_url: config.baseUrl
+		root_url: config.rootUrl
 	},
 	id = req.params.id;
 
@@ -74,7 +74,6 @@ exports.renderRootCollection = function(req, res) {
 		paginator: {},
 		typeCount: {},
 		error: null,
-		base_url: config.baseUrl,
 		root_url: config.rootUrl
 	},
 	page = req.query.page || 0;	// Render all collecions, do not paginate
@@ -118,7 +117,6 @@ exports.renderCollection = function(req, res) {
 			facets: {},
 			error: null,
 			pagination: {},
-			base_url: config.baseUrl,
 			root_url: config.rootUrl
 		};
 			
@@ -159,7 +157,6 @@ exports.renderObjectView = function(req, res) {
 		summary: null,
 		mods: {},
 		error: null,
-		base_url: config.baseUrl,
 		root_url: config.rootUrl
 	};
 
