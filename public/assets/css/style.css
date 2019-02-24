@@ -1015,6 +1015,10 @@ div.metadata-content {
   height:auto !important;
 }
 
+div[id^='kaltura_'] {
+  height: 800px;
+}
+
 footer {
     background: #8b2332;
 /*  height: 200px;*/
