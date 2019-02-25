@@ -15,7 +15,7 @@ const es = require('../config/index');
 const fs = require('fs');
 const config = require('../config/config');
 const request  = require("request");
-const Repository = require('../libs/repository');
+const Repository = require('../libs/repository-fedora');
 const Helper = require("./helper");
 const IIIF = require("../libs/IIIF");
 
