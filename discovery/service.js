@@ -15,7 +15,7 @@ const es = require('../config/index');
 const fs = require('fs');
 const config = require('../config/config');
 const request  = require("request");
-const Repository = require('../libs/repository');
+const Repository = require('../libs/repository-fedora');
 const Helper = require("./helper");
 const IIIF = require("../libs/IIIF");
 
@@ -191,7 +191,7 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
             aggs: facetAggregations
           }
         }
- 
+
         // Get children objects of this collection
         es.search(data, function (error, response, status) {
 
@@ -204,7 +204,6 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
           }
           else {
             var results = [];
-
             // Create the result list
             for(var index of response.hits.hits) {
               results.push(index._source);
@@ -305,6 +304,7 @@ var fetchObjectByPid = function(pid, callback) {
         }
       }
   }, function (error, response) {
+
       if(error) {
         callback(error, null);
       }
@@ -313,7 +313,7 @@ var fetchObjectByPid = function(pid, callback) {
         callback(null, objectData);
       }
       else {
-        callback("Object not found", {});
+        callback("Object not found", null);
       }
   });
 }
@@ -398,31 +398,35 @@ exports.getCollectionHeirarchy = function(pid, callback) {
  * @return 
  */
 var getParentTrace = function(pid, collections, callback) {
-
   fetchObjectByPid(pid, function(error, response) {
-    var title = "",
-        url = config.rootUrl + "/collection/" + pid;
+      var title = "",
+          url = config.rootUrl + "/collection/" + pid;
 
-    // There is > 1 title associated with this object, use the first one
-    if(typeof response.title == "object") {
-      title = response.title[0];
-    }
-    else {
-      title = response.title || "Untitled Collection";
-    }
-    collections.push({pid: response.pid, name: title, url: url});
+      if(error) {
+        callback(error, null);
+      }
+      else {
+        // There is > 1 title associated with this object, use the first one
+        if(typeof response.title == "object") {
+          title = response.title[0];
+        }
+        else {
+          title = response.title || "Untitled Collection";
+        }
+        collections.push({pid: response.pid, name: title, url: url});
 
-    // There is > 1 collection parents associated with this object.  Use the first one for trace
-    if(typeof response.is_member_of_collection == 'object') {
-      getParentTrace(response.is_member_of_collection[0], collections, callback);
-    }
-    else if(response.is_member_of_collection.indexOf("root") >= 0) {
-      collections.push({pid: config.topLevelCollectionPID, name: config.topLevelCollectionName, url: config.rootUrl});
-      callback(collections.reverse());
-    }
-    else {
-      getParentTrace(response.is_member_of_collection, collections, callback);
-    }
+        // There is > 1 collection parents associated with this object.  Use the first one for trace
+        if(typeof response.is_member_of_collection == 'object') {
+          getParentTrace(response.is_member_of_collection[0], collections, callback);
+        }
+        else if(response.is_member_of_collection.indexOf("root") >= 0) {
+          collections.push({pid: config.topLevelCollectionPID, name: config.topLevelCollectionName, url: config.rootUrl});
+          callback(collections.reverse());
+        }
+        else {
+          getParentTrace(response.is_member_of_collection, collections, callback);
+        }
+      }
   });
 }
 
