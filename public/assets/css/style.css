@@ -655,7 +655,7 @@ div#home-collections .item-thumb {
 }
 
 div#collections .item-thumb {
-    max-height: 200px;
+    /*max-height: 200px;*/
     max-width: 200px;
     /* align-content: center; */
     margin: 20px auto;
@@ -710,7 +710,7 @@ div.collection-breadcrumbs a:visited {
     padding: 0;
 }
 .collection-thumb .item-title {
-  font-size: 13px;
+  font-size: 15px;
 }
 .item-title a {
     color: #222;
