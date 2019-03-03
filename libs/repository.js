@@ -26,13 +26,13 @@ exports.getFedoraDatastreamUrl = function(datastream, pid) {
 		case "tn":
 			dsID = "TN";
 			break;
-		case "small_image":
+		case "smallimage":
 		case "jpg":
 			dsID = "OBJ";
 			break;
-		case "large_image":
+		case "largeimage":
 		case "tiff":
-			dsID = "OBJ";
+			dsID = "JP2";
 			break;
 		case "audio":
 		case "mp3":

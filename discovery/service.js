@@ -360,14 +360,26 @@ exports.getFacets = getFacets;
  * @return 
  */
 exports.getDatastream = function(objectID, datastreamID, callback) {
-  Repository.streamData(objectID, datastreamID, function(error, stream) {
-    if(error) {
-      callback(error, null);
+  fetchObjectByPid(objectID, function(error, object) {
+
+    // Stream by object type
+    if(datastreamID == "object") {
+      for(var key in config.mimeTypes) {
+        if(config.mimeTypes[key].includes(object.mime_type)) {
+          datastreamID = key;
+        }
+      }
     }
-    else {
-      callback(null, stream);
-    }
-  }); 
+
+    Repository.streamData(objectID, datastreamID, function(error, stream) {
+      if(error) {
+        callback(error, null);
+      }
+      else {
+        callback(null, stream);
+      }
+    }); 
+  });
 }
 
 /**
@@ -468,11 +480,13 @@ exports.getManifestObject = function(pid, callback) {
         for(var key in object.children) {
 
           // Use iiif server 
-          if(object.children[key].mimetype == "image/tiff") {
+          // DEV: If a jpg source is available from iiif server, use this option only
+          if(config.mimeTypes.largeImage.includes(object.children[key].mimetype)) {
             resourceUrl = config.IIIFServerUrl + "/iiif/2/" + container.resourceID + "/full/full/0/default.jpg";
           }
 
           // Use repository datastream
+          // DEV: If a jpg source is available from iiif server, can remove this
           else {
             resourceUrl = config.rootUrl + "/datastream/" + object.children[key].url + "/" + Helper.getDsType(object.children[key].mimetype);
           }
@@ -495,11 +509,13 @@ exports.getManifestObject = function(pid, callback) {
       else {
 
         // Use iiif server
-        if(object.mime_type == "image/tiff") {
+        // DEV: If a jpg source is available from iiif server, use this option only
+        if(config.mimeTypes.largeImage.includes(object.mime_type)) {
           resourceUrl = config.IIIFServerUrl + "/iiif/2/" + container.resourceID + "/full/full/0/default.jpg";
         }
 
         // Use repository datastream
+        // DEV: If a jpg source is available from iiif server, can remove this
         else {
           resourceUrl = config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType(object.mime_type);
         }
