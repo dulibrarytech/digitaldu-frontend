@@ -114,9 +114,6 @@ exports.getManifest = function(container, objects, callback) {
 						canvas.images[0].resource.width = imageData.width;
 						canvas.images[0].resource.service["@context"] = imageData["@context"];
 						canvas.images[0].resource.service.profile = imageData.profile;
-
-						// set service and profile data in corresponding elements[] element
-						// This is set for the index of which the image canvas appears in the canvas array
 					}
 				}
 			}
@@ -263,6 +260,26 @@ var getThumbnailCanvas = function(container, object) {
 	return canvas;
 }
 
+var getThumbnailObject = function(container, object) {
+	let thumbnail = {
+		service: {}
+	},
+	service = {};
+
+	thumbnail["@id"] = object.thumbnailUrl;
+	thumbnail["@type"] = config.IIIFObjectTypes["smallImage"];
+
+	service["@context"] = "http://iiif.io/api/image/2/context.json";
+	service["@id"] = object.thumbnailUrl;
+	service["protocol"] = "http://iiif.io/api/image";
+	service["height"] = config.IIIFThumbnailHeight;
+	service["width"] = config.IIIFThumbnailWidth;
+	service["profile"] = ['"http://iiif.io/api/image/2/level0.json"'];
+	thumbnail["service"] = service;
+
+	return thumbnail;
+}
+
 /*
  * Retrieving image tile data from IIIF image server
  */
@@ -275,6 +292,9 @@ var getImageCanvas = function(container, object) {
 	canvas["@id"] = config.IIIFUrl + "/" + container.resourceID + "/canvas/c" + object.sequence;
 	canvas["@type"] = "sc:Canvas";
 	canvas["label"] = object.label;
+
+	//canvas["thumbnail"] = getThumbnailObject(container, object);
+
 	canvas["height"] = "";
 	canvas["width"] = "";
 	canvas['images'] = [];
@@ -300,6 +320,8 @@ var getImageCanvas = function(container, object) {
 
 	image["resource"] = resource;
 	image["on"] = canvas["@id"];
+
+	image["thumbnail"] = getThumbnailObject(container, object);
 
 	canvas.images.push(image);
 	return canvas;
