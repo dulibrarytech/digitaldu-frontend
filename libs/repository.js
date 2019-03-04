@@ -13,10 +13,12 @@ const config = require('../config/config'),
 const host = config.repositoryUrl;
 
 /**
- * 
+ * Get the Fedora datastream ID corresponding to the DigitalDU ID
+ * Construct Fedora datastream url
  *
- * @param 
- * @return 
+ * @param string datastream 	The digital du datstream identifier
+ * @param string pid 	The object identifier
+ * @return string 	The path to Fodora datastream 
  */
 exports.getFedoraDatastreamUrl = function(datastream, pid) {
 	var dsID = "";
@@ -32,6 +34,7 @@ exports.getFedoraDatastreamUrl = function(datastream, pid) {
 			break;
 		case "largeimage":
 		case "tiff":
+		case "jp2":
 			dsID = "JP2";
 			break;
 		case "audio":

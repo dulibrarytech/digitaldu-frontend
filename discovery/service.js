@@ -360,17 +360,26 @@ exports.getFacets = getFacets;
  * @return 
  */
 exports.getDatastream = function(objectID, datastreamID, callback) {
-  fetchObjectByPid(objectID, function(error, object) {
+  
+  // Find datastream ID by object type
+  if(datastreamID == "object") {
+    fetchObjectByPid(objectID, function(error, object) {
 
-    // Stream by object type
-    if(datastreamID == "object") {
-      for(var key in config.mimeTypes) {
-        if(config.mimeTypes[key].includes(object.mime_type)) {
-          datastreamID = key;
+      // Get the datastream ID from the configuration based on the object mime type
+      datastreamID = Helper.getDsType(object.mime_type);
+      Repository.streamData(objectID, datastreamID, function(error, stream) {
+        if(error) {
+          callback(error, null);
         }
-      }
-    }
+        else {
+          callback(null, stream);
+        }
+      });
+    });
+  }
 
+  // Stream using the requested datastream ID
+  else {
     Repository.streamData(objectID, datastreamID, function(error, stream) {
       if(error) {
         callback(error, null);
@@ -378,8 +387,8 @@ exports.getDatastream = function(objectID, datastreamID, callback) {
       else {
         callback(null, stream);
       }
-    }); 
-  });
+    });
+  } 
 }
 
 /**
@@ -477,19 +486,12 @@ exports.getManifestObject = function(pid, callback) {
 
       // Compound objects
       if(Helper.isParentObject(object)) {
+        
+        // Add the child objects of the main parent object
         for(var key in object.children) {
 
-          // Use iiif server 
-          // DEV: If a jpg source is available from iiif server, use this option only
-          if(config.mimeTypes.largeImage.includes(object.children[key].mimetype)) {
-            resourceUrl = config.IIIFServerUrl + "/iiif/2/" + container.resourceID + "/full/full/0/default.jpg";
-          }
-
-          // Use repository datastream
-          // DEV: If a jpg source is available from iiif server, can remove this
-          else {
-            resourceUrl = config.rootUrl + "/datastream/" + object.children[key].url + "/" + Helper.getDsType(object.children[key].mimetype);
-          }
+          // IIIF server default image url
+          resourceUrl = config.IIIFServerUrl + "/iiif/2/" + container.resourceID + "/full/full/0/default.jpg";
 
           // Add the data
           children.push({
@@ -508,17 +510,8 @@ exports.getManifestObject = function(pid, callback) {
       // Single objects
       else {
 
-        // Use iiif server
-        // DEV: If a jpg source is available from iiif server, use this option only
-        if(config.mimeTypes.largeImage.includes(object.mime_type)) {
-          resourceUrl = config.IIIFServerUrl + "/iiif/2/" + container.resourceID + "/full/full/0/default.jpg";
-        }
-
-        // Use repository datastream
-        // DEV: If a jpg source is available from iiif server, can remove this
-        else {
-          resourceUrl = config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType(object.mime_type);
-        }
+        // IIIF server default image url
+        resourceUrl = config.IIIFServerUrl + "/iiif/2/" + container.resourceID + "/full/full/0/default.jpg";
 
         // Add the data
         children.push({

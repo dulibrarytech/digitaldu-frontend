@@ -180,13 +180,14 @@ module.exports = {
     },
 
     /*
-     * Register datastreams here.  These may not all be available
+     * Define datastreams here
      * Available datastreams are defined in the Repository interface
      */
      datastreams: {
         "tn": "thumbnail",
         "jpg": ["image/jpeg", "image/jpg"],
         "tiff": ["image/tiff"],
+        "jp2" : ["imaage/jp2"],
         "mp3": ["audio/mp3", "audio/mpeg", "audio/x-wav"],
         "mp4": ["video/mp4"],
         "mov": ["video/mov"],
