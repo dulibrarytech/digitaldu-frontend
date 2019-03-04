@@ -489,9 +489,7 @@ exports.getManifestObject = function(pid, callback) {
         
         // Add the child objects of the main parent object
         for(var key in object.children) {
-
-          // IIIF server default image url
-          resourceUrl = config.IIIFServerUrl + "/iiif/2/" + container.resourceID + "/full/full/0/default.jpg";
+          resourceUrl = config.rootUrl + "/datastream/" + object.children[key].url + "/" + Helper.getDsType(object.children[key].mimetype);
 
           // Add the data
           children.push({
@@ -509,9 +507,7 @@ exports.getManifestObject = function(pid, callback) {
 
       // Single objects
       else {
-
-        // IIIF server default image url
-        resourceUrl = config.IIIFServerUrl + "/iiif/2/" + container.resourceID + "/full/full/0/default.jpg";
+        resourceUrl = config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType(object.mime_type);
 
         // Add the data
         children.push({

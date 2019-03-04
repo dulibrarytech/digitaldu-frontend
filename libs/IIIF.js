@@ -304,14 +304,12 @@ var getImageCanvas = function(container, object) {
 	image["@type"] =  "oa:Annotation";
 	image["motivation"] = "";
 
-	resource["@id"] = object.resourceUrl;
-	//resource["@id"] = 
+	resource["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + "/full/full/0/default.jpg";
 	resource["@type"] = object.type; 
 	resource["format"] = object.format; 
 
 	service["@context"] = "";
 	service["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID;	
-	//service["@id"] = 
 	service["profile"] = [];
 
 	resource["service"] = service;
