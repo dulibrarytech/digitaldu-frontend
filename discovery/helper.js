@@ -68,10 +68,10 @@ var config = require('../config/config');
 
     // Add collection or object path
     if(item.object_type && item.object_type == config.collectionMimeType) {
-      path = config.rootRoute + "/collection";
+      path = "/collection";
     }
     else {
-      path = config.rootRoute + "/object";
+      path = "/object";
     }
 
     // Push the current item to the list
