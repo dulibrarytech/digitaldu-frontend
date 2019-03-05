@@ -182,7 +182,7 @@ exports.renderObjectView = function(req, res) {
 			if(Helper.isParentObject(object)) {
 				switch(object.object_type) {
 					case "compound":
-						data.viewer = Viewer.getIIIFObjectViewer(object, index); // the payload, uv object... will contact discovery iiif endpoint for the manifest
+						data.viewer = Viewer.getCompoundObjectViewer(object, index);
 						break;
 					case "book":
 						//data.viewer = CompoundViewer.getBookViewer(...);

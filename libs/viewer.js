@@ -1,4 +1,4 @@
- /**
+/**
  * @file 
  *
  * Viewer class
@@ -34,31 +34,23 @@ exports.getObjectViewer = function(object, mimeType="") {
  	// Get viewer for object mime type:
  	switch(dataType) {
  		case "audio":
- 			//viewer = getAudioPlayer(object, mimeType);
- 			// TODO get kaltura viewer
- 			viewer = this.getIIIFObjectViewer(object);
+ 			viewer += getAudioPlayer(object, mimeType);
  			break;
 
  		case "video":
- 			//viewer = getVideoViewer(object);
- 			// TODO get kaltura viewer
- 			viewer = this.getIIIFObjectViewer(object);
+ 			viewer += getVideoViewer(object);
  			break;
 
  		case "smallImage":
- 			//viewer = getSmallImageViewer(object);
- 			//viewer = getLargeImageViewer(object);
- 			viewer = this.getIIIFObjectViewer(object);
+ 			viewer += getLargeImageViewer(object);
  			break;
 
  		case "largeImage":
- 			//viewer = getLargeImageViewer(object);
- 			viewer = this.getIIIFObjectViewer(object);
+ 			viewer += getLargeImageViewer(object);
  			break;
 
  		case "pdf":
- 			//viewer = getPDFViewer(object);
- 			viewer = this.getIIIFObjectViewer(object);
+ 			viewer += getPDFViewer(object);
  			break;
 
  		default:
@@ -76,7 +68,223 @@ exports.getObjectViewer = function(object, mimeType="") {
  * @param 
  * @return 
  */
-exports.getIIIFObjectViewer = function(object, index=null) {
+exports.getCompoundObjectViewer = function(object) {
+ 	var viewer = "";
+
+ 	// Get viewer for object mime type:
+ 	switch(config.compoundObjectViewer) {
+ 		case "universalviewer":
+ 			viewer += getIIIFObjectViewer(object);
+ 			break;
+
+ 		default:
+ 			console.log("Viewer error: No compound viewer found.  Please check configuration");
+ 			viewer = "";
+ 			break;
+ 	}
+
+ 	return viewer;
+}
+
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
+function getAudioPlayer(object, type) {
+	var player = '<div id="audio-player" class="viewer-section">', tn, stream;
+	var extension = "mp3";
+
+	tn = config.rootUrl + "/datastream/" + object.pid + "/tn";
+	stream = config.rootUrl + "/datastream/" + object.pid + "/mp3";
+
+	switch(config.audioPlayer) {
+		case "browser":
+			player += getHTMLAudioPlayer(tn, stream, object.mime_type);
+			break;
+		case "jwplayer":
+			player += getJWPlayer(tn, stream, extension, config.jwplayerPathToLibrary);
+			break;
+		case "universalviewer":
+			player += getIIIFObjectViewer(object);
+			break;
+		case "kaltura":
+			player += getKalturaViewer(object, {
+				partner_id: config.kalturaPartnerID,
+				uiconf_id: config.kalturaUI_ID,
+				entry_id: "1_pmh226et",	// DEV
+				unique_object_id: config.kalturaUniqueObjectID
+			});
+			break;
+		default:
+			player += 'Viewer is down temporarily.  Please check configuration</div>';
+			break;
+	}
+
+	player += '</div>';
+	return player;
+}
+
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
+function getVideoViewer(object) {
+	var viewer = '<div id="video-viewer" class="viewer-section">', tn, stream, url;
+	var extension = "", datastreamID = "";
+
+	tn = config.rootUrl + "/datastream/" + object.pid + "/tn";
+	if(object.mime_type == "video/mp4") {
+		extension = "mp4";
+		datastreamID = "mp4";
+	}
+	else if(object.mime_type == "video/quicktime") {
+		extension = "mov";
+		datastreamID = "mov";
+	}
+	else {
+		console.log("Error: Incorrect object mime type for object: " + object.pid);
+	}
+	stream = config.rootUrl + "/datastream/" + object.pid + "/" + datastreamID;
+
+	switch(config.videoViewer) {
+		case "videojs":
+			viewer += getVideojsViewer(tn, stream, object.mime_type);
+			break;
+		case "jwplayer":
+			viewer += getJWPlayer(tn, stream, extension, config.jwplayerPathToLibrary);
+			break;
+		case "universalviewer":
+			viewer += getIIIFObjectViewer(object);
+			break;
+		case "kaltura":
+			viewer += getKalturaViewer(object, {
+				partner_id: config.kalturaPartnerID,
+				uiconf_id: config.kalturaUI_ID,
+				entry_id: "1_pmh226et",	// DEV
+				unique_object_id: config.kalturaUniqueObjectID
+			});
+			break;
+		default:
+			viewer += 'No video viewer is enabled.  Please check configuration</div>';
+			break;
+	}
+
+	viewer += "</div>";
+	return viewer;
+}
+
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
+function getSmallImageViewer(object) {
+	var viewer = '<div id="small-image-viewer" class="viewer-section">';
+
+	var image = Repository.getDatastreamUrl("jpg", object.pid);
+
+	viewer += '<div id="viewer-content-wrapper" class="small-image"><img class="viewer-content" src="' + image + '"/></div>';
+	viewer += '</div>';
+
+	viewer += '</div>';
+	return viewer;
+}
+
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
+function getLargeImageViewer(object) {
+	var viewer = "";
+
+	switch(config.largeImageViewer) {
+		case "browser":
+			viewer += getSmallImageViewer(object);
+			break;
+
+		case "openseadragon":
+			viewer += getOpenSeadragonViewer(object, imagePath, imageServerUrl);
+			break;
+
+		case "universalviewer":
+			viewer += getIIIFObjectViewer(object, config.openseadragonPathToLibrary, config.openseadragonImagePath, config.IIIFServerUrl);
+			break;
+
+		default:
+			viewer += 'Viewer is down temporarily.  Please check configuration';
+			break;
+	}
+
+	return viewer;
+}
+
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
+function getPDFViewer(object) {
+	var viewer = '<div id="pdf-viewer" class="viewer-section">';
+	var doc = "/datastream/" + object.pid + "/OBJ";
+
+	switch(config.pdfViewer) {
+		case "browser":
+			viewer += '<iframe class="viewer-content" src="' + doc + '" height="500px" type="application/pdf" ></iframe>';
+			break;
+		case "universalviewer": 
+			viewer += getIIIFObjectViewer(object);
+			break;
+		default:
+			viewer += 'Viewer is down temporarily.  Please check configuration</div>';
+			break;
+	}
+
+	viewer += '</div>';
+	return viewer;
+}
+
+function getHTMLAudioPlayer(thumbnailUrl, streamUrl, mimeType) {
+	return '<div id="viewer-content-wrapper"><audio controlsList="nodownload" controls><source src="' + streamUrl + '" type="' + mimeType + '"></audio></div>';
+}
+
+function getVideojsViewer(thumbnailUrl, streamUrl, mimeType) {
+	return '<video id="my-video" class="video-js" controls preload="auto" width="640" height="264" poster="' + thumbnailUrl + '" data-setup="{}"><source src="' + streamUrl + '" type="video/mp4"><p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that<a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p></video>';
+}
+
+function getJWPlayer(thumbnailUrl, streamUrl, fileExtension, jwPlayerPath) {
+	var player = "";
+	streamUrl += "/file_name_spoof." + fileExtension;
+	player += '<script src="' + jwPlayerPath + '"></script>';
+	player += '<div id="mediaplayer" class="viewer-content">Loading JW Player...</div>';
+	player += '</div>';
+	player += '<script>jwplayer("mediaplayer").setup({'
+	player +=     'file: "' + streamUrl + '",'
+	player +=     'image: "' +  thumbnailUrl + '",'
+	player +=     'width: 500,'
+	player +=     'height: 300,'
+	player +=     'aspectratio: "16:9",'
+	player +=     'primary: "flash",'
+	player +=     'androidhls: "true"'
+	player += '});</script>';
+
+	return player;
+}	
+
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
+function getIIIFObjectViewer(object, index=null) {
 	let viewer = '<div id="uv" class="uv"></div>';
 		viewer += '<script>';
 		viewer += 'window.addEventListener("uvLoaded", function (e) {';
@@ -96,159 +304,38 @@ exports.getIIIFObjectViewer = function(object, index=null) {
  * @param 
  * @return 
  */
-function getAudioPlayer(objectData, type) {
-	var player = '<div id="audio-player" class="viewer-section">', tn, stream;
-	var extension = "mp3";
+ function getKalturaViewer(object, params) {
+ 	var cache_st = "1549920112",
+ 		height = "100%",
+ 		width = "100%";
 
-	tn = config.rootUrl + "/datastream/" + objectData.pid + "/tn";
-	stream = config.rootUrl + "/datastream/" + objectData.pid + "/mp3";
+ 	return '<script src="https://cdnapisec.kaltura.com/p/' + params.partner_id + '/sp/' + params.partner_id + "00" + '/embedIframeJs/uiconf_id/' + params.uiconf_id + '/partner_id/' + params.partner_id + '?autoembed=true&entry_id=' + params.entry_id + '&playerId=' + params.unique_object_id + '&cache_st=' + cache_st + '&width=' + width + '&height=' + height + '&flashvars[streamerType]=auto"></script>';
+ }
 
-	if(config.audioPlayer == "browser") {
-		player += '<div id="viewer-content-wrapper"><audio controlsList="nodownload" controls><source src="' + stream + '" type="' + objectData.mime_type + '"></audio></div>';
-		player += '</div>';
-	}
-	else if(config.audioPlayer == "jwplayer") {
-		// JWPlayer needs a filename in the path.  
-		stream += "/file_name_spoof." + extension;
-		player += '<script src="' + config.rootUrl + '/libs/jwplayer_du/jwplayer-du.js"></script>';
-		player += '<div id="mediaplayer" class="viewer-content">Loading JW Player...</div>';
-		player += '</div>';
-		player += '<script>jwplayer("mediaplayer").setup({'
-		player +=     'file: "' + stream + '",'
-		player +=     'image: "' +  tn + '",'
-		player +=     'width: 500,'
-		player +=     'height: 300,'
-		player +=     'aspectratio: "16:9",'
-		player +=     'primary: "flash",'
-		player +=     'androidhls: "true"'
-		player += '});</script>';
-	}
-	else {
-		player += 'Viewer is down temporarily.  Please check configuration</div>';
-	}
-
-	return player;
-}
-
-/**
+ /**
  * 
  *
  * @param 
  * @return 
  */
-function getVideoViewer(objectData) {
-	var viewer = '<div id="video-viewer" class="viewer-section">', tn, stream, url;
-	var extension = "", datastreamID = "";
+ function getOpenSeadragonViewer(object, osdPath, imagePath, serverUrl) {
+	var viewer = "";
 
-	tn = config.rootUrl + "/datastream/" + objectData.pid + "/tn";
-	if(objectData.mime_type == "video/mp4") {
-		extension = "mp4";
-		datastreamID = "mp4";
-	}
-	else if(objectData.mime_type == "video/quicktime") {
-		extnsion = "mov";
-		datastreamID = "mov";
-	}
-	else {
-		console.log("Error: Incorrect object mime type for object: " + objectData.pid);
-	}
-	stream = config.rootUrl + "/datastream/" + objectData.pid + "/" + datastreamID;
-
-	if(config.videoViewer == "videojs") {
-		viewer += '<video id="my-video" class="video-js" controls preload="auto" width="640" height="264" poster="' + tn + '" data-setup="{}"><source src="' + stream + '" type="video/mp4"><p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that<a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p></video>';
-		viewer += '</div>';
-	}
-	else if(config.videoViewer == "jwplayer") {
-		// JWPlayer needs a filename in the path.  
-		url += "/file_name_spoof." + extension;
-		viewer += '<script src="' + config.rootUrl + '/libs/jwplayer_du/jwplayer-du.js"></script>';
-		viewer += '<div id="mediaplayer" class="viewer-content">Loading JW Player...</div>';
-		viewer += '</div>';
-		viewer += '<script>jwplayer("mediaplayer").setup({'
-		viewer +=     'file: "' + stream + '",'
-		viewer +=     'image: "' +  tn + '",'
-		viewer +=     'width: 500,'
-		viewer +=     'height: 300,'
-		viewer +=     'aspectratio: "16:9",'
-		viewer +=     'primary: "flash",'
-		viewer +=     'androidhls: "true"'
-		viewer += '});</script>';
-	}
-	else {
-		viewer += 'No video viewer is enabled.  Please check configuration</div>';
-	}
-
-	return viewer;
-}
-
-/**
- * 
- *
- * @param 
- * @return 
- */
-function getSmallImageViewer(objectData) {
-	var viewer = '<div id="small-image-viewer" class="viewer-section">';
-
-	var image = Repository.getDatastreamUrl("jpg", objectData.pid);
-
-	viewer += '<div id="viewer-content-wrapper" class="small-image"><img class="viewer-content" alt="Viewer Content" src="' + image + '"/></div>';
+ 	viewer += "<span id='display-message' >Loading image, please wait...</span>";
+	viewer += '<div id="large-image-viewer" class="viewer-section">'
+	viewer += '<div id="viewer-content-wrapper"><div id="openseadragon1" class="viewer-content" style="width: 96%; margin: 0 auto"><span id="large-image-viewer-loading"></span></div>';
+	viewer += '</div>';
+	viewer += '<script src="' + osdPath + '"></script>';
+	viewer += '<script>var viewer = OpenSeadragon({'
+	viewer +=     'id: "openseadragon1",'
+	viewer +=     'prefixUrl: "' + imagePath + '",'
+	viewer +=     'immediateRender: true,'
+	viewer +=     'showNavigator: true,'
+	viewer +=     'tileSources: "' + serverUrl + '/iiif/2/' + object.pid + '"'
+	viewer += '});'
+	viewer += 'viewer.addHandler("tile-loaded", function(event) {document.getElementById("display-message").style.display = "none"})'
+	viewer += '</script>';
 	viewer += '</div>';
 
 	return viewer;
-}
-
-/**
- * 
- *
- * @param 
- * @return 
- */
-function getLargeImageViewer(objectData) {
-	var viewer = '<div id="large-image-viewer" class="viewer-section">',
-		viewerImages = config.openseadragonImagePath;
-
-	viewer += "<span id='display-message' >Loading image, please wait...</span>";
-	if(config.largeImageViewer == "openseadragon") {
-
-		viewer += '<div id="viewer-content-wrapper"><div id="openseadragon1" class="viewer-content" style="width: 96%; margin: 0 auto"><span id="large-image-viewer-loading"></span></div>';
-		viewer += '</div>';
-		viewer += '<script src="' + config.rootUrl + '/libs/openseadragon/openseadragon.min.js"></script>';
-		viewer += '<script>var viewer = OpenSeadragon({'
-		viewer +=     'id: "openseadragon1",'
-		viewer +=     'prefixUrl: "' + config.rootUrl + viewerImages + '",'
-		viewer +=     'immediateRender: true,'
-		viewer +=     'showNavigator: true,'
-		viewer +=     'tileSources: "' + config.IIIFServerUrl + '/iiif/2/' + objectData.pid + '"'
-		viewer += '});'
-		viewer += 'viewer.addHandler("tile-loaded", function(event) {document.getElementById("display-message").style.display = "none"})'
-		viewer += '</script>';
-	}
-	else {
-		viewer += 'Viewer is down temporarily.  Please check configuration';
-	}
-
-	viewer += '</div>';
-	return viewer;
-}
-
-/**
- * 
- *
- * @param 
- * @return 
- */
-function getPDFViewer(objectData) {
-	var viewer = '<div id="pdf-viewer" class="viewer-section">';
-	var doc = config.rootUrl + "/datastream/" + objectData.pid + "/OBJ";
-
-	if(config.pdfViewer == "browser") {
-		viewer += '<iframe class="viewer-content" src="' + doc + '" height="500px" type="application/pdf" >This is iframe content.</iframe>';
-		viewer += '</div>';
-	}
-	else {
-		viewer += 'Viewer is down temporarily.  Please check configuration</div>';
-	}
-
-	return viewer;
-}	
+ }

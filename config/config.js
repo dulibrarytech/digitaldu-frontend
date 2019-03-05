@@ -60,29 +60,54 @@ module.exports = {
 
     /* 
      * Viewer to play audio files
-     * [browser | jwplayer | [ext audio lib]]
+     * [browser | jwplayer | universalviewer | kaltura]
      */
-    audioPlayer: "browser",
+    audioPlayer: "universalviewer",
 
     /* 
      * Viewer to display video files
-     * [videojs | jwplayer]
+     * [videojs | jwplayer | universalviewer | kaltura]
      */
-    videoViewer: "videojs",
+    videoViewer: "universalviewer",
 
     /* 
      * Viewer to display pdf files
      * * PDF-JS currently unavailable
-     * [browser | [pdf-js]]
+     * [browser | universalviewer]
      */
-    pdfViewer: "browser",
+    pdfViewer: "universalviewer",
 
     /* 
      * Viewer to display large image files (tiff, jp2)
-     * [browser | [openseadragon]]
+     * [browser | openseadragon | universalviewer]
      */
-    largeImageViewer: "openseadragon",
+    largeImageViewer: "universalviewer",
+
+    /* 
+     * Viewer to display compound objects
+     * At this point, multiple compound viewers can not be configured.  
+     * [ universalviewer ]
+     */
+    compoundObjectViewer: "universalviewer",
+
+    /*
+     * Openseadragon viewer settings
+     */
+    openseadragonPathToLibrary: "/libs/openseadragon/openseadragon.min.js",
     openseadragonImagePath: "/libs/openseadragon/images/",
+
+    /* 
+     * JWPlayer Settings
+     */
+    jwplayerPathToLibrary: "/libs/jwplayer_du/jwplayer-du.js",
+
+    /*
+     * Kaltura viewer settings
+     */
+    kalturaUI_ID: "41433862",
+    kalturaPartnerID: "2357732",
+    //kalturaUniqueObjectID: "kaltura_du_12345",
+    kalturaUniqueObjectID: "kaltura_player_1549920112",
 
     /*
      * Fields for fulltext search (search all)
@@ -135,9 +160,9 @@ module.exports = {
      * "Search type name": Index field to search"
      */ 
     searchFields: [
-    	{"Title": "title"},
-    	{"Creator": "creator"},
-    	{"Subject": "subject"},
+        {"Title": "title"},
+        {"Creator": "creator"},
+        {"Subject": "subject"},
         {"Type": "type"},
         {"Description": "abstract"}
     ],
@@ -180,14 +205,13 @@ module.exports = {
     },
 
     /*
-     * Define datastreams here
+     * Register datastreams here.  These may not all be available
      * Available datastreams are defined in the Repository interface
      */
      datastreams: {
         "tn": "thumbnail",
         "jpg": ["image/jpeg", "image/jpg"],
         "tiff": ["image/tiff"],
-        "jp2" : ["imaage/jp2"],
         "mp3": ["audio/mp3", "audio/mpeg", "audio/x-wav"],
         "mp4": ["video/mp4"],
         "mov": ["video/mov"],

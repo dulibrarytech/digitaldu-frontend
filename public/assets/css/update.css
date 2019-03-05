@@ -3,6 +3,11 @@
     margin: 15px 0 0 0 !important;
 }
 
+/* Force Kaltura viewer fixed height */
+div[id^='kaltura_'] {
+  height: 800px;
+}
+
 /* Scrollbar width */
 ::-webkit-scrollbar {
     width: 15px;
