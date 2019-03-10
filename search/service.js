@@ -165,6 +165,19 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
       }
       else {
 
+        // Remove selected facet from the list
+        for(var facetKey in facets) {
+          for(var index in facets[facetKey]) {
+            var facetString = facets[facetKey][index],
+                bucket = response.aggregations[facetKey].buckets;
+            for(let facetIndex in bucket) {
+              if(bucket[facetIndex].key == facetString) {
+                bucket.splice(facetIndex,1);
+              }
+            }
+          }
+        }
+        
         // Return the aggregation results for the facet display
         responseData['facets'] = response.aggregations;
         responseData['count'] = response.hits.total;

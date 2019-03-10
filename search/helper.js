@@ -82,3 +82,26 @@ exports.getSearchResultDisplayFields = function(searchResult) {
 
     return fields;
 }
+
+/**
+ * Create the 'results for:' label for search results
+ *
+ * @param 
+ * @return 
+ */
+exports.getResultsLabel = function(query, facets) {
+  let queryData = " ";
+  if(query == "" && facets) {
+    for(let key in facets) {
+      for(let index in facets[key]) {
+        queryData += (" " + facets[key][index]);
+      }
+      queryData += ";";
+    }
+  }
+  else {
+    queryData = query;
+  }
+
+  return queryData; 
+}
