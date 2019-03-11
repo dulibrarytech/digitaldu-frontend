@@ -165,6 +165,7 @@ var getObjectElement = function(object) {
 	let rendering = {};
 	rendering['@id'] = object.resourceUrl;
 	rendering['format'] = object.format;
+	rendering['label'] = "Test Label for Download"
 
 	let element = {};
 	element["@id"] = object.resourceUrl;
@@ -208,6 +209,11 @@ var getPDFCanvas = function(container, object) {
 	canvas["@id"] = config.IIIFUrl + "/" + container.resourceID + "/canvas/c" + object.sequence;
 	canvas["@type"] = "Canvas";
 	canvas["thumbnail"] = object.thumbnailUrl;
+	canvas["rendering"] = {
+		"@id": object.resourceUrl + "/" + container.downloadFileName + ".pdf",
+		"format": "application/pdf",
+		"label": "Download PDF"
+	};
 	canvas["content"] = [];
 
 	content["@id"] = config.IIIFUrl + "/" + container.resourceID + "/annotationpage/ap" + object.sequence;

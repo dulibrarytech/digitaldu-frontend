@@ -38,9 +38,7 @@ module.exports = function (app) {
         .get(Discovery.getDatastream);
 
     app.route('/datastream/:pid/:datastream/:spoof')
-        .get(function(req, res) {
-            res.redirect("/datastream/" + req.params.pid + "/" + req.params.datastream);
-    });
+        .get(Discovery.getDatastream);
 
     app.route('/iiif/:pid/manifest')
         .get(Discovery.getIIIFManifest);

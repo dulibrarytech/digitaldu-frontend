@@ -250,8 +250,13 @@ exports.getDatastream = function(req, res) {
 			console.log(error);
 			if(ds.toLowerCase() == "tn") {
 				Service.getThumbnailPlaceholderStream(function(error, stream) {
-					// TODO hndle error
-					stream.pipe(res);
+					if(error) {
+						console.log(error);
+						res.sendStatus(500);
+					}
+					else {
+						stream.pipe(res);
+					}
 				});
 			}
 			else {
@@ -261,8 +266,13 @@ exports.getDatastream = function(req, res) {
 		else {
 			if(stream.headers['content-type'] == "text/plain" && ds.toLowerCase() == "tn") {
 				Service.getThumbnailPlaceholderStream(function(error, stream) {
-					// TODO handle error
-					stream.pipe(res);
+					if(error) {
+						console.log(error);
+						res.sendStatus(500);
+					}
+					else {
+						stream.pipe(res);
+					}
 				});
 			}
 			else {

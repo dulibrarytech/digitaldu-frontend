@@ -473,6 +473,7 @@ exports.getManifestObject = function(pid, callback) {
       var object = response,
       container = {
         resourceID: object.pid,
+        downloadFileName: object.pid.replace(":", "_"), // Temporarily use pid for filename, replacing ':'' with '_'
         title: object.title,
         description: object.abstract,
         metadata: {
@@ -499,6 +500,7 @@ exports.getManifestObject = function(pid, callback) {
             format: object.children[key].mimetype,
             type: Helper.getIIIFObjectType(object.children[key].mimetype) || "",
             resourceID: object.children[key].url,
+            downloadFileName: object.children[key].url.replace(":", "_"), // Temporarily use pid for filename, replacing ':'' with '_'
             resourceUrl: resourceUrl,
             thumbnailUrl: config.rootUrl + "/datastream/" + object.children[key].url + "/" + Helper.getDsType("thumbnail")
           });
