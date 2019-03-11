@@ -73,7 +73,8 @@ header {
 }
 
 main {
-  padding-bottom: 300px;
+  padding-bottom: 230px;
+  /*min-height: 538px;*/
 }
 
 .col-md-1-nostack {
@@ -243,21 +244,24 @@ main {
 
 div#main-wrapper {
   max-width: 2000px;
-    margin: 0 auto;
-    background: white;
+  margin: 0 auto;
+  background: white;
+  height: 100vh;
+  min-height: 100%;
+  position: relative;
 }
 
 main > .wrapper {
   padding-top: 0 !important;
-    padding-bottom: 0 !important;
+  padding-bottom: 0 !important;
 }
 
 div.header-logo {
   height: 40px;
-    width: 140px;
-    position: relative;
-    top: 5px;
-    left: -9px;
+  width: 140px;
+  position: relative;
+  top: 5px;
+  left: -9px;
 }
 
 div.header-logo img {
@@ -1025,9 +1029,12 @@ div.metadata-content {
 
 footer {
     background: #8b2332;
-/*  height: 200px;*/
+    height: 230px;
     padding: 50px 0 25px 0;
     overflow: hidden;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
 }
 
 .footer-wrapper {
