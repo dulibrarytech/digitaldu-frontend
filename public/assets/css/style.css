@@ -9,6 +9,7 @@ body {
   font-family: 'Montserrat', 'Poppins', 'Raleway', sans-serif;
   font-size: 15px;
   line-height: 1;
+  min-height: 100%;
   margin: 0 !important;
   padding: 0 !important;
   position: relative;
@@ -70,11 +71,16 @@ ul {
 header {
   background: #8b2332;
   height: 50px;
+  position: absolute;
+  top: 0;
+  width: 100%;
 }
 
 main {
+  padding-top: 50px;
   padding-bottom: 230px;
   /*min-height: 538px;*/
+  min-height: 100vh;
 }
 
 .col-md-1-nostack {
@@ -246,7 +252,7 @@ div#main-wrapper {
   max-width: 2000px;
   margin: 0 auto;
   background: white;
-  height: 100vh;
+  /*height: 100vh;*/
   min-height: 100%;
   position: relative;
 }
@@ -254,6 +260,7 @@ div#main-wrapper {
 main > .wrapper {
   padding-top: 0 !important;
   padding-bottom: 0 !important;
+  margin-bottom: 150px;
 }
 
 div.header-logo {
