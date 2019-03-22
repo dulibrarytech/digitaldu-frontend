@@ -287,23 +287,28 @@ div.banner-search > form {
 }
 
 div.banner-search input {
-  width: 74%;
+  width: 70%;
   height: 34px;
   border-width: 1px;
-    border-style: solid;
+  border-style: solid;
   border-color: #aaa;
   padding: 6px;
 }
 
 div.banner-search button {
-  width: 23%;
+  width: 28%;
   height: 34px;
   position: relative;
+  top:-1px;
   right: 5px;
   background-color: #e5e3e1;
   border-style: solid;
   border-color: #aaa;
   border-width: 1px;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 div#title-banner {
