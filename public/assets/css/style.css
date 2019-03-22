@@ -410,6 +410,10 @@ div.banner-search form {
     border-left-style: none;
     padding: 9px;
     width: 100%;
+
+    color: #e5e3e1;
+    font-size: 18px;
+    font-family: 'Montserrat', 'Poppins', 'Raleway', sans-serif;
 }
 
 .searchform button i {
@@ -1094,4 +1098,3 @@ footer .footer-column {
 .footer-link-list label {
     text-decoration: underline;
 }
-
