@@ -313,7 +313,7 @@ var fetchObjectByPid = function(pid, callback) {
         callback(null, objectData);
       }
       else {
-        callback("Object not found", null);
+        callback(null, null);
       }
   });
 }
@@ -467,8 +467,7 @@ exports.getManifestObject = function(pid, callback) {
     if(error) {
       callback(error, JSON.stringify({}));
     }
-    else {
-
+    else if(response) {
       // Create object for IIIF
       var object = response,
       container = {
@@ -533,6 +532,9 @@ exports.getManifestObject = function(pid, callback) {
           callback(null, manifest);
         }
       });
+    }
+    else {
+      callback(null, null);
     }
   });
 }

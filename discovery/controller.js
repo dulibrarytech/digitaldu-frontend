@@ -289,8 +289,12 @@ exports.getIIIFManifest = function(req, res) {
 			console.log(error);
 			res.sendStatus(500);
 		}
-		else {
+		else if(manifest){
+			res.setHeader('Content-Type', 'application/json');
 			res.send(JSON.stringify(manifest));
+		}
+		else {
+			res.send("Item not found");
 		}
 	});
 }
