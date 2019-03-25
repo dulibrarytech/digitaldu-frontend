@@ -291,6 +291,7 @@ exports.getIIIFManifest = function(req, res) {
 		}
 		else if(manifest){
 			res.setHeader('Content-Type', 'application/json');
+			res.setHeader('Access-Control-Allow-Origin', '*');
 			res.send(JSON.stringify(manifest));
 		}
 		else {

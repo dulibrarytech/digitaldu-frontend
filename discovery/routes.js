@@ -42,6 +42,9 @@ module.exports = function (app) {
 
     app.route('/iiif/:pid/manifest')
         .get(Discovery.getIIIFManifest);
+
+    app.route('/iiif/:pid/manifest.json')
+        .get(Discovery.getIIIFManifest);
 };
 
 
