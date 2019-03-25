@@ -419,11 +419,14 @@ div.banner-search form {
     color: #e5e3e1;
     font-size: 18px;
     font-family: 'Montserrat', 'Poppins', 'Raleway', sans-serif;
+    
+    overflow: hidden;
 }
 
 .searchform button i {
     color: #e5e3e1;
     font-size: 20px;
+    padding-bottom:40px;
 }
 
 div#search-options {
