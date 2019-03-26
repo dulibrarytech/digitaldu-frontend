@@ -172,9 +172,14 @@ module.exports = {
      * "Facet name": "index field"
      */
     facets: {
+        // Index v1 external fields
         "Creator": "creator",
         "Subject": "subject",
-        "Type": "type"
+        "Type": "type",
+
+        // Index v1 display record fields
+        "Date": "display_record.originInfo.d_created",
+        "Collections": "is_member_of_collection"
     },
 
     /*

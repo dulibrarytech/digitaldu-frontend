@@ -12,7 +12,8 @@ const async = require('async'),
     Service = require('./service.js'),
     Facets = require('../libs/facets'),
     Paginator = require('../libs/paginator'),
-    Helper = require('./helper.js');
+    Helper = require('./helper.js'),
+    DDUHelper = require("../libs/ddu-helper.js");
 
 exports.search = function(req, res) {
 
@@ -83,6 +84,17 @@ exports.search = function(req, res) {
 			data.error = error;
 		}
 		else {
+				// console.log("TEST controller facet data test:", response.facets.Collections.buckets);
+			var pids = [];
+			for(var index of response.facets.Collections.buckets) {
+				//console.log("TEST collection key", index.key);
+				pids.push(index.key);
+			}
+
+			// DDUHelper.getTitleString(pids, [], function(error, data) {
+			// 	console.log("TEST titles", data);
+			// });
+
 			data.results = response.results;
 			data.facets = Facets.create(response.facets, config.rootUrl);	// PROD
 			data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(facets);  // Param: the facets from the search request params

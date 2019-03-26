@@ -10,6 +10,7 @@
 const async = require('async'),
     config = require('../config/config'),
     Helper = require('./helper.js'),
+    DDUHelper = require("../libs/ddu-helper"),
     Service = require('./service.js'),
     Viewer = require('../libs/viewer'),
     Facets = require('../libs/facets'),
@@ -215,7 +216,7 @@ exports.renderObjectView = function(req, res) {
 					}
 
 					// Get titles of any collection parents
-					Service.getTitleString(object.is_member_of_collection, [], function(error, titleData) {
+					DDUHelper.getTitleString(object.is_member_of_collection, [], function(error, titleData) {
 						if(error) {
 							console.log(error);
 						}

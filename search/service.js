@@ -143,7 +143,7 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
 
     // Get elasticsearch aggregations object 
     var facetAggregations = Helper.getFacetAggregationObject(config.facets);
-
+      console.log("TEST results data test:", facetAggregations);
     // Create elasticsearch query object
     var data = {  
       index: config.elasticsearchIndex,

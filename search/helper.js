@@ -20,6 +20,7 @@ exports.getFacetAggregationObject = function(facets) {
     for(var key in facets) {
       field = {};
       field['field'] = facets[key] + ".keyword";
+        console.log("TEST facet", field['field']);
       field['size'] = config.facetLimit;
       facetAggregations[key] = {
         "terms": field

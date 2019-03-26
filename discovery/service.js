@@ -17,6 +17,7 @@ const config = require('../config/config');
 const request  = require("request");
 const Repository = require('../libs/repository');
 const Helper = require("./helper");
+const DDUHelper = require("../libs/ddu-helper");
 const IIIF = require("../libs/IIIF");
 
 /**
@@ -230,45 +231,6 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
           }
         });
       }
-  });
-}
-
-/**
- * 
- *
- * @param 
- * @return 
- */
-exports.getTitleString = function(pids, titles, callback) {
-  var pidArray = [], pid;
-  if(typeof pids == 'string') {
-    pidArray.push(pids);
-  }
-  else {
-    pidArray = pids;
-  }
-  pid = pidArray[ titles.length ];
-  
-  // Get the title data for the current pid
-  fetchObjectByPid(pid, function (error, response) {
-    if(error) {
-      callback(error, titles);
-    }
-    else {
-      titles.push({
-        name: response.title[0],
-        pid: pid
-      });
-
-      if(titles.length == pidArray.length) {
-        // Have found a title for each pid in the input array
-        callback(null, titles);
-      }
-      else {
-        // Get the title for the next pid in the pid array
-        getTitleString(pidArray, titles, callback);
-      }
-    }
   });
 }
 
