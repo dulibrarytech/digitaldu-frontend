@@ -164,7 +164,7 @@ var getObjectElement = function(object) {
 
 	// Create the rendering data
 	let rendering = {};
-	rendering['@id'] = object.resourceUrl + "/" + container.downloadFileName,
+	rendering['@id'] = object.resourceUrl + "/" + object.downloadFileName,
 	rendering['format'] = object.format;
 	rendering['label'] = "Test Label for Download"
 
