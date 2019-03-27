@@ -106,3 +106,20 @@ exports.getResultsLabel = function(query, facets) {
 
   return queryData; 
 }
+
+/**
+ * Create the facet list for the display from the Elastic respone object
+ *
+ * @param 
+ * @return 
+ */
+ exports.getFacetList = function(esAggregetions) {
+    var list = {};
+    for(var key in esAggregetions) {
+      list[key] = [];
+      for(var item of esAggregetions[key].buckets) {
+        list[key].push(item);
+      }
+    }
+    return list;
+ }

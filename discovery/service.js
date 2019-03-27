@@ -17,7 +17,7 @@ const config = require('../config/config');
 const request  = require("request");
 const Repository = require('../libs/repository');
 const Helper = require("./helper");
-const DDUHelper = require("../libs/ddu-helper");
+const AppHelper = require("../libs/helper");
 const IIIF = require("../libs/IIIF");
 
 /**
@@ -380,6 +380,46 @@ exports.getCollectionHeirarchy = function(pid, callback) {
  * @param 
  * @return 
  */
+var getTitleString = function(pids, titles, callback) {
+  var pidArray = [], pid;
+  if(typeof pids == 'string') {
+    pidArray.push(pids);
+  }
+  else {
+    pidArray = pids;
+  }
+  pid = pidArray[ titles.length ];
+  // Get the title data for the current pid
+  fetchObjectByPid(pid, function (error, response) {
+    if(error) {
+      callback(error, titles);
+    }
+    else {
+
+      titles.push({
+        name: response ? response.title[0] : "Untitled",
+        pid: pid
+      });
+
+      if(titles.length == pidArray.length) {
+        // Have found a title for each pid in the input array
+        callback(null, titles);
+      }
+      else {
+        // Get the title for the next pid in the pid array
+        getTitleString(pidArray, titles, callback);
+      }
+    }
+  });
+}
+exports.getTitleString = getTitleString;
+
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
 var getParentTrace = function(pid, collections, callback) {
   fetchObjectByPid(pid, function(error, response) {
       var title = "",
@@ -447,7 +487,7 @@ exports.getManifestObject = function(pid, callback) {
       var children = [], resourceUrl;
 
       // Compound objects
-      if(Helper.isParentObject(object)) {
+      if(AppHelper.isParentObject(object)) {
         
         // Add the child objects of the main parent object
         for(var key in object.children) {

@@ -13,7 +13,7 @@ const async = require('async'),
     Facets = require('../libs/facets'),
     Paginator = require('../libs/paginator'),
     Helper = require('./helper.js'),
-    DDUHelper = require("../libs/ddu-helper.js");
+    Format = require("../libs/format");
 
 exports.search = function(req, res) {
 
@@ -71,7 +71,7 @@ exports.search = function(req, res) {
 			results: [],
 			pageData: null,
 			page: req.query.page || 1,
-			base_url: config.baseUrl,
+			// base_url: config.baseUrl,
 			root_url: config.rootUrl,
 			collection_scope: "",
 			query: Helper.getResultsLabel(req.query.q, facets)
@@ -84,19 +84,11 @@ exports.search = function(req, res) {
 			data.error = error;
 		}
 		else {
-				// console.log("TEST controller facet data test:", response.facets.Collections.buckets);
-			var pids = [];
-			for(var index of response.facets.Collections.buckets) {
-				//console.log("TEST collection key", index.key);
-				pids.push(index.key);
-			}
-
-			// DDUHelper.getTitleString(pids, [], function(error, data) {
-			// 	console.log("TEST titles", data);
-			// });
+			var facetList = Helper.getFacetList(response.facets);
+			facetList = Format.format(facetList);
 
 			data.results = response.results;
-			data.facets = Facets.create(response.facets, config.rootUrl);	// PROD
+			data.facets = Facets.create( facetList, config.rootUrl );	// DEV
 			data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(facets);  // Param: the facets from the search request params
 			data.pagination = Paginator.create(response.results, data.page, config.maxResultsPerPage, response.count, path);
 		}

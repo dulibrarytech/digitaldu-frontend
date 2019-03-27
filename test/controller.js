@@ -62,8 +62,6 @@ exports.testKalturaViewer = function(req, res) {
 		root_url: config.rootUrl
 	};
 
-	console.log("TEST test kal viewer", data);
-
 	res.render("test_kaltura", data);
 }
 

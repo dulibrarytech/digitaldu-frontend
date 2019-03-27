@@ -10,7 +10,7 @@
 const async = require('async'),
     config = require('../config/config'),
     Helper = require('./helper.js'),
-    DDUHelper = require("../libs/ddu-helper"),
+    AppHelper = require("../libs/helper"),
     Service = require('./service.js'),
     Viewer = require('../libs/viewer'),
     Facets = require('../libs/facets'),
@@ -180,7 +180,7 @@ exports.renderObjectView = function(req, res) {
 				index = req.params.index && isNaN(parseInt(req.params.index)) === false ? req.params.index : 0;
 
 			// Render a parent object with child objects
-			if(Helper.isParentObject(object)) {
+			if(AppHelper.isParentObject(object)) {
 				switch(object.object_type) {
 					case "compound":
 						data.viewer = Viewer.getCompoundObjectViewer(object, index);
@@ -216,7 +216,7 @@ exports.renderObjectView = function(req, res) {
 					}
 
 					// Get titles of any collection parents
-					DDUHelper.getTitleString(object.is_member_of_collection, [], function(error, titleData) {
+					Service.getTitleString(object.is_member_of_collection, [], function(error, titleData) {
 						if(error) {
 							console.log(error);
 						}
