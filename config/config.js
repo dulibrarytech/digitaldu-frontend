@@ -182,6 +182,10 @@ module.exports = {
         "Collections": "is_member_of_collection"
     },
 
+    facetOrdering: {
+        "Date": "desc"
+    },
+
     /*
      * Fields to display in the summary data section (above Details link)
      * "Display field name": "index field key to match"

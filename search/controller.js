@@ -61,7 +61,6 @@ exports.search = function(req, res) {
 		}
 	}
 
-	//Service.searchIndex(query, type, facets, collection, page, function(response) {
 	Service.searchIndex(query, type, facets, collection, page, function(error, response) {
 
 		var data = {
@@ -71,7 +70,6 @@ exports.search = function(req, res) {
 			results: [],
 			pageData: null,
 			page: req.query.page || 1,
-			// base_url: config.baseUrl,
 			root_url: config.rootUrl,
 			collection_scope: "",
 			query: Helper.getResultsLabel(req.query.q, facets)
@@ -85,14 +83,23 @@ exports.search = function(req, res) {
 		}
 		else {
 			var facetList = Helper.getFacetList(response.facets);
-			facetList = Format.format(facetList);
 
-			data.results = response.results;
-			data.facets = Facets.create( facetList, config.rootUrl );	// DEV
-			data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(facets);  // Param: the facets from the search request params
-			data.pagination = Paginator.create(response.results, data.page, config.maxResultsPerPage, response.count, path);
+			if(facets) {
+				facets = Helper.getSearchFacetObject(facets);
+					// console.log("TEST facet obj", facets);
+			}
+
+			Format.formatFacetDisplay(facetList, function(error, facetList) {
+
+				Format.formatFacetBreadcrumbs(facets, function(error, facets) {
+					data.results = response.results;
+					data.facets = Facets.create( facetList, config.rootUrl );	// DEV
+					data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(facets);  // Param: the facets from the search request params
+					data.pagination = Paginator.create(response.results, data.page, config.maxResultsPerPage, response.count, path);
+
+					return res.render('results', data);
+				});
+			});
 		}
-
-		return res.render('results', data);
 	});
 };

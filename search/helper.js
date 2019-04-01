@@ -20,7 +20,6 @@ exports.getFacetAggregationObject = function(facets) {
     for(var key in facets) {
       field = {};
       field['field'] = facets[key] + ".keyword";
-        console.log("TEST facet", field['field']);
       field['size'] = config.facetLimit;
       facetAggregations[key] = {
         "terms": field
@@ -103,7 +102,6 @@ exports.getResultsLabel = function(query, facets) {
   else {
     queryData = query;
   }
-
   return queryData; 
 }
 
@@ -122,4 +120,24 @@ exports.getResultsLabel = function(query, facets) {
       }
     }
     return list;
+ }
+
+/*
+ * Create the facet object for the display from the search query facets
+ *
+ * @param 
+ * @return 
+ */
+ exports.getSearchFacetObject = function(searchFacets) {
+    var object = {}, facets = [];
+    for(var key in searchFacets) {
+      object[key] = [];
+      facets = searchFacets[key];
+      for(var index in facets) {
+        object[key].push({
+          name: facets[index] || ""
+        });
+      }
+    }
+    return object;
  }

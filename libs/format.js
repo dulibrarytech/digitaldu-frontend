@@ -4,14 +4,33 @@
  * Custom format functions
  */
 
-Discovery = require('../discovery/service.js');
+const Discovery = require('../discovery/service.js'),
+      config = require('../config/config.js');
 
 /*
  * Add custom format functions here
  */
-exports.format = function(object) {
+exports.formatFacetDisplay = function(object, callback) {
   formatDateFacets(object["Date"]);
-  return object;
+  formatCollectionFacets(object["Collections"], function(error) {
+    if(error) {
+      callback(error, null);
+    }
+    else {
+      callback(null, object);
+    }
+  });
+}
+
+exports.formatFacetBreadcrumbs = function(object, callback) {
+  if(object == null) {
+    callback(null, {});
+  }
+  else {
+      formatCollectionBreadcrumbs(object["Collections"], function(error) {
+         callback(null, object);
+      });
+  }
 }
 
 var exampleFormatter = function(object) {
@@ -31,19 +50,51 @@ var formatDateFacets = function(dateFacets) {
     return dateFacets;
 }
 
-var formatCollectionFacets = function(collectionFacets/*, callback*/) {
-        // console.log("TEST controller facet data test:", collectionFacets);
+var formatCollectionFacets = function(collectionFacets, callback) {
+    if(collectionFacets.length < 1) {
+      callback(null);
+    }
+    else {
       var pids = [];
       for(var index of collectionFacets) {
-        //console.log("TEST collection key", index.key);
         pids.push(index.key);
       }
 
-      // Discovery.getTitleString(pids, [], function(error, data) {
-      //   console.log("TEST titles", data);
-      //   callback(data);
-      // });
+      Discovery.getTitleString(pids, [], function(error, data) {
 
-      // Get title without the recursive calls?
-      return collectionFacets;
+        // TODO limit via config setting.  
+        for(var index in collectionFacets) {
+          collectionFacets[index].name = data[index].name;
+          collectionFacets[index].facet = pids[index];
+          collectionFacets[index].type = "Collection";
+        }
+        callback(null);
+      });
+    }
+}
+
+var formatCollectionBreadcrumbs = function(breadcrumbFacets, callback) {
+
+  if(breadcrumbFacets.length < 1) {
+    callback(null);
+  }
+  else {
+    var pids = [];
+    for(var index of breadcrumbFacets) {
+      pids.push(index.name);
+    }
+
+    Discovery.getTitleString(pids, [], function(error, data) {
+
+      for(var index in breadcrumbFacets) {
+        breadcrumbFacets[index].name = data[index].name;
+        breadcrumbFacets[index].facet = data[index].pid;
+        breadcrumbFacets[index].type = "Collections";
+      }
+
+      callback(null);
+    });
+  }
+
+  //callback(null);
 }
