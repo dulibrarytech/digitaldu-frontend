@@ -47,7 +47,7 @@ h3 {
   -webkit-margin-after: 0px;
 }
 
-h4 {
+h2, h4 {
   font-size: 1.1em;
   font-weight: bold;
   -webkit-margin-after: 0px;
@@ -590,10 +590,10 @@ div.facets .static-facets {
     margin-top: 5px;
 }
 
-button.accordion > h5 {
+button.accordion > h4 {
     margin: 0;
     float: left;
-    font-size: 16px;
+    font-size: 16px !important;
 }
 
 button.accordion > i {

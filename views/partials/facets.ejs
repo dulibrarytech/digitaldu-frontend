@@ -3,7 +3,7 @@
 	<% for(var key in facets) { %>	
 	  <% if(facets[key] != "") { %>
 	  	<button class="accordion" alt="<%= key %>">
-	      <h5><%= key %></h5><i class="fas fa-caret-right facet-caret"></i>
+	      <h4><%= key %></h4><i class="fas fa-caret-right facet-caret"></i>
 		</button>
 		<%- facets[key] %>
 	  <% } %>
