@@ -62,7 +62,6 @@ var formatCollectionFacets = function(collectionFacets, callback) {
 
       Discovery.getTitleString(pids, [], function(error, data) {
 
-        // TODO limit via config setting.  
         for(var index in collectionFacets) {
           collectionFacets[index].name = data[index].name;
           collectionFacets[index].facet = pids[index];
@@ -75,7 +74,7 @@ var formatCollectionFacets = function(collectionFacets, callback) {
 
 var formatCollectionBreadcrumbs = function(breadcrumbFacets, callback) {
 
-  if(breadcrumbFacets.length < 1) {
+  if(!breadcrumbFacets || breadcrumbFacets.length < 1) {
     callback(null);
   }
   else {

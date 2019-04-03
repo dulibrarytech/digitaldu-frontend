@@ -77,20 +77,17 @@ exports.search = function(req, res) {
 		path = config.rootUrl + req.url.substring(req.url.indexOf('search')-1);
 
 		if(error) {
-			console.error("Search Error: ", error);
+			console.error(error);
 			data.results = null;
 			data.error = error;
 		}
 		else {
 			var facetList = Helper.getFacetList(response.facets);
-				console.log("TEST facet list", facetList);
 			if(facets) {
 				facets = Helper.getSearchFacetObject(facets);
-					// console.log("TEST facet obj", facets);
 			}
 
 			Format.formatFacetDisplay(facetList, function(error, facetList) {
-					console.log("TEST fmt'd facet list", facetList);
 				Format.formatFacetBreadcrumbs(facets, function(error, facets) {
 					data.results = response.results;
 					data.facets = Facets.create( facetList, config.rootUrl );	// DEV

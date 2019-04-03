@@ -134,13 +134,15 @@ exports.getResultsLabel = function(query, facets) {
  * @return 
  */
  exports.getSearchFacetObject = function(searchFacets) {
+      console.log("TEST search facets in", searchFacets);
     var object = {}, facets = [];
     for(var key in searchFacets) {
       object[key] = [];
       facets = searchFacets[key];
       for(var index in facets) {
         object[key].push({
-          name: facets[index] || ""
+          name: facets[index] || "",
+          facet: facets[index] || ""
         });
       }
     }
