@@ -23,6 +23,7 @@ exports.search = function(req, res) {
 	var typeVal = req.query.type || "all", type;
 	var page = req.query.page || 1;
 	var collection = req.query.collection || null;
+	var showAll = req.query.showAll || [];
 
 	// Allow empty search to return all results in the repository
 	if(query == "") {
@@ -82,7 +83,7 @@ exports.search = function(req, res) {
 			data.error = error;
 		}
 		else {
-			var facetList = Helper.getFacetList(response.facets);
+			var facetList = Helper.getFacetList(response.facets, showAll);
 			if(facets) {
 				facets = Helper.getSearchFacetObject(facets);
 			}

@@ -57,6 +57,9 @@ module.exports = {
 
     // Limit of facet results returned from a search
     facetLimit: 200,
+    facetLimitsByType: {
+        "Collections": 15 
+    },
 
     /* 
      * Viewer to play audio files

@@ -111,7 +111,7 @@ exports.getResultsLabel = function(query, facets) {
  * @param 
  * @return 
  */
- exports.getFacetList = function(esAggregetions) {
+ exports.getFacetList = function(esAggregetions, showAll=[]) {
     var list = {};
     for(var key in esAggregetions) {
       list[key] = [];
@@ -122,6 +122,10 @@ exports.getResultsLabel = function(query, facets) {
         item.facet = item.key;
         item.name = item.key;
         list[key].push(item);
+
+        if(showAll.includes(key) == false && list[key].length >= config.facetLimitsByType[key]) {
+          break;
+        }
       }
     }
     return list;
@@ -134,7 +138,6 @@ exports.getResultsLabel = function(query, facets) {
  * @return 
  */
  exports.getSearchFacetObject = function(searchFacets) {
-      console.log("TEST search facets in", searchFacets);
     var object = {}, facets = [];
     for(var key in searchFacets) {
       object[key] = [];
