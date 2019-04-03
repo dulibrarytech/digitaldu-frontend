@@ -116,6 +116,11 @@ exports.getResultsLabel = function(query, facets) {
     for(var key in esAggregetions) {
       list[key] = [];
       for(var item of esAggregetions[key].buckets) {
+
+        // View data
+        item.type = key;
+        item.facet = item.key;
+        item.name = item.key;
         list[key].push(item);
       }
     }
