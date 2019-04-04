@@ -136,7 +136,7 @@ exports.renderCollection = function(req, res) {
 			}
 			else {
 				var facetList = Facets.getFacetList(response.facets, showAll);
-					delete facetList.Collections;
+				delete facetList.Collections;
 				if(reqFacets) {
 					reqFacets = Facets.getSearchFacetObject(reqFacets);
 				}
@@ -150,6 +150,8 @@ exports.renderCollection = function(req, res) {
 				data.facets = Facets.create(facetList, config.rootUrl);
 				data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(reqFacets);
 				data.collection_breadcrumb_trail = Helper.getCollectionBreadcrumbObject(parentCollections);
+				data.collectionID = pid;
+				data.searchFields = config.searchFields;
 			}
 
 			return res.render('collection', data);

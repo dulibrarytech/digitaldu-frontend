@@ -352,7 +352,6 @@ div#title-banner {
 }
 /* End search banner */
 
-/* Begin front page search banner */
 div#hero-banner {
   height: 480px;
     background-color: grey;
@@ -371,6 +370,15 @@ div#hero-banner .logo {
 div.intro-text {
   margin-top: 7vw;
   width: 71%;
+}
+
+.search-element {
+  height: 40px;
+  width: 100%;
+}
+
+input.search-element {
+  padding: 0 15px;
 }
 
 .searchform {
@@ -421,22 +429,33 @@ div.banner-search form {
     font-size: 20px;
 }
 
-div#search-options {
+div.searchform #search-options {
   width: 20%;
 }
 
-div#search-box {
+div.searchform #search-box {
   width: 60%;
 }
 
-div#search-submit {
+div.searchform #search-submit {
   width: 20%;
 }
 
-.search-element {
-  height: 40px;
+div.sidebar-search #search-options {
+  width: 20%;
 }
-/* End front page search banner */
+
+div.sidebar-search #search-box {
+  width: 60%;
+}
+
+div.sidebar-search #search-submit {
+  width: 20%;
+}
+
+div.sidebar-search .search-element {
+  height: 30px;
+}
 
 .welcomeBox {
     text-align: center;
@@ -468,6 +487,10 @@ div#search-submit {
 
 div#sidebar {
     padding: 0 15px;
+}
+
+div.sidebar-section {
+    margin-bottom: 40px;
 }
 
 div.paginator {
