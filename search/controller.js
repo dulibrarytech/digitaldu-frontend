@@ -83,9 +83,9 @@ exports.search = function(req, res) {
 			data.error = error;
 		}
 		else {
-			var facetList = Helper.getFacetList(response.facets, showAll);
+			var facetList = Facets.getFacetList(response.facets, showAll);
 			if(facets) {
-				facets = Helper.getSearchFacetObject(facets);
+				facets = Facets.getSearchFacetObject(facets);
 			}
 
 			Format.formatFacetDisplay(facetList, function(error, facetList) {

@@ -111,43 +111,43 @@ exports.getResultsLabel = function(query, facets) {
  * @param 
  * @return 
  */
- exports.getFacetList = function(esAggregetions, showAll=[]) {
-    var list = {};
-    for(var key in esAggregetions) {
-      list[key] = [];
-      for(var item of esAggregetions[key].buckets) {
+ // exports.getFacetList = function(esAggregetions, showAll=[]) {
+ //    var list = {};
+ //    for(var key in esAggregetions) {
+ //      list[key] = [];
+ //      for(var item of esAggregetions[key].buckets) {
 
-        // View data
-        item.type = key;
-        item.facet = item.key;
-        item.name = item.key;
-        list[key].push(item);
+ //        // View data
+ //        item.type = key;
+ //        item.facet = item.key;
+ //        item.name = item.key;
+ //        list[key].push(item);
 
-        if(showAll.includes(key) == false && list[key].length >= config.facetLimitsByType[key]) {
-          break;
-        }
-      }
-    }
-    return list;
- }
+ //        if(showAll.includes(key) == false && list[key].length >= config.facetLimitsByType[key]) {
+ //          break;
+ //        }
+ //      }
+ //    }
+ //    return list;
+ // }
 
-/*
- * Create the facet object for the display from the search query facets
- *
- * @param 
- * @return 
- */
- exports.getSearchFacetObject = function(searchFacets) {
-    var object = {}, facets = [];
-    for(var key in searchFacets) {
-      object[key] = [];
-      facets = searchFacets[key];
-      for(var index in facets) {
-        object[key].push({
-          name: facets[index] || "",
-          facet: facets[index] || ""
-        });
-      }
-    }
-    return object;
- }
+// /*
+//  * Create the facet object for the display from the search query facets
+//  *
+//  * @param 
+//  * @return 
+//  */
+//  exports.getSearchFacetObject = function(searchFacets) {
+//     var object = {}, facets = [];
+//     for(var key in searchFacets) {
+//       object[key] = [];
+//       facets = searchFacets[key];
+//       for(var index in facets) {
+//         object[key].push({
+//           name: facets[index] || "",
+//           facet: facets[index] || ""
+//         });
+//       }
+//     }
+//     return object;
+//  }

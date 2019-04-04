@@ -214,24 +214,44 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
             collection.facets = response.aggregations;
             collection.count = response.hits.total;
 
-            // Get this collection's title
-            fetchObjectByPid(collectionID, function(error, object) {
+            // Get the child object facets
+            getFacets(collectionID, function(error, facets) {
               if(error) {
-                collection.title = "";
                 callback(error, []);
               }
-              else if(object.object_type != "collection") {
-                callback("Invalid collection: " + object.pid, []);
-              }
               else {
-                collection.title = object.title[0];
-                callback(null, collection);
+                collection.facets = facets;
+
+                // Get this collection's title
+                fetchObjectByPid(collectionID, function(error, object) {
+                  if(error) {
+                    collection.title = "";
+                    callback(error, []);
+                  }
+                  else if(object.object_type != "collection") {
+                    callback("Invalid collection: " + object.pid, []);
+                  }
+                  else {
+                    collection.title = object.title[0];
+                    callback(null, collection);
+                  }
+                });
               }
             });
           }
         });
       }
   });
+}
+
+/**
+ * Finds all child collections within a parent collection, and its children (recursive)
+ *
+ * @param 
+ * @return 
+ */
+var geChildCollectionPids = function(pid, callback) {
+
 }
 
 /**
@@ -282,15 +302,16 @@ var fetchObjectByPid = function(pid, callback) {
 exports.fetchObjectByPid = fetchObjectByPid;
 
 /**
- * TODO move to search service
+ * 
  *
  * @param 
  * @return 
  */
-var getFacets = function (callback) {
+var getFacets = function (collection=null, callback) {
 
     // Build elasticsearch aggregations object from config facet list
     var aggs = {}, field;
+    var matchFacetFields = [], restrictions = [];
     for(var key in config.facets) {
       field = {};
       field['field'] = config.facets[key] + ".keyword";
@@ -300,14 +321,36 @@ var getFacets = function (callback) {
       };
     }
 
-    es.search({
+    var searchObj = {
         index: config.elasticsearchIndex,
         type: 'data',
         body: {
             "size": 0,
-            "aggregations": aggs
+            "aggregations": aggs,
+            "query": {}
         }
-    }).then(function (body) {
+    };
+
+    if(collection) {
+      matchFacetFields.push({
+          "match_phrase": {
+            "is_member_of_collection": collection
+          }
+      });
+
+      restrictions.push({
+        "exists": {
+            "field": "is_child_of"
+        }
+      });
+
+      searchObj.body.query["bool"] = {
+        "must": matchFacetFields,
+        "must_not": restrictions
+      }
+    }
+
+    es.search(searchObj).then(function (body) {
         callback(null, body.aggregations);
     }, function (error) {
         callback(error.body.error.reason, null);
