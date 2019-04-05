@@ -3,11 +3,13 @@
     <div id="search-options" class="form-group">
       <select name="type" class="search-element">
         <option value="all">All</option>
+        <optgroup label="Specific Fields">
         <% for (var i = 0; i < searchFields.length; i++) { %>
           <% for (var key in searchFields[i]) { %>
             <option value='<%- key %>'><%- key %></option>
           <% } %>
         <% } %>
+      </optgroup>
       </select>
     </div>
     <div id="search-box" class="form-group">
