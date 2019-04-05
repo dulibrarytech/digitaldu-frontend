@@ -1048,7 +1048,7 @@ div.metadata-content {
 
 footer {
     background: #8b2332;
-    height: 230px;
+    /* height: 230px; [C22] */
     padding: 50px 0 25px 0;
     overflow: hidden;
     position: absolute;
