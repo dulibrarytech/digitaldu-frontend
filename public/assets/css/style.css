@@ -47,7 +47,7 @@ h3 {
   -webkit-margin-after: 0px;
 }
 
-h4 {
+h2, h4 {
   font-size: 1.1em;
   font-weight: bold;
   -webkit-margin-after: 0px;
@@ -291,23 +291,28 @@ div.banner-search > form {
 }
 
 div.banner-search input {
-  width: 74%;
+  width: 70%;
   height: 34px;
   border-width: 1px;
-    border-style: solid;
+  border-style: solid;
   border-color: #aaa;
   padding: 6px;
 }
 
 div.banner-search button {
-  width: 23%;
+  width: 28%;
   height: 34px;
   position: relative;
+  top:-1px;
   right: 5px;
   background-color: #e5e3e1;
   border-style: solid;
   border-color: #aaa;
   border-width: 1px;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 div#title-banner {
@@ -422,11 +427,18 @@ div.banner-search form {
     border-left-style: none;
     padding: 9px;
     width: 100%;
+
+    color: #e5e3e1;
+    font-size: 18px;
+    font-family: 'Montserrat', 'Poppins', 'Raleway', sans-serif;
+    
+    overflow: hidden;
 }
 
 .searchform button i {
     color: #e5e3e1;
     font-size: 20px;
+    padding-bottom:40px;
 }
 
 div.searchform #search-options {
@@ -605,10 +617,10 @@ div.facets .static-facets {
     margin-top: 5px;
 }
 
-button.accordion > h5 {
+button.accordion > h4 {
     margin: 0;
     float: left;
-    font-size: 16px;
+    font-size: 16px !important;
 }
 
 button.accordion > i {
@@ -1063,7 +1075,7 @@ div.metadata-content {
 
 footer {
     background: #8b2332;
-    height: 230px;
+    /* height: 230px; [C22] */
     padding: 50px 0 25px 0;
     overflow: hidden;
     position: absolute;
@@ -1121,4 +1133,3 @@ footer .footer-column {
 .footer-link-list label {
     text-decoration: underline;
 }
-

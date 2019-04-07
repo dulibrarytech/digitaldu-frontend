@@ -3,18 +3,20 @@
     <div id="search-options" class="form-group">
       <select name="type" class="search-element">
         <option value="all">All</option>
+        <optgroup label="Specific Fields">
         <% for (var i = 0; i < searchFields.length; i++) { %>
           <% for (var key in searchFields[i]) { %>
             <option value='<%- key %>'><%- key %></option>
           <% } %>
         <% } %>
+      </optgroup>
       </select>
     </div>
     <div id="search-box" class="form-group">
       <input class="search-element" type="text" name="q" placeholder="Search Keyword(s)" />
     </div>
     <div id="search-submit" class="form-group">
-      <button class="search-element" type="submit" alt="Search"><i class="fas fa-search"></i></button>
+      <button class="search-element" type="submit" alt="Search"><i class="fas fa-search"></i> Search</button>
     </div>
   </form>
 </div>
