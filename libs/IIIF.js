@@ -22,10 +22,10 @@ exports.getManifest = function(container, objects, callback) {
 		mediaSequences = [];
 
 	// Define the manifest
-	manifest["@context"] = "http://iiif.io/api/presentation/2/context.json";	// OK (standard)
-	manifest["@id"] = config.IIIFUrl + "/" + container.resourceID + "/manifest";	// OK  
-	manifest["@type"] = "sc:Manifest";	// OK standard
-	manifest["label"] = container.title;	// OK
+	manifest["@context"] = "http://iiif.io/api/presentation/2/context.json";
+	manifest["@id"] = config.IIIFUrl + "/" + container.resourceID + "/manifest";
+	manifest["@type"] = "sc:Manifest";
+	manifest["label"] = container.title;
 
 	manifest['metadata'] = [];
 	for(var key in container.metadata) {
@@ -35,28 +35,28 @@ exports.getManifest = function(container, objects, callback) {
 		});
 	}
 
-	manifest['description'] = [];  // Push one description object, use container.description
+	manifest['description'] = []; 
 	manifest.description.push({
 		"@value": container.description,
 		"@language": "en"
 	});
 
-	manifest['license'] = "https://creativecommons.org/licenses/by/3.0/";	// OK  
-	manifest['logo'] = "https://www.du.edu/_resources/images/nav/logo2.gif";	// INPUT THIS
+	manifest['license'] = "https://creativecommons.org/licenses/by/3.0/"; 
+	manifest['logo'] = "https://www.du.edu/_resources/images/nav/logo2.gif";
 	manifest['sequences'] = [];
-	manifest['structures'] = []; 	// push the selectable structures object
-	manifest['thumbnail'] = {};    // If used... Get thumbnail url somewhere.  Leave empty for testing
+	manifest['structures'] = [];
+	manifest['thumbnail'] = {};
 
 	// Define the sequence.  At this time only one sequence can be defined
 	manifest.sequences.push({
-		"@id": config.IIIFUrl + "/" + container.resourceID + "/sequence/s0",	// OK  
+		"@id": config.IIIFUrl + "/" + container.resourceID + "/sequence/s0",
 		"@type": "sc:Sequence",
 		"label": "Sequence s0",
 		"canvases": []
 	});
 
 	mediaSequences.push({
-		"@id" : config.IIIFUrl + "/" + container.resourceID + "/xsequence/s0",	// OK  
+		"@id" : config.IIIFUrl + "/" + container.resourceID + "/xsequence/s0",  
 		"@type" : "ixif:MediaSequence",
 		"label" : "XSequence 0",
 		"elements": []
@@ -135,7 +135,7 @@ var getImageData = function(objects, data=[], callback) {
 	}
 	else {
 		let object = objects[index],
-			url = config.IIIFServerUrl + "/iiif/2/" + object.resourceID; 	// *** INPUT the path to each child, same as with the tn's ***
+			url = config.IIIFServerUrl + "/iiif/2/" + object.resourceID; 
 			//url = 
 
 		request(url, function(error, response, body) {
@@ -161,9 +161,10 @@ var getImageElement = function(object) {
 }
 
 var getObjectElement = function(object) {
+
 	// Create the rendering data
 	let rendering = {};
-	rendering['@id'] = object.resourceUrl;
+	rendering['@id'] = object.resourceUrl + "/" + object.downloadFileName,
 	rendering['format'] = object.format;
 	rendering['label'] = "Test Label for Download"
 
@@ -300,6 +301,11 @@ var getImageCanvas = function(container, object) {
 	canvas["label"] = object.label;
 
 	//canvas["thumbnail"] = getThumbnailObject(container, object);
+	// canvas["rendering"] = {
+	// 	"@id": object.resourceUrl + "/" + object.downloadFileName,
+	// 	"format": object.format,
+	// 	"label": "Download Image"
+	// }
 
 	canvas["height"] = "";
 	canvas["width"] = "";

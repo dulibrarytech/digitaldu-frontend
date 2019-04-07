@@ -17,6 +17,7 @@ const config = require('../config/config');
 const request  = require("request");
 const Repository = require('../libs/repository');
 const Helper = require("./helper");
+const AppHelper = require("../libs/helper");
 const IIIF = require("../libs/IIIF");
 
 /**
@@ -213,18 +214,28 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
             collection.facets = response.aggregations;
             collection.count = response.hits.total;
 
-            // Get this collection's title
-            fetchObjectByPid(collectionID, function(error, object) {
+            // Get the child object facets
+            getFacets(collectionID, function(error, facets) {
               if(error) {
-                collection.title = "";
                 callback(error, []);
               }
-              else if(object.object_type != "collection") {
-                callback("Invalid collection: " + object.pid, []);
-              }
               else {
-                collection.title = object.title[0];
-                callback(null, collection);
+                collection.facets = facets;
+
+                // Get this collection's title
+                fetchObjectByPid(collectionID, function(error, object) {
+                  if(error) {
+                    collection.title = "";
+                    callback(error, []);
+                  }
+                  else if(object.object_type != "collection") {
+                    callback("Invalid collection: " + object.pid, []);
+                  }
+                  else {
+                    collection.title = object.title[0];
+                    callback(null, collection);
+                  }
+                });
               }
             });
           }
@@ -234,42 +245,13 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
 }
 
 /**
- * 
+ * Finds all child collections within a parent collection, and its children (recursive)
  *
  * @param 
  * @return 
  */
-exports.getTitleString = function(pids, titles, callback) {
-  var pidArray = [], pid;
-  if(typeof pids == 'string') {
-    pidArray.push(pids);
-  }
-  else {
-    pidArray = pids;
-  }
-  pid = pidArray[ titles.length ];
-  
-  // Get the title data for the current pid
-  fetchObjectByPid(pid, function (error, response) {
-    if(error) {
-      callback(error, titles);
-    }
-    else {
-      titles.push({
-        name: response.title[0],
-        pid: pid
-      });
+var geChildCollectionPids = function(pid, callback) {
 
-      if(titles.length == pidArray.length) {
-        // Have found a title for each pid in the input array
-        callback(null, titles);
-      }
-      else {
-        // Get the title for the next pid in the pid array
-        getTitleString(pidArray, titles, callback);
-      }
-    }
-  });
 }
 
 /**
@@ -313,22 +295,23 @@ var fetchObjectByPid = function(pid, callback) {
         callback(null, objectData);
       }
       else {
-        callback("Object not found", null);
+        callback(null, null);
       }
   });
 }
 exports.fetchObjectByPid = fetchObjectByPid;
 
 /**
- * TODO move to search service
+ * 
  *
  * @param 
  * @return 
  */
-var getFacets = function (callback) {
+var getFacets = function (collection=null, callback) {
 
     // Build elasticsearch aggregations object from config facet list
     var aggs = {}, field;
+    var matchFacetFields = [], restrictions = [];
     for(var key in config.facets) {
       field = {};
       field['field'] = config.facets[key] + ".keyword";
@@ -338,14 +321,36 @@ var getFacets = function (callback) {
       };
     }
 
-    es.search({
+    var searchObj = {
         index: config.elasticsearchIndex,
         type: 'data',
         body: {
             "size": 0,
-            "aggregations": aggs
+            "aggregations": aggs,
+            "query": {}
         }
-    }).then(function (body) {
+    };
+
+    if(collection) {
+      matchFacetFields.push({
+          "match_phrase": {
+            "is_member_of_collection": collection
+          }
+      });
+
+      restrictions.push({
+        "exists": {
+            "field": "is_child_of"
+        }
+      });
+
+      searchObj.body.query["bool"] = {
+        "must": matchFacetFields,
+        "must_not": restrictions
+      }
+    }
+
+    es.search(searchObj).then(function (body) {
         callback(null, body.aggregations);
     }, function (error) {
         callback(error.body.error.reason, null);
@@ -418,6 +423,46 @@ exports.getCollectionHeirarchy = function(pid, callback) {
  * @param 
  * @return 
  */
+var getTitleString = function(pids, titles, callback) {
+  var pidArray = [], pid;
+  if(typeof pids == 'string') {
+    pidArray.push(pids);
+  }
+  else {
+    pidArray = pids;
+  }
+  pid = pidArray[ titles.length ];
+  // Get the title data for the current pid
+  fetchObjectByPid(pid, function (error, response) {
+    if(error) {
+      callback(error, titles);
+    }
+    else {
+
+      titles.push({
+        name: response ? response.title[0] : "Untitled",
+        pid: pid
+      });
+
+      if(titles.length == pidArray.length) {
+        // Have found a title for each pid in the input array
+        callback(null, titles);
+      }
+      else {
+        // Get the title for the next pid in the pid array
+        getTitleString(pidArray, titles, callback);
+      }
+    }
+  });
+}
+exports.getTitleString = getTitleString;
+
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
 var getParentTrace = function(pid, collections, callback) {
   fetchObjectByPid(pid, function(error, response) {
       var title = "",
@@ -467,8 +512,7 @@ exports.getManifestObject = function(pid, callback) {
     if(error) {
       callback(error, JSON.stringify({}));
     }
-    else {
-
+    else if(response) {
       // Create object for IIIF
       var object = response,
       container = {
@@ -486,7 +530,7 @@ exports.getManifestObject = function(pid, callback) {
       var children = [], resourceUrl;
 
       // Compound objects
-      if(Helper.isParentObject(object)) {
+      if(AppHelper.isParentObject(object)) {
         
         // Add the child objects of the main parent object
         for(var key in object.children) {
@@ -533,6 +577,9 @@ exports.getManifestObject = function(pid, callback) {
           callback(null, manifest);
         }
       });
+    }
+    else {
+      callback(null, null);
     }
   });
 }

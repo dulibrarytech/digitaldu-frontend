@@ -10,6 +10,7 @@
 const async = require('async'),
     config = require('../config/config'),
     Helper = require('./helper.js'),
+    AppHelper = require("../libs/helper"),
     Service = require('./service.js'),
     Viewer = require('../libs/viewer'),
     Facets = require('../libs/facets'),
@@ -18,7 +19,7 @@ const async = require('async'),
     Search = require('../search/service');
 
 exports.getFacets = function(req, res) {
-    Service.getFacets(function(error, facets) {
+    Service.getFacets(null, function(error, facets) {
     	let response = {};
         if(error) {
         	console.log("Error");
@@ -92,7 +93,7 @@ exports.renderRootCollection = function(req, res) {
 		}
 
 		// Get facets for all data
-		Service.getFacets(function(error, facets) {
+		Service.getFacets(null, function(error, facets) {
 			if(error) {
 				console.log(error);
 			}
@@ -123,7 +124,8 @@ exports.renderCollection = function(req, res) {
 		var	pid = req.params.pid || "",
 			page = req.query.page || 1,
 			path = config.baseUrl + req._parsedOriginalUrl.path,
-			reqFacets = req.query.f || null;
+			reqFacets = req.query.f || null,
+			showAll = req.query.showAll || [];
 
 		// Get all collections in this community
 		Service.getObjectsInCollection(pid, page, reqFacets, function(error, response) {
@@ -133,6 +135,11 @@ exports.renderCollection = function(req, res) {
 				data.current_collection_title = "Error";
 			}
 			else {
+				var facetList = Facets.getFacetList(response.facets, showAll);
+				delete facetList.Collections;
+				if(reqFacets) {
+					reqFacets = Facets.getSearchFacetObject(reqFacets);
+				}
 				// Add collections and collection data	
 				data.collections = response.list;
 				data.current_collection = pid;
@@ -140,10 +147,13 @@ exports.renderCollection = function(req, res) {
 
 				// Add view data
 				data.pagination = Paginator.create(response.list, page, config.maxCollectionsPerPage, response.count, path);
-				data.facets = Facets.create(response.facets, config.rootUrl);
+				data.facets = Facets.create(facetList, config.rootUrl);
 				data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(reqFacets);
 				data.collection_breadcrumb_trail = Helper.getCollectionBreadcrumbObject(parentCollections);
+				data.collectionID = pid;
+				data.searchFields = config.searchFields;
 			}
+
 			return res.render('collection', data);
 		});
 	});
@@ -179,7 +189,7 @@ exports.renderObjectView = function(req, res) {
 				index = req.params.index && isNaN(parseInt(req.params.index)) === false ? req.params.index : 0;
 
 			// Render a parent object with child objects
-			if(Helper.isParentObject(object)) {
+			if(AppHelper.isParentObject(object)) {
 				switch(object.object_type) {
 					case "compound":
 						data.viewer = Viewer.getCompoundObjectViewer(object, index);
@@ -289,8 +299,13 @@ exports.getIIIFManifest = function(req, res) {
 			console.log(error);
 			res.sendStatus(500);
 		}
-		else {
+		else if(manifest){
+			res.setHeader('Content-Type', 'application/json');
+			res.setHeader('Access-Control-Allow-Origin', '*');
 			res.send(JSON.stringify(manifest));
+		}
+		else {
+			res.send("Item not found");
 		}
 	});
 }

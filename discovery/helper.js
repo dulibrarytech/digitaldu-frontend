@@ -93,50 +93,50 @@ var config = require('../config/config');
  * @return 
  */
 exports.getTypeFacetTotalsObject = function(facets) {
+  // TODO implement user creatable static facet list
+  var totals = {
+    stillImage: 0,
+    movingImage: 0,
+    soundRecording: 0,
+    soundRecordingMusical: 0,
+    soundRecordingNonMusical: 0,
+    text: 0,
+    map: 0,
+    mixedMaterial: 0,
+    threeDObject: 0
+  }
 
-	var totals = {
-		stillImage: 0,
-		movingImage: 0,
-		soundRecording: 0,
-		soundRecordingMusical: 0,
-		soundRecordingNonMusical: 0,
-		text: 0,
-		map: 0,
-		mixedMaterial: 0,
-		threeDObject: 0
-	}
+  for(var facet of facets.Type.buckets) {
+    if(facet.key == "still image") {
+      totals.stillImage = facet.doc_count;
+    }
+    else if(facet.key == "moving image") {
+      totals.movingImage = facet.doc_count;
+    }
+    else if(facet.key == "sound recording") {
+      totals.soundRecording = facet.doc_count;
+    }
+    else if(facet.key == "sound recording-musical") {
+      totals.soundRecordingMusical = facet.doc_count;
+    }
+    else if(facet.key == "sound recording-nonmusical") {
+      totals.soundRecordingNonMusical = facet.doc_count;
+    }
+    else if(facet.key == "text") {
+      totals.text = facet.doc_count;
+    }
+    else if(facet.key == "cartographic") {
+      totals.map = facet.doc_count;
+    }
+    else if(facet.key == "mixed material") {
+      totals.mixedMaterial = facet.doc_count;
+    }
+    else if(facet.key == "three dimensional object") {
+      totals.threeDObject = facet.doc_count;
+    }
+  }
 
-	for(var facet of facets.Type.buckets) {
-		if(facet.key == "still image") {
-			totals.stillImage = facet.doc_count;
-		}
-		else if(facet.key == "moving image") {
-			totals.movingImage = facet.doc_count;
-		}
-		else if(facet.key == "sound recording") {
-			totals.soundRecording = facet.doc_count;
-		}
-		else if(facet.key == "sound recording-musical") {
-			totals.soundRecordingMusical = facet.doc_count;
-		}
-		else if(facet.key == "sound recording-nonmusical") {
-			totals.soundRecordingNonMusical = facet.doc_count;
-		}
-		else if(facet.key == "text") {
-			totals.text = facet.doc_count;
-		}
-		else if(facet.key == "cartographic") {
-			totals.map = facet.doc_count;
-		}
-		else if(facet.key == "mixed material") {
-			totals.mixedMaterial = facet.doc_count;
-		}
-		else if(facet.key == "three dimensional object") {
-			totals.threeDObject = facet.doc_count;
-		}
-	}
-
-	return totals;
+  return totals;
 }
 
 /**
@@ -217,9 +217,9 @@ exports.getFacetAggregationObject = function(facets) {
  * @param 
  * @return 
  */
-exports.isParentObject = function(object) {
-  return typeof object.children != 'undefined';
-}
+// exports.isParentObject = function(object) {
+//   return typeof object.children != 'undefined';
+// }
 
 /**
  * 

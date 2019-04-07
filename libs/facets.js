@@ -7,6 +7,7 @@
  */
 
 'use strict';
+const config = require('../config/config');
 
 /**
  * 
@@ -17,7 +18,7 @@
 exports.create = function(facets, baseUrl) {
     var facetObj = {};
     for(var key in facets) {
-        facetObj[key] = createList(key, facets[key].buckets, baseUrl);
+        facetObj[key] = createList(key, facets[key], baseUrl);
     }
     return facetObj;
 };
@@ -29,7 +30,6 @@ exports.create = function(facets, baseUrl) {
  * @return 
  */
 exports.getFacetBreadcrumbObject = function(selectedFacets) {
-
     var breadcrumbs = [], buckets;
 
     // Create the object to populate the view elements
@@ -39,12 +39,60 @@ exports.getFacetBreadcrumbObject = function(selectedFacets) {
         for(var index of buckets) {
             breadcrumbs.push({
                 type: key,
-                name: index
+                name: index.name,
+                facet: index.facet
             });
         }
     }
     return createBreadcrumbTrail(breadcrumbs);
 };
+
+/**
+ * Create the facet list for the display from the Elastic respone object
+ *
+ * @param 
+ * @return 
+ */
+ exports.getFacetList = function(esAggregetions, showAll=[]) {
+    var list = {};
+    for(var key in esAggregetions) {
+      list[key] = [];
+      for(var item of esAggregetions[key].buckets) {
+
+        // View data
+        item.type = key;
+        item.facet = item.key;
+        item.name = item.key;
+        list[key].push(item);
+
+        if(showAll.includes(key) == false && list[key].length >= config.facetLimitsByType[key]) {
+          break;
+        }
+      }
+    }
+    return list;
+ }
+
+ /*
+ * Create the facet object for the display from the search query facets
+ *
+ * @param 
+ * @return 
+ */
+ exports.getSearchFacetObject = function(searchFacets) {
+    var object = {}, facets = [];
+    for(var key in searchFacets) {
+      object[key] = [];
+      facets = searchFacets[key];
+      for(var index in facets) {
+        object[key].push({
+          name: facets[index] || "",
+          facet: facets[index] || ""
+        });
+      }
+    }
+    return object;
+ }
 
 /**
  * 
@@ -60,7 +108,7 @@ function createList(facet, data, baseUrl) {
         html += '<div class="panel facet-panel panel-collapsed"><ul>';
         for (i = 0; i < data.length; i++) {
             if(data[i].key != "") {
-                html += '<li><span class="facet-name"><a href="javascript:document.location.href=selectFacet(\'' + facet + '\', \'' + data[i].key + '\', \'' + baseUrl + '\');">' + data[i].key + '</a></span><span class="facet-count">(' + data[i].doc_count + ')</span></li>';
+                html += '<li><span class="facet-name"><a href="javascript:document.location.href=selectFacet(\'' + facet + '\', \'' + data[i].facet + '\', \'' + baseUrl + '\');">' + data[i].name + '</a></span><span class="facet-count">(' + data[i].doc_count + ')</span></li>';
             }
             else {
                 html += "";
@@ -82,7 +130,7 @@ function createBreadcrumbTrail(data) {
     var i;
     var html = '';
     for (i = 0; i < data.length; i++) {
-        html += '<span><a href="javascript:document.location.href=removeFacet(\'' + data[i].type + '\', \'' + data[i].name + '\');"><strong style="color: red">X</strong></a>&nbsp&nbsp' + data[i].type + '&nbsp&nbsp<strong style="color: green"> > </strong>&nbsp&nbsp' + data[i].name + '</span>';   // good
+        html += '<span><a href="javascript:document.location.href=removeFacet(\'' + data[i].type + '\', \'' + data[i].facet + '\');"><strong style="color: red">X</strong></a>&nbsp&nbsp' + data[i].type + '&nbsp&nbsp<strong style="color: green"> > </strong>&nbsp&nbsp' + data[i].name + '</span>';   // good
     }
 
     return data.length > 0 ? html : null;

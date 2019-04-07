@@ -19,13 +19,14 @@
   </div>
 
   <div id="search-results-wrapper" class="col-md-9">
-    <% if(query.length >= 0) { %>
-      <h4>Results for: <span><%- query %></span></h4>
-    <% } %>
 
     <% if(error) { %>
       <h5><%- error %></h5>
     <% } else { %>
+
+      <% if(query.length >= 0) { %>
+        <h4>Results for: <span><%- query %></span></h4>
+      <% } %>
 
       <hr>
       <% include partials/paginator %>

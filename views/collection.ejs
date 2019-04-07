@@ -20,8 +20,13 @@
 <div class="row no-side-margin section content results-display">
 	<div class="col-md-3">
 		<% if(error == null) { %>
-			<div class="result-facets">
-				<h2>Filter By</h2>
+			<div class="sidebar-section">
+				<h4>Search This Collection</h4>
+				<hr>
+				<% include partials/sidebar-search %>
+			</div>
+			<div class="result-facets sidebar-section">
+				<h4>Filter By</h4>
 				<hr>
 				<% include partials/facets %>
 			</div>

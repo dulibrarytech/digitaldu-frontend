@@ -12,7 +12,8 @@ const async = require('async'),
     Service = require('./service.js'),
     Facets = require('../libs/facets'),
     Paginator = require('../libs/paginator'),
-    Helper = require('./helper.js');
+    Helper = require('./helper.js'),
+    Format = require("../libs/format");
 
 exports.search = function(req, res) {
 
@@ -22,6 +23,7 @@ exports.search = function(req, res) {
 	var typeVal = req.query.type || "all", type;
 	var page = req.query.page || 1;
 	var collection = req.query.collection || null;
+	var showAll = req.query.showAll || [];
 
 	// Allow empty search to return all results in the repository
 	if(query == "") {
@@ -60,7 +62,6 @@ exports.search = function(req, res) {
 		}
 	}
 
-	//Service.searchIndex(query, type, facets, collection, page, function(response) {
 	Service.searchIndex(query, type, facets, collection, page, function(error, response) {
 
 		var data = {
@@ -70,7 +71,6 @@ exports.search = function(req, res) {
 			results: [],
 			pageData: null,
 			page: req.query.page || 1,
-			base_url: config.baseUrl,
 			root_url: config.rootUrl,
 			collection_scope: "",
 			query: Helper.getResultsLabel(req.query.q, facets)
@@ -78,17 +78,26 @@ exports.search = function(req, res) {
 		path = config.rootUrl + req.url.substring(req.url.indexOf('search')-1);
 
 		if(error) {
-			console.error("Search Error: ", error);
+			console.error(error);
 			data.results = null;
 			data.error = error;
 		}
 		else {
-			data.results = response.results;
-			data.facets = Facets.create(response.facets, config.rootUrl);	// PROD
-			data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(facets);  // Param: the facets from the search request params
-			data.pagination = Paginator.create(response.results, data.page, config.maxResultsPerPage, response.count, path);
-		}
+			var facetList = Facets.getFacetList(response.facets, showAll);
+			if(facets) {
+				facets = Facets.getSearchFacetObject(facets);
+			}
 
-		return res.render('results', data);
+			Format.formatFacetDisplay(facetList, function(error, facetList) {
+				Format.formatFacetBreadcrumbs(facets, function(error, facets) {
+					data.results = response.results;
+					data.facets = Facets.create( facetList, config.rootUrl );	// DEV
+					data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(facets);  // Param: the facets from the search request params
+					data.pagination = Paginator.create(response.results, data.page, config.maxResultsPerPage, response.count, path);
+
+					return res.render('results', data);
+				});
+			});
+		}
 	});
 };

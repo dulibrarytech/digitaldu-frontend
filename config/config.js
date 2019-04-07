@@ -57,6 +57,9 @@ module.exports = {
 
     // Limit of facet results returned from a search
     facetLimit: 200,
+    facetLimitsByType: {
+        "Collections": 15 
+    },
 
     /* 
      * Viewer to play audio files
@@ -172,9 +175,18 @@ module.exports = {
      * "Facet name": "index field"
      */
     facets: {
+        // Index v1 external fields
         "Creator": "creator",
         "Subject": "subject",
-        "Type": "type"
+        "Type": "type",
+
+        // Index v1 display record fields
+        "Date": "display_record.originInfo.d_created",
+        "Collections": "is_member_of_collection"
+    },
+
+    facetOrdering: {
+        "Date": "desc"
     },
 
     /*
