@@ -20,7 +20,7 @@ const es = require('../config/index'),
  * @param 
  * @return 
  */
-exports.searchIndex = function(query, type, facets=null, collection=null, pageNum=1, callback) {
+exports.searchIndex = function(query, type, facets=null, collection=null, pageNum=1, daterange=null, callback) {
 
     var field = { match: "" },
         matchFields = [], matchFacetFields = [], results = [], restrictions = [],
@@ -158,59 +158,30 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
 
     // Query the index
     es.search(data, function (error, response, status) {
-      var responseData = {};
-
       if (error){
         callback({status: false, message: error, data: null});
       }
-      else {
+      if(daterange) {
 
-        // Remove selected facet from the list
-        for(var facetKey in facets) {
-          for(var index in facets[facetKey]) {
-            var facetString = facets[facetKey][index],
-                bucket = response.aggregations[facetKey].buckets;
-            for(let facetIndex in bucket) {
-              if(bucket[facetIndex].key == facetString) {
-                bucket.splice(facetIndex,1);
-              }
+        // Get list of outofrange pids using results
+        let pids = Helper.findRecordsNotInRange(response.hits.hits, [daterange.from, daterange.to]);
+
+        // Build resrict object (update data{} arg below)
+        for(var index in pids) {
+          restrictions.push({
+            "match": {
+              "pid": pids[index] // restricted pid array
             }
-          }
+          });
         }
-        
-        // Return the aggregation results for the facet display
-        responseData['facets'] = response.aggregations;
-        responseData['count'] = response.hits.total;
 
-        try {
-
-          // Create the search results objects
-          var results = [], tn, resultData;
-          for(var result of response.hits.hits) {
-
-            // Get the thumbnail
-            tn = config.rootUrl + "/datastream/" + result._source.pid.replace('_', ':') + "/tn";
-
-            // Get the title and description data for the result listing
-            resultData = Helper.getSearchResultDisplayFields(result);
-
-            // Push a new result object to the results array
-            results.push({
-              title: resultData.title || "Untitled",
-              creator: resultData.creator || "Unknown",
-              abstract: resultData.description || "No Description",
-              tn: tn,
-              pid: result._source.pid
-            });
-          }
-
-          // Add the results array, send the response
-          responseData['results'] = results;
-          callback(null, responseData);
-        }
-        catch(error) {
-          callback(error, {});
-        }
+        // Search again
+        es.search(data, function (error, response, status) {
+          returnResponseData(facets, response, callback);
+        });
+      }
+      else {
+        returnResponseData(facets, response, callback);
       }
   });
 }
@@ -245,3 +216,54 @@ exports.searchFacets = function (query, facets, page, callback) {
         callback(error, {});
     });
 };
+
+var returnResponseData = function(facets, response, callback) {
+  // Remove selected facet from the list
+  // TODO move this somewhere else
+  for(var facetKey in facets) {
+    for(var index in facets[facetKey]) {
+      var facetString = facets[facetKey][index],
+          bucket = response.aggregations[facetKey].buckets;
+      for(let facetIndex in bucket) {
+        if(bucket[facetIndex].key == facetString) {
+          bucket.splice(facetIndex,1);
+        }
+      }
+    }
+  }
+  
+  // Return the aggregation results for the facet display
+  var responseData = {};
+  responseData['facets'] = response.aggregations;
+  responseData['count'] = response.hits.total;
+
+  try {
+
+    // Create the search results objects
+    var results = [], tn, resultData;
+    for(var result of response.hits.hits) {
+
+      // Get the thumbnail
+      tn = config.rootUrl + "/datastream/" + result._source.pid.replace('_', ':') + "/tn";
+
+      // Get the title and description data for the result listing
+      resultData = Helper.getSearchResultDisplayFields(result);
+
+      // Push a new result object to the results array
+      results.push({
+        title: resultData.title || "Untitled",
+        creator: resultData.creator || "Unknown",
+        abstract: resultData.description || "No Description",
+        tn: tn,
+        pid: result._source.pid
+      });
+    }
+
+    // Add the results array, send the response
+    responseData['results'] = results;
+    callback(null, responseData);
+  }
+  catch(error) {
+    callback(error, {});
+  }
+}

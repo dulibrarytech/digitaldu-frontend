@@ -18,12 +18,20 @@ const async = require('async'),
 exports.search = function(req, res) {
 
 	// Verify / sanitize
-	var query = req.query.q;
-	var facets = req.query.f || null;
-	var typeVal = req.query.type || "all", type;
-	var page = req.query.page || 1;
-	var collection = req.query.collection || null;
-	var showAll = req.query.showAll || [];
+	var query = req.query.q,
+		facets = req.query.f || null,
+		typeVal = req.query.type || "all", type,
+		page = req.query.page || 1,
+		collection = req.query.collection || null,
+		showAll = req.query.showAll || [],
+		daterange = req.query.from && req.query.to ? {
+			from: req.query.from,
+			to: req.query.to
+		} : null;
+
+		console.log("TEST daterange", daterange);
+		console.log("TEST url fr", req.query.from);
+		console.log("TEST url to", req.query.to);
 
 	// Allow empty search to return all results in the repository
 	if(query == "") {
@@ -62,7 +70,7 @@ exports.search = function(req, res) {
 		}
 	}
 
-	Service.searchIndex(query, type, facets, collection, page, function(error, response) {
+	Service.searchIndex(query, type, facets, collection, page, daterange, function(error, response) {
 
 		var data = {
 			error: null,

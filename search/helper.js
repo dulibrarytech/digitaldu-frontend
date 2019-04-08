@@ -106,48 +106,54 @@ exports.getResultsLabel = function(query, facets) {
 }
 
 /**
- * Create the facet list for the display from the Elastic respone object
+ * 
  *
  * @param 
  * @return 
  */
- // exports.getFacetList = function(esAggregetions, showAll=[]) {
- //    var list = {};
- //    for(var key in esAggregetions) {
- //      list[key] = [];
- //      for(var item of esAggregetions[key].buckets) {
+exports.findRecordsNotInRange = function(results, range) {
+  var records = [], date;
+    for(var index of results) {
+      date = index._source.display_record.dates[0].date;   // PROD
+      if(isDateInRange(date, range) === false) {
+        records.push(index._id);
+      }
+    }
 
- //        // View data
- //        item.type = key;
- //        item.facet = item.key;
- //        item.name = item.key;
- //        list[key].push(item);
+  return records;
+}
 
- //        if(showAll.includes(key) == false && list[key].length >= config.facetLimitsByType[key]) {
- //          break;
- //        }
- //      }
- //    }
- //    return list;
- // }
+var isDateInRange = function(date, range) {
+  var inRange = false;
 
-// /*
-//  * Create the facet object for the display from the search query facets
-//  *
-//  * @param 
-//  * @return 
-//  */
-//  exports.getSearchFacetObject = function(searchFacets) {
-//     var object = {}, facets = [];
-//     for(var key in searchFacets) {
-//       object[key] = [];
-//       facets = searchFacets[key];
-//       for(var index in facets) {
-//         object[key].push({
-//           name: facets[index] || "",
-//           facet: facets[index] || ""
-//         });
-//       }
-//     }
-//     return object;
-//  }
+  var dateElements = date.split(" "),
+      dates = [];
+
+  for(var i=0; i<dateElements.length; i++) {
+    if(!isNaN(dateElements[i]) && dates.length < 2) {
+      dates.push(parseInt(dateElements[i]))
+    }
+    else if(isNaN(dateElements[i])) {
+      continue;
+    }
+    else {
+      break;
+    }
+  }
+
+  if(dates.length == 1) {
+    if(dates[0] >= range[0] && dates[0] <= range[1]) {
+      inRange = true;
+    }
+  }
+  else if(dates.length == 2) {
+    if( ( (dates[0] >= range[0] && dates[0] <= range[1]) || (dates[1] >= range[0] && dates[1] <= range[1]) ) || (dates[0] <= range[0] && dates[1] >= range[1]) ) {
+      inRange = true;
+    }
+  }
+  else {
+    inRange = true;
+  }
+
+  return inRange;
+}

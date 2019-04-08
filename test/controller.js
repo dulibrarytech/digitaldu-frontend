@@ -6,12 +6,15 @@ config = require('../config/config'),
 DiscHelper = require('../discovery/helper.js'),
 DiscService = require('../discovery/service.js'),
 
+SearchHelper = require('../search/helper.js'),
+SearchService = require('../search/service.js'),
+
 Viewer = require('../libs/viewer'),
 Facets = require('../libs/facets'),
 Paginator = require('../libs/paginator'),
 IIIF = require('../libs/IIIF');
 
-exports.testUVViewer = function(req, res) {
+exports.test_UVViewer = function(req, res) {
 
 	var data = {
 		root_url: config.rootUrl,
@@ -57,11 +60,43 @@ exports.testUVViewer = function(req, res) {
 	res.render("test_UV", data);
 }
 
-exports.testKalturaViewer = function(req, res) {
+exports.test_KalturaViewer = function(req, res) {
 	var data = {
 		root_url: config.rootUrl
 	};
 
 	res.render("test_kaltura", data);
+}
+
+exports.test_findRecordsNotInRange = function(req, res) {
+
+	var results = [];
+	results.push({
+		date: "between 1935 and 2012",
+		pid: "1"
+	});
+	// results.push({
+	// 	date: "circa 2008",
+	// 	pid: "2"
+	// });
+	// results.push({
+	// 	date: "1992",
+	// 	pid: "3"
+	// });
+	// results.push({
+	// 	date: "between 1974 and 2014",
+	// 	pid: "4"
+	// });
+	// results.push({
+	// 	date: "between 1990 and 2010",
+	// 	pid: "5"
+	// });
+
+	var range = [1920, 1925];
+
+	var notinrange = SearchHelper.findRecordsNotInRange(results, range);
+	console.log("test_findRecordsNotInRange:", notinrange);
+
+	res.send(JSON.stringify(notinrange));
 }
 
