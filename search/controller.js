@@ -29,10 +29,6 @@ exports.search = function(req, res) {
 			to: req.query.to
 		} : null;
 
-		console.log("TEST daterange", daterange);
-		console.log("TEST url fr", req.query.from);
-		console.log("TEST url to", req.query.to);
-
 	// Allow empty search to return all results in the repository
 	if(query == "") {
 		query = '*';

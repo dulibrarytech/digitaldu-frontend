@@ -98,7 +98,16 @@ exports.renderRootCollection = function(req, res) {
 				console.log(error);
 			}
 			else {
-				data.facets = Facets.create(facets, config.rootUrl);
+				var facetList = Facets.getFacetList(facets, []);
+
+				// Only show the specified front page display facets, remove others here
+				for(var key in facetList) {
+					if(config.frontPageFacets.includes(key) === false) {
+						delete facetList[key];
+					}
+				}
+
+				data.facets = Facets.create(facetList, config.rootUrl);
 				data.typeCount = Helper.getTypeFacetTotalsObject(facets);
 			}
 			

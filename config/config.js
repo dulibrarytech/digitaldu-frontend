@@ -185,6 +185,8 @@ module.exports = {
         "Collections": "is_member_of_collection"
     },
 
+    frontPageFacets: ["Creator", "Subject", "Type"],
+
     facetOrdering: {
         "Date": "desc"
     },
