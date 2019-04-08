@@ -57,18 +57,27 @@ var formatCollectionFacets = function(collectionFacets, callback) {
     else {
       var pids = [];
       for(var index of collectionFacets) {
-        pids.push(index.key);
+          if(index.facet != config.topLevelCollectionPID) {
+            pids.push(index.key);
+          }
       }
 
-      Discovery.getTitleString(pids, [], function(error, data) {
-
-        for(var index in collectionFacets) {
-          collectionFacets[index].name = data[index].name;
-          collectionFacets[index].facet = pids[index];
-          collectionFacets[index].type = "Collection";
-        }
+      if(pids.length > 1) {
+        Discovery.getTitleString(pids, [], function(error, data) {
+          if(data.length > 0) {
+            for(var index in collectionFacets) {
+              collectionFacets[index].name = data[index].name;
+              collectionFacets[index].facet = pids[index];
+              collectionFacets[index].type = "Collection";
+            }
+          }
+      
+          callback(null);
+        });
+      }
+      else {
         callback(null);
-      });
+      }
     }
 }
 

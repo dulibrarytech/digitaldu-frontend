@@ -59,6 +59,10 @@ exports.getFacetBreadcrumbObject = function(selectedFacets) {
       list[key] = [];
       for(var item of esAggregetions[key].buckets) {
 
+        if(item.key == config.topLevelCollectionPID) {
+            continue;
+        }
+
         // View data
         item.type = key;
         item.facet = item.key;
