@@ -66,6 +66,14 @@
 			return searchUrl;
 		};
 
+		function showAllFacets(facetType) {
+			return window.location.href += "&showAll[]=" + facetType;
+		};
+
+		function showLessFacets(facetType) {
+			return window.location.href.replace("&showAll[]=" + facetType, "");
+		};
+
 	</script>
 
 

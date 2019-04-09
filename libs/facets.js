@@ -15,10 +15,10 @@ const config = require('../config/config');
  * @param 
  * @return 
  */
-exports.create = function(facets, baseUrl) {
+exports.create = function(facets, baseUrl, showAll=[]) {
     var facetObj = {};
     for(var key in facets) {
-        facetObj[key] = createList(key, facets[key], baseUrl);
+        facetObj[key] = createList(key, facets[key], baseUrl, showAll);
     }
     return facetObj;
 };
@@ -104,7 +104,7 @@ exports.getFacetBreadcrumbObject = function(selectedFacets) {
  * @param 
  * @return 
  */
-function createList(facet, data, baseUrl) {
+function createList(facet, data, baseUrl, showAll) {
     var i;
     var html = '';
     
@@ -118,6 +118,14 @@ function createList(facet, data, baseUrl) {
                 html += "";
             }
         }
+
+        if(facet in config.facetLimitsByType && showAll.includes(facet)) {
+            html += '<li><a href="javascript:document.location.href=showLessFacets(\'' + facet + '\')">Show Less</a></li>';
+        }
+        else if(facet in config.facetLimitsByType && showAll.includes(facet) === false) {
+            html += '<li><a href="javascript:document.location.href=showAllFacets(\'' + facet + '\')">Show All</a></li>';
+        }
+
         html += '</ul></div>';
     }
 

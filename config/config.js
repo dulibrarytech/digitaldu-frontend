@@ -55,12 +55,6 @@ module.exports = {
     // Image to display if no thumbnail image exists in the repository
     tnPlaceholderPath: "files/tn-placeholder.jpg",
 
-    // Limit of facet results returned from a search
-    facetLimit: 200,
-    facetLimitsByType: {
-        "Collections": 15 
-    },
-
     /* 
      * Viewer to play audio files
      * [browser | jwplayer | universalviewer | kaltura]
@@ -185,10 +179,19 @@ module.exports = {
         "Collections": "is_member_of_collection"
     },
 
+    /*
+     * Facets to display on the front page
+     */
     frontPageFacets: ["Creator", "Subject", "Type"],
 
     facetOrdering: {
         "Date": "desc"
+    },
+
+    // Limit of facet results returned from a search
+    facetLimit: 200,
+    facetLimitsByType: {
+        "Collections": 15 
     },
 
     /*

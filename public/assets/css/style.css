@@ -563,6 +563,12 @@ div.facets .panel {
     padding: 10px 1px;
 }
 
+div.facet-panel li > a {
+    position: relative;
+    top: 10px;
+    text-decoration:underline;
+}
+
 div.facets .panel span {
     display: inline-block;
 }
