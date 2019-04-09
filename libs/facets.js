@@ -15,10 +15,10 @@ const config = require('../config/config');
  * @param 
  * @return 
  */
-exports.create = function(facets, baseUrl, showAll=[]) {
+exports.create = function(facets, baseUrl, showAll=[], expand=[]) {
     var facetObj = {};
     for(var key in facets) {
-        facetObj[key] = createList(key, facets[key], baseUrl, showAll);
+        facetObj[key] = createList(key, facets[key], baseUrl, showAll, expand);
     }
     return facetObj;
 };
@@ -104,12 +104,18 @@ exports.getFacetBreadcrumbObject = function(selectedFacets) {
  * @param 
  * @return 
  */
-function createList(facet, data, baseUrl, showAll) {
+function createList(facet, data, baseUrl, showAll, expand) {
     var i;
     var html = '';
     
     if(data.length > 0) {
-        html += '<div class="panel facet-panel panel-collapsed"><ul>';
+        if(expand.includes(facet)) {
+            html += '<div id="' + facet + '-window" class="panel facet-panel panel-collapsed" style="display: block"><ul>';
+        }
+        else {
+            html += '<div id="' + facet + '-window" class="panel facet-panel panel-collapsed"><ul>';
+        }
+
         for (i = 0; i < data.length; i++) {
             if(data[i].key != "") {
                 html += '<li><span class="facet-name"><a href="javascript:document.location.href=selectFacet(\'' + facet + '\', \'' + data[i].facet + '\', \'' + baseUrl + '\');">' + data[i].name + '</a></span><span class="facet-count">(' + data[i].doc_count + ')</span></li>';

@@ -2,9 +2,14 @@
 	<!-- dynamic facet list -->
 	<% for(var key in facets) { %>	
 	  <% if(facets[key] != "") { %>
-	  	<button class="accordion" alt="<%= key %>">
-	      <h4><%= key %></h4><i class="fas fa-caret-right facet-caret"></i>
-		</button>
+	  	<% if(expandFacets.includes(key)) { %>
+	  	  <button class="accordion active" alt="<%= key %>" name="<%= key %>_collapsible">
+	  	  	<h4><%= key %></h4><i class="fas fa-caret-down facet-caret"></i>
+	  	<% } else { %>
+	  	  <button class="accordion" alt="<%= key %>" name="<%= key %>_collapsible">
+	  	  	<h4><%= key %></h4><i class="fas fa-caret-right facet-caret"></i>
+	  	<% } %>
+	    </button>
 		<%- facets[key] %>
 	  <% } %>
 	<% } %>
@@ -38,7 +43,15 @@
 
 			// Remove showAll params
 			searchUrl = searchUrl.replace(/&showAll\[\]=[a-zA-Z]+/g, "");
-			
+
+			// // Flag the expanded facet panels for page reload
+			var accordions = document.getElementsByClassName("accordion");
+			for(var i=0; i<accordions.length; i++) {
+				if(accordions[i].classList.contains("active")) {
+					searchUrl += "&expand[]=" + accordions[i].name.replace("_collapsible", "");
+				}
+			}
+
 			return searchUrl;
 		};
 
@@ -70,8 +83,19 @@
 		};
 
 		function showAllFacets(facetType) {
+			var searchUrl = window.location.href;
+
 			document.getElementById("show-facets").innerHTML = "<img src='assets/img/spinner1.gif' height='33' width='33' />";
-			return window.location.href += "&showAll[]=" + facetType;
+
+			// Flag the expanded facet panels for page reload
+			var accordions = document.getElementsByClassName("accordion");
+			for(var i=0; i<accordions.length; i++) {
+				if(accordions[i].classList.contains("active")) {
+					searchUrl += "&expand[]=" + accordions[i].name.replace("_collapsible", "");
+				}
+			}
+
+			return searchUrl += "&showAll[]=" + facetType;
 		};
 
 		function showLessFacets(facetType) {

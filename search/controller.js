@@ -24,6 +24,7 @@ exports.search = function(req, res) {
 		page = req.query.page || 1,
 		collection = req.query.collection || null,
 		showAll = req.query.showAll || [],
+		expandFacets = req.query.expand || [],
 		daterange = req.query.from && req.query.to ? {
 			from: req.query.from,
 			to: req.query.to
@@ -95,7 +96,8 @@ exports.search = function(req, res) {
 			Format.formatFacetDisplay(facetList, function(error, facetList) {
 				Format.formatFacetBreadcrumbs(facets, function(error, facets) {
 					data.results = response.results;
-					data.facets = Facets.create(facetList, config.rootUrl, showAll);	// DEV
+					data.facets = Facets.create(facetList, config.rootUrl, showAll, expandFacets);	// DEV
+					data.expandFacets = expandFacets;
 					data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(facets);  // Param: the facets from the search request params
 					data.pagination = Paginator.create(response.results, data.page, config.maxResultsPerPage, response.count, path);
 
