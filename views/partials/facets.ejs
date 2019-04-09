@@ -36,6 +36,9 @@
 				searchUrl += facetParam;
 			}
 
+			// Remove showAll params
+			searchUrl = searchUrl.replace(/&showAll\[\]=[a-zA-Z]+/g, "");
+			
 			return searchUrl;
 		};
 

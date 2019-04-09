@@ -303,7 +303,7 @@ div.banner-search button {
   width: 28%;
   height: 34px;
   position: relative;
-  top:-1px;
+  top:0px;
   right: 5px;
   background-color: #e5e3e1;
   border-style: solid;
