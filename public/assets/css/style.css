@@ -484,6 +484,7 @@ div.sidebar-search .search-element {
 .welcomeBox .title1 {
     font-size: 43px;
     font-family: 'Oswald';
+    font-weight: 400;
     color: #715657;
     text-transform: uppercase;
     margin-top: -5px;
