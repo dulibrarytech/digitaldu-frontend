@@ -120,10 +120,10 @@ function createList(facet, data, baseUrl, showAll) {
         }
 
         if(facet in config.facetLimitsByType && showAll.includes(facet)) {
-            html += '<li><a href="javascript:document.location.href=showLessFacets(\'' + facet + '\')">Show Less</a></li>';
+            html += '<li id="show-facets"><a href="javascript:document.location.href=showLessFacets(\'' + facet + '\')">Show Less</a></li>';
         }
         else if(facet in config.facetLimitsByType && showAll.includes(facet) === false) {
-            html += '<li><a href="javascript:document.location.href=showAllFacets(\'' + facet + '\')">Show All</a></li>';
+            html += '<li id="show-facets"><a href="javascript:document.location.href=showAllFacets(\'' + facet + '\')">Show All</a></li>';
         }
 
         html += '</ul></div>';
