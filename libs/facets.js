@@ -29,22 +29,27 @@ exports.create = function(facets, baseUrl, showAll=[], expand=[]) {
  * @param 
  * @return 
  */
-exports.getFacetBreadcrumbObject = function(selectedFacets) {
-    var breadcrumbs = [], buckets;
+exports.getFacetBreadcrumbObject = function(selectedFacets, dateRange=null) {
+    var facets = [], dates = [], buckets;
 
     // Create the object to populate the view elements
     for(var key in selectedFacets) {
         buckets = selectedFacets[key];
 
         for(var index of buckets) {
-            breadcrumbs.push({
+            facets.push({
                 type: key,
                 name: index.name,
                 facet: index.facet
             });
         }
-    }
-    return createBreadcrumbTrail(breadcrumbs);
+    }   
+
+    if(dateRange && typeof dateRange.from != 'undefined' && typeof dateRange.to != 'undefined') {
+        dates.push(dateRange);
+    } 
+
+    return createBreadcrumbTrail(facets, dates);
 };
 
 /**
@@ -144,13 +149,16 @@ function createList(facet, data, baseUrl, showAll, expand) {
  * @param 
  * @return 
  */
-function createBreadcrumbTrail(data) {
-    var i;
+function createBreadcrumbTrail(data, dates) {
     var html = '';
-    for (i = 0; i < data.length; i++) {
+    for (var i = 0; i < data.length; i++) {
         html += '<span><a href="javascript:document.location.href=removeFacet(\'' + data[i].type + '\', \'' + data[i].facet + '\');"><strong style="color: red">X</strong></a>&nbsp&nbsp' + data[i].type + '&nbsp&nbsp<strong style="color: green"> > </strong>&nbsp&nbsp' + data[i].name + '</span>';   // good
     }
 
-    return data.length > 0 ? html : null;
+    for (i = 0; i < dates.length; i++) {
+        html += '<span><a href="javascript:document.location.href=removeDateRange(\'' + dates[i].from + '\', \'' + dates[i].to + '\');"><strong style="color: red">X</strong></a>&nbsp&nbspDate Range&nbsp&nbsp<strong style="color: green"> > </strong>&nbsp&nbsp' + dates[i].from + ' - ' + dates[i].to + '</span>';   // good
+    }
+       
+    return (data.length > 0 || dates.length > 0) ? html : null;
 };
 

@@ -96,9 +96,9 @@ exports.search = function(req, res) {
 			Format.formatFacetDisplay(facetList, function(error, facetList) {
 				Format.formatFacetBreadcrumbs(facets, function(error, facets) {
 					data.results = response.results;
-					data.facets = Facets.create(facetList, config.rootUrl, showAll, expandFacets);	// DEV
+					data.facets = Facets.create(facetList, config.rootUrl, showAll, expandFacets);
 					data.expandFacets = expandFacets;
-					data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(facets);  // Param: the facets from the search request params
+					data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(facets, daterange); 
 					data.pagination = Paginator.create(response.results, data.page, config.maxResultsPerPage, response.count, path);
 
 					return res.render('results', data);
