@@ -62,7 +62,7 @@ var formatCollectionFacets = function(collectionFacets, callback) {
           }
       }
 
-      if(pids.length > 1) {
+      if(pids.length >= 1) {
         Discovery.getTitleString(pids, [], function(error, data) {
           if(data.length > 0) {
             for(var index in collectionFacets) {
