@@ -1,0 +1,20 @@
+<form id="daterange-form" action="javascript:submitDateRange()">
+	<label>From:</label>
+	<input type="number" name="from" min="1" max="2050" maxlength="4"/>
+	<label>To:</label>
+	<input type="number" name="to" min="1" max="2050" maxlength="4"/>
+	<button type="submit">Submit</button>
+</form>
+
+<script type="text/javascript">
+	function submitDateRange() {
+		var url = window.location.href + "&" + $("#daterange-form").serialize();
+		return window.location.replace(url);
+	}
+
+	function removeDateRange(from, to) {
+		// Remove the date range from the query string
+		var searchUrl = window.location.href;
+		return searchUrl.replace(/&from=[0-9]+&to=[0-9]+/g, "");
+	}
+</script>
