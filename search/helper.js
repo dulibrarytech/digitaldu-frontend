@@ -114,7 +114,12 @@ exports.getResultsLabel = function(query, facets) {
 exports.findRecordsNotInRange = function(results, range) {
   var records = [], date;
     for(var index of results) {
-      date = index._source.display_record.dates[0].date;   // PROD
+
+      // If index does not have the dates fieid, skip the record.  Date can not be determined, search result will be displayed
+      if(typeof index._source.display_record.dates == 'undefined') {
+        continue;
+      }
+      date = index._source.display_record.dates[0].date || [];   // PROD
       if(isDateInRange(date, range) === false) {
         records.push(index._id);
       }
@@ -154,6 +159,6 @@ var isDateInRange = function(date, range) {
   else {
     inRange = true;
   }
-
+    console.log("TETS in range is T");
   return inRange;
 }

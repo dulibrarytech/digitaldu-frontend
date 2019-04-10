@@ -10,11 +10,15 @@
 
 <div class="row no-side-margin section content">
   <div class="col-md-3">
-    <div class="result-facets facets">
+    <div class="result-facets facets sidebar-section">
       <h4>Limit Your Search</h4>
       <hr>
       <% include partials/facets %>
-
+    </div>
+    <div class="sidebar-section">
+      <h4>Date Range</h4>
+      <hr>
+      <% include partials/daterange-search %>
     </div>
   </div>
 
@@ -61,3 +65,4 @@
 </div>
 
 <% include partials/footer %>
+

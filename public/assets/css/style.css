@@ -830,6 +830,14 @@ div.collection-breadcrumbs a:visited {
 /* End collection grid section */
 
 /* Begin search results */
+form#daterange-form input {
+  margin-right: 25px;
+}
+
+form#daterange-form button {
+  height: 25px;
+}
+
 .results-display {
     margin-top: 60px;
     display: flex;
