@@ -8,7 +8,8 @@
 
 <script type="text/javascript">
 	function submitDateRange() {
-		var url = window.location.href + "&" + $("#daterange-form").serialize();
+		// Add date range to the query string
+		var url = window.location.href.replace(/&from=[0-9]+&to=[0-9]+/g, "") + "&" + $("#daterange-form").serialize();
 		return window.location.replace(url);
 	}
 

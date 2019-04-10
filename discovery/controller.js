@@ -157,6 +157,7 @@ exports.renderCollection = function(req, res) {
 				// Add view data
 				data.pagination = Paginator.create(response.list, page, config.maxCollectionsPerPage, response.count, path);
 				data.facets = Facets.create(facetList, config.rootUrl);
+				data.expandFacets = [];	// TODO get from url if implemented
 				data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(reqFacets);
 				data.collection_breadcrumb_trail = Helper.getCollectionBreadcrumbObject(parentCollections);
 				data.collectionID = pid;

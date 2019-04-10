@@ -159,6 +159,6 @@ var isDateInRange = function(date, range) {
   else {
     inRange = true;
   }
-    console.log("TETS in range is T");
+
   return inRange;
 }

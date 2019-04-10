@@ -831,11 +831,19 @@ div.collection-breadcrumbs a:visited {
 
 /* Begin search results */
 form#daterange-form input {
-  margin-right: 25px;
+  margin-right: 4%;
+  width: 20%;
+  font-size: 13px;
+}
+
+form#daterange-form label {
+  font-size: 13px;
 }
 
 form#daterange-form button {
   height: 25px;
+  font-size: 14px;
+  float: right;
 }
 
 .results-display {
