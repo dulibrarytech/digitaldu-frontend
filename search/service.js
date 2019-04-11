@@ -158,7 +158,7 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
 
     // Query the index
     es.search(data, function (error, response, status) {
-      if (error){
+      if (error || typeof response == 'undefined'){
         callback({status: false, message: error, data: null});
       }
       if(daterange) {

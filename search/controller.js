@@ -66,7 +66,7 @@ exports.search = function(req, res) {
 			}
 		}
 	}
-
+		
 	Service.searchIndex(query, type, facets, collection, page, daterange, function(error, response) {
 
 		var data = {
@@ -98,7 +98,7 @@ exports.search = function(req, res) {
 					data.results = response.results;
 					data.facets = Facets.create(facetList, config.rootUrl, showAll, expandFacets);
 					data.expandFacets = expandFacets;
-					data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(facets, daterange); 
+					data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(facets, daterange, config.rootUrl); 
 					data.pagination = Paginator.create(response.results, data.page, config.maxResultsPerPage, response.count, path);
 
 					return res.render('results', data);
