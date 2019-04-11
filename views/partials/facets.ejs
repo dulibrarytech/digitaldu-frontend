@@ -17,11 +17,7 @@
 	<script type="text/javascript">
 
 		function selectFacet(facetType, facet, baseUrl) {
-
-			// Url encode spaces for querystring
-			facet = facet.replace(' ', '%20');
-
-			var searchUrl = window.location.href,
+			var searchUrl = decodeURIComponent(window.location.href.replace(baseUrl, "")),
 				facetParam = "";
 
 			// Remove page param from url if it is there.  Facet update will show updated results from page 1
@@ -36,29 +32,31 @@
 			}
 			facetParam += "f[" + facetType + "][]=" + facet;
 
-			// Add the selected facet param to the search querystring, if it has not been added yetf
+			// Add the selected facet param to the search querystring, if it has not been added yet
 			if(searchUrl.indexOf(facetParam) <= 0) {
 				searchUrl += facetParam;
 			}
 
-			// Remove showAll params
-			searchUrl = searchUrl.replace(/&showAll\[\]=[a-zA-Z]+/g, "");
-
 			// // Flag the expanded facet panels for page reload
-			var accordions = document.getElementsByClassName("accordion");
+			var accordions = document.getElementsByClassName("accordion"), paramStr;
 			for(var i=0; i<accordions.length; i++) {
-				if(accordions[i].classList.contains("active")) {
-					searchUrl += "&expand[]=" + accordions[i].name.replace("_collapsible", "");
+				paramStr = "&expand[]=" + accordions[i].name.replace("_collapsible", "");
+
+				// If.. AND it does not exist yet
+				if(accordions[i].classList.contains("active") && searchUrl.indexOf(paramStr) <= 0) {
+					searchUrl += paramStr;
+				}
+				else {
+					searchUrl = searchUrl.replace(/&showAll\[\]=[a-zA-Z]+/g, "");
 				}
 			}
 
-			return searchUrl;
+			searchUrl = encodeURI(searchUrl);
+			return baseUrl + searchUrl;
 		};
 
 		function removeFacet(facetType, facet, baseUrl) {
-
-			// Get current search querystring
-			var searchUrl = window.location.href,
+			var searchUrl = decodeURIComponent(window.location.href.replace(baseUrl, "")),
 				facetParam = "";
 
 			// Remove page param from url if it is there.  Facet update will show updated results from page 1
@@ -66,7 +64,7 @@
 
 			// Create the facet parameter string.  Use ? if the url containd no parameters	
 			if(searchUrl.indexOf("?f") > 0) {
-				facetParam += "?f";
+				facetParam += "f";
 			}
 			else {
 				facetParam += "&f";
@@ -74,17 +72,31 @@
 
 			// Get the facet param string to remove from the search querystring
 			facetParam += "[" + facetType + "][]=" + facet;
-			facetParam = facetParam.replace(/\s/g, "%20");
 
 			// Remove the selected facet param from the search querystring
 			searchUrl = searchUrl.replace(facetParam, "");
 
-			return searchUrl;
+			// // Flag the expanded facet panels for page reload
+			var accordions = document.getElementsByClassName("accordion"), paramStr;
+			for(var i=0; i<accordions.length; i++) {
+				paramStr = "&expand[]=" + accordions[i].name.replace("_collapsible", "");
+
+				if(accordions[i].classList.contains("active")) {
+					searchUrl += paramStr;
+				}
+				else {
+					searchUrl = searchUrl.replace(paramStr, "");
+				}
+			}
+
+			searchUrl = encodeURI(searchUrl);
+			return baseUrl + searchUrl;	
 		};
 
 		function showAllFacets(facetType) {
-			var searchUrl = window.location.href;
+			var searchUrl = decodeURIComponent(window.location.href);
 
+			// Show the spinner
 			document.getElementById("show-facets").innerHTML = "<img src='assets/img/spinner1.gif' height='33' width='33' />";
 
 			// Flag the expanded facet panels for page reload
@@ -95,11 +107,13 @@
 				}
 			}
 
-			return searchUrl += "&showAll[]=" + facetType;
+			return encodeURI(searchUrl += "&showAll[]=" + facetType);
 		};
 
 		function showLessFacets(facetType) {
-			return window.location.href.replace("&showAll[]=" + facetType, "");
+			// Remove the showAll parameter for this facet
+			var url = decodeURIComponent(window.location.href);
+			return encodeURI(url.replace("&showAll[]=" + facetType, ""));
 		};
 
 	</script>

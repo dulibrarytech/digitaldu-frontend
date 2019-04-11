@@ -7,15 +7,16 @@
 </form>
 
 <script type="text/javascript">
+	// Add date range to the query string
 	function submitDateRange() {
-		// Add date range to the query string
-		var url = window.location.href.replace(/&from=[0-9]+&to=[0-9]+/g, "") + "&" + $("#daterange-form").serialize();
-		return window.location.replace(url);
+		var decoded = decodeURIComponent(window.location.href);
+		var url = decoded.replace(/&from=[0-9]+&to=[0-9]+/g, "") + "&" + $("#daterange-form").serialize();
+		return window.location.replace(encodeURI(url));
 	}
 
+	// Remove the date range from the query string
 	function removeDateRange(from, to) {
-		// Remove the date range from the query string
-		var searchUrl = window.location.href;
-		return searchUrl.replace(/&from=[0-9]+&to=[0-9]+/g, "");
+		var searchUrl = decodeURIComponent(window.location.href);
+		return encodeURI(searchUrl.replace(/&from=[0-9]+&to=[0-9]+/g, ""));
 	}
 </script>

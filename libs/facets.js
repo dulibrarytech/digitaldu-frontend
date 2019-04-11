@@ -29,7 +29,7 @@ exports.create = function(facets, baseUrl, showAll=[], expand=[]) {
  * @param 
  * @return 
  */
-exports.getFacetBreadcrumbObject = function(selectedFacets, dateRange=null) {
+exports.getFacetBreadcrumbObject = function(selectedFacets, dateRange=null, baseUrl) {
     var facets = [], dates = [], buckets;
 
     // Create the object to populate the view elements
@@ -49,7 +49,7 @@ exports.getFacetBreadcrumbObject = function(selectedFacets, dateRange=null) {
         dates.push(dateRange);
     } 
 
-    return createBreadcrumbTrail(facets, dates);
+    return createBreadcrumbTrail(facets, dates, baseUrl);
 };
 
 /**
@@ -123,7 +123,8 @@ function createList(facet, data, baseUrl, showAll, expand) {
 
         for (i = 0; i < data.length; i++) {
             if(data[i].key != "") {
-                html += '<li><span class="facet-name"><a href="javascript:document.location.href=selectFacet(\'' + facet + '\', \'' + data[i].facet + '\', \'' + baseUrl + '\');">' + data[i].name + '</a></span><span class="facet-count">(' + data[i].doc_count + ')</span></li>';
+                html += '<li><span class="facet-name"><a href="javascript:document.location.href=selectFacet(\'' + facet + '\', \'' + data[i].facet + '\', \'' + baseUrl + '\');">' + data[i].name + '</a></span><span class="facet-count">(' + data[i].doc_count + ')</span></li>';                
+                //html += '<li><span class="facet-name"><a href="#" onclick="selectFacet(\'' + facet + '\', \'' + data[i].facet + '\', \'' + baseUrl + '\');">' + data[i].name + '</a></span><span class="facet-count">(' + data[i].doc_count + ')</span></li>'; //DEV
             }
             else {
                 html += "";
@@ -149,14 +150,16 @@ function createList(facet, data, baseUrl, showAll, expand) {
  * @param 
  * @return 
  */
-function createBreadcrumbTrail(data, dates) {
+function createBreadcrumbTrail(data, dates, baseUrl) {
     var html = '';
     for (var i = 0; i < data.length; i++) {
-        html += '<span><a href="javascript:document.location.href=removeFacet(\'' + data[i].type + '\', \'' + data[i].facet + '\');"><strong style="color: red">X</strong></a>&nbsp&nbsp' + data[i].type + '&nbsp&nbsp<strong style="color: green"> > </strong>&nbsp&nbsp' + data[i].name + '</span>';   // good
+        html += '<span><a href="javascript:document.location.href=removeFacet(\'' + data[i].type + '\', \'' + data[i].facet + '\', \'' + baseUrl + '\');"><strong style="color: red">X</strong></a>&nbsp&nbsp' + data[i].type + '&nbsp&nbsp<strong style="color: green"> > </strong>&nbsp&nbsp' + data[i].name + '</span>';   // good
+        //html += '<span><a href="#" onclick="removeFacet(\'' + data[i].type + '\', \'' + data[i].facet + '\', \'' + baseUrl + '\');"><strong style="color: red">X</strong></a>&nbsp&nbsp' + data[i].type + '&nbsp&nbsp<strong style="color: green"> > </strong>&nbsp&nbsp' + data[i].name + '</span>'; // DEV
     }
 
     for (i = 0; i < dates.length; i++) {
         html += '<span><a href="javascript:document.location.href=removeDateRange(\'' + dates[i].from + '\', \'' + dates[i].to + '\');"><strong style="color: red">X</strong></a>&nbsp&nbspDate Range&nbsp&nbsp<strong style="color: green"> > </strong>&nbsp&nbsp' + dates[i].from + ' - ' + dates[i].to + '</span>';   // good
+        //html += '<span><a href="#" onclick="removeDateRange(\'' + dates[i].from + '\', \'' + dates[i].to + '\');"><strong style="color: red">X</strong></a>&nbsp&nbspDate Range&nbsp&nbsp<strong style="color: green"> > </strong>&nbsp&nbsp' + dates[i].from + ' - ' + dates[i].to + '</span>'; // DEV
     }
        
     return (data.length > 0 || dates.length > 0) ? html : null;

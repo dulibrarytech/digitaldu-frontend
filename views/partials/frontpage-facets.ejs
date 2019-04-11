@@ -102,26 +102,22 @@
           break;
       }
 
-      // Url encode spaces for querystring
-      facet = facet.replace(' ', '%20');
-
       // Get search querystring
-      var searchUrl = baseurl + "/search?type=all&q=&f[" + facetType + "][]=" + facet;
-      return searchUrl;
+      var searchUrl = encodeURI("/search?type=all&q=&f[" + facetType + "][]=" + facet);
+      return baseurl + searchUrl;
     };
 
     function removeFacet(facetType, facet) {
 
       // Get the facet param string to remove from the search querystring
       var facetParam = "&f[" + facetType + "][]=" + facet;
-      facetParam = facetParam.replace(/\s/g, "%20");
 
       // Get current search querystring
-      url = window.location.href;
+      var searchUrl = decodeURIComponent(window.location.href.replace(baseUrl, ""))
 
       // Remove the selected facet param from the search querystring
-      var searchUrl = url.replace(facetParam, "");
-      return searchUrl;
+      var searchUrl = encodeURI(url.replace(facetParam, ""));
+      return baseUrl + searchUrl;
     };
   </script>
 </div>
