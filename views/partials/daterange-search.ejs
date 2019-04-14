@@ -10,6 +10,7 @@
 	// Add date range to the query string
 	function submitDateRange() {
 		var decoded = decodeURIComponent(window.location.href);
+		decoded = updateUrlExpandParams(decoded);
 		var url = decoded.replace(/&from=[0-9]+&to=[0-9]+/g, "") + "&" + $("#daterange-form").serialize();
 		return window.location.replace(encodeURI(url));
 	}
@@ -17,6 +18,7 @@
 	// Remove the date range from the query string
 	function removeDateRange(from, to) {
 		var searchUrl = decodeURIComponent(window.location.href);
+		searchUrl = updateUrlExpandParams(searchUrl);
 		return encodeURI(searchUrl.replace(/&from=[0-9]+&to=[0-9]+/g, ""));
 	}
 </script>

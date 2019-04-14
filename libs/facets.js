@@ -120,7 +120,7 @@ function createList(facet, data, baseUrl, showAll, expand) {
         else {
             html += '<div id="' + facet + '-window" class="panel facet-panel panel-collapsed"><ul>';
         }
-
+        
         for (i = 0; i < data.length; i++) {
             if(data[i].key != "") {
                 html += '<li><span class="facet-name"><a href="javascript:document.location.href=selectFacet(\'' + facet + '\', \'' + data[i].facet + '\', \'' + baseUrl + '\');">' + data[i].name + '</a></span><span class="facet-count">(' + data[i].doc_count + ')</span></li>';                

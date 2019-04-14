@@ -37,20 +37,7 @@
 				searchUrl += facetParam;
 			}
 
-			// // Flag the expanded facet panels for page reload
-			var accordions = document.getElementsByClassName("accordion"), paramStr;
-			for(var i=0; i<accordions.length; i++) {
-				paramStr = "&expand[]=" + accordions[i].name.replace("_collapsible", "");
-
-				// If.. AND it does not exist yet
-				if(accordions[i].classList.contains("active") && searchUrl.indexOf(paramStr) <= 0) {
-					searchUrl += paramStr;
-				}
-				else {
-					searchUrl = searchUrl.replace(/&showAll\[\]=[a-zA-Z]+/g, "");
-				}
-			}
-
+			searchUrl = updateUrlExpandParams(searchUrl);
 			searchUrl = encodeURI(searchUrl);
 			return baseUrl + searchUrl;
 		};
@@ -75,20 +62,8 @@
 
 			// Remove the selected facet param from the search querystring
 			searchUrl = searchUrl.replace(facetParam, "");
-
-			// // Flag the expanded facet panels for page reload
-			var accordions = document.getElementsByClassName("accordion"), paramStr;
-			for(var i=0; i<accordions.length; i++) {
-				paramStr = "&expand[]=" + accordions[i].name.replace("_collapsible", "");
-
-				if(accordions[i].classList.contains("active")) {
-					searchUrl += paramStr;
-				}
-				else {
-					searchUrl = searchUrl.replace(paramStr, "");
-				}
-			}
-
+			
+			searchUrl = updateUrlExpandParams(searchUrl);
 			searchUrl = encodeURI(searchUrl);
 			return baseUrl + searchUrl;	
 		};
@@ -98,21 +73,14 @@
 
 			// Show the spinner
 			document.getElementById("show-facets").innerHTML = "<img src='assets/img/spinner1.gif' height='33' width='33' />";
-
-			// Flag the expanded facet panels for page reload
-			var accordions = document.getElementsByClassName("accordion");
-			for(var i=0; i<accordions.length; i++) {
-				if(accordions[i].classList.contains("active")) {
-					searchUrl += "&expand[]=" + accordions[i].name.replace("_collapsible", "");
-				}
-			}
-
+			searchUrl = updateUrlExpandParams(searchUrl);
 			return encodeURI(searchUrl += "&showAll[]=" + facetType);
 		};
 
 		function showLessFacets(facetType) {
 			// Remove the showAll parameter for this facet
 			var url = decodeURIComponent(window.location.href);
+			url = updateUrlExpandParams(url);
 			return encodeURI(url.replace("&showAll[]=" + facetType, ""));
 		};
 
