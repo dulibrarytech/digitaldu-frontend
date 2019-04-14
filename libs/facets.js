@@ -112,7 +112,7 @@ exports.getFacetBreadcrumbObject = function(selectedFacets, dateRange=null, base
 function createList(facet, data, baseUrl, showAll, expand) {
     var i;
     var html = '';
-    
+
     if(data.length > 0) {
         if(expand.includes(facet)) {
             html += '<div id="' + facet + '-window" class="panel facet-panel panel-collapsed" style="display: block"><ul>';
@@ -131,11 +131,14 @@ function createList(facet, data, baseUrl, showAll, expand) {
             }
         }
 
-        if(facet in config.facetLimitsByType && showAll.includes(facet)) {
-            html += '<li id="show-facets"><a href="javascript:document.location.href=showLessFacets(\'' + facet + '\')">Show Less</a></li>';
-        }
-        else if(facet in config.facetLimitsByType && showAll.includes(facet) === false) {
-            html += '<li id="show-facets"><a href="javascript:document.location.href=showAllFacets(\'' + facet + '\')">Show All</a></li>';
+        // If there is a length limit on this facet, and the facet list returned has more facets than the length limit, add the show all link
+        if(facet in config.facetLimitsByType && data.length >= config.facetLimitsByType[facet]) {
+            if(showAll.includes(facet)) {
+                html += '<li id="show-facets"><a href="javascript:document.location.href=showLessFacets(\'' + facet + '\')">Show Less</a></li>';
+            }
+            else if(showAll.includes(facet) === false) {
+                html += '<li id="show-facets"><a href="javascript:document.location.href=showAllFacets(\'' + facet + '\')">Show All</a></li>';
+            }
         }
 
         html += '</ul></div>';
