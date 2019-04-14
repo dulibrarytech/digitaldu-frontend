@@ -214,28 +214,18 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
             collection.facets = response.aggregations;
             collection.count = response.hits.total;
 
-            // Get the child object facets
-            getFacets(collectionID, function(error, facets) {
+            // Get this collection's title
+            fetchObjectByPid(collectionID, function(error, object) {
               if(error) {
+                collection.title = "";
                 callback(error, []);
               }
+              else if(object.object_type != "collection") {
+                callback("Invalid collection: " + object.pid, []);
+              }
               else {
-                collection.facets = facets;
-
-                // Get this collection's title
-                fetchObjectByPid(collectionID, function(error, object) {
-                  if(error) {
-                    collection.title = "";
-                    callback(error, []);
-                  }
-                  else if(object.object_type != "collection") {
-                    callback("Invalid collection: " + object.pid, []);
-                  }
-                  else {
-                    collection.title = object.title[0];
-                    callback(null, collection);
-                  }
-                });
+                collection.title = object.title[0];
+                callback(null, collection);
               }
             });
           }
