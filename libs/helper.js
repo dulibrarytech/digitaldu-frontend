@@ -5,3 +5,7 @@ exports.testObject = function(object) {
 exports.isParentObject = function(object) {
   return typeof object.children != 'undefined';
 }
+
+exports.isObjectEmpty = function(object) {
+	return (Object.entries(object).length === 0 && object.constructor === Object)
+}

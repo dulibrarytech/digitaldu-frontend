@@ -144,11 +144,18 @@ exports.renderCollection = function(req, res) {
 				data.current_collection_title = "Error";
 			}
 			else {
+
+				// Get the list of facets for this collection, remove the 'Collections' facets (Can re-add this field, if we ever show facets for nested collections: 
+				// ie there will be multiple collections facets present when one collection is open)
 				var facetList = Facets.getFacetList(response.facets, showAll);
 				delete facetList.Collections;
+
+				// This variable should always be null here, as rendering the collection view is separate from a keyword search and no request facets should be present here.  
+				// The below code is to prevent a potential crash of the appication, just in case
 				if(reqFacets) {
 					reqFacets = Facets.getSearchFacetObject(reqFacets);
 				}
+
 				// Add collections and collection data	
 				data.collections = response.list;
 				data.current_collection = pid;
@@ -162,6 +169,11 @@ exports.renderCollection = function(req, res) {
 				data.collection_breadcrumb_trail = Helper.getCollectionBreadcrumbObject(parentCollections);
 				data.collectionID = pid;
 				data.searchFields = config.searchFields;
+
+				// If there are no facets to display, set to null so the view does not show the facets section
+				if(AppHelper.isObjectEmpty(data.facets)) {
+					data.facets = null;
+				}
 			}
 
 			return res.render('collection', data);
@@ -180,7 +192,6 @@ exports.renderObjectView = function(req, res) {
 		root_url: config.rootUrl
 	};
 
-	// let regex = /[a-zA-Z]*[:_][0-9]*/;
 	// if(!req.params.pid || /[a-zA-Z]*[:_][0-9]*/.test(req.params.pid) === false) {
 	// 	return res.sendStatus(400);
 	// }

@@ -18,7 +18,9 @@ const config = require('../config/config');
 exports.create = function(facets, baseUrl, showAll=[], expand=[]) {
     var facetObj = {};
     for(var key in facets) {
-        facetObj[key] = createList(key, facets[key], baseUrl, showAll, expand);
+        if(facets[key].length > 0) {
+            facetObj[key] = createList(key, facets[key], baseUrl, showAll, expand);
+        }
     }
     return facetObj;
 };
