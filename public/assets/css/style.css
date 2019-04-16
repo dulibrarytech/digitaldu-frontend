@@ -667,6 +667,7 @@ div.facet-breadcrumbs span {
     margin: 0 auto 5px auto;
     color: #222;
     white-space: normal;
+    display: inline-block;
 }
 
 div.facet-breadcrumbs span:not(:first-child) {
