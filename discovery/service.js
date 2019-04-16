@@ -430,7 +430,7 @@ var getTitleString = function(pids, titles, callback) {
     else {
 
       titles.push({
-        name: response ? response.title[0] : "Untitled",
+        name: response ? response.title[0] : pid,
         pid: pid
       });
 
