@@ -116,33 +116,45 @@ exports.findRecordsNotInRange = function(results, range) {
     for(var index of results) {
 
       // If index does not have the dates fieid, skip the record.  Date can not be determined, search result will be displayed
-      if(typeof index._source.display_record.dates == 'undefined') {
-        continue;
-      }
-      date = index._source.display_record.dates[0].date || [];   // PROD
-      if(isDateInRange(date, range) === false) {
-        records.push(index._id);
+      if(typeof index._source.display_record.dates != 'undefined') {
+        date = index._source.display_record.dates[0].date || [];   // PROD
+        if(isDateInRange(date, range) === false) {
+          records.push(index._id);
+        }
       }
     }
 
   return records;
 }
 
+// Update for new index, vocabulary specific
+// Using the new begin and end dates in the index (separate from the display data)
 var isDateInRange = function(date, range) {
   var inRange = false;
 
   var dateElements = date.split(" "),
       dates = [];
 
-  for(var i=0; i<dateElements.length; i++) {
-    if(!isNaN(dateElements[i]) && dates.length < 2) {
-      dates.push(parseInt(dateElements[i]))
-    }
-    else if(isNaN(dateElements[i])) {
-      continue;
-    }
-    else {
-      break;
+  // Handle "circa", create date range +/- 5 years
+  if(date.toLowerCase().includes("circa")) {
+    date = date.match(/[0-9][0-9][0-9][0-9]/g);
+    dates.push(parseInt(date[0])-5);  // Begin dste
+    dates.push(parseInt(date[0])+5);  // End date
+  }
+
+  // Use the first appearing year as the start of the date range, use the second for the end
+  // If one date appears, treat as single
+  else {
+    for(var i=0; i<dateElements.length; i++) {
+      if(!isNaN(dateElements[i]) && dates.length < 2) {
+        dates.push(parseInt(dateElements[i]))
+      }
+      else if(isNaN(dateElements[i])) {
+        continue;
+      }
+      else {
+        break;
+      }
     }
   }
 
