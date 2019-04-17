@@ -246,23 +246,12 @@ exports.renderObjectView = function(req, res) {
 					}
 
 					// Get titles of any collection parents
-					Service.getTitleString(object.is_member_of_collection, [], function(error, titleData) {
+					Service.getTitleString(object.is_member_of_collection, [], function(error, collectionTitles) {
 						if(error) {
 							console.log(error);
 						}
-						// Add the titles of the parent collections to the mods display, if any
-						let titles = [];
-						for(var title of titleData) {
-							titles.push('<a href="' + config.rootUrl + '/collection/' + title.pid + '">' + title.name + '</a>');
-						}
-						if(titles.length > 0) {
-							data.mods = {
-								'In Collections': titles
-							}
-						}
-
 						// Add summary data and object metadata to the mods display
-						data.summary = Metadata.createSummaryDisplayObject(object);
+						data.summary = Metadata.createSummaryDisplayObject(object, collectionTitles);
 						data.mods = Object.assign(data.mods, Metadata.createMetadataDisplayObject(object));
 						renderView(data);
 					});

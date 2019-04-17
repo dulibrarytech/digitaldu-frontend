@@ -57,10 +57,22 @@ exports.createSummaryDisplayObject = function(result) {
  * @param 
  * @return 
  */
-exports.createMetadataDisplayObject = function(result) {
+exports.createMetadataDisplayObject = function(result, collections=[]) {
 	var displayObj = {},
 	    displayFields = config.metadataDisplay,
 		displayRecord = {};
+
+	// Add the collections to the metadata display
+	// Add the titles of the parent collections to the mods display, if any
+	let titles = [];
+	for(var collection of collections) {
+		titles.push('<a href="' + config.rootUrl + '/collection/' + collection.pid + '">' + collection.name + '</a>');
+	}
+	if(titles.length > 0) {
+		data.mods = {
+			'In Collections': titles
+		}
+	}
 
 	// Get metadata object from result display record json
 	if(result.display_record && typeof result.display_record == "string") {
@@ -246,7 +258,7 @@ exports.createMetadataDisplayObject = function(result) {
 	}
 
 	if(Object.keys(displayObj).length === 0 && displayObj.constructor === Object) {
-		displayObj["No display available"] = "";
+		displayObj["No metadata available"] = "";
 	}
 
 	return displayObj;
