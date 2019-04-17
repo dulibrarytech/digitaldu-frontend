@@ -176,7 +176,9 @@ module.exports = {
 
         // Index v1 display record fields
         "Date": "display_record.originInfo.d_created",
-        "Collections": "is_member_of_collection"
+        "Collections": "is_member_of_collection",
+
+        "Authority ID": "display_record.subjects.authority_id"
     },
 
     /*
@@ -205,20 +207,28 @@ module.exports = {
 
     /*
      * MODS fields to display in the Details section
-     * "Display field name": "index field"
+     * Must be valid json, can be application managed in the future (admin)
+     * "Display record key": "Display record value"
      */
-    metadataDisplay: {
-        "Title": ["title"],
-        "Creator": {"field": "name", "data": "namePart", "id": {"role": "creator"}},
-        "Corporate Creator": "nameCorporate",
-        "Publisher": "publisher",
-        "Type": "typeOfResource",
-        "Genre": "genre",
-        "Topic": "subjectTopic",
-        "Identifier": "identifier",
-        "Language": "language",
-        "Access Condition": "accessCondition",
-        "Subject": "subject"
+    metadataDisplayValues: {
+        "Title": '{"title": ["VALUE"]}',
+        "Creator": '{"name": [ { "namePart": "VALUE", "role": "creator" } ]}',
+        "Abstract": "abstract",
+        "Type": '{"typeOfResource":"VALUE"}',
+        "Publisher": '{"originInfo":[{"publisher": "VALUE"}]}',
+        "Place": '{"originInfo":[{"place": "VALUE"}]}',
+        "Date Created": '{"originInfo":[{"d_created": "VALUE"}]}',
+        "Date Issued": '{"originInfo":[{"d_issued": "VALUE"}]}',
+        "Subject": '{"subject":[ { "namePart": "VALUE" }]}',
+        "Topic": '{"subject": [ { "topic": "VALUE" } ]}',
+        "Genre": '{"subject": [ { "genre": "VALUE" } ]}',
+        "Geographic": '{"subject": [ { "geographic": "VALUE" } ]}',
+        "Origin": '{"physicalDescription":[ { "digitalOrigin": "VALUE" }]}',
+        "Extent": '{"physicalDescription":[ { "extent": "VALUE" }]}',
+        "Form": '{"physicalDescription":[ { "form": "VALUE" }]}',
+        "Local Identifier": '{"identifier":"VALUE"}',
+        "Access Condition": '{"accessCondition":"VALUE"}',
+        "Handle": '{"location":[ { "url": "VALUE" } ]}'
     },
 
     /*

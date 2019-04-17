@@ -538,6 +538,8 @@ exports.getManifestObject = function(pid, callback) {
             resourceUrl: resourceUrl,
             thumbnailUrl: config.rootUrl + "/datastream/" + object.children[key].url + "/" + Helper.getDsType("thumbnail")
           });
+
+          // ^^ Parts data (caption) ?
         }
       }
 
@@ -556,6 +558,8 @@ exports.getManifestObject = function(pid, callback) {
           resourceUrl: resourceUrl,
           thumbnailUrl: config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType("thumbnail")
         });
+
+        // ^^ Parts data (caption)   ?
       }
 
       IIIF.getManifest(container, children, function(error, manifest) {

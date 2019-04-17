@@ -251,8 +251,8 @@ exports.renderObjectView = function(req, res) {
 							console.log(error);
 						}
 						// Add summary data and object metadata to the mods display
-						data.summary = Metadata.createSummaryDisplayObject(object, collectionTitles);
-						data.mods = Object.assign(data.mods, Metadata.createMetadataDisplayObject(object));
+						data.summary = Metadata.createSummaryDisplayObject(object);
+						data.mods = Object.assign(data.mods, Metadata.createMetadataDisplayObject(object, collectionTitles));
 						renderView(data);
 					});
 				}
