@@ -11,8 +11,8 @@ const Discovery = require('../discovery/service.js'),
  * Add custom format functions here
  */
 exports.formatFacetDisplay = function(object, callback) {
-  formatDateFacets(object["Date"]);
-  formatCollectionFacets(object["Collections"], function(error) {
+  formatDateFacets(object["Date"] || []);
+  formatCollectionFacets(object["Collections"] || [], function(error) {
     if(error) {
       callback(error, null);
     }
@@ -27,7 +27,8 @@ exports.formatFacetBreadcrumbs = function(object, callback) {
     callback(null, {});
   }
   else {
-      formatCollectionBreadcrumbs(object["Collections"], function(error) {
+      formatDateFacets(object["Date"] || []);
+      formatCollectionBreadcrumbs(object["Collections"] || [], function(error) {
          callback(null, object);
       });
   }
@@ -41,12 +42,20 @@ var exampleFormatter = function(object) {
 }
 
 var formatDateFacets = function(dateFacets) {
-    for(var index of dateFacets) {
-      // TODO 
-      // Regex for common date entries
-      // Normalize to one format:  detect, convert
-      // Leave in place but do not format outlier formats (Can add regex for uncommon outliers in future
-    }
+    var dates = [];
+    // for(var index of dateFacets) {
+      
+    //   // Isolate the year from mm/dd/yyyy entries
+    //   if(index.facet.indexOf("/") >= 0) {
+    //     index.name = index.facet.replace(/[0-9]+\//g, "");
+    //   }
+
+    //   // Remove non numeric characters and spaces
+    //   else {
+    //     index.name = index.facet.replace(/[a-zA-Z]+\ +/g, "");
+    //   }
+    // }
+
     return dateFacets;
 }
 

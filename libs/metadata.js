@@ -87,29 +87,28 @@ exports.createMetadataDisplayObject = function(result, collections=[]) {
 
 	// Build the disply from the configuration settings
 	for(var key in displayFields) {
-		var obj, record, insert=true, showValue;
+		var displayFieldsObject, recordItem, insert=true, showValue;
 
 		if(displayFields[key][0] == "{") {
-			obj = JSON.parse(displayFields[key]);
+			displayFieldsObject = JSON.parse(displayFields[key]);
 
-			for(var subKey in obj) {	// Should only be 1 at first
-				record = displayRecord[subKey];
+			for(var subKey in displayFieldsObject) {	// Should only be 1 at first
+				recordItem = displayRecord[subKey];
 
-				if(typeof record[0] == "string") {
-					displayObj[key] = record;
+				if(typeof recordItem[0] == "string") {
+					displayObj[key] = recordItem;
 				}
 
-				else if(typeof record[0] == "object") {
+				else if(typeof recordItem[0] == "object") {
 					showValue = [];
-					for(var index in record) {
-						for(var data in obj[subKey][0]) {
-							if(record[index][data] != obj[subKey][0][data] && obj[subKey][0][data].toLowerCase() != "value") {
-								console.log("OK");
+					for(var index in recordItem) {
+						for(var data in displayFieldsObject[subKey][0]) {
+							if(recordItem[index][data] != displayFieldsObject[subKey][0][data] && displayFieldsObject[subKey][0][data].toLowerCase() != "value") {
 								insert = false;
 							}
 
-							if(obj[subKey][0][data].toLowerCase() == "value") {
-								showValue.push(record[index][data]);
+							if(displayFieldsObject[subKey][0][data].toLowerCase() == "value") {
+								showValue.push(recordItem[index][data]);
 							}
 						}
 					}
