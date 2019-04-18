@@ -196,6 +196,21 @@ module.exports = {
         "Collections": 15 
     },
 
+    facetLabelNormalization: {
+        "Type": {
+            "Still Image": ["still image"],
+            "Moving Image": ["moving image", "moving_image"],
+            "Text": ["text"],
+            "Sound Recording": ["sound recording", "sound recording,[object Object]"],
+            "Music Recording": ["sound recording-musical"],
+            "Nonmusic Recording": ["sound recording-nonmusical"],
+            "Map": ["cartographic"],
+            "Mixed Material": ["mixed material"],
+            "3D Object": ["three dimensional object", "three dimensional object,[object Object]"],
+            "Unknown": ["[object Object]"]
+        }
+    },
+
     /*
      * Fields to display in the summary data section (above Details link)
      * "Display field name": "index field key to match"

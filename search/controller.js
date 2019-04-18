@@ -100,7 +100,6 @@ exports.search = function(req, res) {
 					data.expandFacets = expandFacets;
 					data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(facets, daterange, config.rootUrl); 
 					data.pagination = Paginator.create(response.results, data.page, config.maxResultsPerPage, response.count, path);
-
 					return res.render('results', data);
 				});
 			});

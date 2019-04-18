@@ -7,10 +7,18 @@
 const Discovery = require('../discovery/service.js'),
       config = require('../config/config.js');
 
+var exampleFormatter = function(object) {
+  for(var key of object) {
+    // Do something
+  }
+  return object;
+}
+
 /*
  * Add custom format functions here
  */
 exports.formatFacetDisplay = function(object, callback) {
+  formatTypeFacets(object["Type"] || []);
   formatDateFacets(object["Date"] || []);
   formatCollectionFacets(object["Collections"] || [], function(error) {
     if(error) {
@@ -34,11 +42,17 @@ exports.formatFacetBreadcrumbs = function(object, callback) {
   }
 }
 
-var exampleFormatter = function(object) {
-  for(var key of object) {
-    // Do something
-  }
-  return object;
+var formatTypeFacets = function(typeFacets) {
+    var types = [];
+    for(var index of typeFacets) {
+      for(var key in config.facetLabelNormalization.Type) {
+        if(config.facetLabelNormalization.Type[key].includes(index.facet)) {
+          index.name = key;
+        }
+      }
+    }
+
+    return typeFacets;
 }
 
 var formatDateFacets = function(dateFacets) {
