@@ -213,6 +213,7 @@ module.exports = {
     metadataDisplayValues: {
         "Title": '{"title": ["VALUE"]}',
         "Creator": '{"name": [ { "namePart": "VALUE", "role": "creator" } ]}',
+        "Corporate Creator": '{"name": [ { "namePart": "VALUE", "role": "corporate" } ]}',
         "Abstract": "abstract",
         "Type": '{"typeOfResource":"VALUE"}',
         "Publisher": '{"originInfo":[{"publisher": "VALUE"}]}',

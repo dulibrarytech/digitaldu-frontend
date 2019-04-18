@@ -82,7 +82,7 @@ exports.createMetadataDisplayObject = function(result, collections=[]) {
 		}
 	}
 	else if(result.display_record && typeof result.display_record == "object") {
-		displayRecord = result.display_record;
+		displayRecord = result.display_record || {};
 	}
 
 	// Build the disply from the configuration settings
@@ -90,10 +90,10 @@ exports.createMetadataDisplayObject = function(result, collections=[]) {
 		var displayFieldsObject, recordItem, insert=true, showValue;
 
 		if(displayFields[key][0] == "{") {
-			displayFieldsObject = JSON.parse(displayFields[key]);
+			displayFieldsObject = JSON.parse(displayFields[key]) || {};
 
 			for(var subKey in displayFieldsObject) {	// Should only be 1 at first
-				recordItem = displayRecord[subKey];
+				recordItem = displayRecord[subKey] || [];
 
 				if(typeof recordItem[0] == "string") {
 					displayObj[key] = recordItem;
@@ -107,12 +107,13 @@ exports.createMetadataDisplayObject = function(result, collections=[]) {
 								insert = false;
 							}
 
-							if(displayFieldsObject[subKey][0][data].toLowerCase() == "value") {
+							if(displayFieldsObject[subKey][0][data].toLowerCase() == "value" &&
+								typeof recordItem[index][data] != "undefined") {
 								showValue.push(recordItem[index][data]);
 							}
 						}
 					}
-					if(insert) {
+					if(insert && showValue.length > 0) {
 						displayObj[key] = showValue;
 					}
 				}
@@ -126,6 +127,6 @@ exports.createMetadataDisplayObject = function(result, collections=[]) {
 	if(Object.keys(displayObj).length === 0 && displayObj.constructor === Object) {
 		displayObj["No metadata available"] = "";
 	}
-
+		
 	return displayObj;
 }
