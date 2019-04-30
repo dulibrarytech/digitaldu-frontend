@@ -16,7 +16,8 @@ const async = require('async'),
     Facets = require('../libs/facets'),
     Paginator = require('../libs/paginator'),
     Metadata = require('../libs/metadata'),
-    Search = require('../search/service');
+    Search = require('../search/service'),
+    Format = require("../libs/format");
 
 exports.getFacets = function(req, res) {
     Service.getFacets(null, function(error, facets) {
@@ -142,6 +143,7 @@ exports.renderCollection = function(req, res) {
 				console.log(error);
 				data.error = "Could not open collection.";
 				data.current_collection_title = "Error";
+				return res.render('collection', data);
 			}
 			else {
 
@@ -156,27 +158,29 @@ exports.renderCollection = function(req, res) {
 					reqFacets = Facets.getSearchFacetObject(reqFacets);
 				}
 
-				// Add collections and collection data	
-				data.collections = response.list;
-				data.current_collection = pid;
-				data.current_collection_title = response.title || "Untitled";
+				Format.formatFacetDisplay(facetList, function(error, facetList) {
+					// Add collections and collection data	
+					data.collections = response.list;
+					data.current_collection = pid;
+					data.current_collection_title = response.title || "Untitled";
 
-				// Add view data
-				data.pagination = Paginator.create(response.list, page, config.maxCollectionsPerPage, response.count, path);
-				data.facets = Facets.create(facetList, config.rootUrl);
-				data.expandFacets = [];	// TODO get from url if implemented
-				data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(reqFacets, null, config.rootUrl);
-				data.collection_breadcrumb_trail = Helper.getCollectionBreadcrumbObject(parentCollections);
-				data.collectionID = pid;
-				data.searchFields = config.searchFields;
+					// Add view data
+					data.pagination = Paginator.create(response.list, page, config.maxCollectionsPerPage, response.count, path);
+					data.facets = Facets.create(facetList, config.rootUrl);
+					data.expandFacets = [];	// TODO get from url if implemented
+					data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(reqFacets, null, config.rootUrl);
+					data.collection_breadcrumb_trail = Helper.getCollectionBreadcrumbObject(parentCollections);
+					data.collectionID = pid;
+					data.searchFields = config.searchFields;
 
-				// If there are no facets to display, set to null so the view does not show the facets section
-				if(AppHelper.isObjectEmpty(data.facets)) {
-					data.facets = null;
-				}
+					// If there are no facets to display, set to null so the view does not show the facets section
+					if(AppHelper.isObjectEmpty(data.facets)) {
+						data.facets = null;
+					}
+
+					return res.render('collection', data);
+				});
 			}
-
-			return res.render('collection', data);
 		});
 	});
 }

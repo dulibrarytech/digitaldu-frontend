@@ -7,5 +7,10 @@ exports.isParentObject = function(object) {
 }
 
 exports.isObjectEmpty = function(object) {
-	return (Object.entries(object).length === 0 && object.constructor === Object)
+	//return (Object.entries(object).length === 0 && object.constructor === Object)
+	for(var key in object) {
+        if(object.hasOwnProperty(key))
+            return false;
+    }
+    return true;
 }
