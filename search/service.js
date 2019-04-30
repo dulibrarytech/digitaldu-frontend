@@ -43,7 +43,8 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
       let qtemp = query;
       query = {
         "query": qtemp,
-        "operator": "and"
+        "operator": "and",
+        "fuzziness": "AUTO"
       }
       queryType = "match";
     }
@@ -119,8 +120,8 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
           "must": matchFacetFields,
           "must_not": restrictions,
           "filter": {
-            "bool": {  // Why using this bool?
-              "should": matchFields   // must here?  
+            "bool": {
+              "should": matchFields
             }
           }
         }
