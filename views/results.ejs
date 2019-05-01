@@ -29,7 +29,22 @@
     <% } else { %>
 
       <% if(query.length >= 0) { %>
-        <h4>Results for: <span><%- query %></span></h4>
+        <div class="search-results-menu">
+          <div class="search-terms-label">
+            <h4>Results for: <span><%- query %></span></h4>
+          </div>
+          <div class="search-results-form">
+            <select id="results-per-page" class="form-control">
+                <% for (var i = 0; i < perPageCountOptions.length; i++) { %>
+                  <% if(perPageCountOptions[i] == pageSize) { %>
+                    <option value="<%= perPageCountOptions[i] %>" selected><%= perPageCountOptions[i] %> per page</option>
+                  <% } else { %>
+                    <option value="<%= perPageCountOptions[i] %>"><%= perPageCountOptions[i] %> per page</option>
+                  <% } %>
+                <% } %>
+            </select>
+          </div>
+        </div>
       <% } %>
 
       <hr>

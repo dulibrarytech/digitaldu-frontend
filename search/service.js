@@ -20,7 +20,7 @@ const es = require('../config/index'),
  * @param 
  * @return 
  */
-exports.searchIndex = function(query, type, facets=null, collection=null, pageNum=1, daterange=null, callback) {
+exports.searchIndex = function(query, type, facets=null, collection=null, pageNum=1, pageSize=10, daterange=null, callback) {
 
     var field = { match: "" },
         matchFields = [], matchFacetFields = [], results = [], restrictions = [],
@@ -150,8 +150,8 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
       index: config.elasticsearchIndex,
       type: config.searchIndexName,
       body: {
-        from : (pageNum - 1) * config.maxResultsPerPage, 
-        size : config.maxResultsPerPage,
+        from : (pageNum - 1) * pageSize, 
+        size : pageSize,
         query: queryObj,
         aggregations: facetAggregations
       }

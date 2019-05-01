@@ -837,7 +837,7 @@ div.collection-breadcrumbs a:visited {
 
 /* Begin search results */
 form#daterange-form input {
-  margin-right: 4%;
+  margin: 0 4% 0 2%;
   width: 20%;
   font-size: 13px;
 }
@@ -847,7 +847,6 @@ form#daterange-form label {
 }
 
 form#daterange-form button {
-  height: 25px;
   font-size: 14px;
   float: right;
 }
@@ -864,15 +863,19 @@ div.results-display h4 {
     margin-bottom: 0;
 }
 
-div.results-display .content-col-9 {
-    /*margin-left: 40px;*/
+div.search-results-menu > div {
+    display: inline-block;
+}
+
+div.search-results-form {
+  margin-left: 20px;
 }
 
 div#search-results-wrapper h4 {
   margin-top: 0;
 }
 
-div#search-results-wrapper > h4 span {
+div#search-results-wrapper h4 span {
   font-weight: normal;
   margin-left: 15px;
   font-size: 16px;

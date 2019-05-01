@@ -22,6 +22,7 @@ exports.search = function(req, res) {
 		facets = req.query.f || null,
 		typeVal = req.query.type || "all", type,
 		page = req.query.page || 1,
+		pageSize = req.query.resultsPerPage || config.maxResultsPerPage,
 		collection = req.query.collection || null,
 		showAll = req.query.showAll || [],
 		expandFacets = req.query.expand || [],
@@ -67,7 +68,7 @@ exports.search = function(req, res) {
 		}
 	}
 		
-	Service.searchIndex(query, type, facets, collection, page, daterange, function(error, response) {
+	Service.searchIndex(query, type, facets, collection, page, pageSize, daterange, function(error, response) {
 
 		var data = {
 			error: null,
@@ -100,6 +101,10 @@ exports.search = function(req, res) {
 					data.expandFacets = expandFacets;
 					data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(facets, daterange, config.rootUrl); 
 					data.pagination = Paginator.create(response.results, data.page, config.maxResultsPerPage, response.count, path);
+
+					data.perPageCountOptions = config.resultCountOptions;
+					data.pageSize = pageSize;
+					
 					return res.render('results', data);
 				});
 			});
