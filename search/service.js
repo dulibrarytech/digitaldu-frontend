@@ -145,6 +145,17 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
     // Get elasticsearch aggregations object 
     var facetAggregations = Helper.getFacetAggregationObject(config.facets);
 
+    // Apply sortBy option
+    // var sortArr = [],
+    //     sortData = {
+    //       "order": "asc",
+    //       "ignore_unmapped" : true
+    //     };
+    // sortArr.push({
+    //   "title": sortData
+    // });
+    //   console.log("TEST sortArr", sortArr);
+
     // Create elasticsearch query object
     var data = {  
       index: config.elasticsearchIndex,
@@ -153,6 +164,7 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
         from : (pageNum - 1) * pageSize, 
         size : pageSize,
         query: queryObj,
+        // sort: sortArr,
         aggregations: facetAggregations
       }
     }
@@ -160,9 +172,9 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
     // Query the index
     es.search(data, function (error, response, status) {
       if (error || typeof response == 'undefined'){
-        callback({status: false, message: error, data: null});
+        callback(error, {});
       }
-      if(daterange) {
+      else if(daterange) {
 
         // Get list of outofrange pids using results
         let pids = Helper.findRecordsNotInRange(response.hits.hits, [daterange.from, daterange.to]);

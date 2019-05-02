@@ -50,31 +50,65 @@
       <hr>
       <% include partials/paginator %>
 
-      <div class="search-results container">
-        <% if(results.length > 0) { %>
-          <% for (var i = 0; i < results.length; i++) { %>
+      <% if(typeof view != 'undefined' && view == "grid") { %>
 
-            <div class="row search-result">
-              <div class="col-md-9 search-result-data">
-                <dl>
-                  <dt class="result-title"><%= (i+1)+((page-1)*10) %>.&nbsp&nbsp<a href="<%= root_url %>/object/<%= results[i].pid %>"><%= results[i].title %></a></dt>
-                    <dd></dd>
-                    <dt>Creator:</dt>
-                    <dd><%= results[i].creator %></dd>
-                    <dt>Description:</dt>
-                    <dd class="result-description"><%= results[i].abstract %></dd>
-                </dl>
-              </div>
-              <div class="col-md-3 search-result-tn">
-                  <a href="<%= root_url %>/object/<%= results[i].pid %>" title="<%= results[i].title %>"><img src="<%= results[i].tn %>" alt="<%= results[i].title %>"/></a>            
-              </div>
+        <div class="search-results-grid">
+          <% if(results.length > 0) { %>
+            <div class="row">
+              <% for (var i = 0; i < results.length; i++) { %>
+                <div class="col-sm-3 thumb">
+                  <dl class="item">
+                    <a href="<%= root_url %>/object/<%= results[i].pid %>">
+                      <dt>
+                        <div class="item-thumb">
+                          <img src="<%= results[i].tn %>" alt="<%= results[i].title %>">
+                        </div>
+                      </dt>
+                      <dd>
+                        <div class="item-details">
+                          <h4 class="item-title"><%= results[i].title %></h4>
+                        </div>
+                      </dd>
+                      <dd>
+                        <div class="item-details">
+                          <%= results[i].creator %>
+                        </div>
+                      </dd>
+                    </a>
+                  </dl>
+                </div>
+              <% } %>
             </div>
-
           <% } %>
-        <% } else { %>
-          <span>No results found</span>
-        <% } %>
-      </div>
+        </div>
+
+      <% } else { %>
+
+        <div class="search-results-list container">
+          <% if(results.length > 0) { %>
+            <% for (var i = 0; i < results.length; i++) { %>
+              <div class="row search-result">
+                <div class="col-md-9 search-result-data">
+                  <dl>
+                    <dt class="result-title"><%= (i+1)+((page-1)*10) %>.&nbsp&nbsp<a href="<%= root_url %>/object/<%= results[i].pid %>"><%= results[i].title %></a></dt>
+                      <dd></dd>
+                      <dt>Creator:</dt>
+                      <dd><%= results[i].creator %></dd>
+                      <dt>Description:</dt>
+                      <dd class="result-description"><%= results[i].abstract %></dd>
+                  </dl>
+                </div>
+                <div class="col-md-3 search-result-tn">
+                    <a href="<%= root_url %>/object/<%= results[i].pid %>" title="<%= results[i].title %>"><img src="<%= results[i].tn %>" alt="<%= results[i].title %>"/></a>            
+                </div>
+              </div>
+            <% } %>
+          <% } else { %>
+            <span>No results found</span>
+          <% } %>
+        </div>
+
+      <% } %>
     <% } %>
   </div>
 </div>

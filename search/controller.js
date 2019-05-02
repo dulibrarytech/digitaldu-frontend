@@ -79,7 +79,8 @@ exports.search = function(req, res) {
 			page: req.query.page || 1,
 			root_url: config.rootUrl,
 			collection_scope: "",
-			query: Helper.getResultsLabel(req.query.q, facets)
+			query: Helper.getResultsLabel(req.query.q, facets),
+			view: req.query.view || config.defaultSearchResultsView || "list"
 		},
 		path = config.rootUrl + req.url.substring(req.url.indexOf('search')-1);
 
@@ -87,6 +88,7 @@ exports.search = function(req, res) {
 			console.error(error);
 			data.results = null;
 			data.error = error;
+			return res.render('results', data);
 		}
 		else {
 			var facetList = Facets.getFacetList(response.facets, showAll);
@@ -101,7 +103,6 @@ exports.search = function(req, res) {
 					data.expandFacets = expandFacets;
 					data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(facets, daterange, config.rootUrl); 
 					data.pagination = Paginator.create(response.results, data.page, pageSize, response.count, path);
-
 					data.perPageCountOptions = config.resultCountOptions;
 					data.pageSize = pageSize;
 					

@@ -750,6 +750,50 @@ div#collections .row:not(:first-child) {
     border-top-color: #e5e3e1;
 }
 
+div#collections .item-thumb {
+    /*max-height: 200px;*/
+    max-width: 200px;
+    /* align-content: center; */
+    margin: 20px auto;
+}
+
+div.search-results-grid div.thumb {
+  margin-bottom: 15px;
+}
+
+div.search-results-grid {
+    margin: 50px 0 0 15px;
+}
+
+div.search-results-grid dl.item {
+/*    max-width: 200px;
+    max-height: 200px;*/
+}
+
+div.search-results-grid dl.item > dt {
+    border-bottom-style: solid;
+    border-bottom-color: #e5e3e1;
+}
+
+div.search-results-grid .row:not(:first-child) {
+    margin-top: 4vw;
+    border-top-style: solid;
+    border-top-width: 1px;
+    border-top-color: #e5e3e1;
+}
+
+div.search-results-grid .item-title {
+  font-size: 15px;
+}
+
+div.search-results-grid dl.item {
+  width: 80%;
+}
+
+div.search-results-grid dl.item dd {
+  text-align: left;
+}
+
 div.collection-breadcrumbs {
     font-size: 13px;
     padding-left: 20px;
@@ -784,6 +828,10 @@ div.collection-breadcrumbs a:visited {
 .item {
     margin: 20px auto;
     text-align: center;
+}
+
+.item a {
+  color: inherit;
 }
 .item dd {
   margin: 12px 0 .5rem 0;
@@ -882,15 +930,15 @@ div#search-results-wrapper h4 span {
   font-size: 16px;
 }
 
-div.search-results {
+div.search-results-list {
   margin-top: 60px;
 }
 
-div.search-results > h3 {
+div.search-results-list > h3 {
   font-size: 1.23em;
 }
 
-div.search-results div.search-result:not(:first-child) {
+div.search-results-list div.search-result:not(:first-child) {
   margin-top: 45px;
 }
 
