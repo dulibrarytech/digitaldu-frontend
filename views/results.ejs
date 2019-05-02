@@ -33,7 +33,7 @@
           <div class="search-terms-label">
             <h4>Results for: <span><%- query %></span></h4>
           </div>
-          <div class="search-results-form">
+          <div class="search-results-menu-element">
             <select id="results-per-page" class="form-control">
                 <% for (var i = 0; i < perPageCountOptions.length; i++) { %>
                   <% if(perPageCountOptions[i] == pageSize) { %>
@@ -44,13 +44,25 @@
                 <% } %>
             </select>
           </div>
+
+          <div class="search-results-menu-element btn-group">
+            <select id="results-view-select" class="form-control">
+                <% for (var i = 0; i < resultsViewOptions.length; i++) { %>
+                  <% if(resultsViewOptions[i] == view) { %>
+                    <option value="<%= resultsViewOptions[i] %>" selected><%= resultsViewOptions[i] %> View</option>
+                  <% } else { %>
+                    <option value="<%= resultsViewOptions[i] %>"><%= resultsViewOptions[i] %> View</option>
+                  <% } %>
+                <% } %>
+            </select>
+          </div>
         </div>
       <% } %>
 
       <hr>
       <% include partials/paginator %>
 
-      <% if(typeof view != 'undefined' && view == "grid") { %>
+      <% if(typeof view != 'undefined' && view == "Grid") { %>
 
         <div class="search-results-grid">
           <% if(results.length > 0) { %>
@@ -90,7 +102,7 @@
               <div class="row search-result">
                 <div class="col-md-9 search-result-data">
                   <dl>
-                    <dt class="result-title"><%= (i+1)+((page-1)*10) %>.&nbsp&nbsp<a href="<%= root_url %>/object/<%= results[i].pid %>"><%= results[i].title %></a></dt>
+                    <dt class="result-title"><%= (i+1)+((page-1)*pageSize) %>.&nbsp&nbsp<a href="<%= root_url %>/object/<%= results[i].pid %>"><%= results[i].title %></a></dt>
                       <dd></dd>
                       <dt>Creator:</dt>
                       <dd><%= results[i].creator %></dd>

@@ -104,6 +104,7 @@ exports.search = function(req, res) {
 					data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(facets, daterange, config.rootUrl); 
 					data.pagination = Paginator.create(response.results, data.page, pageSize, response.count, path);
 					data.perPageCountOptions = config.resultCountOptions;
+					data.resultsViewOptions = config.resultsViewOptions;
 					data.pageSize = pageSize;
 					
 					return res.render('results', data);

@@ -8,6 +8,13 @@ $( document ).ready(function() {
 		window.location.replace(encodeURI(searchUrl));
 	});
 
+	$('#results-view-select').click(function(event) {
+		var searchUrl = decodeURIComponent(window.location.href).replace(/&view=[0-9]+/g, "");
+		//searchUrl = searchUrl.replace(/&*page=[0-9]+/g, "");
+		searchUrl += "&view=" + $('#results-view-select').val();
+		window.location.replace(encodeURI(searchUrl));
+	});
+
 });
 
 
