@@ -18,7 +18,6 @@ const config = require('../config/config');
  * @return 
  */
 exports.create = function(items, page, maxItems, totalItems, path) {
-
 	var pagination = {};
 	pagination['page'] = page || 1;
 
