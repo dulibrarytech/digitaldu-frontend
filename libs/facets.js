@@ -170,6 +170,7 @@ function createBreadcrumbTrail(data, dates, baseUrl) {
         //html += '<span><a href="#" onclick="removeDateRange(\'' + dates[i].from + '\', \'' + dates[i].to + '\');"><strong style="color: red">X</strong></a>&nbsp&nbspDate Range&nbsp&nbsp<strong style="color: green"> > </strong>&nbsp&nbsp' + dates[i].from + ' - ' + dates[i].to + '</span>'; // DEV
     }
        
-    return (data.length > 0 || dates.length > 0) ? html : null;
+    //return (data.length > 0 || dates.length > 0) ? html : null;
+    return html;
 };
 

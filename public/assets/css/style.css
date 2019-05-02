@@ -240,7 +240,7 @@ main {
 
 .section {
   margin: 0 auto;
-  margin-top: 5vw;
+  margin-top: 40px;
 }
 
 /*.wide-container {
@@ -385,6 +385,7 @@ div.intro-text {
 a#new-search-link {
     text-decoration: underline;
     margin-right: 20px;
+    color: inherit;
 }
 
 input.search-element {
@@ -838,7 +839,7 @@ div.collection-breadcrumbs a:visited {
 /* Begin search results */
 form#daterange-form input {
   margin: 0 4% 0 2%;
-  width: 20%;
+  width: 15%;
   font-size: 13px;
 }
 
