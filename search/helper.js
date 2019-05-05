@@ -113,21 +113,15 @@ exports.getResultsLabel = function(query, facets) {
  * @return 
  */
 exports.findRecordsNotInRange = function(results, range) {
-  var records = [], dateObj = {}, date;
+  var records = [], dateObj = {}, displayRecord, date;
     for(var index of results) {
 
-      //var displayRecord = index._source[config.displayRecordField]; // NEW
+      displayRecord = index._source[config.displayRecordField];
+      date = appHelper.parseJSONObjectValues(config.objectDateValue, displayRecord);
 
-      // If index does not have the dates fieid, skip the record.  Date can not be determined, search result will be displayed
-      if(typeof index._source.display_record.dates != 'undefined') {
-        date = index._source.display_record.dates[0].date || [];   // OLD
-        // dateObj = appHelper.parseJSONObjectValues(config.objectDateValue, displayRecord);  // NEW
-        // date = dateObj["Date"];
-          //console.log("TEST date", date);
-
-        if(isDateInRange(date, range) === false) {
+      if(appHelper.testObject(date["Date"]) && 
+        isDateInRange(date["Date"][0], range) === false) {
           records.push(index._id);
-        }
       }
     }
 
@@ -145,7 +139,7 @@ var isDateInRange = function(date, range) {
   // Handle "circa", create date range +/- 5 years
   if(date.toLowerCase().includes("circa")) {
     date = date.match(/[0-9][0-9][0-9][0-9]/g);
-    dates.push(parseInt(date[0])-5);  // Begin dste
+    dates.push(parseInt(date[0])-5);  // Begin date
     dates.push(parseInt(date[0])+5);  // End date
   }
 

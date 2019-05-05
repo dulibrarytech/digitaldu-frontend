@@ -224,6 +224,8 @@ module.exports = {
 
     /*
      * The date which is used in search results sorting, the date which the object is identified by
+     * Key must be "Date", value is location in index display object
+     * If multiple dates exist in the index, the first that appears will be used
      */
     objectDateValue: {
         "Date": '{"dates":[{"date": "VALUE", "type": "creation"}]}'

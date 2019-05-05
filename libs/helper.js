@@ -18,6 +18,8 @@ exports.isObjectEmpty = function(object) {
 // Extract values from jsonObject. Values to parse out are set in the valueMap:
 exports.parseJSONObjectValues = function(valueMap, jsonObject) {
 	var valuesObject = {};
+
+	// Locate nested fields in the index
 	for(var key in valueMap) {
 		var mapObject, recordItem, insert=true, showValue;
 
@@ -51,6 +53,8 @@ exports.parseJSONObjectValues = function(valueMap, jsonObject) {
 				}
 			}
 		}
+
+		// Use the value from a flat field
 		else {
 			valuesObject[key] = jsonObject[valueMap[key]];
 		}

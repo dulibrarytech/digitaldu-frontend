@@ -64,17 +64,16 @@ exports.createMetadataDisplayObject = function(result, collections=[]) {
 		displayRecord = {};
 
 	// Get metadata object from result display record json
-	if(result.display_record && typeof result.display_record == "string") {
+	if(result[config.displayRecordField] && typeof result[config.displayRecordField] == "string") {
 		try {
-			//displayRecord = JSON.parse(result[config.displayRecordField]);
-			displayRecord = JSON.parse(result.display_record);
+			displayRecord = JSON.parse(result[config.displayRecordField]);
 		}
 		catch(e) {
 			console.log("Error: invalid object display record for object: " + result.pid);
 		}
 	}
-	else if(result.display_record && typeof result.display_record == "object") {
-		displayRecord = result.display_record || {};
+	else if(result[config.displayRecordField] && typeof result[config.displayRecordField] == "object") {
+		displayRecord = result[config.displayRecordField] || {};
 	}
 
 	// Get the display fields object from the metadata configurtion
