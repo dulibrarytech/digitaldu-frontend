@@ -885,9 +885,14 @@ div.collection-breadcrumbs a:visited {
 /* End collection grid section */
 
 /* Begin search results */
+form#daterange-form {
+  display: inline-flex;
+  width: 100%;
+}
+
 form#daterange-form input {
   margin: 0 4% 0 2%;
-  width: 15%;
+  width: 25%;
   font-size: 13px;
 }
 

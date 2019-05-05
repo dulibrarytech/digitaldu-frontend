@@ -76,6 +76,8 @@ exports.createMetadataDisplayObject = function(result, collections=[]) {
 		displayRecord = result[config.displayRecordField] || {};
 	}
 
+	console.log("TEST disp rec", displayRecord);
+
 	// Get the display fields object from the metadata configurtion
 	displayObj = Helper.parseJSONObjectValues(displayFields, displayRecord);
 
@@ -92,6 +94,6 @@ exports.createMetadataDisplayObject = function(result, collections=[]) {
 	if(Object.keys(displayObj).length === 0 && displayObj.constructor === Object) {
 		displayObj["No metadata available"] = "";
 	}
-		
+		console.log("TEST disp obj", displayObj);
 	return displayObj;
 }

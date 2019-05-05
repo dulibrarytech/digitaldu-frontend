@@ -56,7 +56,9 @@ exports.parseJSONObjectValues = function(valueMap, jsonObject) {
 
 		// Use the value from a flat field
 		else {
-			valuesObject[key] = jsonObject[valueMap[key]];
+			if(typeof jsonObject[valueMap[key]] != 'undefined') {
+				valuesObject[key] = jsonObject[valueMap[key]];
+			}
 		}
 	}
 
