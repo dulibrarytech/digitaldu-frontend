@@ -9,7 +9,8 @@
 'use strict';
 
 
-var config = require('../config/config');
+var config = require('../config/config'),
+	Helper = require('./helper');
 
 /**
  * 
@@ -62,19 +63,10 @@ exports.createMetadataDisplayObject = function(result, collections=[]) {
 	    displayFields = config.metadataDisplayValues,
 		displayRecord = {};
 
-	// Add the collections to the metadata display
-	// Add the titles of the parent collections to the mods display, if any
-	let titles = [];
-	for(var collection of collections) {
-		titles.push('<a href="' + config.rootUrl + '/collection/' + collection.pid + '">' + collection.name + '</a>');
-	}
-	if(titles.length > 0) {
-		displayObj["In Collections"] = titles;
-	}
-
 	// Get metadata object from result display record json
 	if(result.display_record && typeof result.display_record == "string") {
 		try {
+			//displayRecord = JSON.parse(result[config.displayRecordField]);
 			displayRecord = JSON.parse(result.display_record);
 		}
 		catch(e) {
@@ -85,43 +77,17 @@ exports.createMetadataDisplayObject = function(result, collections=[]) {
 		displayRecord = result.display_record || {};
 	}
 
-	// Build the disply from the configuration settings
-	for(var key in displayFields) {
-		var displayFieldsObject, recordItem, insert=true, showValue;
+	// Get the display fields object from the metadata configurtion
+	displayObj = Helper.parseJSONObjectValues(displayFields, displayRecord);
 
-		if(displayFields[key][0] == "{") {
-			displayFieldsObject = JSON.parse(displayFields[key]) || {};
-
-			for(var subKey in displayFieldsObject) {	// Should only be 1 at first
-				recordItem = displayRecord[subKey] || [];
-
-				if(typeof recordItem[0] == "string") {
-					displayObj[key] = recordItem;
-				}
-
-				else if(typeof recordItem[0] == "object") {
-					showValue = [];
-					for(var index in recordItem) {
-						for(var data in displayFieldsObject[subKey][0]) {
-							if(recordItem[index][data] != displayFieldsObject[subKey][0][data] && displayFieldsObject[subKey][0][data].toLowerCase() != "value") {
-								insert = false;
-							}
-
-							if(displayFieldsObject[subKey][0][data].toLowerCase() == "value" &&
-								typeof recordItem[index][data] != "undefined") {
-								showValue.push(recordItem[index][data]);
-							}
-						}
-					}
-					if(insert && showValue.length > 0) {
-						displayObj[key] = showValue;
-					}
-				}
-			}
-		}
-		else {
-			displayObj[key] = displayRecord[displayFields[key]];
-		}
+	// Add the collections to the metadata display
+	// Add the titles of the parent collections to the mods display, if any
+	let titles = [];
+	for(var collection of collections) {
+		titles.push('<a href="' + config.rootUrl + '/collection/' + collection.pid + '">' + collection.name + '</a>');
+	}
+	if(titles.length > 0) {
+		displayObj["In Collections"] = titles;
 	}
 
 	if(Object.keys(displayObj).length === 0 && displayObj.constructor === Object) {

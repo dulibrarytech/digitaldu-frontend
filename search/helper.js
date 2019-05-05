@@ -7,7 +7,8 @@
 
 'use strict';
 
-var config = require('../config/config');
+var config = require('../config/config'),
+    appHelper = require('../libs/helper');
 
 /**
  * 
@@ -112,12 +113,18 @@ exports.getResultsLabel = function(query, facets) {
  * @return 
  */
 exports.findRecordsNotInRange = function(results, range) {
-  var records = [], date;
+  var records = [], dateObj = {}, date;
     for(var index of results) {
+
+      //var displayRecord = index._source[config.displayRecordField]; // NEW
 
       // If index does not have the dates fieid, skip the record.  Date can not be determined, search result will be displayed
       if(typeof index._source.display_record.dates != 'undefined') {
-        date = index._source.display_record.dates[0].date || [];   // PROD
+        date = index._source.display_record.dates[0].date || [];   // OLD
+        // dateObj = appHelper.parseJSONObjectValues(config.objectDateValue, displayRecord);  // NEW
+        // date = dateObj["Date"];
+          //console.log("TEST date", date);
+
         if(isDateInRange(date, range) === false) {
           records.push(index._id);
         }

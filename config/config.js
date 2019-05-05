@@ -106,6 +106,9 @@ module.exports = {
     //kalturaUniqueObjectID: "kaltura_du_12345",
     kalturaUniqueObjectID: "kaltura_player_1549920112",
 
+    // The index field that holdas the display record data
+    displayRecordField: "display_record",
+
     /*
      * Fields for fulltext search (search all)
      * 
@@ -217,6 +220,13 @@ module.exports = {
             "3D Object": ["three dimensional object", "three dimensional object,[object Object]"],
             "Unknown": ["[object Object]"]
         }
+    },
+
+    /*
+     * The date which is used in search results sorting, the date which the object is identified by
+     */
+    objectDateValue: {
+        "Date": '{"dates":[{"date": "VALUE", "type": "creation"}]}'
     },
 
     /*
