@@ -231,19 +231,8 @@ exports.searchFacets = function (query, facets, page, callback) {
 };
 
 var returnResponseData = function(facets, response, callback) {
-  // Remove selected facet from the list
-  // TODO move this somewhere else
-  for(var facetKey in facets) {
-    for(var index in facets[facetKey]) {
-      var facetString = facets[facetKey][index],
-          bucket = response.aggregations[facetKey].buckets;
-      for(let facetIndex in bucket) {
-        if(bucket[facetIndex].key == facetString) {
-          bucket.splice(facetIndex,1);
-        }
-      }
-    }
-  }
+  // Remove selected facet from the facet panel
+  Helper.removeSelectedFacets(facets, response);
   
   // Return the aggregation results for the facet display
   var responseData = {};
@@ -259,21 +248,18 @@ var returnResponseData = function(facets, response, callback) {
       // Get the thumbnail
       tn = config.rootUrl + "/datastream/" + result._source.pid.replace('_', ':') + "/tn";
 
-      // Get the title and description data for the result listing
-      resultData = Helper.getSearchResultDisplayFields(result);
-
       // Push a new result object to the results array
       results.push({
-        title: resultData.title || "Untitled",
-        creator: resultData.creator || "Unknown",
-        abstract: resultData.description || "No Description",
+        title: result._source.title || "No Title",
         tn: tn,
-        pid: result._source.pid
+        pid: result._source.pid,
+        display_record: result._source.display_record
       });
     }
 
     // Add the results array, send the response
     responseData['results'] = results;
+
     callback(null, responseData);
   }
   catch(error) {

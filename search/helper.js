@@ -35,6 +35,26 @@ exports.getFacetAggregationObject = function(facets) {
  * @param 
  * @return 
  */
+exports.removeSelectedFacets = function(facets, results) {
+  for(var facetKey in facets) {
+    for(var index in facets[facetKey]) {
+      var facetString = facets[facetKey][index],
+          bucket = results.aggregations[facetKey].buckets;
+      for(let facetIndex in bucket) {
+        if(bucket[facetIndex].key == facetString) {
+          bucket.splice(facetIndex,1);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
 exports.getSearchResultDisplayFields = function(searchResult) {
   var fields = {
     title: "",

@@ -241,6 +241,16 @@ module.exports = {
     },
 
     /*
+     * Fields to display in the summary data section (above Details link)
+     * "Display field name": "index field key to match"
+     */
+    resultsDisplay: {
+        "Creator": '{"name": [ { "namePart": "VALUE", "role": "creator" } ]}',
+        "Description": "abstract",
+        "Date": '{"dates":[{"date": "VALUE", "type": "creation"}]}'
+    },
+
+    /*
      * MODS fields to display in the Details section
      * Must be valid json, can be application managed in the future (admin)
      * "Display record key": "Display record value"

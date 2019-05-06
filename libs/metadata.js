@@ -83,3 +83,32 @@ exports.createMetadataDisplayObject = function(result, collections=[]) {
 
 	return displayObj;
 }
+
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
+exports.addResultMetadataDisplays = function(resultArray) {
+	var metadata = {},
+	    displayFields = config.resultsDisplay,
+		displayRecord = {};
+
+	for(var index of resultArray) {
+		if(index[config.displayRecordField] && typeof index[config.displayRecordField] == "string") {
+			try {
+				displayRecord = JSON.parse(index[config.displayRecordField]);
+			}
+			catch(e) {
+				console.log("Error: invalid object display record for object: " + result.pid);
+			}
+		}
+		else if(index[config.displayRecordField] && typeof index[config.displayRecordField] == "object") {
+			displayRecord = index[config.displayRecordField] || {};
+		}
+		index["metadata"] = Helper.parseJSONObjectValues(displayFields, displayRecord);
+	}
+
+	return resultArray;
+}

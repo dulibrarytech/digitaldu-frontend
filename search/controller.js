@@ -13,6 +13,7 @@ const async = require('async'),
     Facets = require('../libs/facets'),
     Paginator = require('../libs/paginator'),
     Helper = require('./helper.js'),
+    Metadata = require('../libs/metadata'),
     Format = require("../libs/format");
 
 exports.search = function(req, res) {
@@ -99,6 +100,8 @@ exports.search = function(req, res) {
 			Format.formatFacetDisplay(facetList, function(error, facetList) {
 				Format.formatFacetBreadcrumbs(facets, function(error, facets) {
 					data.results = response.results;
+					Metadata.addResultMetadataDisplays(response.results);
+					
 					data.facets = Facets.create(facetList, config.rootUrl, showAll, expandFacets);
 					data.expandFacets = expandFacets;
 					data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(facets, daterange, config.rootUrl); 
@@ -106,7 +109,7 @@ exports.search = function(req, res) {
 					data.perPageCountOptions = config.resultCountOptions;
 					data.resultsViewOptions = config.resultsViewOptions;
 					data.pageSize = pageSize;
-					
+						
 					return res.render('results', data);
 				});
 			});
