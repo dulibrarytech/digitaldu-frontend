@@ -35,19 +35,7 @@ exports.createSummaryDisplayObject = function(result) {
 		displayRecord = result.display_record;
 	}
 
-	var key, field, value;
-	for(key in displayFields) {
-		field = displayFields[key];
-
-		// If object field is null or empty, look for the field in the display record
-		if(!result[field] || result[field] == "") {
-			value = displayRecord[field];
-		}
-		else {
-			value = result[field];
-		}
-		displayObj[key] = value;
-	}
+	displayObj = Helper.parseJSONObjectValues(displayFields, displayRecord);
 
 	return displayObj;
 }
@@ -76,8 +64,6 @@ exports.createMetadataDisplayObject = function(result, collections=[]) {
 		displayRecord = result[config.displayRecordField] || {};
 	}
 
-	console.log("TEST disp rec", displayRecord);
-
 	// Get the display fields object from the metadata configurtion
 	displayObj = Helper.parseJSONObjectValues(displayFields, displayRecord);
 
@@ -94,6 +80,6 @@ exports.createMetadataDisplayObject = function(result, collections=[]) {
 	if(Object.keys(displayObj).length === 0 && displayObj.constructor === Object) {
 		displayObj["No metadata available"] = "";
 	}
-		console.log("TEST disp obj", displayObj);
+
 	return displayObj;
 }

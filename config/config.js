@@ -236,7 +236,7 @@ module.exports = {
      * "Display field name": "index field key to match"
      */
     summaryDisplay: {
-        "Title": "title",
+        "Title": '{"title": ["VALUE"]}',
         "Description": "abstract"
     },
 
