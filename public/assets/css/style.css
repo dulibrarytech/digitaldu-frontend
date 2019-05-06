@@ -988,8 +988,8 @@ div.search-result-data {
   font-size: 1em;
 }
 
-div.search-result-data dt {
-  /*margin-top: 15px;*/
+div.search-result-data dt:not(.result-title) {
+  margin-left: 5px;
 }
 
 div.search-result-data dd {

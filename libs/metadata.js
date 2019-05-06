@@ -21,18 +21,19 @@ var config = require('../config/config'),
 exports.createSummaryDisplayObject = function(result) {
 	var displayObj = {},
 	    displayFields = config.summaryDisplay,
-		displayRecord = {};
+		displayRecord = {},
+		resultDisplayRecord = result[config.displayRecordField];
 
-	if(result.display_record && typeof result.display_record == "string") {
+	if(resultDisplayRecord && typeof resultDisplayRecord == "string") {
 		try {
-			displayRecord = JSON.parse(result.display_record);
+			displayRecord = JSON.parse(resultDisplayRecord);
 		}
 		catch(e) {
 			console.log("Error: invalid object display record for object: " + result.pid);
 		}
 	}
-	else if(result.display_record && typeof result.display_record == "object") {
-		displayRecord = result.display_record;
+	else if(resultDisplayRecord && typeof resultDisplayRecord == "object") {
+		displayRecord = resultDisplayRecord;
 	}
 
 	displayObj = Helper.parseJSONObjectValues(displayFields, displayRecord);
@@ -49,19 +50,20 @@ exports.createSummaryDisplayObject = function(result) {
 exports.createMetadataDisplayObject = function(result, collections=[]) {
 	var displayObj = {},
 	    displayFields = config.metadataDisplayValues,
-		displayRecord = {};
+		displayRecord = {},
+		resultDisplayRecord = result[config.displayRecordField];
 
 	// Get metadata object from result display record json
-	if(result[config.displayRecordField] && typeof result[config.displayRecordField] == "string") {
+	if(resultDisplayRecord && typeof resultDisplayRecord == "string") {
 		try {
-			displayRecord = JSON.parse(result[config.displayRecordField]);
+			displayRecord = JSON.parse(resultDisplayRecord);
 		}
 		catch(e) {
 			console.log("Error: invalid object display record for object: " + result.pid);
 		}
 	}
-	else if(result[config.displayRecordField] && typeof result[config.displayRecordField] == "object") {
-		displayRecord = result[config.displayRecordField] || {};
+	else if(resultDisplayRecord && typeof resultDisplayRecord == "object") {
+		displayRecord = resultDisplayRecord || {};
 	}
 
 	// Get the display fields object from the metadata configurtion
@@ -93,19 +95,21 @@ exports.createMetadataDisplayObject = function(result, collections=[]) {
 exports.addResultMetadataDisplays = function(resultArray) {
 	var metadata = {},
 	    displayFields = config.resultsDisplay,
-		displayRecord = {};
+		displayRecord = {},
+		resultDisplayRecord;
 
 	for(var index of resultArray) {
-		if(index[config.displayRecordField] && typeof index[config.displayRecordField] == "string") {
+		resultDisplayRecord = index[config.displayRecordField];
+		if(resultDisplayRecord && typeof resultDisplayRecord == "string") {
 			try {
-				displayRecord = JSON.parse(index[config.displayRecordField]);
+				displayRecord = JSON.parse(resultDisplayRecord);
 			}
 			catch(e) {
 				console.log("Error: invalid object display record for object: " + result.pid);
 			}
 		}
-		else if(index[config.displayRecordField] && typeof index[config.displayRecordField] == "object") {
-			displayRecord = index[config.displayRecordField] || {};
+		else if(resultDisplayRecord && typeof resultDisplayRecord == "object") {
+			displayRecord = resultDisplayRecord || {};
 		}
 		index["metadata"] = Helper.parseJSONObjectValues(displayFields, displayRecord);
 	}

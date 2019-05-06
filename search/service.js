@@ -231,7 +231,7 @@ exports.searchFacets = function (query, facets, page, callback) {
 };
 
 var returnResponseData = function(facets, response, callback) {
-  // Remove selected facet from the facet panel
+  // Remove selected facet from the facet panelslist
   Helper.removeSelectedFacets(facets, response);
   
   // Return the aggregation results for the facet display
@@ -242,19 +242,20 @@ var returnResponseData = function(facets, response, callback) {
   try {
 
     // Create the search results objects
-    var results = [], tn, resultData;
+    var results = [], tn, resultData, resultObj;
     for(var result of response.hits.hits) {
 
       // Get the thumbnail
       tn = config.rootUrl + "/datastream/" + result._source.pid.replace('_', ':') + "/tn";
 
       // Push a new result object to the results array
-      results.push({
+      resultObj = {
         title: result._source.title || "No Title",
         tn: tn,
-        pid: result._source.pid,
-        display_record: result._source.display_record
-      });
+        pid: result._source.pid
+      }
+      resultObj[config.displayRecordField] = result._source[config.displayRecordField] || {};
+      results.push(resultObj);
     }
 
     // Add the results array, send the response
