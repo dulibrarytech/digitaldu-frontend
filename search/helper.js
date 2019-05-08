@@ -50,7 +50,7 @@ exports.removeSelectedFacets = function(facets, results) {
 }
 
 /**
- * 
+ * Defunct
  *
  * @param 
  * @return 
@@ -151,10 +151,11 @@ exports.findRecordsNotInRange = function(results, range) {
 // Update for new index, vocabulary specific
 // Using the new begin and end dates in the index (separate from the display data)
 var isDateInRange = function(date, range) {
-  var inRange = false;
+  var inRange = false, dateElements, dates = [];
 
-  var dateElements = date.split(" "),
-      dates = [];
+  // Replace all non alphanumeric characters with spaces
+  date = date.replace(/[^a-zA-Z0-9]/g, " ");
+  dateElements = date.split(" ");
 
   // Handle "circa", create date range +/- 5 years
   if(date.toLowerCase().includes("circa")) {
@@ -163,27 +164,19 @@ var isDateInRange = function(date, range) {
     dates.push(parseInt(date[0])+5);  // End date
   }
 
-  // Use the first appearing year as the start of the date range, use the second for the end
-  // If one date appears, treat as single
+  // Parse the dates out of the date field string
   else {
-    for(var i=0; i<dateElements.length; i++) {
-      if(!isNaN(dateElements[i]) && dates.length < 2) {
-        dates.push(parseInt(dateElements[i]))
-      }
-      else if(isNaN(dateElements[i])) {
-        continue;
-      }
-      else {
-        break;
-      }
-    }
+    dates = date.match(/[0-9][0-9][0-9][0-9]/g);
   }
 
+  // If one date is present, that is the single date value
   if(dates.length == 1) {
     if(dates[0] >= range[0] && dates[0] <= range[1]) {
       inRange = true;
     }
   }
+
+  // If two dates are present, test the range.  The first date that appears is the start date, the second date that appears is the end date, subsequent dates are ignored
   else if(dates.length == 2) {
     if( ( (dates[0] >= range[0] && dates[0] <= range[1]) || (dates[1] >= range[0] && dates[1] <= range[1]) ) || (dates[0] <= range[0] && dates[1] >= range[1]) ) {
       inRange = true;
