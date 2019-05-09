@@ -50,6 +50,25 @@ exports.removeSelectedFacets = function(facets, results) {
 }
 
 /**
+ * 
+ *
+ * @param 
+ * @return 
+ */
+exports.removeEmptyFacetKeys = function(facets) {
+  var buckets;
+  for(var facetKey in facets) {
+      buckets = facets[facetKey].buckets;
+      for(var index in buckets) {
+        if(buckets[index].key.length < 2) {
+          buckets.splice(index);
+        }
+      }
+  }
+  return facets;
+}
+
+/**
  * Defunct
  *
  * @param 
