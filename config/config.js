@@ -59,13 +59,13 @@ module.exports = {
      * Viewer to play audio files
      * [browser | jwplayer | universalviewer | kaltura]
      */
-    audioPlayer: "universalviewer",
+    audioPlayer: "kaltura",
 
     /* 
      * Viewer to display video files
      * [videojs | jwplayer | universalviewer | kaltura]
      */
-    videoViewer: "universalviewer",
+    videoViewer: "kaltura",
 
     /* 
      * Viewer to display pdf files
@@ -101,7 +101,7 @@ module.exports = {
     /*
      * Kaltura viewer settings
      */
-    kalturaUI_ID: "41433862",
+    kalturaUI_ID: "44058172",
     kalturaPartnerID: "2357732",
     //kalturaUniqueObjectID: "kaltura_du_12345",
     kalturaUniqueObjectID: "kaltura_player_1549920112",
@@ -113,47 +113,48 @@ module.exports = {
      * Fields for fulltext search (search all)
      * 
      */ 
-    metadataKeywordFields: [
-        "display_record.abstract",
-        "display_record.accessCondition",
-        "display_record.classification",
-        "display_record.genre",
-        "display_record.identifier",
-        "display_record.language",
-        "display_record.location.url",
-        "display_record.name.namePart",
-        "display_record.name.role",
-        "display_record.note",
-        "display_record.originInfo.copyrightDate",
-        "display_record.originInfo.d_captured",
-        "display_record.originInfo.d_created",
-        // "display_record.originInfo.d_issued",    // Check index schema, no date format specified.  Throws error
-        "display_record.originInfo.frequency",
-        "display_record.originInfo.place",
-        "display_record.originInfo.publisher",
-        "display_record.physicalDescription.digitalOrigin",
-        "display_record.physicalDescription.extent",
-        "display_record.physicalDescription.form",
-        "display_record.physicalDescription.internetMediaType",
-        "display_record.physicalDescription.note",
-        "display_record.subject.city",
-        "display_record.subject.citySection",
-        "display_record.subject.continent",
-        "display_record.subject.country",
-        "display_record.subject.county",
-        "display_record.subject.genre",
-        "display_record.subject.geographic",
-        "display_record.subject.namePart",
-        "display_record.subject.occupation",
-        "display_record.subject.region",
-        "display_record.subject.role",
-        "display_record.subject.temporal",
-        "display_record.subject.topic",
-        "display_record.tableOfContents",
-        "display_record.targetAudience",
-        "display_record.title",
-        "display_record.typeOfResource"
+    searchKeywordFields: [
+        {"field": "title", "boost": "3"},
+        {"field": "display_record.abstract", "boost": "2"},
+        {"field": "display_record.accessCondition"},
+        {"field": "display_record.classification"},
+        {"field": "display_record.identifier"},
+        {"field": "display_record.language"},
+        {"field": "display_record.location.url"},
+        {"field": "display_record.name.namePart", "boost": "2"},
+        {"field": "display_record.note"},
+        {"field": "display_record.originInfo.d_captured"},
+        {"field": "display_record.originInfo.d_created"},
+        {"field": "display_record.originInfo.place", "boost": "1"},
+        {"field": "display_record.originInfo.publisher"},
+        {"field": "display_record.physicalDescription.digitalOrigin"},
+        {"field": "display_record.physicalDescription.extent"},
+        {"field": "display_record.physicalDescription.form"},
+        {"field": "display_record.physicalDescription.note"},
+        {"field": "display_record.subject.city"},
+        {"field": "display_record.subject.citySection"},
+        {"field": "display_record.subject.continent"},
+        {"field": "display_record.subject.country"},
+        {"field": "display_record.subject.county"},
+        {"field": "display_record.subject.genre"},
+        {"field": "display_record.subject.geographic"},
+        {"field": "display_record.subject.namePart"},
+        {"field": "display_record.subject.occupation"},
+        {"field": "display_record.subject.region"},
+        {"field": "display_record.subject.role"},
+        {"field": "display_record.subject.temporal"},
+        {"field": "display_record.subject.topic"},
+        {"field": "display_record.typeOfResource"},
+        {"field": "display_record.targetAudience"},
+        {"field": "display_record.physicalDescription.internetMediaType"}
     ],
+
+    // new index
+    // searchKeywordFields: [
+    //     {"field": "title", "boost": "3"},
+    //     {"field": ""},
+    //     {"field": ""},
+    // ],
 
     /*
      * Options for results per page
@@ -182,7 +183,8 @@ module.exports = {
     facets: {
         // Index v1 external fields
         "Creator": "creator",
-        "Subject": "subject",
+        // "Subject": "subject",
+        "Subject": "f_subjects",
         "Type": "type",
 
         // Index v1 display record fields
@@ -229,6 +231,7 @@ module.exports = {
      */
     objectDateValue: {
         "Date": '{"dates":[{"date": "VALUE", "type": "creation"}]}'
+        //"Date": '{"originInfo":[{"d_created": "VALUE"}]}'
     },
 
     /*

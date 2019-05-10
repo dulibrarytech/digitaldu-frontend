@@ -23,50 +23,86 @@ const es = require('../config/index'),
 exports.searchIndex = function(query, type, facets=null, collection=null, pageNum=1, pageSize=10, daterange=null, callback) {
 
     var field = { match: "" },
-        matchFields = [], matchFacetFields = [], results = [], restrictions = [],
-        queryObj = {},
-        queryType;
+        matchFields = [], matchFacetFields = [], 
+        results = [], 
+        restrictions = [],
+        queryType, queryArray = [], 
+        stringLiterals = [];
 
-    // This is a string literal search if the query is contained by parentheses.  Use 'match_phrase'.  Must match the entire query
-    if(query[0] == '"' && query[ query.length-1 ] == '"') {
-      query = query.replace(/"/g, '');  
-      queryType = "match_phrase";
+    // Tokenize the query string to individual words and word groups enclosed with parentheses 
+    stringLiterals = query.match(/"[A-Za-z0-9 ]+"/g) || [];   
+    if(query.replace(/"[A-Za-z0-9 ]+"/g, "").length > 0) {
+      queryArray = query.replace(/"[A-Za-z0-9 ]+"/g, "").split(/ +/g).concat(stringLiterals);
     }
-
-    // This is a wildcard search.  Use 'wildcard'.  Perform an Elasticsearch wildcard query
-    else if(query.indexOf('*') >= 0) {
-      queryType = "wildcard";
-    }
-
-    // This is a regular term search.  Use 'match'.  Will match any word in the query with weighted results.  Closest matches or multiple word matches have higher weight
-    else  {
-      let qtemp = query;
-      query = {
-        "query": qtemp,
-        "operator": "and",
-        "fuzziness": "AUTO"
-      }
-      queryType = "match";
-    }
-
-    // If an array of fields is passed in, search in all of the fields that are present
-    if(Array.isArray(type)) {
-        type.forEach(function(type) {
-          let q = {}, tempObj = {};
-          type = config.searchFieldNamespace + type;
-          q[type] = query;
-          tempObj[queryType] = q;
-          matchFields.push(tempObj);
-        });
-          //console.log("TEST", matchFields); // <-- use multi match
-    }
-
-    // Search a single field
     else {
-        let q = {}, tempObj = {};
-        q[type] = query;
-        tempObj[queryType] = q;
-        matchFields.push(tempObj);
+      queryArray = stringLiterals;
+    }
+
+    /* Build the search fields object: iterate through search query tokens.  
+     * Use a match query for each word token, a match_phrase query for word group tokens, and a wildcard search for tokens that contain a '*'.
+     * All tokens default to AND search.
+     * TODO Advanced search options
+     */
+    for(var index of queryArray) {
+      
+       // This is a string literal search if the query is contained by parentheses.  Use 'match_phrase'.  Must match the entire query
+      if(index[0] == '"' && index[ index.length-1 ] == '"') {
+        index = index.replace(/"/g, '');  
+        queryType = "match_phrase";
+      }
+
+      // This is a wildcard search.  Use 'wildcard'.  Perform an Elasticsearch wildcard query
+      else if(index.indexOf('*') >= 0) {
+        queryType = "wildcard";
+      }
+
+      // This is a regular term search.  Use 'match'.  Will match any word in the query with weighted results.  Closest matches or multiple word matches have higher weight
+      else  {
+        queryType = "match";
+      }
+
+      // If an array of fields is passed in, search in all of the fields that are in the array.
+      if(Array.isArray(type)) {
+
+        // type is an array of keyword objects: {field: "elastic keyword field"}
+        // Loop the keywords, adding each to the main query array under the specified query type (match, wildcard, match_phrase)
+        // For match queries, check for a boost value in the keyword object and add it to the query if the value is present
+        let keywordObj, tempObj, queryObj;
+        for(var field of type) {
+          keywordObj = {};
+          tempObj = {};
+          queryObj = {};
+
+          // Get boost value if it exists in this field object
+          if(queryType == "match") {
+            let qtemp = index;
+            queryObj = {
+              "query": qtemp,
+              "operator": "and",
+              "fuzziness": "AUTO"
+            };
+
+            if(field.boost) {
+              queryObj["boost"] = field.boost;
+            }
+            keywordObj[field.field] = queryObj;
+          }
+          else {
+            keywordObj[field.field] = index;
+          }
+
+          tempObj[queryType] = keywordObj;
+          matchFields.push(tempObj);
+        }
+      }
+
+      // Search a single field
+      else {
+          let keywordObj = {}, tempObj = {};
+          keywordObj[type] = index;
+          tempObj[queryType] = keywordObj;
+          matchFields.push(tempObj);
+      } 
     }
 
     // If facets are present, add them to the search
@@ -113,6 +149,7 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
     });
 
     // Querystring and facet search
+    var queryObj = {};
     if(query != "" || facets) {
       queryObj = {
         "bool": {
@@ -197,6 +234,7 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
         returnResponseData(facets, response, callback);
       }
   });
+  //callback(null, []);
 }
 
 /**
@@ -236,7 +274,7 @@ var returnResponseData = function(facets, response, callback) {
   
   // Return the aggregation results for the facet display
   var responseData = {};
-  responseData['facets'] = response.aggregations;
+  responseData['facets'] = Helper.removeEmptyFacetKeys(response.aggregations);
   responseData['count'] = response.hits.total;
 
   try {

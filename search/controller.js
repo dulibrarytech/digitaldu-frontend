@@ -43,7 +43,7 @@ exports.search = function(req, res) {
 
 		// Non-scoped search: Use fulltect search fields
 		if(config.fulltextMetadataSearch === true) {
-			type = config.metadataKeywordFields;
+			type = config.searchKeywordFields;
 		}
 
 		// Non-scoped search: Search in all of the fields in the search type dropdown
