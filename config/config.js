@@ -164,7 +164,7 @@ module.exports = {
     resultsViewOptions: ["List", "Grid"],
     defaultSearchResultsView: "List",
 
-    searchTermFuzziness: "2",
+    searchTermFuzziness: "1",
 
     /*
      * Fields for scoped search.  These will appear in 'Search Type' dropdown list

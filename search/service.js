@@ -23,23 +23,27 @@ const es = require('../config/index'),
 exports.searchIndex = function(query, type, facets=null, collection=null, pageNum=1, pageSize=10, daterange=null, callback) {
 
     var field = { match: "" },
-        matchFields = [], matchFacetFields = [], 
+        matchFields = [], 
+        mustMatchFields = [], 
         results = [], 
         restrictions = [],
-        queryType, queryArray = [], 
-        stringLiterals = [];
+        queryType,
+        queryArray = [];
 
-    // Separate the terms grouped by parentheses for match_phrase query.  Add the rest of the search terms to the array for a match query
-    queryArray = query.match(/"[A-Za-z0-9 ]+"/g) || [];   
-    queryArray.push(query.replace(/"[A-Za-z0-9 ]+"/g, "").trim());
+    // Separate the terms grouped by parentheses for match_phrase query.  Add the rest of the search terms to the array for a match query.
+    queryArray = query.match(/"[A-Za-z0-9 ]+"/g) || []; 
+    if(query.replace(/"[A-Za-z0-9 ]+"/g, "").length > 0) {
+      queryArray.push(query.replace(/"[A-Za-z0-9 ]+"/g, "").trim());
+    } 
 
-    /* Build the search fields object 
+    /* 
+     * Build the search fields object 
      * Use a match query for each word token, a match_phrase query for word group tokens, and a wildcard search for tokens that contain a '*'.
      * All tokens default to AND search.
      * TODO: Advanced search options
      */
     for(var index of queryArray) {
-      
+
        // This is a string literal search if the query is contained by parentheses.  Use 'match_phrase'.  Must match the entire query
       if(index[0] == '"' && index[ index.length-1 ] == '"') {
         index = index.replace(/"/g, '');  
@@ -56,12 +60,14 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
         queryType = "match";
       }
 
-      // If an array of fields is passed in, search in all of the fields that are in the array.
+      // Build elastic query.  If an array of fields is passed in, search in all of the fields that are in the array.
       if(Array.isArray(type)) {
 
-        // type is an array of keyword objects: {field: "elastic keyword field"}
-        // Loop the keywords, adding each to the main query array under the specified query type (match, wildcard, match_phrase)
-        // For match queries, check for a boost value in the keyword object and add it to the query if the value is present
+        /*
+         * type is an array of keyword objects: {field: "elastic keyword field"}
+         * Loop the keywords, adding each to the main query array under the specified query type (match, wildcard, match_phrase)
+         * For match queries, check for a boost value in the keyword object and add it to the query if the value is present
+         */
         let keywordObj, tempObj, queryObj;
         for(var field of type) {
           keywordObj = {};
@@ -70,9 +76,8 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
 
           // Get boost value if it exists in this field object
           if(queryType == "match") {
-            let qtemp = index;
             queryObj = {
-              "query": qtemp,
+              "query": index,
               "operator": "and",
               "fuzziness": config.searchTermFuzziness
             };
@@ -80,14 +85,16 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
             if(field.boost) {
               queryObj["boost"] = field.boost;
             }
+
             keywordObj[field.field] = queryObj;
+            tempObj[queryType] = keywordObj;
+            matchFields.push(tempObj);
           }
           else {
             keywordObj[field.field] = index;
+            tempObj[queryType] = keywordObj;
+            matchFields.push(tempObj);
           }
-
-          tempObj[queryType] = keywordObj;
-          matchFields.push(tempObj);
         }
       }
 
@@ -99,7 +106,7 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
           matchFields.push(tempObj);
       } 
     }
-      console.log("TEST mf", matchFields);
+
     // If facets are present, add them to the search
     if(facets) {
       var indexKey, count=0;
@@ -113,7 +120,7 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
 
           // Add to the main ES query object
           q[indexKey] = index;
-          matchFacetFields.push({
+          mustMatchFields.push({
             "match_phrase": q 
           });
         }
@@ -122,7 +129,7 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
 
     // If a collection id is present, scope search to that collection
     if(collection) {
-      matchFacetFields.push({
+      mustMatchFields.push({
           "match_phrase": {
             "is_member_of_collection": collection
           }
@@ -136,7 +143,7 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
       }
     });
 
-    // Do not show objects that are children of compuond objects
+    // Do not show objects that are children of compound objects
     restrictions.push({
       "exists": {
           "field": "is_child_of"
@@ -149,7 +156,7 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
       queryObj = {
         "bool": {
           "should": matchFields,
-          "must": matchFacetFields,
+          "must": mustMatchFields,
           "must_not": restrictions,
           "filter": {
             "bool": {
@@ -164,7 +171,7 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
     else {
       queryObj = {
         "bool": {
-          "must": matchFacetFields,
+          "must": mustMatchFields,
           "must_not": {
             "match": {
               "object_type": "collection"
@@ -229,7 +236,6 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
         returnResponseData(facets, response, callback);
       }
   });
-  //callback(null, []);
 }
 
 /**
