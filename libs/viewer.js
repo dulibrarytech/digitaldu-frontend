@@ -307,9 +307,13 @@ function getIIIFObjectViewer(object, index=null) {
  function getKalturaViewer(object, params) {
  	var cache_st = "1549920112",
  		height = "100%",
- 		width = "100%";
+ 		width = "100%",
+ 		html = "";
 
- 	return '<script src="https://cdnapisec.kaltura.com/p/' + params.partner_id + '/sp/' + params.partner_id + "00" + '/embedIframeJs/uiconf_id/' + params.uiconf_id + '/partner_id/' + params.partner_id + '?autoembed=true&entry_id=' + params.entry_id + '&playerId=' + params.unique_object_id + '&cache_st=' + cache_st + '&width=' + width + '&height=' + height + '&flashvars[streamerType]=auto"></script>';
+ 	html += "<h3>" + object.title + "</h3>";
+ 	html += '<script src="https://cdnapisec.kaltura.com/p/' + params.partner_id + '/sp/' + params.partner_id + "00" + '/embedIframeJs/uiconf_id/' + params.uiconf_id + '/partner_id/' + params.partner_id + '?autoembed=true&entry_id=' + params.entry_id + '&playerId=' + params.unique_object_id + '&cache_st=' + cache_st + '&width=' + width + '&height=' + height + '&flashvars[streamerType]=auto"></script>';
+
+ 	return html;
  }
 
  /**
