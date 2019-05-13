@@ -14,10 +14,6 @@
       <h4>Limit Your Search</h4>
       <hr>
       <% include partials/facets %>
-    </div>
-    <div class="sidebar-section">
-      <h4>Date Range</h4>
-      <hr>
       <% include partials/daterange-search %>
     </div>
   </div>
@@ -35,11 +31,11 @@
           </div>
           <div class="search-results-menu-element">
             <select id="results-per-page" class="form-control">
-                <% for (var i = 0; i < perPageCountOptions.length; i++) { %>
-                  <% if(perPageCountOptions[i] == pageSize) { %>
-                    <option value="<%= perPageCountOptions[i] %>" selected><%= perPageCountOptions[i] %> per page</option>
+                <% for (var i = 0; i < options.perPageCountOptions.length; i++) { %>
+                  <% if(options.perPageCountOptions[i] == options.pageSize) { %>
+                    <option value="<%= options.perPageCountOptions[i] %>" selected><%= options.perPageCountOptions[i] %> per page</option>
                   <% } else { %>
-                    <option value="<%= perPageCountOptions[i] %>"><%= perPageCountOptions[i] %> per page</option>
+                    <option value="<%= options.perPageCountOptions[i] %>"><%= options.perPageCountOptions[i] %> per page</option>
                   <% } %>
                 <% } %>
             </select>
@@ -47,11 +43,11 @@
 
           <div class="search-results-menu-element">
             <select id="results-view-select" class="form-control">
-                <% for (var i = 0; i < resultsViewOptions.length; i++) { %>
-                  <% if(resultsViewOptions[i] == view) { %>
-                    <option value="<%= resultsViewOptions[i] %>" selected><%= resultsViewOptions[i] %> View</option>
+                <% for (var i = 0; i < options.resultsViewOptions.length; i++) { %>
+                  <% if(options.resultsViewOptions[i] == view) { %>
+                    <option value="<%= options.resultsViewOptions[i] %>" selected><%= options.resultsViewOptions[i] %> View</option>
                   <% } else { %>
-                    <option value="<%= resultsViewOptions[i] %>"><%= resultsViewOptions[i] %> View</option>
+                    <option value="<%= options.resultsViewOptions[i] %>"><%= options.resultsViewOptions[i] %> View</option>
                   <% } %>
                 <% } %>
             </select>
@@ -102,7 +98,7 @@
               <div class="row search-result">
                 <div class="col-md-9 search-result-data">
                   <dl>
-                    <dt class="result-title"><%= (i+1)+((page-1)*pageSize) %>.&nbsp&nbsp<a href="<%= root_url %>/object/<%= results[i].pid %>"><%= results[i].title %></a></dt><dd></dd>
+                    <dt class="result-title"><%= (i+1)+((page-1)*options.pageSize) %>.&nbsp&nbsp<a href="<%= root_url %>/object/<%= results[i].pid %>"><%= results[i].title %></a></dt><dd></dd>
 
                       <% for (var key in results[i].metadata) { %>
                         <dt><%- key %>:</dt>

@@ -149,13 +149,6 @@ module.exports = {
         {"field": "display_record.physicalDescription.internetMediaType"}
     ],
 
-    // new index
-    // searchKeywordFields: [
-    //     {"field": "title", "boost": "3"},
-    //     {"field": ""},
-    //     {"field": ""},
-    // ],
-
     /*
      * Options for results per page
      */
@@ -163,6 +156,7 @@ module.exports = {
 
     resultsViewOptions: ["List", "Grid"],
     defaultSearchResultsView: "List",
+    showDateRangeLimiter: true,
 
     searchTermFuzziness: "1",
 

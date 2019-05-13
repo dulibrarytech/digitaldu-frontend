@@ -885,6 +885,10 @@ div.collection-breadcrumbs a:visited {
 /* End collection grid section */
 
 /* Begin search results */
+div#daterange-window {
+  overflow-y: initial;
+}
+
 form#daterange-form {
   display: inline-flex;
   width: 100%;

@@ -81,9 +81,19 @@ exports.search = function(req, res) {
 			root_url: config.rootUrl,
 			collection_scope: "",
 			query: Helper.getResultsLabel(req.query.q, facets),
-			view: req.query.view || config.defaultSearchResultsView || "list"
+			view: req.query.view || config.defaultSearchResultsView || "list",
+			options: {}
 		},
 		path = config.rootUrl + req.url.substring(req.url.indexOf('search')-1);
+
+		data.options["expandFacets"] = expandFacets;
+		data.options["perPageCountOptions"] = config.resultCountOptions;
+		data.options["resultsViewOptions"] = config.resultsViewOptions;
+		data.options["pageSize"] = pageSize;
+		data.options["showDateRange"] = daterange ? false : config.showDateRangeLimiter;
+
+		Metadata.addResultMetadataDisplays(response.results);
+		data.results = response.results;
 
 		if(error) {
 			console.error(error);
@@ -99,16 +109,10 @@ exports.search = function(req, res) {
 
 			Format.formatFacetDisplay(facetList, function(error, facetList) {
 				Format.formatFacetBreadcrumbs(facets, function(error, facets) {
-					data.results = response.results;
-					Metadata.addResultMetadataDisplays(response.results);
 					
 					data.facets = Facets.create(facetList, config.rootUrl, showAll, expandFacets);
-					data.expandFacets = expandFacets;
 					data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(facets, daterange, config.rootUrl); 
 					data.pagination = Paginator.create(response.results, data.page, pageSize, response.count, path);
-					data.perPageCountOptions = config.resultCountOptions;
-					data.resultsViewOptions = config.resultsViewOptions;
-					data.pageSize = pageSize;
 						
 					return res.render('results', data);
 				});

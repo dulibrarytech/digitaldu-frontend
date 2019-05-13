@@ -2,7 +2,7 @@
 	<!-- dynamic facet list -->
 	<% for(var key in facets) { %>	
 	  <% if(facets[key] != "") { %>
-	  	<% if(expandFacets.includes(key)) { %>
+	  	<% if(options.expandFacets.includes(key)) { %>
 	  	  <button class="accordion active" alt="<%= key %>" name="<%= key %>_collapsible">
 	  	  	<h4><%= key %></h4><i class="fas fa-caret-down facet-caret"></i>
 	  	<% } else { %>
