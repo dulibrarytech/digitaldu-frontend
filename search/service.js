@@ -29,19 +29,14 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
         queryType, queryArray = [], 
         stringLiterals = [];
 
-    // Tokenize the query string to individual words and word groups enclosed with parentheses 
-    stringLiterals = query.match(/"[A-Za-z0-9 ]+"/g) || [];   
-    if(query.replace(/"[A-Za-z0-9 ]+"/g, "").length > 0) {
-      queryArray = query.replace(/"[A-Za-z0-9 ]+"/g, "").split(/ +/g).concat(stringLiterals);
-    }
-    else {
-      queryArray = stringLiterals;
-    }
+    // Separate the terms grouped by parentheses for match_phrase query.  Add the rest of the search terms to the array for a match query
+    queryArray = query.match(/"[A-Za-z0-9 ]+"/g) || [];   
+    queryArray.push(query.replace(/"[A-Za-z0-9 ]+"/g, "").trim());
 
-    /* Build the search fields object: iterate through search query tokens.  
+    /* Build the search fields object 
      * Use a match query for each word token, a match_phrase query for word group tokens, and a wildcard search for tokens that contain a '*'.
      * All tokens default to AND search.
-     * TODO Advanced search options
+     * TODO: Advanced search options
      */
     for(var index of queryArray) {
       
@@ -79,7 +74,7 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
             queryObj = {
               "query": qtemp,
               "operator": "and",
-              "fuzziness": "AUTO"
+              "fuzziness": config.searchTermFuzziness
             };
 
             if(field.boost) {
@@ -104,7 +99,7 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
           matchFields.push(tempObj);
       } 
     }
-
+      console.log("TEST mf", matchFields);
     // If facets are present, add them to the search
     if(facets) {
       var indexKey, count=0;
