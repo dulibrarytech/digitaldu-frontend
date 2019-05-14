@@ -70,7 +70,7 @@ exports.search = function(req, res) {
 	}
 		
 	Service.searchIndex(query, type, facets, collection, page, pageSize, daterange, function(error, response) {
-
+			console.log("TEST response", response);
 		var data = {
 			error: null,
 			facets: {},
@@ -90,7 +90,9 @@ exports.search = function(req, res) {
 		data.options["perPageCountOptions"] = config.resultCountOptions;
 		data.options["resultsViewOptions"] = config.resultsViewOptions;
 		data.options["pageSize"] = pageSize;
-		data.options["showDateRange"] = daterange ? false : config.showDateRangeLimiter;
+
+		// Don't show the daterange limit option if there is a daterange parameter preent, or if there are no search results
+		data.options["showDateRange"] = (daterange || response.count == 0) ? false : config.showDateRangeLimiter;
 
 		Metadata.addResultMetadataDisplays(response.results);
 		data.results = response.results;
