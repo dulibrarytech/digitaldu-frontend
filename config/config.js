@@ -179,8 +179,7 @@ module.exports = {
     facets: {
         // Index v1 external fields
         "Creator": "creator",
-        // "Subject": "subject",
-        "Subject": "f_subjects",
+        "Subject": "subject",
         "Type": "type",
 
         // Index v1 display record fields
@@ -205,18 +204,18 @@ module.exports = {
         "Collections": 15 
     },
 
-    facetLabelNormalization: {
+    facetDisplayLabel: {
         "Type": {
-            "Still Image": ["still image"],
-            "Moving Image": ["moving image", "moving_image"],
-            "Text": ["text"],
-            "Sound Recording": ["sound recording", "sound recording,[object Object]"],
-            "Music Recording": ["sound recording-musical"],
-            "Nonmusic Recording": ["sound recording-nonmusical"],
-            "Map": ["cartographic"],
-            "Mixed Material": ["mixed material"],
-            "3D Object": ["three dimensional object", "three dimensional object,[object Object]"],
-            "Unknown": ["[object Object]"]
+            "Still Image": "still image",
+            "Moving Image": "moving image",
+            "Text": "text",
+            "Sound Recording": "sound recording",
+            "Music Recording": "sound recording-musical",
+            "Nonmusic Recording": "sound recording-nonmusical",
+            "Map": "cartographic",
+            "Mixed Material": "mixed material",
+            "3D Object": "three dimensional object",
+            "Unknown": "[object Object]"
         }
     },
 

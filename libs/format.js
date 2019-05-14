@@ -45,8 +45,8 @@ exports.formatFacetBreadcrumbs = function(object, callback) {
 var formatTypeFacets = function(typeFacets) {
     var types = [];
     for(var index of typeFacets) {
-      for(var key in config.facetLabelNormalization.Type) {
-        if(config.facetLabelNormalization.Type[key].includes(index.facet)) {
+      for(var key in config.facetDisplayLabel.Type) {
+        if(config.facetDisplayLabel.Type[key] == index.facet) {
           index.name = key;
         }
       }
