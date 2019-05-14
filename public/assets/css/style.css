@@ -1163,7 +1163,7 @@ div.metadata-content {
   /*height:auto !important;*/
 }
 
-#video-viewer h3 {
+.kaltura-viewer h3 {
   margin-bottom: 15px;
 }
 

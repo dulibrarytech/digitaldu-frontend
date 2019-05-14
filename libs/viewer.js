@@ -310,7 +310,7 @@ function getIIIFObjectViewer(object, index=null) {
  		width = "100%",
  		html = "";
 
- 	html += "<h3>" + object.title + "</h3>";
+ 	html += "<div class='kaltura-viewer'><h3>" + object.title + "</h3></div>";
  	html += '<script src="https://cdnapisec.kaltura.com/p/' + params.partner_id + '/sp/' + params.partner_id + "00" + '/embedIframeJs/uiconf_id/' + params.uiconf_id + '/partner_id/' + params.partner_id + '?autoembed=true&entry_id=' + params.entry_id + '&playerId=' + params.unique_object_id + '&cache_st=' + cache_st + '&width=' + width + '&height=' + height + '&flashvars[streamerType]=auto"></script>';
 
  	return html;
