@@ -118,17 +118,19 @@ exports.renderRootCollection = function(req, res) {
 }
 
 exports.renderCollection = function(req, res) {
-
+	
 	Service.getCollectionHeirarchy(req.params.pid, function(parentCollections) {
 		var data = {
+			error: null,
+			facets: {},
 			facet_breadcrumb_trail: null,
 			collection_breadcrumb_trail: null,
 			current_collection_title: "",
 			current_collection: "",
-			facets: {},
-			error: null,
 			pagination: {},
-			root_url: config.rootUrl
+			root_url: config.rootUrl,
+			searchFields: config.searchFields,
+			options: {}
 		};
 			
 		var	pid = req.params.pid || "",
@@ -136,6 +138,10 @@ exports.renderCollection = function(req, res) {
 			path = config.baseUrl + req._parsedOriginalUrl.path,
 			reqFacets = req.query.f || null,
 			showAll = req.query.showAll || [];
+
+		data.collectionID = pid;
+		data.options["expandFacets"] = [];
+		data.options["perPageCountOptions"] = config.resultCountOptions;
 
 		// Get all collections in this community
 		Service.getObjectsInCollection(pid, page, reqFacets, function(error, response) {
@@ -146,6 +152,10 @@ exports.renderCollection = function(req, res) {
 				return res.render('collection', data);
 			}
 			else {
+
+				data.collections = response.list;
+				data.current_collection = pid;
+				data.current_collection_title = response.title || "Untitled";
 
 				// Get the list of facets for this collection, remove the 'Collections' facets (Can re-add this field, if we ever show facets for nested collections: 
 				// ie there will be multiple collections facets present when one collection is open)
@@ -160,18 +170,10 @@ exports.renderCollection = function(req, res) {
 
 				Format.formatFacetDisplay(facetList, function(error, facetList) {
 					// Add collections and collection data	
-					data.collections = response.list;
-					data.current_collection = pid;
-					data.current_collection_title = response.title || "Untitled";
-
-					// Add view data
 					data.pagination = Paginator.create(response.list, page, config.maxCollectionsPerPage, response.count, path);
 					data.facets = Facets.create(facetList, config.rootUrl);
-					data.expandFacets = [];	// TODO get from url if implemented
 					data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(reqFacets, null, config.rootUrl);
 					data.collection_breadcrumb_trail = Helper.getCollectionBreadcrumbObject(parentCollections);
-					data.collectionID = pid;
-					data.searchFields = config.searchFields;
 
 					// If there are no facets to display, set to null so the view does not show the facets section
 					if(AppHelper.isObjectEmpty(data.facets)) {
