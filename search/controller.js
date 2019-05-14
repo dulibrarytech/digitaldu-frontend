@@ -70,7 +70,6 @@ exports.search = function(req, res) {
 	}
 		
 	Service.searchIndex(query, type, facets, collection, page, pageSize, daterange, function(error, response) {
-			console.log("TEST response", response);
 		var data = {
 			error: null,
 			facets: {},

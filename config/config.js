@@ -59,7 +59,7 @@ module.exports = {
      * Viewer to play audio files
      * [browser | jwplayer | universalviewer | kaltura]
      */
-    audioPlayer: "kaltura",
+    audioPlayer: "universalviewer",
 
     /* 
      * Viewer to display video files
@@ -115,7 +115,9 @@ module.exports = {
      */ 
     searchKeywordFields: [
         {"field": "title", "boost": "3"},
-        {"field": "display_record.abstract", "boost": "2"},
+        {"field": "abstract", "boost": "2"},
+        {"field": "creator", "boost": "2"},
+        {"field": "subject", "boost": "1"},
         {"field": "display_record.accessCondition"},
         {"field": "display_record.classification"},
         {"field": "display_record.identifier"},
@@ -177,16 +179,12 @@ module.exports = {
      * "Facet name": "index field"
      */
     facets: {
-        // Index v1 external fields
         "Creator": "creator",
         "Subject": "subject",
         "Type": "type",
-
-        // Index v1 display record fields
         "Date": "display_record.originInfo.d_created",
         "Collections": "is_member_of_collection",
-
-        "Authority ID": "display_record.subjects.authority_id"
+        "Authority ID": "display_record.subject.authority_id"
     },
 
     /*
@@ -225,8 +223,8 @@ module.exports = {
      * If multiple dates exist in the index, the first that appears will be used
      */
     objectDateValue: {
-        "Date": '{"dates":[{"date": "VALUE", "type": "creation"}]}'
-        //"Date": '{"originInfo":[{"d_created": "VALUE"}]}'
+        //"Date": '{"dates":[{"date": "VALUE", "type": "creation"}]}'
+        "Date": '{"originInfo":[{"d_created": "VALUE"}]}'
     },
 
     /*
@@ -243,9 +241,9 @@ module.exports = {
      * "Display field name": "index field key to match"
      */
     resultsDisplay: {
+        "Date": '{"originInfo":[{"d_created": "VALUE"}]}',
         "Creator": '{"name": [ { "namePart": "VALUE", "role": "creator" } ]}',
-        "Description": "abstract",
-        "Date": '{"dates":[{"date": "VALUE", "type": "creation"}]}'
+        "Description": "abstract"
     },
 
     /*

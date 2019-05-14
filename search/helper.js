@@ -140,8 +140,9 @@ exports.getResultsLabel = function(query, facets) {
     }
   }
   else {
-    queryData = query;
+    queryData = query == "" ? "*" : query;
   }
+    console.log("TEST qd", queryData);
   return queryData; 
 }
 
