@@ -20,6 +20,12 @@ var Repository = require('./repository');
  */
 exports.getObjectViewer = function(object, mimeType="") {
  	var viewer = "";
+
+ 	if(object == null) {
+ 		console.log("Viewer says: null object");
+ 		return viewer;
+ 	}
+
 	if(mimeType == "" && typeof object.mime_type != 'undefined') {
  		mimeType = object.mime_type;
  	}

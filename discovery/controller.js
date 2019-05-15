@@ -211,6 +211,10 @@ exports.renderObjectView = function(req, res) {
 			data.error = error;
 			renderView(data);
 		}
+		else if(response == null) {
+			data.error = "Object not found: " + req.params.pid;
+			renderView(data);
+		}
 		else {
 			var object = response,
 				index = req.params.index && isNaN(parseInt(req.params.index)) === false ? req.params.index : 0;
