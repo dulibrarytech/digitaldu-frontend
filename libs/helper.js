@@ -1,9 +1,9 @@
 exports.testObject = function(object) {
-	return typeof object != "undefined";
+	return (object && typeof object != "undefined");
 }
 
 exports.isParentObject = function(object) {
-  return typeof object.children != 'undefined';
+  return (object && typeof object.children != 'undefined');
 }
 
 exports.isObjectEmpty = function(object) {

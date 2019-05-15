@@ -278,10 +278,14 @@ exports.getDatastream = function(req, res) {
 				Service.getThumbnailPlaceholderStream(function(error, stream) {
 					if(error) {
 						console.log(error);
-						res.sendStatus(500);
+						res.sendStatus(503);
+					}
+					else if(stream) {
+						stream.pipe(res);
 					}
 					else {
-						stream.pipe(res);
+						console.log("Could not fetch stream: ", pid);
+						res.sendStatus(404);
 					}
 				});
 			}
@@ -294,10 +298,14 @@ exports.getDatastream = function(req, res) {
 				Service.getThumbnailPlaceholderStream(function(error, stream) {
 					if(error) {
 						console.log(error);
-						res.sendStatus(500);
+						res.sendStatus(503);
+					}
+					else if(stream) {
+						stream.pipe(res);
 					}
 					else {
-						stream.pipe(res);
+						console.log("Could not fetch stream: ", pid);
+						res.sendStatus(404);
 					}
 				});
 			}

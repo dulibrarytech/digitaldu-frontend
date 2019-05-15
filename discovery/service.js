@@ -461,6 +461,9 @@ var getParentTrace = function(pid, collections, callback) {
       if(error) {
         callback(error, null);
       }
+      else if(response == null) {
+        callback("Object not found:", pid, null);
+      }
       else {
         // There is > 1 title associated with this object, use the first one
         if(typeof response.title == "object") {
