@@ -152,59 +152,56 @@ exports.getResultsLabel = function(query, facets) {
  * @param 
  * @return 
  */
-exports.findRecordsNotInRange = function(results, range) {
-  var records = [], dateObj = {}, displayRecord, date;
-    for(var index of results) {
+exports.getDaterangeQuery = function(daterange) {
+  if(/[0-9][0-9][0-9][0-9]/g.test(daterange.from) && /[0-9][0-9][0-9][0-9]/g.test(daterange.to)) {
+      let dateMatchFields = [], dateQuery = {}, dateStr = "";
 
-      displayRecord = index._source[config.displayRecordField];
-      date = appHelper.parseJSONObjectValues(config.objectDateValue, displayRecord);
+      // Build a string of all dates included in the specified range
+      for(let i=parseInt(daterange.from); i<=parseInt(daterange.to); i++) {
+        dateStr += i.toString() + " ";
+      }
 
-      if(appHelper.testObject(date["Date"]) && 
-        isDateInRange(date["Date"][0], range) === false) {
-          records.push(index._id);
+      // Add the date string to the date query
+      dateQuery[config.objectDateField] = {
+        "query": dateStr
+      }
+
+      // Add the date query to the array
+      dateMatchFields.push({
+        "match": dateQuery
+      });
+
+      // 'Circa' dates extend range positive
+      for(let i=1; i<=config.datespanRange; i++) {
+        dateQuery = {};
+        dateQuery[config.objectDateField] = {
+          "query": "circa " + (parseInt(daterange.to) + i).toString()
+        }
+
+        // Add the query to the array
+        dateMatchFields.push({
+          "match": dateQuery
+        });
+      }
+
+      // 'Circa' dates extend range negative
+      for(let i=1; i<=config.datespanRange; i++) {
+        dateQuery = {};
+        dateQuery[config.objectDateField] = {
+          "query": "circa " + (parseInt(daterange.from) - i).toString()
+        }
+
+        // Add the query to the array
+        dateMatchFields.push({
+          "match": dateQuery
+        });
+      }
+
+      // Add the date query array to the bool query object, return it
+      return {
+        "bool": {
+          "should": dateMatchFields
+        }
       }
     }
-
-    return records;
-}
-
-// Update for new index, vocabulary specific
-// Using the new begin and end dates in the index (separate from the display data)
-var isDateInRange = function(date, range) {
-  var inRange = false, dateElements, dates = [];
-
-  // Replace all non alphanumeric characters with spaces
-  date = date.replace(/[^a-zA-Z0-9]/g, " ");
-  dateElements = date.split(" ");
-
-  // Handle "circa", create date range +/- 5 years
-  if(date.toLowerCase().includes("circa")) {
-    date = date.match(/[0-9][0-9][0-9][0-9]/g);
-    dates.push(parseInt(date[0])-5);  // Begin date
-    dates.push(parseInt(date[0])+5);  // End date
-  }
-
-  // Parse the dates out of the date field string
-  else {
-    dates = date.match(/[0-9][0-9][0-9][0-9]/g) || [];
-  }
-  
-  // If one date is present, that is the single date value
-  if(dates.length == 1) {
-    if(dates[0] >= range[0] && dates[0] <= range[1]) {
-      inRange = true;
-    }
-  }
-
-  // If two dates are present, test the range.  The first date that appears is the start date, the second date that appears is the end date, subsequent dates are ignored
-  else if(dates.length == 2) {
-    if( ( (dates[0] >= range[0] && dates[0] <= range[1]) || (dates[1] >= range[0] && dates[1] <= range[1]) ) || (dates[0] <= range[0] && dates[1] >= range[1]) ) {
-      inRange = true;
-    }
-  }
-  else {
-    inRange = true;
-  }
-
-  return inRange;
 }
