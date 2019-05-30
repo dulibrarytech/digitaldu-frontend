@@ -758,11 +758,15 @@ div#collections .item-thumb {
 }
 
 div.search-results-grid div.thumb {
-  margin-bottom: 15px;
+    margin-bottom: 15px;
 }
 
 div.search-results-grid {
     margin: 50px 0 0 15px;
+}
+
+div.search-results-grid div.item-details {
+    text-align: center;
 }
 
 div.search-results-grid dl.item {
@@ -783,11 +787,11 @@ div.search-results-grid .row:not(:first-child) {
 }
 
 div.search-results-grid .item-title {
-  font-size: 15px;
+    font-size: 15px;
 }
 
 div.search-results-grid dl.item {
-  width: 80%;
+    width: 80%;
 }
 
 div.search-results-grid dl.item dd {
