@@ -227,6 +227,7 @@ module.exports = {
         //"Date": '{"dates":[{"date": "VALUE", "type": "creation"}]}'
         "Date": '{"originInfo":[{"d_created": "VALUE"}]}'
     },
+    datespanRange: "5", // "circa"
 
     /*
      * Fields to display in the summary data section (above Details link)

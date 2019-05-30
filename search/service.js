@@ -30,8 +30,12 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
         queryType,
         queryArray = [];
 
+    if(query == "") {
+      query = '*';
+    }
+
     // Standard search, use single query string
-   queryArray.push(query);
+    queryArray.push(query);
 
     // TODO: Advanced Search
     // Separate the terms grouped by parentheses for match_phrase query.  Add the rest of the search terms to the array for a match query.
@@ -140,19 +144,54 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
     }
 
     if(daterange) {
-      let dateMatchFields = [];
+
+      //mustMatchFields.push(Helper.getDaterangeQuery(daterange));
+
       if(/[0-9][0-9][0-9][0-9]/g.test(daterange.from) && /[0-9][0-9][0-9][0-9]/g.test(daterange.to)) {
-        let dates = [], dateQuery;
+        let dateMatchFields = [], dateQuery = {}, dateStr = "";
+
+        // Build a string of all dates included in the specified range
         for(let i=parseInt(daterange.from); i<=parseInt(daterange.to); i++) {
+          dateStr += i.toString() + " ";
+        }
+
+        // Add the date string to the date query
+        dateQuery[config.objectDateField] = {
+          "query": dateStr
+        }
+
+        // Add the date query to the array
+        dateMatchFields.push({
+          "match": dateQuery
+        });
+
+        // 'Circa' dates extend range positive
+        for(let i=1; i<=config.datespanRange; i++) {
           dateQuery = {};
           dateQuery[config.objectDateField] = {
-            "query": i.toString()
+            "query": "circa " + (parseInt(daterange.to) + i).toString()
           }
 
+          // Add the query to the array
           dateMatchFields.push({
             "match": dateQuery
           });
         }
+
+        // 'Circa' dates extend range negative
+        for(let i=1; i<=config.datespanRange; i++) {
+          dateQuery = {};
+          dateQuery[config.objectDateField] = {
+            "query": "circa " + (parseInt(daterange.from) - i).toString()
+          }
+
+          // Add the query to the array
+          dateMatchFields.push({
+            "match": dateQuery
+          });
+        }
+
+        // Add the date query array to the bool query object
         mustMatchFields.push({
           "bool": {
             "should": dateMatchFields
@@ -262,7 +301,7 @@ exports.searchFacets = function (query, facets, page, callback) {
                             "multi_match": {
                                 "operator": "and",
                                 "fields": facets,
-                                "query": query // q
+                                "query": query
                             }
                         }
                     }
