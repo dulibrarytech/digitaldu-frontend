@@ -222,6 +222,7 @@ module.exports = {
      * Key must be "Date", value is location in index display object
      * If multiple dates exist in the index, the first that appears will be used
      */
+    objectDateField: "display_record.originInfo.d_created",
     objectDateValue: {
         //"Date": '{"dates":[{"date": "VALUE", "type": "creation"}]}'
         "Date": '{"originInfo":[{"d_created": "VALUE"}]}'

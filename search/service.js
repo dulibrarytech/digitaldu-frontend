@@ -30,11 +30,15 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
         queryType,
         queryArray = [];
 
+    // Standard search, use single query string
+   queryArray.push(query);
+
+    // TODO: Advanced Search
     // Separate the terms grouped by parentheses for match_phrase query.  Add the rest of the search terms to the array for a match query.
-    queryArray = query.match(/"[A-Za-z0-9 ]+"/g) || []; 
-    if(query.replace(/"[A-Za-z0-9 ]+"/g, "").length > 0) {
-      queryArray.push(query.replace(/"[A-Za-z0-9 ]+"/g, "").trim());
-    } 
+    // queryArray = query.match(/"[A-Za-z0-9 ]+"/g) || []; 
+    // if(query.replace(/"[A-Za-z0-9 ]+"/g, "").length > 0) {
+    //   queryArray.push(query.replace(/"[A-Za-z0-9 ]+"/g, "").trim());
+    // } 
 
     /* 
      * Build the search fields object 
@@ -43,7 +47,6 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
      * TODO: Advanced search options
      */
     for(var index of queryArray) {
-
        // This is a string literal search if the query is contained by parentheses.  Use 'match_phrase'.  Must match the entire query
       if(index[0] == '"' && index[ index.length-1 ] == '"') {
         index = index.replace(/"/g, '');  
@@ -136,6 +139,28 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
       });
     }
 
+    if(daterange) {
+      let dateMatchFields = [];
+      if(/[0-9][0-9][0-9][0-9]/g.test(daterange.from) && /[0-9][0-9][0-9][0-9]/g.test(daterange.to)) {
+        let dates = [], dateQuery;
+        for(let i=parseInt(daterange.from); i<=parseInt(daterange.to); i++) {
+          dateQuery = {};
+          dateQuery[config.objectDateField] = {
+            "query": i.toString()
+          }
+
+          dateMatchFields.push({
+            "match": dateQuery
+          });
+        }
+        mustMatchFields.push({
+          "bool": {
+            "should": dateMatchFields
+          }
+        });
+      } 
+    }
+
     // Do not show collection objects
     restrictions.push({
       "match": {
@@ -169,14 +194,15 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
 
     // If empty querystring, search for all items that are not collections
     else {
+      restrictions.push({
+        match: {
+          "object_type": "collection"
+        }
+      });
       queryObj = {
         "bool": {
           "must": mustMatchFields,
-          "must_not": {
-            "match": {
-              "object_type": "collection"
-            }
-          }
+          "must_not": restrictions
         }
       }
     }
@@ -195,7 +221,7 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
     // });
     //   console.log("TEST sortArr", sortArr);
 
-    // Create elasticsearch query object
+    // Create elasticsearch data object
     var data = {  
       index: config.elasticsearchIndex,
       type: config.searchIndexName,
@@ -213,29 +239,10 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
       if (error || typeof response == 'undefined'){
         callback(error, {});
       }
-      else if(daterange) {
-
-        // Get list of outofrange pids using results
-        let pids = Helper.findRecordsNotInRange(response.hits.hits, [daterange.from, daterange.to]);
-
-        // Build resrict object (update data{} arg below)
-        for(var index in pids) {
-          restrictions.push({
-            "match": {
-              "pid": pids[index] // restricted pid array
-            }
-          });
-        }
-
-        // Search again
-        es.search(data, function (error, response, status) {
-          returnResponseData(facets, response, callback);
-        });
-      }
       else {
         returnResponseData(facets, response, callback);
       }
-  });
+    });
 }
 
 /**

@@ -220,6 +220,9 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
                 collection.title = "";
                 callback(error, []);
               }
+              else if(!object) {
+                callback("Object not found", []);
+              }
               else if(object.object_type != "collection") {
                 callback("Invalid collection: " + object.pid, []);
               }

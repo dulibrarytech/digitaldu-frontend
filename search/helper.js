@@ -142,7 +142,7 @@ exports.getResultsLabel = function(query, facets) {
   else {
     queryData = query == "" ? "*" : query;
   }
-    console.log("TEST qd", queryData);
+
   return queryData; 
 }
 
@@ -165,7 +165,7 @@ exports.findRecordsNotInRange = function(results, range) {
       }
     }
 
-  return records;
+    return records;
 }
 
 // Update for new index, vocabulary specific
@@ -186,9 +186,9 @@ var isDateInRange = function(date, range) {
 
   // Parse the dates out of the date field string
   else {
-    dates = date.match(/[0-9][0-9][0-9][0-9]/g);
+    dates = date.match(/[0-9][0-9][0-9][0-9]/g) || [];
   }
-
+  
   // If one date is present, that is the single date value
   if(dates.length == 1) {
     if(dates[0] >= range[0] && dates[0] <= range[1]) {
