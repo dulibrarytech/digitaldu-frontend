@@ -180,7 +180,7 @@ exports.getDaterangeQuery = function(daterange) {
 
         // Add the query to the array
         dateMatchFields.push({
-          "match": dateQuery
+          "match_phrase": dateQuery
         });
       }
 
@@ -193,7 +193,7 @@ exports.getDaterangeQuery = function(daterange) {
 
         // Add the query to the array
         dateMatchFields.push({
-          "match": dateQuery
+          "match_phrase": dateQuery
         });
       }
 
