@@ -144,47 +144,44 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
     }
 
     if(daterange) {
-      let dateQuery = {
+      var dateQuery = {
         "bool": {
           "should": []
         }
-      };
+      },
+      beginRange = {}, endRange = {};
 
       // QI Check if begin date is included in the range
+      beginRange[config.beginDateField] = {
+        "gte": daterange.from,
+        "lte": daterange.to
+      };
       dateQuery.bool.should.push({
-        "range": {
-          "display_record.dates.begin": { // TODO config setting
-            "gte": daterange.from,
-            "lte": daterange.to
-          }
-        }
+        "range": beginRange
       });
 
       // QII Check if end date is included in the range
+      endRange[config.endDateField] = {
+        "gte": daterange.from,
+        "lte": daterange.to
+      };
       dateQuery.bool.should.push({
-        "range": {
-          "display_record.dates.end": {
-            "gte": daterange.from,
-            "lte": daterange.to
-          }
-        }
+        "range": endRange
       });
 
       // QIII, QIV Check for object date span that envelops the selected daterange
-      let temp = [];
+      var temp = [], beginRange = {}, endRange = {};
+      beginRange[config.beginDateField] = {
+        "lte": daterange.from
+      };
       temp.push({
-        "range": {
-          "display_record.dates.begin": {
-            "lte": daterange.from
-          }
-        }
+        "range": beginRange
       });
+      endRange[config.endDateField] = {
+        "gte": daterange.to
+      };
       temp.push({
-        "range": {
-          "display_record.dates.end": {
-            "gte": daterange.to
-          }
-        }
+        "range": endRange
       });
       dateQuery.bool.should.push({
         "bool": {
