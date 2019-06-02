@@ -9,7 +9,7 @@
 'use strict';
 
 const url = require('url');
-const config = require('../config/config');
+const config = require('../config/' + process.env.CONFIGURATION_FILE);
 
 /**
  * 

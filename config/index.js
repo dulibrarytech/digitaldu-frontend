@@ -1,6 +1,6 @@
 'use strict'
 
-const config = require('../config/config');
+const config = require('../config/' + process.env.CONFIGURATION_FILE);
 const elasticsearch = require('elasticsearch');
 
 const client = new elasticsearch.Client( {  

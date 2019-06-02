@@ -8,7 +8,7 @@
 'use strict';
 
 const async = require('async'),
-    config = require('../config/config'),
+    config = require('../config/' + process.env.CONFIGURATION_FILE),
     Service = require('./service.js'),
     Facets = require('../libs/facets'),
     Paginator = require('../libs/paginator'),

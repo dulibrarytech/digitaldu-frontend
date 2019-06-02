@@ -7,7 +7,7 @@
  */
 
 'use strict';
-const config = require('../config/config');
+const config = require('../config/' + process.env.CONFIGURATION_FILE);
 
 /**
  * 

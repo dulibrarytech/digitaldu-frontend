@@ -8,7 +8,7 @@
 'use strict'
 
 const async = require('async'),
-    config = require('../config/config'),
+    config = require('../config/' + process.env.CONFIGURATION_FILE),
     Helper = require('./helper.js'),
     AppHelper = require("../libs/helper"),
     Service = require('./service.js'),

@@ -9,7 +9,7 @@
 'use strict';
 
 
-var config = require('../config/config');
+var config = require('../config/' + process.env.CONFIGURATION_FILE);
 var Repository = require('./repository');
 
 /**

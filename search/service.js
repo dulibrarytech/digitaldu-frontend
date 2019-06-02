@@ -9,7 +9,7 @@
 
 const es = require('../config/index'),
       fs = require('fs'),
-      config = require('../config/config'),
+      config = require('../config/' + process.env.CONFIGURATION_FILE),
       request  = require("request"),
       Repository = require('../libs/repository'),
       Helper = require("./helper");

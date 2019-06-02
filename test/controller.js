@@ -2,7 +2,7 @@
 
 const async = require('async'),
 
-config = require('../config/config'),
+config = require('../config/' + process.env.CONFIGURATION_FILE),
 DiscHelper = require('../discovery/helper.js'),
 DiscService = require('../discovery/service.js'),
 
