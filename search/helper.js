@@ -152,56 +152,51 @@ exports.getResultsLabel = function(query, facets) {
  * @param 
  * @return 
  */
-exports.getDaterangeQuery = function(daterange) {
-  if(/[0-9][0-9][0-9][0-9]/g.test(daterange.from) && /[0-9][0-9][0-9][0-9]/g.test(daterange.to)) {
-      let dateMatchFields = [], dateQuery = {}, dateStr = "";
-
-      // Build a string of all dates included in the specified range
-      for(let i=parseInt(daterange.from); i<=parseInt(daterange.to); i++) {
-        dateStr += i.toString() + " ";
+exports.getDateRangeQuery = function(daterange) {
+  var dateQuery = {
+      "bool": {
+        "should": []
       }
+    },
+    beginRange = {}, endRange = {};
 
-      // Add the date string to the date query
-      dateQuery[config.objectDateField] = {
-        "query": dateStr
+    // QI Check if begin date is included in the range
+    beginRange[config.beginDateField] = {
+      "gte": daterange.from,
+      "lte": daterange.to
+    };
+    dateQuery.bool.should.push({
+      "range": beginRange
+    });
+
+    // QII Check if end date is included in the range
+    endRange[config.endDateField] = {
+      "gte": daterange.from,
+      "lte": daterange.to
+    };
+    dateQuery.bool.should.push({
+      "range": endRange
+    });
+
+    // QIII, QIV Check for object date span that envelops the selected daterange
+    var temp = [], beginRange = {}, endRange = {};
+    beginRange[config.beginDateField] = {
+      "lte": daterange.from
+    };
+    temp.push({
+      "range": beginRange
+    });
+    endRange[config.endDateField] = {
+      "gte": daterange.to
+    };
+    temp.push({
+      "range": endRange
+    });
+    dateQuery.bool.should.push({
+      "bool": {
+        "must": temp
       }
+  });
 
-      // Add the date query to the array
-      dateMatchFields.push({
-        "match": dateQuery
-      });
-
-      // 'Circa' dates extend range positive
-      for(let i=1; i<=config.datespanRange; i++) {
-        dateQuery = {};
-        dateQuery[config.objectDateField] = {
-          "query": "circa " + (parseInt(daterange.to) + i).toString()
-        }
-
-        // Add the query to the array
-        dateMatchFields.push({
-          "match_phrase": dateQuery
-        });
-      }
-
-      // 'Circa' dates extend range negative
-      for(let i=1; i<=config.datespanRange; i++) {
-        dateQuery = {};
-        dateQuery[config.objectDateField] = {
-          "query": "circa " + (parseInt(daterange.from) - i).toString()
-        }
-
-        // Add the query to the array
-        dateMatchFields.push({
-          "match_phrase": dateQuery
-        });
-      }
-
-      // Add the date query array to the bool query object, return it
-      return {
-        "bool": {
-          "should": dateMatchFields
-        }
-      }
-    }
+  return dateQuery;
 }

@@ -144,52 +144,7 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
     }
 
     if(daterange) {
-      var dateQuery = {
-        "bool": {
-          "should": []
-        }
-      },
-      beginRange = {}, endRange = {};
-
-      // QI Check if begin date is included in the range
-      beginRange[config.beginDateField] = {
-        "gte": daterange.from,
-        "lte": daterange.to
-      };
-      dateQuery.bool.should.push({
-        "range": beginRange
-      });
-
-      // QII Check if end date is included in the range
-      endRange[config.endDateField] = {
-        "gte": daterange.from,
-        "lte": daterange.to
-      };
-      dateQuery.bool.should.push({
-        "range": endRange
-      });
-
-      // QIII, QIV Check for object date span that envelops the selected daterange
-      var temp = [], beginRange = {}, endRange = {};
-      beginRange[config.beginDateField] = {
-        "lte": daterange.from
-      };
-      temp.push({
-        "range": beginRange
-      });
-      endRange[config.endDateField] = {
-        "gte": daterange.to
-      };
-      temp.push({
-        "range": endRange
-      });
-      dateQuery.bool.should.push({
-        "bool": {
-          "must": temp
-        }
-      });
-
-      mustMatchFields.push(dateQuery);
+      mustMatchFields.push(Helper.getDateRangeQuery(daterange));
     }
 
     // Do not show collection objects
