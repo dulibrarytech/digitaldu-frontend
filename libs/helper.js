@@ -24,7 +24,13 @@ exports.parseJSONObjectValues = function(valueMap, jsonObject) {
 		var mapObject, recordItem, insert=true, showValue;
 
 		if(valueMap[key][0] == "{") {
-			mapObject = JSON.parse(valueMap[key]) || {};
+
+			try {
+				mapObject = JSON.parse(valueMap[key]) || {};
+			}
+			catch (e) {
+				console.log("Error: Could not parse configuration json object");
+			}
 
 			for(var subKey in mapObject) {	// Should only be 1 at first
 				recordItem = jsonObject[subKey] || [];

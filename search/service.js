@@ -144,7 +144,55 @@ exports.searchIndex = function(query, type, facets=null, collection=null, pageNu
     }
 
     if(daterange) {
-      mustMatchFields.push(Helper.getDaterangeQuery(daterange));
+      let dateQuery = {
+        "bool": {
+          "should": []
+        }
+      };
+
+      // QI Check if begin date is included in the range
+      dateQuery.bool.should.push({
+        "range": {
+          "display_record.dates.begin": { // TODO config setting
+            "gte": daterange.from,
+            "lte": daterange.to
+          }
+        }
+      });
+
+      // QII Check if end date is included in the range
+      dateQuery.bool.should.push({
+        "range": {
+          "display_record.dates.end": {
+            "gte": daterange.from,
+            "lte": daterange.to
+          }
+        }
+      });
+
+      // QIII, QIV Check for object date span that envelops the selected daterange
+      let temp = [];
+      temp.push({
+        "range": {
+          "display_record.dates.begin": {
+            "lte": daterange.from
+          }
+        }
+      });
+      temp.push({
+        "range": {
+          "display_record.dates.end": {
+            "gte": daterange.to
+          }
+        }
+      });
+      dateQuery.bool.should.push({
+        "bool": {
+          "must": temp
+        }
+      });
+
+      mustMatchFields.push(dateQuery);
     }
 
     // Do not show collection objects

@@ -17,8 +17,6 @@ const async = require('async'),
     Format = require("../libs/format");
 
 exports.search = function(req, res) {
-
-	// Verify / sanitize
 	var query = req.query.q,
 		facets = req.query.f || null,
 		typeVal = req.query.type || "all", type,
@@ -83,27 +81,28 @@ exports.search = function(req, res) {
 			query: Helper.getResultsLabel(req.query.q, facets),
 			view: req.query.view || config.defaultSearchResultsView || "list",
 			options: {}
-		},
-		path = config.rootUrl + req.url.substring(req.url.indexOf('search')-1);
-
-		data.options["expandFacets"] = expandFacets;
-		data.options["perPageCountOptions"] = config.resultCountOptions;
-		data.options["resultsViewOptions"] = config.resultsViewOptions;
-		data.options["pageSize"] = pageSize;
-
-		// Don't show the daterange limit option if there is a daterange parameter preent, or if there are no search results
-		data.options["showDateRange"] = (daterange || response.count == 0) ? false : config.showDateRangeLimiter;
-
-		Metadata.addResultMetadataDisplays(response.results);
-		data.results = response.results;
+		};
 
 		if(error) {
 			console.error(error);
-			data.results = null;
-			data.error = error;
+			data.error = "An unexpected error has occurred.  Please contact systems support";
 			return res.render('results', data);
 		}
 		else {
+
+			var path = config.rootUrl + req.url.substring(req.url.indexOf('search')-1);
+
+			data.options["expandFacets"] = expandFacets;
+			data.options["perPageCountOptions"] = config.resultCountOptions;
+			data.options["resultsViewOptions"] = config.resultsViewOptions;
+			data.options["pageSize"] = pageSize;
+
+			// Don't show the daterange limit option if there is a daterange parameter preent, or if there are no search results
+			data.options["showDateRange"] = (daterange || response.count == 0) ? false : config.showDateRangeLimiter;
+
+			Metadata.addResultMetadataDisplays(response.results);
+			data.results = response.results;
+
 			var facetList = Facets.getFacetList(response.facets, showAll);
 			if(facets) {
 				facets = Facets.getSearchFacetObject(facets);
