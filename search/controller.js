@@ -25,16 +25,10 @@ exports.search = function(req, res) {
 		collection = req.query.collection || null,
 		showAll = req.query.showAll || [],
 		expandFacets = req.query.expand || [],
-		daterange = req.query.from || req.query.to ? {
+		daterange = (req.query.from || req.query.to) && (parseInt(req.query.from) < parseInt(req.query.to)) ? {
 			from: req.query.from || 0,
 			to: req.query.to || new Date().getFullYear()
 		} : null;
-
-	// Allow empty search to return all results in the repository
-	// if(query == "") {
-	// 	query = '*';
-	// }
-	// Moved to service ^^^
 
 	// Get the search type
 	// TODO move to helper function
