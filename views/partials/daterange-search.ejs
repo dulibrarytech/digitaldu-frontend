@@ -24,7 +24,7 @@
 	// Remove the date range from the query string
 	function removeDateRange(from, to) {
 		var searchUrl = decodeURIComponent(window.location.href);
-		searchUrl = updateUrlExpandParams(searchUrl);
+		//searchUrl = updateUrlExpandParams(searchUrl);
 		return encodeURI(searchUrl.replace(/&from=[0-9]+&to=[0-9]+/g, ""));
 	}
 </script>

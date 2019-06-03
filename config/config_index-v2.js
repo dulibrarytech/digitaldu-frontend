@@ -196,8 +196,8 @@ module.exports = {
         "Date": '{"dates":[{"expression": "VALUE", "label": "creation"}]}'
         //"Date": '{"originInfo":[{"d_created": "VALUE"}]}'
     },
-    beginDateField: "",
-    endDateField: "",
+    beginDateField: "display_record.dates.begin",
+    endDateField: "display_record.dates.end",
 
     /*
      * Fields to display in the summary data section (above Details link)
@@ -205,7 +205,7 @@ module.exports = {
      */
     summaryDisplay: {
         "Title": '{"title": ["VALUE"]}',
-        "Description": '{"notes"[{"content": "VALUE", "type": "abstract"}]}'
+        "Description": '{"notes": [{"content": "VALUE", "type": "abstract"}]}'
     },
 
     /*
@@ -213,9 +213,9 @@ module.exports = {
      * "Display field name": "index field key to match"
      */
     resultsDisplay: {
-        // "Creator": '{"name": [ { "namePart": "VALUE", "role": "creator" } ]}',
-        "Description": '{"notes"[{"content": "VALUE", "type": "abstract"}]}',
-        "Date": '{"dates":[{"expression": "VALUE", "label": "creation"}]}'
+        "Date": '{"dates":[{"expression": "VALUE", "label": "creation"}]}',
+        "Creator": '{"name": [ { "namePart": "VALUE", "role": "creator" } ]}',
+        "Description": '{"notes": [{"content": "VALUE", "type": "abstract"}]}'
     },
 
     /*
@@ -229,8 +229,8 @@ module.exports = {
         "Local Identifier": '{"identifiers": [{"identifier": "VALUE", "type": "local"}]}',
         "Date": '{"dates": [{"expression": "VALUE", "label": "creation"}]}',
         "Extents": '{"extents": ["VALUE"]}',
-        "Notes": '{"notes": [{"content", "VALUE"}]}',
-        "Language": '{"t_language": [{"text", "VALUE"}]}',
+        "Notes": '{"notes": [{"content": "VALUE"}]}',
+        "Language": '{"t_language": [{"text": "VALUE"}]}',
         "Subject": '{"subjects": [{"title": "VALUE", "authority": "local"}]}',
         "Topic": '{"subjects": [{"terms": [{"term": "VALUE", "type": "topical"}]}]}',
         "Geographic": '{"subjects": [{"terms": [{"term": "VALUE", "type": "geographic"}]}]}'
