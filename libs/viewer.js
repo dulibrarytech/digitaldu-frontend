@@ -139,7 +139,6 @@ function getAudioPlayer(object, type) {
  * @return 
  */
 function getVideoViewer(object) {
-		console.log("TEST viewer gets object", object);
 	var viewer = '<div id="video-viewer" class="viewer-section">', tn, stream, url;
 	var extension = "", datastreamID = "";
 
@@ -302,7 +301,6 @@ function getIIIFObjectViewer(object, index=null) {
 		viewer += '}, new UV.URLDataProvider());';
 		viewer += '}, false);';
 		viewer += '</script>';
-			console.log("TEST viewer iiif", viewer);
 	return viewer;
 }
 

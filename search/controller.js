@@ -104,11 +104,10 @@ exports.search = function(req, res) {
 
 			Format.formatFacetDisplay(facetList, function(error, facetList) {
 				Format.formatFacetBreadcrumbs(facets, function(error, facets) {
-						console.log("TEST facets", facets);
 					data.facets = Facets.create(facetList, config.rootUrl, showAll, expandFacets);
 					data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(facets, daterange, config.rootUrl); 
 					data.pagination = Paginator.create(response.results, data.page, pageSize, response.count, path);
-						
+											
 					return res.render('results', data);
 				});
 			});

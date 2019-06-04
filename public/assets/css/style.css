@@ -261,6 +261,10 @@ div#main-wrapper {
   position: relative;
 }
 
+div#frontpage-content {
+  margin-top: 100px;
+}
+
 main > .wrapper {
   padding-top: 0 !important;
   padding-bottom: 0 !important;

@@ -151,7 +151,8 @@ module.exports = {
     facets: {
         "Creator": "creator",
         "Subject": "f_subjects",
-        "Type": "type",
+        // "Type": "type",
+        "Type": "mime_type",
         "Date": "display_record.dates.expression",
         "Collections": "is_member_of_collection",
         "Authority ID": "display_record.subjects.authority_id"
@@ -174,16 +175,30 @@ module.exports = {
 
     facetLabelNormalization: {
         "Type": {
-            "Still Image": ["still image"],
-            "Moving Image": ["moving image", "moving_image"],
-            "Text": ["text"],
-            "Sound Recording": ["sound recording", "sound recording,[object Object]"],
+            "Still Image": ["still image", "image/tiff", "image/jp2", "image/jp3"],
+            "Moving Image": ["moving image", "moving_image", "video/mp4"],
+            "Text": ["text", "text/plain"],
+            "Sound Recording": ["sound recording", "sound recording,[object Object]", "audio/mp3"],
             "Music Recording": ["sound recording-musical"],
             "Nonmusic Recording": ["sound recording-nonmusical"],
             "Map": ["cartographic"],
-            "Mixed Material": ["mixed material"],
+            "Mixed Material": ["mixed material", "application/pdf"],
             "3D Object": ["three dimensional object", "three dimensional object,[object Object]"],
             "Unknown": ["[object Object]"]
+        }
+    },
+
+    facetThumbnails: {
+        "Type": {
+            "Still Image": "assets/img/picture-in-frame-TN.png",
+            "Moving Image": "assets/img/film-camera-TN.png",
+            "Text": "assets/img/old-book-TN.png",
+            "Sound Recording": "assets/img/Sound-Wave-icon-TN.png",
+            "Music Recording": "assets/img/45_rpm_record-TN.png",
+            "Nonmusic Recording": "assets/img/mic-TN.png",
+            "Map": "assets/img/map-TN.png",
+            "Mixed Material": "assets/img/document-icon-free-0-TN.jpg",
+            "3D Object": "assets/img/objects-icon-TN.png"
         }
     },
 

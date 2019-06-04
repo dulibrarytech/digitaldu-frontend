@@ -110,6 +110,7 @@ exports.renderRootCollection = function(req, res) {
 
 				data.facets = Facets.create(facetList, config.rootUrl);
 				data.typeCount = Helper.getTypeFacetTotalsObject(facets);
+				data.facetThumbnails = config.facetThumbnails;
 			}
 			
 			return res.render('collections', data);
@@ -152,7 +153,6 @@ exports.renderCollection = function(req, res) {
 				return res.render('collection', data);
 			}
 			else {
-					console.log("TEST goic response", response);
 				data.collections = response.list;
 				data.current_collection = pid;
 				data.current_collection_title = response.title || "Untitled";
@@ -298,6 +298,7 @@ exports.getDatastream = function(req, res) {
 			}
 		}
 		else {
+			//if(stream.headers['content-type'] == "text/plain" && ds.toLowerCase() == "tn") {
 			if(stream.headers['content-type'] == "text/plain" && ds.toLowerCase() == "tn") {
 				Service.getThumbnailPlaceholderStream(function(error, stream) {
 					if(error) {

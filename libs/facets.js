@@ -91,13 +91,20 @@ exports.getFacetBreadcrumbObject = function(selectedFacets, dateRange=null, base
  * @return 
  */
  exports.getSearchFacetObject = function(searchFacets) {
-    var object = {}, facets = [];
+    var object = {}, facets = [], name;
     for(var key in searchFacets) {
       object[key] = [];
       facets = searchFacets[key];
       for(var index in facets) {
+        name = facets[index];
+        for(var label in config.facetLabelNormalization[key]) {
+            if(config.facetLabelNormalization[key][label].includes(facets[index])) {
+                name = label;
+            }
+        }
+
         object[key].push({
-          name: facets[index] || "",
+          name: name || "",
           facet: facets[index] || ""
         });
       }

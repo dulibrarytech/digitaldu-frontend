@@ -11,63 +11,7 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
 	  request = require('request');
 
 const host = config.repositoryUrl;
-
-/**
- * Get the Fedora datastream ID corresponding to the DigitalDU ID
- * Construct Fedora datastream url
- *
- * @param string datastream 	The digital du datstream identifier
- * @param string pid 	The object identifier
- * @return string 	The path to Fodora datastream 
- */
-exports.getFedoraDatastreamUrl = function(datastream, pid) {
-	var dsID = "";
-	datastream = datastream.toLowerCase();
-
-	switch(datastream) {
-		case "tn":
-			dsID = "TN";
-			break;
-		case "smallimage":
-		case "jpg":
-			dsID = "OBJ";
-			break;
-		case "largeimage":
-		case "tiff":
-		case "jp2":
-			dsID = "JP2";
-			break;
-		case "audio":
-		case "mp3":
-			dsID = "PROXY_MP3";
-			break;
-		case "video":
-		case "mp4":
-			dsID = "MP4";
-			break;
-		case "mov":
-			dsID = "MOV";
-			break;
-		case "pdf":
-			dsID = "OBJ";
-			break;
-		default: 
-			dsID = "OBJ";
-			break;
-	}
-
-	return host + "/fedora/objects/" + pid + "/datastreams/" + dsID + "/content";
-}
-
-/**
- * 
- *
- * @param 
- * @return 
- */
-exports.getDatastreamUrl = function(datastream, pid) {
-	return this.getFedoraDatastreamUrl(datastream, pid);
-}
+//http://archivesdu.duracloud.org/durastore/dip-store/dip-store/ 		// repo url
 
 /**
  * 
@@ -99,10 +43,26 @@ exports.getCollectionObjects = function(collectionID) {
  * @param 
  * @return 
  */
-exports.streamData = function(object, dsid, callback) {
+exports.getDatastreamUrl = function(datastream, pid) {
+		console.log("TEST getDSURL returns", host + "/" + pid);
+	return host + "/" + pid;	
+}
 
-	// Fedora
-	var url = this.getFedoraDatastreamUrl(dsid, object.pid);
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
+exports.streamData = function(object, dsid, callback) {
+	var url;
+
+	if(dsid == "tn") {
+		url = host + "/" + object.thumbnail;
+	}
+	else {
+		url = host + "/" + object.object;
+	}
 
 	// Get the stream 
 	var rs = require('request-stream');
@@ -114,8 +74,16 @@ exports.streamData = function(object, dsid, callback) {
 			callback(null, res);
 		}
 	});
+
+	// request(url, function(error, res, body) {
+	// 	if(error) {
+	// 		callback(error, []);
+	// 	}
+	// 	else {
+	// 		callback(null, res);
+	// 	}
+	// });
+
+	// var fs = require('fs');
+	// callback(null,request(url).pipe(fs.createWriteStream('doodle.png')));
 }
-
-
-
-

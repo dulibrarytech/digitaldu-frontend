@@ -13,7 +13,7 @@
 
 const es = require('../config/index');
 const fs = require('fs');
-const config = require('../config/config');
+const config = require('../config/' + process.env.CONFIGURATION_FILE);
 const request  = require("request");
 const Repository = require('../libs/repository');
 const Helper = require("./helper");
