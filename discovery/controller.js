@@ -152,7 +152,7 @@ exports.renderCollection = function(req, res) {
 				return res.render('collection', data);
 			}
 			else {
-
+					console.log("TEST goic response", response);
 				data.collections = response.list;
 				data.current_collection = pid;
 				data.current_collection_title = response.title || "Untitled";
@@ -272,7 +272,7 @@ exports.renderObjectView = function(req, res) {
 };
 
 exports.getDatastream = function(req, res) {
-	var ds = req.params.datastream || "",
+	var ds = req.params.datastream.toLowerCase() || "",
 		pid = req.params.pid || "";
 
 	Service.getDatastream(pid, ds, function(error, stream) {

@@ -227,7 +227,7 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
                 callback("Invalid collection: " + object.pid, []);
               }
               else {
-                collection.title = object.title[0];
+                collection.title = object.title;
                 callback(null, collection);
               }
             });
@@ -358,14 +358,16 @@ exports.getFacets = getFacets;
  * @return 
  */
 exports.getDatastream = function(objectID, datastreamID, callback) {
-  
-  // Find datastream ID by object type
-  if(datastreamID == "object") {
-    fetchObjectByPid(objectID, function(error, object) {
+  fetchObjectByPid(objectID, function(error, object) {
+    if(object) {
+      if(datastreamID == "tn") {
+        // Get from local folder.  If in local folder, stream from here (callback).  If not, run repository stream below
+        if(0) { // If is in local folder
+          callback(null, "[file stream from local folder]")
+        } 
+      }
 
-      // Get the datastream ID from the configuration based on the object mime type
-      datastreamID = Helper.getDsType(object.mime_type);
-      Repository.streamData(objectID, datastreamID, function(error, stream) {
+      Repository.streamData(object, datastreamID, function(error, stream) {
         if(error) {
           callback(error, null);
         }
@@ -373,20 +375,11 @@ exports.getDatastream = function(objectID, datastreamID, callback) {
           callback(null, stream);
         }
       });
-    });
-  }
-
-  // Stream using the requested datastream ID
-  else {
-    Repository.streamData(objectID, datastreamID, function(error, stream) {
-      if(error) {
-        callback(error, null);
-      }
-      else {
-        callback(null, stream);
-      }
-    });
-  } 
+    }
+    else {
+      callback("Object not found, can not stream data", null);
+    }
+  });
 }
 
 /**
@@ -433,7 +426,7 @@ var getTitleString = function(pids, titles, callback) {
     else {
 
       titles.push({
-        name: response ? response.title[0] : pid,
+        name: response ? response.title : pid,
         pid: pid
       });
 
@@ -531,6 +524,7 @@ exports.getManifestObject = function(pid, callback) {
         // Add the child objects of the main parent object
         for(var key in object.children) {
           resourceUrl = config.rootUrl + "/datastream/" + object.children[key].url + "/" + Helper.getDsType(object.children[key].mimetype);
+          //resourceUrl = config.rootUrl + "/datastream/repository/" + object.children[key].url + "/object"; // Object url in repository
 
           // Add the data
           children.push({
@@ -543,6 +537,7 @@ exports.getManifestObject = function(pid, callback) {
             downloadFileName: object.children[key].url.replace(":", "_"), // Temporarily use pid for filename, replacing ':'' with '_'
             resourceUrl: resourceUrl,
             thumbnailUrl: config.rootUrl + "/datastream/" + object.children[key].url + "/" + Helper.getDsType("thumbnail")
+            //thumbnailUrl: config.rootUrl + "/datastream/repository/" + object.children[key].url + "/" + Helper.getDsType("thumbnail") // get object tn path to repo, or local tn option
           });
 
           // ^^ Parts data (caption) ?

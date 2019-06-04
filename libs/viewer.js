@@ -139,6 +139,7 @@ function getAudioPlayer(object, type) {
  * @return 
  */
 function getVideoViewer(object) {
+		console.log("TEST viewer gets object", object);
 	var viewer = '<div id="video-viewer" class="viewer-section">', tn, stream, url;
 	var extension = "", datastreamID = "";
 
@@ -170,7 +171,7 @@ function getVideoViewer(object) {
 			viewer += getKalturaViewer(object, {
 				partner_id: config.kalturaPartnerID,
 				uiconf_id: config.kalturaUI_ID,
-				entry_id: "1_pmh226et",	// DEV
+				entry_id: object.entry_id,
 				unique_object_id: config.kalturaUniqueObjectID
 			});
 			break;
@@ -301,6 +302,7 @@ function getIIIFObjectViewer(object, index=null) {
 		viewer += '}, new UV.URLDataProvider());';
 		viewer += '}, false);';
 		viewer += '</script>';
+			console.log("TEST viewer iiif", viewer);
 	return viewer;
 }
 

@@ -99,10 +99,10 @@ exports.getCollectionObjects = function(collectionID) {
  * @param 
  * @return 
  */
-exports.streamData = function(pid, dsid, callback) {
+exports.streamData = function(object, dsid, callback) {
 
 	// Fedora
-	var url = this.getFedoraDatastreamUrl(dsid, pid);
+	var url = this.getFedoraDatastreamUrl(dsid, object.pid);
 
 	// Get the stream 
 	var rs = require('request-stream');

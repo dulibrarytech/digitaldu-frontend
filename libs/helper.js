@@ -32,7 +32,7 @@ exports.parseJSONObjectValues = function(valueMap, jsonObject) {
 				console.log("Error: Could not parse configuration json object", valueMap);
 			}
 
-			for(var subKey in mapObject) {	// Should only be 1 at first
+			for(var subKey in mapObject) {
 				recordItem = jsonObject[subKey] || [];
 
 				if(typeof recordItem[0] == "string") {
@@ -43,7 +43,6 @@ exports.parseJSONObjectValues = function(valueMap, jsonObject) {
 					showValue = [];
 					for(var index in recordItem) {
 						for(var data in mapObject[subKey][0]) {
-							console.log("TEST", mapObject[subKey][0][data]);
 							if(recordItem[index][data] != mapObject[subKey][0][data] && mapObject[subKey][0][data] != "VALUE") {
 								insert = false;
 							}
