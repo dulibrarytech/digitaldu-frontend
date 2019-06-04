@@ -119,7 +119,7 @@ function getAudioPlayer(object, type) {
 			player += getKalturaViewer(object, {
 				partner_id: config.kalturaPartnerID,
 				uiconf_id: config.kalturaUI_ID,
-				entry_id: "1_pmh226et",	// DEV
+				entry_id: entry_id,
 				unique_object_id: config.kalturaUniqueObjectID
 			});
 			break;
