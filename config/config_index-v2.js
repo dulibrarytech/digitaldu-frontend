@@ -156,7 +156,7 @@ module.exports = {
      * "Facet name": "index field"
      */
     facets: {
-        "Creator": "creator",
+        "Creator": "display_record.names.title",
         "Subject": "f_subjects",
         // "Type": "type",
         "Type": "mime_type",
