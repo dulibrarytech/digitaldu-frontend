@@ -319,6 +319,14 @@ module.exports = {
         "pdf": ["application/pdf"]
      },
 
+     fileExtensions: {
+        "jp2": ["image/tiff"],
+        "mp3": ["audio/mp3"],
+        "mp4": ["video/mp4"],
+        "pdf": ["application/pdf"]
+     },
+     objectFilePath: "files/object/",
+
     /*
      * Mime Types for each object type
      * Object type determines which viewer is used for each mime type

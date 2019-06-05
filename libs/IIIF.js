@@ -136,7 +136,6 @@ var getImageData = function(objects, data=[], callback) {
 	else {
 		let object = objects[index],
 			url = config.IIIFServerUrl + "/iiif/2/" + object.resourceID; 
-			//url = 
 
 		request(url, function(error, response, body) {
 			if(error) {

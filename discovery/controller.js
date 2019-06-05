@@ -281,7 +281,6 @@ exports.getDatastream = function(req, res) {
 			res.send(404);
 		}
 		else {
-			//if(stream.headers['content-type'] == "text/plain" && ds.toLowerCase() == "tn") {
 			stream.pipe(res);
 		}
 	});

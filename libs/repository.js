@@ -73,16 +73,4 @@ exports.streamData = function(object, dsid, callback) {
 			callback(null, res);
 		}
 	});
-
-	// request(url, function(error, res, body) {
-	// 	if(error) {
-	// 		callback(error, []);
-	// 	}
-	// 	else {
-	// 		callback(null, res);
-	// 	}
-	// });
-
-	// var fs = require('fs');
-	// callback(null,request(url).pipe(fs.createWriteStream('doodle.png')));
 }

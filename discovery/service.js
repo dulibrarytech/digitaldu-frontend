@@ -361,16 +361,22 @@ exports.getDatastream = function(objectID, datastreamID, callback) {
   fetchObjectByPid(objectID, function(error, object) {
     if(object) {
       if(datastreamID == "tn") {
-        // Get from local folder.  If in local folder, stream from here (callback).  If not, run repository stream below
-        let path = config.tnPath + objectID.match(/[0-9]+/)[0] + ".png"; // segment out [0-9]+, this s filename objectID
+        // Separate any namespace appendix from the pid.  Look for a corresponding png
+        let path = config.tnPath + objectID.match(/[0-9]+/)[0] + ".png";
+
+        // Try to create a thumbnail image for this object
         if(0) {
           // TODO Attempt to get generated tn from viewer
         }
-        else if(fs.existsSync(path)) { // If is not in local folder
-          getThumbnailStream(path, function(error, thumbnail) {
+
+        // Check if a thumbnail image exists in the local image folder
+        else if(fs.existsSync(path)) {
+          getFileStream(path, function(error, thumbnail) {
             callback(null, thumbnail);
           });
         }
+
+        // Use the default thumbnail image for this object
         else {
           path = config.tnPath + config.defaultThumbnailImage;
           for(var index in config.thumbnailPlaceholderImages) {
@@ -381,20 +387,48 @@ exports.getDatastream = function(objectID, datastreamID, callback) {
 
         }
 
-        getThumbnailStream(path, function(error, thumbnail) {
+        // Create the thumbnail stream
+        getFileStream(path, function(error, thumbnail) {
             callback(null, thumbnail);
         }); 
 
       }
       else {
-        Repository.streamData(object, datastreamID, function(error, stream) {
-          if(error) {
-            callback(error, null);
+
+        // Check for a local content file for this object
+        let file = null, path;
+        for(var extension in config.fileExtensions) {
+          if(config.fileExtensions[extension].includes(object.mime_type)) {
+            path = config.objectFilePath + objectID.match(/[0-9]+/)[0] + "." + extension;
+
+            if(fs.existsSync(path)) {
+              file = path;
+            }
           }
-          else {
-            callback(null, stream);
-          }
-        });
+        }
+
+        // Stream the local file
+        if(file) {
+          console.log("INFO Filefound ", file, "Streaming locally...");
+          // Create the thumbnail stream
+          getFileStream(file, function(error, content) {
+              callback(null, content);
+          }); 
+        }
+
+        // Stream the object data from the repository 
+        else {
+          console.log("INFO Streaming object data for " + objectID + "...");
+          Repository.streamData(object, datastreamID, function(error, stream) {
+            if(error) {
+              callback(error, null);
+            }
+            else {
+              console.log("INFO Retrieved stream for " + objectID + "...");
+              callback(null, stream);
+            }
+          });
+        }
       }
     }
     else {
@@ -409,11 +443,11 @@ exports.getDatastream = function(objectID, datastreamID, callback) {
  * @param 
  * @return 
  */
-var getThumbnailStream = function(path, callback) {
+var getFileStream = function(path, callback) {
   var rstream = fs.createReadStream(path);
   callback(null, rstream);
 }
-exports.getThumbnailStream = getThumbnailStream;
+exports.getFileStream = getFileStream;
 
 /**
  * 
@@ -568,6 +602,7 @@ exports.getManifestObject = function(pid, callback) {
 
       // Single objects
       else {
+          console.log("TEST single obj");
         resourceUrl = config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType(object.mime_type);
 
         // Add the data
@@ -586,7 +621,6 @@ exports.getManifestObject = function(pid, callback) {
       }
 
       IIIF.getManifest(container, children, function(error, manifest) {
-        // TODO handle the error
         if(error) {
           callback(error, []);
         }
