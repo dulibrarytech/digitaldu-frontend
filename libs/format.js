@@ -5,7 +5,7 @@
  */
 
 const Discovery = require('../discovery/service.js'),
-      config = require('../config/config.js');
+      config = require('../config/' + process.env.CONFIGURATION_FILE);
 
 var exampleFormatter = function(object) {
   for(var key of object) {
@@ -45,8 +45,8 @@ exports.formatFacetBreadcrumbs = function(object, callback) {
 var formatTypeFacets = function(typeFacets) {
     var types = [];
     for(var index of typeFacets) {
-      for(var key in config.facetDisplayLabel.Type) {
-        if(config.facetDisplayLabel.Type[key] == index.facet) {
+      for(var key in config.facetLabelNormalization.Type) {
+        if(config.facetLabelNormalization.Type[key].includes(index.facet)) {
           index.name = key;
         }
       }

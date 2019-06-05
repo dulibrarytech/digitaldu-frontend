@@ -44,7 +44,6 @@ exports.getCollectionObjects = function(collectionID) {
  * @return 
  */
 exports.getDatastreamUrl = function(datastream, pid) {
-		console.log("TEST getDSURL returns", host + "/" + pid);
 	return host + "/" + pid;	
 }
 

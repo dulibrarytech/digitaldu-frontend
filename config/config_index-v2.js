@@ -53,7 +53,14 @@ module.exports = {
     noTitlePlaceholder: "Untitled",
 
     // Image to display if no thumbnail image exists in the repository
-    tnPlaceholderPath: "files/tn-placeholder.jpg",
+    tnPath: "files/thumbnails/",
+    defaultThumbnailImage: "tn-placeholder.jpg",
+    thumbnailPlaceholderImages: {
+        "audio-tn.png": ["audio/mp3"],
+        "video-tn.png": ["video/mp4"],
+        "pdf-tn.png": ["application/pdf"],
+        "image-tn.png": ["image/tiff", "image/jp2", "image/jp3"]
+    },
 
     /* 
      * Viewer to play audio files
@@ -172,6 +179,21 @@ module.exports = {
     facetLimitsByType: {
         "Collections": 15 
     },
+
+    // facetDisplayLabel: {
+    //     "Type": {
+    //         "Still Image": "still image",
+    //         "Moving Image": "moving image",
+    //         "Text": "text",
+    //         "Sound Recording": "sound recording",
+    //         "Music Recording": "sound recording-musical",
+    //         "Nonmusic Recording": "sound recording-nonmusical",
+    //         "Map": "cartographic",
+    //         "Mixed Material": "mixed material",
+    //         "3D Object": "three dimensional object",
+    //         "Unknown": "[object Object]"
+    //     }
+    // },
 
     facetLabelNormalization: {
         "Type": {

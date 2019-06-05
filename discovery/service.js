@@ -362,19 +362,40 @@ exports.getDatastream = function(objectID, datastreamID, callback) {
     if(object) {
       if(datastreamID == "tn") {
         // Get from local folder.  If in local folder, stream from here (callback).  If not, run repository stream below
-        if(0) { // If is in local folder
-          callback(null, "[file stream from local folder]")
-        } 
-      }
-
-      Repository.streamData(object, datastreamID, function(error, stream) {
-        if(error) {
-          callback(error, null);
+        let path = config.tnPath + objectID.match(/[0-9]+/)[0] + ".png"; // segment out [0-9]+, this s filename objectID
+        if(0) {
+          // TODO Attempt to get generated tn from viewer
+        }
+        else if(fs.existsSync(path)) { // If is not in local folder
+          getThumbnailStream(path, function(error, thumbnail) {
+            callback(null, thumbnail);
+          });
         }
         else {
-          callback(null, stream);
+          path = config.tnPath + config.defaultThumbnailImage;
+          for(var index in config.thumbnailPlaceholderImages) {
+            if(config.thumbnailPlaceholderImages[index].includes(object.mime_type)) {
+              path = config.tnPath + index;
+            }
+          }
+
         }
-      });
+
+        getThumbnailStream(path, function(error, thumbnail) {
+            callback(null, thumbnail);
+        }); 
+
+      }
+      else {
+        Repository.streamData(object, datastreamID, function(error, stream) {
+          if(error) {
+            callback(error, null);
+          }
+          else {
+            callback(null, stream);
+          }
+        });
+      }
     }
     else {
       callback("Object not found, can not stream data", null);
@@ -388,10 +409,11 @@ exports.getDatastream = function(objectID, datastreamID, callback) {
  * @param 
  * @return 
  */
-exports.getThumbnailPlaceholderStream = function(callback) {
-  var rstream = fs.createReadStream(config.tnPlaceholderPath);
+var getThumbnailStream = function(path, callback) {
+  var rstream = fs.createReadStream(path);
   callback(null, rstream);
 }
+exports.getThumbnailStream = getThumbnailStream;
 
 /**
  * 

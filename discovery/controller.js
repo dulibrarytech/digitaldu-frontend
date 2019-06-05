@@ -278,45 +278,11 @@ exports.getDatastream = function(req, res) {
 	Service.getDatastream(pid, ds, function(error, stream) {
 		if(error) {
 			console.log(error);
-			if(ds.toLowerCase() == "tn") {
-				Service.getThumbnailPlaceholderStream(function(error, stream) {
-					if(error) {
-						console.log(error);
-						res.sendStatus(503);
-					}
-					else if(stream) {
-						stream.pipe(res);
-					}
-					else {
-						console.log("Could not fetch stream: ", pid);
-						res.sendStatus(404);
-					}
-				});
-			}
-			else {
-				stream.pipe(res);
-			}
+			res.send(404);
 		}
 		else {
 			//if(stream.headers['content-type'] == "text/plain" && ds.toLowerCase() == "tn") {
-			if(stream.headers['content-type'] == "text/plain" && ds.toLowerCase() == "tn") {
-				Service.getThumbnailPlaceholderStream(function(error, stream) {
-					if(error) {
-						console.log(error);
-						res.sendStatus(503);
-					}
-					else if(stream) {
-						stream.pipe(res);
-					}
-					else {
-						console.log("Could not fetch stream: ", pid);
-						res.sendStatus(404);
-					}
-				});
-			}
-			else {
-				stream.pipe(res);
-			}
+			stream.pipe(res);
 		}
 	});
 }

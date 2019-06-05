@@ -202,7 +202,6 @@ module.exports = {
         "Collections": 15 
     },
 
-    // Obsolete in v2
     facetDisplayLabel: {
         "Type": {
             "Still Image": "still image",
