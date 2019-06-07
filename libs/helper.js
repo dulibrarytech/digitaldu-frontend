@@ -15,6 +15,12 @@ exports.isObjectEmpty = function(object) {
     return true;
 }
 
+exports.getFileStream = function(path, callback) {
+  var fs = require('fs');
+  var rstream = fs.createReadStream(path);
+  callback(null, rstream);
+}
+
 // Extract values from jsonObject. Values to parse out are set in the valueMap:
 exports.parseJSONObjectValues = function(valueMap, jsonObject) {
 	var valuesObject = {};

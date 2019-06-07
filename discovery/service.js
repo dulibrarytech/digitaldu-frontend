@@ -361,34 +361,30 @@ exports.getDatastream = function(objectID, datastreamID, callback) {
   fetchObjectByPid(objectID, function(error, object) {
     if(object) {
       if(datastreamID == "tn") {
-        // Separate any namespace appendix from the pid.  Look for a corresponding png
-        let path = config.tnPath + objectID.match(/[0-9]+/)[0] + ".png";
+        // Separate any namespace appendix from the pid.  Numeric pid + extension = thumbnail image file
+        let path = config.tnPath + objectID.match(/[0-9]+/)[0] + config.thumbnailFileExtension;
 
-        // Try to create a thumbnail image for this object
-        if(0) {
+        // First, try to create a thumbnail image for this object
+        if(getThumbnailFromObject(object) != false) {
           // TODO Attempt to get generated tn from viewer
         }
 
-        // Check if a thumbnail image exists in the local image folder
-        else if(fs.existsSync(path)) {
-          getFileStream(path, function(error, thumbnail) {
-            callback(null, thumbnail);
-          });
-        }
+        // If a thumbnail can not be generated, check if a thumbnail image exists in the local image folder
+        else if(fs.existsSync(path) == false) {
 
-        // Use the default thumbnail image for this object
-        else {
+          // If a thumbnail image does not exist in the local folder, use the default thumbnail image
           path = config.tnPath + config.defaultThumbnailImage;
+
+          // Check for object specific thumbnail in the configuration.  If listed, use this file
           for(var index in config.thumbnailPlaceholderImages) {
             if(config.thumbnailPlaceholderImages[index].includes(object.mime_type)) {
               path = config.tnPath + index;
             }
           }
-
         }
 
         // Create the thumbnail stream
-        getFileStream(path, function(error, thumbnail) {
+        AppHelper.getFileStream(path, function(error, thumbnail) {
             callback(null, thumbnail);
         }); 
 
@@ -406,25 +402,21 @@ exports.getDatastream = function(objectID, datastreamID, callback) {
             }
           }
         }
-
+        
         // Stream the local file
         if(file) {
-          console.log("INFO Filefound ", file, "Streaming locally...");
-          // Create the thumbnail stream
-          getFileStream(file, function(error, content) {
+          AppHelper.getFileStream(file, function(error, content) {
               callback(null, content);
           }); 
         }
 
         // Stream the object data from the repository 
         else {
-          console.log("INFO Streaming object data for " + objectID + "...");
           Repository.streamData(object, datastreamID, function(error, stream) {
             if(error) {
               callback(error, null);
             }
             else {
-              console.log("INFO Retrieved stream for " + objectID + "...");
               callback(null, stream);
             }
           });
@@ -436,18 +428,6 @@ exports.getDatastream = function(objectID, datastreamID, callback) {
     }
   });
 }
-
-/**
- * 
- *
- * @param 
- * @return 
- */
-var getFileStream = function(path, callback) {
-  var rstream = fs.createReadStream(path);
-  callback(null, rstream);
-}
-exports.getFileStream = getFileStream;
 
 /**
  * 
@@ -498,6 +478,10 @@ var getTitleString = function(pids, titles, callback) {
   });
 }
 exports.getTitleString = getTitleString;
+
+var getThumbnailFromObject = function(object) {
+  return false;
+}
 
 /**
  * 
@@ -602,7 +586,6 @@ exports.getManifestObject = function(pid, callback) {
 
       // Single objects
       else {
-          console.log("TEST single obj");
         resourceUrl = config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType(object.mime_type);
 
         // Add the data

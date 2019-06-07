@@ -54,6 +54,7 @@ module.exports = {
 
     // Image to display if no thumbnail image exists in the repository
     tnPath: "files/thumbnails/",
+    thumbnailFileExtension: ".png",
     defaultThumbnailImage: "tn-placeholder.jpg",
     thumbnailPlaceholderImages: {
         "audio-tn.png": ["audio/mp3"],
@@ -111,7 +112,8 @@ module.exports = {
     kalturaUI_ID: "44058172",
     kalturaPartnerID: "2357732",
     //kalturaUniqueObjectID: "kaltura_du_12345",
-    kalturaUniqueObjectID: "kaltura_player_1549920112",
+    //kalturaUniqueObjectID: "kaltura_player_1549920112",
+    kalturaUniqueObjectID: "kaltura_player_1559751114",
 
     // The index field that holdas the display record data
     displayRecordField: "display_record",
