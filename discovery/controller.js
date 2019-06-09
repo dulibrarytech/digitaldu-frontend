@@ -221,6 +221,7 @@ exports.renderObjectView = function(req, res) {
 
 			// Render a parent object with child objects
 			if(AppHelper.isParentObject(object)) {
+					console.log("TEST is compound obj");
 				switch(object.object_type) {
 					case "compound":
 						data.viewer = Viewer.getCompoundObjectViewer(object, index);
@@ -240,6 +241,7 @@ exports.renderObjectView = function(req, res) {
 
 			// Render singular object
 			else {
+					console.log("TEST is not compound obj");
 				// Can't lookup index of a non-parent object
 				if(index > 0) {
 					data.error = "Object not found";
@@ -273,9 +275,10 @@ exports.renderObjectView = function(req, res) {
 
 exports.getDatastream = function(req, res) {
 	var ds = req.params.datastream.toLowerCase() || "",
-		pid = req.params.pid || "";
-
-	Service.getDatastream(pid, ds, function(error, stream) {
+		pid = req.params.pid || "",
+		part = req.params.part || null;
+			
+	Service.getDatastream(pid, ds, part, function(error, stream) {
 		if(error) {
 			console.log(error);
 			res.send(404);

@@ -357,13 +357,30 @@ exports.getFacets = getFacets;
  * @param 
  * @return 
  */
-exports.getDatastream = function(objectID, datastreamID, callback) {
+exports.getDatastream = function(objectID, datastreamID, part, callback) {
   fetchObjectByPid(objectID, function(error, object) {
     if(object) {
+      console.log("TEST part is", part);
+      if(part) {
+        
+        for(var index in object.parts) {
+          console.log("TEST part index", object.parts[index]);
+
+          if(object.parts[index].order == part) {
+            objectPart = {
+              mime_type: object.parts[index].type,
+              object: object.parts[index].object,
+              thumbnail: object.parts[index].thumbnail
+            };
+            object = objectPart;
+          }
+        }
+      }
+
       if(datastreamID == "tn") {
         // Separate any namespace appendix from the pid.  Numeric pid + extension = thumbnail image file
-        let path = config.tnPath + objectID.match(/[0-9]+/)[0] + config.thumbnailFileExtension;
-
+        let path = part ? config.tnPath + objectID.match(/[0-9]+/)[0] + "-" + part + config.thumbnailFileExtension : config.tnPath + objectID.match(/[0-9]+/)[0] + config.thumbnailFileExtension;
+          console.log("TEST tn path is", path);
         // First, try to create a thumbnail image for this object
         if(getThumbnailFromObject(object) != false) {
           // TODO Attempt to get generated tn from viewer
@@ -383,10 +400,30 @@ exports.getDatastream = function(objectID, datastreamID, callback) {
           }
         }
 
-        // Create the thumbnail stream
-        AppHelper.getFileStream(path, function(error, thumbnail) {
+        // DEMO
+        if(object.mime_type == "image/tiff") {
+            console.log("TEST tn from repo");
+          Repository.streamData(object, datastreamID, function(error, stream) {
+            if(error) {
+              callback(error, null);
+            }
+            else {
+              callback(null, stream);
+            }
+          });
+        }
+        else {
+            console.log("TEST tn from local");
+          AppHelper.getFileStream(path, function(error, thumbnail) {
             callback(null, thumbnail);
-        }); 
+          }); 
+        }
+
+        // LIVE
+        // Create the thumbnail stream
+        // AppHelper.getFileStream(path, function(error, thumbnail) {
+        //     callback(null, thumbnail);
+        // }); 
 
       }
       else {
@@ -395,7 +432,8 @@ exports.getDatastream = function(objectID, datastreamID, callback) {
         let file = null, path;
         for(var extension in config.fileExtensions) {
           if(config.fileExtensions[extension].includes(object.mime_type)) {
-            path = config.objectFilePath + objectID.match(/[0-9]+/)[0] + "." + extension;
+            path = part ? config.objectFilePath + objectID.match(/[0-9]+/)[0] + "-" + part + "." + extension : config.objectFilePath + objectID.match(/[0-9]+/)[0] +  "." + extension;
+              console.log("TEST path is", path);
 
             if(fs.existsSync(path)) {
               file = path;
@@ -556,31 +594,38 @@ exports.getManifestObject = function(pid, callback) {
       };
 
       // Create children array for IIIF
-      var children = [], resourceUrl;
+      var parts = [], resourceUrl;
 
       // Compound objects
       if(AppHelper.isParentObject(object)) {
         
         // Add the child objects of the main parent object
-        for(var key in object.children) {
-          resourceUrl = config.rootUrl + "/datastream/" + object.children[key].url + "/" + Helper.getDsType(object.children[key].mimetype);
-          //resourceUrl = config.rootUrl + "/datastream/repository/" + object.children[key].url + "/object"; // Object url in repository
+        for(var key in object.display_record.parts) {
+          resourceUrl = config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType(object.display_record.parts[key].type) + "/" + object.display_record.parts[key].order;
+            console.log("TEST key", key);
+          // DEMO
+          if(key == 0) {
+            resourceUrl = "http://archivesdu.duracloud.org/durastore/dip-store/dip-store/ae91/4df5/6fd1/402b/84ec/4652/dc59/f881/codu_111355_B299.01.00001_transfer-192165d1-f7bd-48be-8b6c-a23937811b92/objects/4c2c9269-32af-4608-9bdf-09dd82655aa2-B299.01.00001.pdf";
+          }
+          else if(key == 1) {
+            resourceUrl = "http://archivesdu.duracloud.org/durastore/dip-store/dip-store/3449/0431/2c62/41dd/ad38/3a99/fb90/56eb/codu_111355_B299.02.00002_transfer-228cb798-ab52-451b-88cc-0e2fa40678e5/objects/f3dd39b0-639a-46c9-b7ba-5c1656953160-B299.02.00002.pdf";
+          }
 
           // Add the data
           children.push({
-            label: object.children[key].title,
-            sequence: object.children[key].sequence || key,
-            description: object.children[key].description,
-            format: object.children[key].mimetype,
-            type: Helper.getIIIFObjectType(object.children[key].mimetype) || "",
-            resourceID: object.children[key].url,
-            downloadFileName: object.children[key].url.replace(":", "_"), // Temporarily use pid for filename, replacing ':'' with '_'
+            label: object.display_record.parts[key].title,
+            sequence: object.display_record.parts[key].order || key,
+            description: object.display_record.parts[key].caption,
+            format: object.display_record.parts[key].type,
+            type: Helper.getIIIFObjectType(object.display_record.parts[key].type) || "",
+            resourceID: object.display_record.parts[key].object,
+            downloadFileName: object.display_record.parts[key].title, // Temporarily use pid for filename, replacing ':'' with '_'
             resourceUrl: resourceUrl,
-            thumbnailUrl: config.rootUrl + "/datastream/" + object.children[key].url + "/" + Helper.getDsType("thumbnail")
-            //thumbnailUrl: config.rootUrl + "/datastream/repository/" + object.children[key].url + "/" + Helper.getDsType("thumbnail") // get object tn path to repo, or local tn option
-          });
+            //thumbnailUrl: config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType("thumbnail") + "/" + object.parts[key].order
 
-          // ^^ Parts data (caption) ?
+            // DEMO
+            thumbnailUrl: "http://archivesdu.duracloud.org/durastore/dip-store/dip-store/ae91/4df5/6fd1/402b/84ec/4652/dc59/f881/codu_111355_B299.01.00001_transfer-192165d1-f7bd-48be-8b6c-a23937811b92/thumbnails/4c2c9269-32af-4608-9bdf-09dd82655aa2.jpg"
+          });
         }
       }
 

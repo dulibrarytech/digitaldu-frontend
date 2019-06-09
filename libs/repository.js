@@ -8,7 +8,8 @@
 'use strict';
 
 const config = require('../config/' + process.env.CONFIGURATION_FILE),
-	  request = require('request');
+	  request = require('request'),
+	  rs = require('request-stream');
 
 const host = config.repositoryUrl;
 //http://archivesdu.duracloud.org/durastore/dip-store/dip-store/ 		// repo url
@@ -48,7 +49,7 @@ exports.getDatastreamUrl = function(datastream, pid) {
 }
 
 /**
- * 
+ * Datastream request
  *
  * @param 
  * @return 
@@ -64,7 +65,6 @@ exports.streamData = function(object, dsid, callback) {
 	}
 
 	// Get the stream 
-	var rs = require('request-stream');
 	rs(url, {}, function(err, res) {
 		if(err) {
 			callback("Could not open datastream. " + err + " Check connection to repository", null);

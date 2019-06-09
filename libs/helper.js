@@ -3,7 +3,8 @@ exports.testObject = function(object) {
 }
 
 exports.isParentObject = function(object) {
-  return (object && typeof object.children != 'undefined');
+		console.log("TEST len", object.display_record.parts.length);
+  return (object && object.display_record.parts.length > 0);
 }
 
 exports.isObjectEmpty = function(object) {

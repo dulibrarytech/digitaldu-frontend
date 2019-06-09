@@ -37,12 +37,8 @@ module.exports = function (app) {
     app.route('/datastream/:pid/:datastream')
         .get(Discovery.getDatastream);
 
-    app.route('/datastream/:pid/:datastream/:spoof')
+    app.route('/datastream/:pid/:datastream/:part')
         .get(Discovery.getDatastream);
-
-    // Objects with a url instead of a pid can use this route (e.g. children objects with no pids)
-    // app.route('/datastream/repository/:path/:type')
-    //     .get(Discovery.getRepositoryObject);
 
     app.route('/iiif/:pid/manifest')
         .get(Discovery.getIIIFManifest);
