@@ -3,8 +3,7 @@ exports.testObject = function(object) {
 }
 
 exports.isParentObject = function(object) {
-		console.log("TEST len", object.display_record.parts.length);
-  return (object && object.display_record.parts.length > 0);
+  return (object && object.object_type == "compound");
 }
 
 exports.isObjectEmpty = function(object) {

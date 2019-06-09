@@ -73,7 +73,6 @@ exports.getManifest = function(container, objects, callback) {
 
 	// Define the canvas objects.  Create a mediaSequence object if a/v or pdf items are present.  For each of these, insert an element object
 	for(var object of objects) {
-			console.log("TEST iiif object:", object);
 		if(object.type == config.IIIFObjectTypes["largeImage"]) {
 			images.push(object);
 			canvases.push(getImageCanvas(container, object));
