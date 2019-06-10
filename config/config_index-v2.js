@@ -182,21 +182,6 @@ module.exports = {
         "Collections": 15 
     },
 
-    // facetDisplayLabel: {
-    //     "Type": {
-    //         "Still Image": "still image",
-    //         "Moving Image": "moving image",
-    //         "Text": "text",
-    //         "Sound Recording": "sound recording",
-    //         "Music Recording": "sound recording-musical",
-    //         "Nonmusic Recording": "sound recording-nonmusical",
-    //         "Map": "cartographic",
-    //         "Mixed Material": "mixed material",
-    //         "3D Object": "three dimensional object",
-    //         "Unknown": "[object Object]"
-    //     }
-    // },
-
     facetLabelNormalization: {
         "Type": {
             "Still Image": ["still image", "image/tiff", "image/jp2", "image/jp3"],
@@ -265,7 +250,7 @@ module.exports = {
     metadataDisplayValues: {
         "Title": '{"title": ["VALUE"]}',
         "Uri": '{"uri": ["VALUE"]}',
-        "Local Identifier": '{"identifiers": [{"identifier": "VALUE", "type": "local"}]}',
+        "ArchivesSpace ID": '{"identifiers": [{"identifier": "VALUE", "type": "local"}]}',
         "Date": '{"dates": [{"expression": "VALUE", "label": "creation"}]}',
         "Extents": '{"extents": ["VALUE"]}',
         "Notes": '{"notes": [{"content": "VALUE"}]}',
