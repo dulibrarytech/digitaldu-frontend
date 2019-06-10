@@ -503,8 +503,10 @@ var getTitleString = function(pids, titles, callback) {
     if(error) {
       callback(error, titles);
     }
+    else if(response == null) {
+      callback("Object not found: ", pid, titles);
+    }
     else {
-
       titles.push({
         name: response ? response.title : pid,
         pid: pid
