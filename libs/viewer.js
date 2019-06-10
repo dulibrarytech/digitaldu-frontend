@@ -76,7 +76,7 @@ exports.getObjectViewer = function(object, mimeType="") {
  */
 exports.getCompoundObjectViewer = function(object) {
  	var viewer = "";
- 		console.log("TEST gcov");
+
  	// Get viewer for object mime type:
  	switch(config.compoundObjectViewer) {
  		case "universalviewer":
