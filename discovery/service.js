@@ -365,16 +365,17 @@ exports.getDatastream = function(objectID, datastreamID, part, callback) {
 
       // If there is a part value, Assign the object data from the requested part of the parent object.  Set the part string to be appended to the object url, append nothing if no part is present
       if(part) {
+        var sequence;
         let objectPart = {
           mime_type: object.display_record.parts[part-1].type,
           object: object.display_record.parts[part-1].object,
           thumbnail: object.display_record.parts[part-1].thumbnail
         }
         object = objectPart;
-        part = "-" + part;
+        sequence = "-" + part;
       }
       else {
-        part = ""; // Omit from the path below
+        sequence = ""; // Omit from the path below
       }
 
       // Request a thumbnail datastream
@@ -401,7 +402,7 @@ exports.getDatastream = function(objectID, datastreamID, part, callback) {
         // Handle request for non-image thumbnail
         else {
           // Separate any namespace appendix from the pid.  Numeric pid + extension = thumbnail image file
-          let path = config.tnPath + objectID.match(/[0-9]+/)[0] + part + config.thumbnailFileExtension;
+          let path = config.tnPath + objectID.match(/[0-9]+/)[0] + sequence + config.thumbnailFileExtension;
 
           // Try to create a thumbnail image for this object
           if(getThumbnailFromObject(object) != false) {
@@ -436,7 +437,7 @@ exports.getDatastream = function(objectID, datastreamID, part, callback) {
         let file = null, path;
         for(var extension in config.fileExtensions) {
           if(config.fileExtensions[extension].includes(object.mime_type)) {
-            path = config.objectFilePath + objectID.match(/[0-9]+/)[0] + part + "." + extension;
+            path = config.objectFilePath + objectID.match(/[0-9]+/)[0] + sequence + "." + extension;
 
             if(fs.existsSync(path)) {
               file = path;

@@ -89,6 +89,7 @@ exports.getManifest = function(container, objects, callback) {
 
 		}
 		else if(object.type == config.IIIFObjectTypes["pdf"]) {
+			elements.push(getPDFElement(object));
 			canvases.push(getPDFCanvas(container, object));
 		}
 		else {
