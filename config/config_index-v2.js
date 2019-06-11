@@ -21,6 +21,7 @@ module.exports = {
     topLevelCollectionPID: "codu:root",
     topLevelCollectionName: "Root Collection",
     collectionMimeType: "collection",
+    compoundObjectPartID: "_part-",
 
     // IIIF
     IIIFUrl: process.env.IIIF_URL,
@@ -73,7 +74,7 @@ module.exports = {
      * Viewer to display video files
      * [videojs | jwplayer | universalviewer | kaltura]
      */
-    videoViewer: "kaltura",
+    videoViewer: "universalviewer",
 
     /* 
      * Viewer to display pdf files

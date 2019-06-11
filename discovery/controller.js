@@ -279,9 +279,10 @@ exports.getDatastream = function(req, res) {
 	Service.getDatastream(pid, ds, part, function(error, stream) {
 		if(error) {
 			console.log(error);
-			res.send(404);
+			res.sendStatus(404);
 		}
 		else {
+			res.set('Accept-Ranges', 'bytes');
 			stream.pipe(res);
 		}
 	});

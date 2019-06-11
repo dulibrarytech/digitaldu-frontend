@@ -359,11 +359,17 @@ exports.getFacets = getFacets;
  */
 exports.getDatastream = function(objectID, datastreamID, part, callback) {
 
+  // The objectID (pid) has a part ID, assign the part ID and remove it from the objectID
+  if(part == null && objectID.indexOf(config.compoundObjectPartID) > 0) {
+    part = objectID.substring(objectID.indexOf(config.compoundObjectPartID)+config.compoundObjectPartID.length);
+    objectID = objectID.split(config.compoundObjectPartID,1)[0];
+  }
+
   // Get the object data
   fetchObjectByPid(objectID, function(error, object) {
     if(object) {
 
-      // If there is a part value, Assign the object data from the requested part of the parent object.  Set the part string to be appended to the object url, append nothing if no part is present
+      // If there is a part value, retrieve the part data.  Redefine the object data with the part data
       if(part) {
         var sequence;
         let objectPart = {
@@ -374,8 +380,10 @@ exports.getDatastream = function(objectID, datastreamID, part, callback) {
         object = objectPart;
         sequence = "-" + part;
       }
+
+      // If there are no parts in this object, do not append the sequence to the stream url
       else {
-        sequence = ""; // Omit from the path below
+        sequence = "";
       }
 
       // Request a thumbnail datastream
@@ -433,7 +441,7 @@ exports.getDatastream = function(objectID, datastreamID, part, callback) {
       // Request a non thumbnail datastream
       else {
 
-        // Check for a local object file
+        // Check for a local object file: get the path
         let file = null, path;
         for(var extension in config.fileExtensions) {
           if(config.fileExtensions[extension].includes(object.mime_type)) {
@@ -610,6 +618,7 @@ exports.getManifestObject = function(pid, callback) {
         // Add the child objects of the main parent object
         for(var key in object.display_record.parts) {
           resourceUrl = config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType(object.display_record.parts[key].type) + "/" + object.display_record.parts[key].order;
+          //resourceUrl = config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType(object.display_record.parts[key].type);
 
           // Add the data
           children.push({
@@ -618,7 +627,8 @@ exports.getManifestObject = function(pid, callback) {
             description: object.display_record.parts[key].caption,
             format: object.display_record.parts[key].type,
             type: Helper.getIIIFObjectType(object.display_record.parts[key].type) || "",
-            resourceID: object.display_record.parts[key].object,
+            //resourceID: object.display_record.parts[key].object,
+            resourceID: object.pid + config.compoundObjectPartID + object.display_record.parts[key].order,
             downloadFileName: object.display_record.parts[key].title,
             resourceUrl: resourceUrl,
             thumbnailUrl: config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType("thumbnail") + "/" + object.display_record.parts[key].order

@@ -77,6 +77,8 @@ exports.getObjectViewer = function(object, mimeType="") {
 exports.getCompoundObjectViewer = function(object) {
  	var viewer = "";
 
+ 	// IF video this is the kaltura player
+
  	// Get viewer for object mime type:
  	switch(config.compoundObjectViewer) {
  		case "universalviewer":

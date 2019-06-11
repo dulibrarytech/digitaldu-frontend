@@ -21,6 +21,7 @@ module.exports = {
     topLevelCollectionPID: "codu:root",
     topLevelCollectionName: "Root Collection",
     collectionMimeType: "collection",
+    compoundObjectPartID: "_part-",
 
     // IIIF
     IIIFUrl: process.env.IIIF_URL,

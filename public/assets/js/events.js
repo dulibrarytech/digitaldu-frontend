@@ -14,6 +14,11 @@ $( document ).ready(function() {
 		window.location.replace(encodeURI(searchUrl));
 	});
 
+	// $("#thumb0 > div > img").click(function(event){
+	//   // action goes here!!
+	//   console.log("HERE event");
+	// });
+
 });
 
 
