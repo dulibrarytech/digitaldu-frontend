@@ -275,7 +275,7 @@ exports.getDatastream = function(req, res) {
 	var ds = req.params.datastream.toLowerCase() || "",
 		pid = req.params.pid || "",
 		part = req.params.part || null;
-			
+
 	Service.getDatastream(pid, ds, part, function(error, stream) {
 		if(error) {
 			console.log(error);

@@ -64,13 +64,18 @@ exports.streamData = function(object, dsid, callback) {
 		url = host + "/" + object.object;
 	}
 
-	// Get the stream 
-	rs(url, {}, function(err, res) {
-		if(err) {
-			callback("Could not open datastream. " + err + " Check connection to repository", null);
-		}
-		else {
-			callback(null, res);
-		}
-	});
+	try {
+		// Get the stream 
+		rs(url, {}, function(err, res) {
+			if(err) {
+				callback("Could not open datastream. " + err + " Check connection to repository", null);
+			}
+			else {
+				callback(null, res);
+			}
+		});
+	}
+	catch(e) {
+		callback(e, null);
+	}
 }

@@ -364,13 +364,12 @@ exports.getDatastream = function(objectID, datastreamID, part, callback) {
     part = objectID.substring(objectID.indexOf(config.compoundObjectPartID)+config.compoundObjectPartID.length);
     objectID = objectID.split(config.compoundObjectPartID,1)[0];
   }
-
   // Get the object data
   fetchObjectByPid(objectID, function(error, object) {
     if(object) {
 
       // If there is a part value, retrieve the part data.  Redefine the object data with the part data
-      if(part) {
+      if(part && isNaN(part) === false) {
         var sequence;
         let objectPart = {
           mime_type: object.display_record.parts[part-1].type,
@@ -614,7 +613,6 @@ exports.getManifestObject = function(pid, callback) {
 
       // Compound objects
       if(AppHelper.isParentObject(object)) {
-        
         // Add the child objects of the main parent object
         for(var key in object.display_record.parts) {
           resourceUrl = config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType(object.display_record.parts[key].type) + "/" + object.display_record.parts[key].order;
