@@ -34,6 +34,9 @@ module.exports = function (app) {
     app.route('/facets')
         .get(Discovery.getFacets);
 
+    app.route('/viewer/kaltura/:pid/:part')
+        .get(Discovery.getKalturaViewer);
+
     app.route('/datastream/:pid/:datastream')
         .get(Discovery.getDatastream);
 

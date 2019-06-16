@@ -230,4 +230,14 @@ exports.getDsType = function(mimeType) {
   return datastream;
 }
 
+exports.getObjectType = function(mimeType) {
+  let type = "";
+  for(var key in config.mimeTypes) {
+    if(config.mimeTypes[key].includes(mimeType)) {
+      type = key;
+    }
+  }
+  return type;
+}
+
 

@@ -13,12 +13,6 @@ $( document ).ready(function() {
 		searchUrl += "&view=" + $('#results-view-select').val();
 		window.location.replace(encodeURI(searchUrl));
 	});
-
-	// $("#thumb0 > div > img").click(function(event){
-	//   // action goes here!!
-	//   console.log("HERE event");
-	// });
-
 });
 
 

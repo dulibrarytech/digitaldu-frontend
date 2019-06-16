@@ -305,3 +305,38 @@ exports.getIIIFManifest = function(req, res) {
 		}
 	});
 }
+
+exports.getKalturaViewer = function(req, res) {
+	let pid = req.params.pid || "",
+		part = req.params.part || "1",
+		entryID = "";
+
+	// TODO add to service
+	Service.fetchObjectByPid(pid, function(error, object) {
+		if(error) {
+			console.log(error, pid);
+			res.send("<h4>Error loading viewer");
+		}
+		else if(object == null) {
+			console.log("Object not found", pid);
+			res.send("<h4>Error loading viewer, object not found");
+		}
+		else {
+			if(object.object_type == "compound") {
+				entryID = object.display_record.parts[part-1].entry_id;
+			}
+			else {
+				entryID = object.entry_id;
+			}
+
+			let kalturaViewer = Viewer.getKalturaViewer(object, {
+				partner_id: config.kalturaPartnerID,
+				uiconf_id: config.kalturaUI_ID,
+				entry_id: entryID,
+				unique_object_id: config.kalturaUniqueObjectID
+			});
+
+			res.send(kalturaViewer);
+		}
+	});
+}

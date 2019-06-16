@@ -387,12 +387,7 @@ exports.getDatastream = function(objectID, datastreamID, part, callback) {
 
       // Request a thumbnail datastream
       if(datastreamID == "tn") {
-        let type = "";
-        for(var key in config.mimeTypes) {
-          if(config.mimeTypes[key].includes(object.mime_type)) {
-            type = key;
-          }
-        }
+        let type = Helper.getObjectType(object.mime_type);
 
         // Stream image thumbnails from the repository
         if(type == "largeImage" || type == "smallImage") {

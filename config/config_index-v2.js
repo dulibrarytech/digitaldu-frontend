@@ -108,13 +108,17 @@ module.exports = {
     jwplayerPathToLibrary: "/libs/jwplayer_du/jwplayer-du.js",
 
     /*
+     * Universalviewer settings
+     */
+    universalViewerKalturaPlayer: true,
+
+    /*
      * Kaltura viewer settings
      */
     kalturaUI_ID: "44058172",
     kalturaPartnerID: "2357732",
-    //kalturaUniqueObjectID: "kaltura_du_12345",
-    //kalturaUniqueObjectID: "kaltura_player_1549920112",
     kalturaUniqueObjectID: "kaltura_player_1559751114",
+
 
     // The index field that holdas the display record data
     displayRecordField: "display_record",
