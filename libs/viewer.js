@@ -297,30 +297,39 @@ function getJWPlayer(thumbnailUrl, streamUrl, fileExtension, jwPlayerPath) {
 function getIIIFObjectViewer(object, part=null, embedKalturaViewer=false) {
 
 	// Embed the Kaltura player in the Universalviewer	
-	let kalturaViewer = "", entryID = "";
+	let kalturaViewer = "", 
+		entryID = "",
+		eventTriggers = "";
+
+	// Option to embed the Kaltura player into this Universalviewer	instance
 	if(embedKalturaViewer) {
 
-		// If an index is present, assume the object is compound, and view this part
+		// If a part value is present, assume the object is compound, and view this part
 		if(part && isNaN(part) == false) {
-			// TODO add to config
-			//index = parseInt(index);
+
+			// Locate the entry_id for the requested compound object part
 			for(var index in object.display_record.parts) {
 				if(object.display_record.parts[index].order == part) {
 					entryID = object.display_record.parts[index].entry_id;
 				}
 			}
 		}
+
+		// This is not a compound object.  Just grab the entry_id from the object
 		else {
 			entryID = object.entry_id || "";
 		}
 
-		// Get the viewer content
+		// Get the player content
 		kalturaViewer = getKalturaViewer(object, {
 			partner_id: config.kalturaPartnerID,
 			uiconf_id: config.kalturaUI_ID,
 			entry_id: entryID,
 			unique_object_id: config.kalturaUniqueObjectID
 		});
+
+		// Add the event trigger to embed the Kaltura player 
+		eventTriggers += '$( "#uv").trigger( "uvloaded", [ ' + embedKalturaViewer + ', "' + object.pid + '", "' + config.universalViewerMediaElement + '", "' + kalturaViewer + '" ] );';
 	}
 
 	let viewer = '<div id="uv" class="uv"></div>';
@@ -331,7 +340,7 @@ function getIIIFObjectViewer(object, part=null, embedKalturaViewer=false) {
 		viewer += 'configUri: "' + config.rootUrl + '/libs/universalviewer/uv-config.json",';
 		viewer += 'root: "../..' + config.appPath + '/libs/universalviewer/uv",';
 		viewer += '}, new UV.URLDataProvider());';
-		viewer += '$( "#uv").trigger( "uvloaded", [ ' + embedKalturaViewer + ', "' + object.pid + '", "' + config.universalViewerMediaElement + '", "' + kalturaViewer + '" ] );';
+		viewer += eventTriggers;
 		viewer += '}, false);';
 		viewer += '</script>';
 	return viewer;

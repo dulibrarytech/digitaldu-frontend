@@ -27,6 +27,10 @@
   padding: 0px;
 }
 
+.uv .mainPanel {
+  overflow: hidden;
+}
+
 .uv .mainPanel .title {
   overflow: initial !important;
 }
