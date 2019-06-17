@@ -1,9 +1,9 @@
 $( document ).ready(function() {
 
-	var uvExpandHeight = "1090px",
-		uvCollapseHeight = "815px",
-		mainPanelExpandHeight = "1050px",
-		mainPanelCollapseHeight = "730px";
+	var uvExpandHeight = "1020px",
+		uvCollapseHeight = "718px",
+		mainPanelExpandHeight = "980px",
+		mainPanelCollapseHeight = "718px";
 	
 	// UV Kaltura viewer: embed the Kaltura viewer, controls, and events
 	$( "#uv" ).on("uvloaded", function(event, embedKalturaViewer, objectID, universalViewerMediaElement, viewerContent) {

@@ -403,6 +403,7 @@ exports.getDatastream = function(objectID, datastreamID, part, callback) {
 
         // Handle request for non-image thumbnail
         else {
+
           // Separate any namespace appendix from the pid.  Numeric pid + extension = thumbnail image file
           let path = config.tnPath + objectID.match(/[0-9]+/)[0] + sequence + config.thumbnailFileExtension;
 
@@ -446,11 +447,16 @@ exports.getDatastream = function(objectID, datastreamID, part, callback) {
             }
           }
         }
-        
+
         // Stream the local object file if it is found
         if(file) {
           AppHelper.getFileStream(file, function(error, content) {
-              callback(null, content);
+              if(error) {
+                callback(error, null);
+              }
+              else {
+                callback(null, content);
+              }
           }); 
         }
 

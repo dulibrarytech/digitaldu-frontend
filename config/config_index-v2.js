@@ -118,7 +118,7 @@ module.exports = {
     kalturaUI_ID: "44058172",
     kalturaPartnerID: "2357732",
     kalturaUniqueObjectID: "kaltura_player_1559751114",
-    kalturaPlayerHeight: "1000px",  // Height without the transcript player
+    kalturaPlayerHeight: "923px",  // Height without the transcript player
 
 
     // The index field that holdas the display record data
