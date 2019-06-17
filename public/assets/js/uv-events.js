@@ -1,4 +1,9 @@
 $( document ).ready(function() {
+
+	var uvExpandHeight = "1090px",
+		uvCollapseHeight = "815px",
+		mainPanelExpandHeight = "1050px",
+		mainPanelCollapseHeight = "730px";
 	
 	// UV Kaltura viewer: embed the Kaltura viewer, controls, and events
 	$( "#uv" ).on("uvloaded", function(event, embedKalturaViewer, objectID, universalViewerMediaElement, viewerContent) {
@@ -6,8 +11,8 @@ $( document ).ready(function() {
 		if(embedKalturaViewer) {
 	  		$( "#uv" ).css("visibility", "hidden");
 	  		//$( "#uv" ).css("height", "1090px");
-	  		$( ".uv" ).css("height", "815px");
-	  		$( ".mainPanel" ).css("height", "730px");
+	  		$( ".uv" ).css("height", uvCollapseHeight);
+	  		$( ".mainPanel" ).css("height", mainPanelCollapseHeight);
 
 			setTimeout(function(){  
 		  		$( "#uv" ).css("visibility", "visible");
@@ -35,16 +40,16 @@ $( document ).ready(function() {
 
 	  		// Show the transcript viewer
 	  		if($(".kaltura-viewer").hasClass("transcript-visible") == false) {
-	  			$( ".uv" ).css("height", "1090px");
-				$( ".mainPanel" ).css("height", "1008px");
+	  			$( ".uv" ).css("height", uvExpandHeight);
+				$( ".mainPanel" ).css("height", mainPanelExpandHeight);
 				$("#show-uv-kaltura-transcript-player").html("Hide Transcript");
 				$(".kaltura-viewer").addClass("transcript-visible");
 	  		}
 
 	  		// Hide the transcript viewer
 	  		else {
-	  			$( ".uv" ).css("height", "815px");
-				$( ".mainPanel" ).css("height", "730px");
+	  			$( ".uv" ).css("height", uvCollapseHeight);
+				$( ".mainPanel" ).css("height", mainPanelCollapseHeight);
 				$("#show-uv-kaltura-transcript-player").html("View Transcript");
 				$(".kaltura-viewer").removeClass("transcript-visible");
 	  		}
