@@ -2,17 +2,18 @@ $( document ).ready(function() {
 	
 	// UV Kaltura viewer: embed the Kaltura viewer, controls, and events
 	$( "#uv" ).on("uvloaded", function(event, embedKalturaViewer, objectID, universalViewerMediaElement, viewerContent) {
+
 		if(embedKalturaViewer) {
 	  		$( "#uv" ).css("visibility", "hidden");
 	  		//$( "#uv" ).css("height", "1090px");
 	  		$( ".uv" ).css("height", "815px");
 	  		$( ".mainPanel" ).css("height", "730px");
-	  			console.log("TEST viewer content", viewerContent);
+
 			setTimeout(function(){  
 		  		$( "#uv" ).css("visibility", "visible");
 		  		$("[id^=mep_]").html("");
 		  		$("[id^=mep_]").append(viewerContent);
-		  			
+
 		  		$(".thumb").on("click", function(event) {
 					let part = parseInt($(this)[0].id.replace("thumb", "")) + 1,
 						uri = $(this)[0].baseURI,

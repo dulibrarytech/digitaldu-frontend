@@ -113,6 +113,7 @@ module.exports = {
     kalturaPartnerID: "2357732",
     //kalturaUniqueObjectID: "kaltura_du_12345",
     kalturaUniqueObjectID: "kaltura_player_1549920112",
+    alturaPlayerHeight: "1000px",
 
     // The index field that holdas the display record data
     displayRecordField: "display_record",
