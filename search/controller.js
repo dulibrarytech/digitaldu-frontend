@@ -17,9 +17,11 @@ const async = require('async'),
     Format = require("../libs/format");
 
 exports.search = function(req, res) {
-	var query = req.query.q,
+	var query = req.query.q || [""],
+		field = req.query.field || ["all"], 
+		type = req.query.type || ["contains"],
+		bool = req.query.bool || ["or"],
 		facets = req.query.f || null,
-		typeVal = req.query.type || "all", type,
 		page = req.query.page || 1,
 		pageSize = req.query.resultsPerPage || config.maxResultsPerPage,
 		collection = req.query.collection || null,
@@ -30,39 +32,13 @@ exports.search = function(req, res) {
 			to: req.query.to || new Date().getFullYear()
 		} : null;
 
-	// Get the search type
-	// TODO move to helper function
-	if(typeVal.toLowerCase() == 'all') {
+		console.log("TEST qparam q:", query);
+		console.log("TEST qparam field:", field);
+		console.log("TEST qparam bool:", bool);
+		console.log("TEST qparam type:", type);
 
-		// Non-scoped search: Use fulltect search fields
-		if(config.fulltextMetadataSearch === true) {
-			type = config.searchKeywordFields;
-		}
-
-		// Non-scoped search: Search in all of the fields in the search type dropdown
-		else {
-			type = [];
-			for(var field of config.keywordFields) {
-				for(var key in field) {
-					type.push(field[key]);
-				}
-			}
-		}
-	}
-
-	// Scoped search.  Use the selected type in the search type dropdown
-	else {
-		
-		for(var field of config.searchFields) {
-			for(var key in field) {
-				if(key == typeVal) {
-					type = field[key];
-				}
-			}
-		}
-	}
-		
-	Service.searchIndex(query, type, facets, collection, page, pageSize, daterange, function(error, response) {
+	var queryData = Helper.getSearchQueryDataObject(query, field, type, bool);
+	Service.searchIndex(queryData, facets, collection, page, pageSize, daterange, function(error, response) {
 		var data = {
 			error: null,
 			facets: {},

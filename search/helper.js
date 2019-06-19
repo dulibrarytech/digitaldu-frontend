@@ -125,13 +125,16 @@ exports.getSearchResultDisplayFields = function(searchResult) {
 
 /**
  * Create the 'results for:' label for search results
+ * If there are multiple queries in the array, this is an advanved search.  Use the first query for the results querystring label
  *
  * @param 
  * @return 
  */
 exports.getResultsLabel = function(query, facets) {
-  let queryData = " ";
-  if(query == "" && facets) {
+  let queryData = " ",
+      queryString = query[0].split(",")[0] || "";
+
+  if(queryString == "" && facets) {
     for(let key in facets) {
       for(let index in facets[key]) {
         queryData += (" " + facets[key][index]);
@@ -140,7 +143,7 @@ exports.getResultsLabel = function(query, facets) {
     }
   }
   else {
-    queryData = query == "" ? "*" : query;
+    queryData = queryString == "" ? "*" : queryString;
   }
 
   return queryData; 
@@ -199,4 +202,69 @@ exports.getDateRangeQuery = function(daterange) {
   });
 
   return dateQuery;
+}
+
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
+exports.getSearchFields = function(fieldValue) {
+  var fields = [];
+  if(fieldValue.toLowerCase() == 'all') {
+
+    // Non-scoped search: Use fulltext search fields
+    if(config.fulltextMetadataSearch === true) {
+      fields = config.searchKeywordFields;
+    }
+
+    // Non-scoped search: Search in all of the fields in the search type dropdown
+    else {
+      for(var field of config.searchFields) {
+        for(var key in field) {
+          fields.push({
+            "field": field[key]
+          });
+        }
+      }
+    }
+  }
+
+  // Scoped search: Use the selected type in the search type dropdown
+  else {
+    for(var field of config.searchFields) {
+      for(var key in field) {
+        if(key.toLowerCase() == fieldValue.toLowerCase()) {
+          //fields = field[key];
+          fields.push({
+            "field": field[key]
+          });
+        }
+      }
+    }
+  }
+
+  return fields;
+}
+
+/**
+ * Build the search query data array (for multiple advanced search queries, or a single search) from individual search url parameters
+ *
+ * @param 
+ * @return 
+ */
+exports.getSearchQueryDataObject = function(queryArray, fieldArray, typeArray, boolArray) {
+  var queryDataArray = [];
+
+  for(var index in queryArray) {
+    queryDataArray.push({
+      terms: queryArray[index],
+      field: fieldArray[index],
+      type: typeArray[index],
+      bool: boolArray[index]
+    });
+  }
+
+  return queryDataArray;
 }

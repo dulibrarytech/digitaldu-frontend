@@ -1,7 +1,7 @@
 <div class="searchform">
   <form class="form-inline" method="get" action="<%= root_url %>/search">
     <div id="search-options" class="form-group">
-      <select name="type" class="search-element">
+      <select name="field[]" class="search-element">
         <option value="all">All</option>
         <optgroup label="Specific Fields">
         <% for (var i = 0; i < searchFields.length; i++) { %>
@@ -13,10 +13,12 @@
       </select>
     </div>
     <div id="search-box" class="form-group">
-      <input class="search-element" type="text" name="q" placeholder="Search Keyword(s)" />
+      <input class="search-element" type="text" name="q[]" placeholder="Search Keyword(s)" />
     </div>
     <div id="search-submit" class="form-group">
       <button class="search-element" type="submit" alt="Search"><i class="fas fa-search"></i> Search</button>
     </div>
+    <input type="hidden" name="type[]" value="contains">
+    <input type="hidden" name="bool[]" value="or">
   </form>
 </div>

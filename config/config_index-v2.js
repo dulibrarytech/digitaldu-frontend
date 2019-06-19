@@ -125,6 +125,18 @@ module.exports = {
     displayRecordField: "display_record",
 
     /*
+     * Fields for scoped search.  These will appear in 'Search Type' dropdown list
+     * "Search type name": Index field to search"
+     */ 
+    searchFields: [
+        {"Title": "title"},
+        {"Creator": "creator"},
+        {"Subject": "subject"},
+        {"Type": "type"},
+        {"Description": "abstract"}
+    ],
+
+    /*
      * Fields for fulltext search (search all)
      * 
      */ 
@@ -135,6 +147,13 @@ module.exports = {
         {"field": "type", "boost": "1"},
         {"field": "abstract", "boost": "2"}
     ],
+    // searchKeywordFields: [
+    //     {"field": "title", "label": "Title", "targetedSearch": "yes", boost": "3"},
+    //     {"field": "creator", "boost": "2"},
+    //     {"field": "subject", "boost": "1"},
+    //     {"field": "type", "boost": "1"},
+    //     {"field": "abstract", "boost": "2"}
+    // ],
 
     /*
      * Options for results per page
@@ -146,18 +165,6 @@ module.exports = {
     showDateRangeLimiter: true,
 
     searchTermFuzziness: "1",
-
-    /*
-     * Fields for scoped search.  These will appear in 'Search Type' dropdown list
-     * "Search type name": Index field to search"
-     */ 
-    searchFields: [
-        {"Title": "title"},
-        {"Creator": "creator"},
-        {"Subject": "subject"},
-        {"Type": "type"},
-        {"Description": "abstract"}
-    ],
 
     /*
      * Facets to display
