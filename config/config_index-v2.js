@@ -138,22 +138,16 @@ module.exports = {
 
     /*
      * Fields for fulltext search (search all)
-     * 
      */ 
-    searchKeywordFields: [
-        {"field": "title", "boost": "3"},
-        {"field": "creator", "boost": "2"},
-        {"field": "subject", "boost": "1"},
-        {"field": "type", "boost": "1"},
-        {"field": "abstract", "boost": "2"}
+    fulltextKeywordSearchFields: [
+        {"label": "Title", "field": "title", "boost": "4"},
+        {"label": "Creator", "field": "creator", "boost": "3"},
+        {"label": "Subject", "field": "f_subjects", "boost": "2"},
+        // {"label": "Type", "field": "title", "boost": "2"},
+        // {"label": "Description", "field": "title", "boost": "3"},
+        // {"label": "Extents", "field": "title"},
+        {"label": "Creation Date", "field": "display_record.dates.expression", "matchField": "display_record.dates.label", "matchTerm": "creation"}
     ],
-    // searchKeywordFields: [
-    //     {"field": "title", "label": "Title", "targetedSearch": "yes", boost": "3"},
-    //     {"field": "creator", "boost": "2"},
-    //     {"field": "subject", "boost": "1"},
-    //     {"field": "type", "boost": "1"},
-    //     {"field": "abstract", "boost": "2"}
-    // ],
 
     /*
      * Options for results per page

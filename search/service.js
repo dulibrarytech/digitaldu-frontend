@@ -41,8 +41,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
     /* 
      * Build the search fields object 
      * Use a match query for each word token, a match_phrase query for word group tokens, and a wildcard search for tokens that contain a '*'.
-     * All tokens default to AND search.
-     * TODO: Advanced search options
+     * Each query is placed in a separate bool object
      */
     var field, fields, type, terms, bool;
     for(var index in queryData) {
@@ -58,9 +57,15 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       type = queryData[index].type || "contains";
       bool = queryData[index].bool || "or";
 
+          console.log("TEST query index", index);
+          console.log("TEST terms", terms);
+          console.log("TEST field", field);
+          console.log("TEST type", type);
+          console.log("TEST bool", bool);
+
       // If field value is "all", get all the available search fields
       fields = Helper.getSearchFields(field)
-
+        console.log("TEST fields is", fields);
       if(terms == "") {
         terms = '*';
       }
@@ -86,7 +91,6 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       // Build elastic query.  If an array of fields is passed in, search in all of the fields that are in the array.
       if(Array.isArray(fields)) {
         /*
-         * type is an array of keyword objects: {field: "elastic keyword field"}
          * Loop the keywords, adding each to the main query array under the specified query type (match, wildcard, match_phrase)
          * For match queries, check for a boost value in the keyword object and add it to the query if the value is present
          */
@@ -100,7 +104,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
           if(queryType == "match") {
             queryObj = {
               "query": terms,
-              "operator": "or",
+              "operator": "and",
               "fuzziness": config.searchTermFuzziness
             };
 
@@ -110,7 +114,22 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
 
             keywordObj[field.field] = queryObj;
             tempObj[queryType] = keywordObj;
-            matchFields.push(tempObj);
+
+            // Create a must bool with the required index field match
+            if(typeof field.matchField != 'undefined') {
+              let mustQuery = {
+                "match_phrase": {}
+              };
+              mustQuery.match_phrase[field.matchField] = field.matchTerm;
+              matchFields.push({
+                "bool": {
+                  "must": [tempObj,mustQuery]
+                }
+              });
+            }
+            else {
+              matchFields.push(tempObj);
+            }
           }
           else {
             keywordObj[field.field] = terms;
@@ -127,13 +146,15 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
           tempObj[queryType] = keywordObj;
           matchFields.push(tempObj);
       } 
-      boolObj.bool.should = matchFields; 
+      boolObj.bool.should = matchFields; // ok
+        console.log("TEST matchFields", util.inspect(matchFields, {showHidden: false, depth: null}));
 
-
-      // Add this query to the boolean filter object
+      // Add this query to the boolean filter must object
       if(bool == "and" && matchFields.length > 0) {
         booleanQuery.bool.must.push(boolObj);
       }
+
+      // Add this query to the boolean filter should object
       else if(matchFields.length > 0) {
         booleanQuery.bool.should.push(boolObj);
       }

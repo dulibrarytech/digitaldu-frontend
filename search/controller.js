@@ -32,11 +32,6 @@ exports.search = function(req, res) {
 			to: req.query.to || new Date().getFullYear()
 		} : null;
 
-		console.log("TEST qparam q:", query);
-		console.log("TEST qparam field:", field);
-		console.log("TEST qparam bool:", bool);
-		console.log("TEST qparam type:", type);
-
 	var queryData = Helper.getSearchQueryDataObject(query, field, type, bool);
 	Service.searchIndex(queryData, facets, collection, page, pageSize, daterange, function(error, response) {
 		var data = {

@@ -212,35 +212,17 @@ exports.getDateRangeQuery = function(daterange) {
  */
 exports.getSearchFields = function(fieldValue) {
   var fields = [];
+
+  // Non-scoped search: Search in all of the fields in the fulltext search
   if(fieldValue.toLowerCase() == 'all') {
-
-    // Non-scoped search: Use fulltext search fields
-    if(config.fulltextMetadataSearch === true) {
-      fields = config.searchKeywordFields;
-    }
-
-    // Non-scoped search: Search in all of the fields in the search type dropdown
-    else {
-      for(var field of config.searchFields) {
-        for(var key in field) {
-          fields.push({
-            "field": field[key]
-          });
-        }
-      }
-    }
+    fields = config.fulltextKeywordSearchFields;
   }
 
   // Scoped search: Use the selected type in the search type dropdown
   else {
-    for(var field of config.searchFields) {
-      for(var key in field) {
-        if(key.toLowerCase() == fieldValue.toLowerCase()) {
-          //fields = field[key];
-          fields.push({
-            "field": field[key]
-          });
-        }
+    for(var field of config.fulltextKeywordSearchFields) {
+      if(field.label.toLowerCase() == fieldValue.toLowerCase()) {
+          fields.push(field);
       }
     }
   }
