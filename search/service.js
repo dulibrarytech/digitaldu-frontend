@@ -61,7 +61,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
 
       // If field value is "all", get all the available search fields
       fields = Helper.getSearchFields(field)
-
+         console.log("TEST fields", fields);
       // Default empty queries to wildcard "all results" query
       if(terms == "") {
         terms = '*';

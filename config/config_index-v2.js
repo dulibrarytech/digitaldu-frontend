@@ -48,7 +48,7 @@ module.exports = {
     searchFieldNamespace: "",
 
     // Search in the specified metadata keyword fields.  These fields will not appear in the Search Type selections.  Search All is not scoped to the selections that appear in the Search Type list.  
-    fulltextMetadataSearch: true,
+    //fulltextMetadataSearch: true,
 
     // Will appear in the view, if an item has no title information
     noTitlePlaceholder: "Untitled",
@@ -135,6 +135,7 @@ module.exports = {
         {"Type": "type"},
         {"Description": "abstract"}
     ],
+
     searchTypes: [
         {"Contains": "contains"},
         {"Is": "is"}
@@ -145,12 +146,26 @@ module.exports = {
      */ 
     fulltextKeywordSearchFields: [
         {"label": "Title", "field": "title", "boost": "4"},
-        {"label": "Creator", "field": "creator", "boost": "3"},
+        {"label": "Creator", "field": "display_record.names.title", "boost": "2"},
+        //{"label": "Creator", "field": "creator", "boost": "3"},
         {"label": "Subject", "field": "f_subjects", "boost": "2"},
-        // {"label": "Type", "field": "title", "boost": "2"},
-        // {"label": "Description", "field": "title", "boost": "3"},
-        // {"label": "Extents", "field": "title"},
-        {"label": "Creation Date", "field": "display_record.dates.expression", "matchField": "display_record.dates.label", "matchTerm": "creation"}
+        {"label": "Type", "field": "type", "boost": "2"},
+        {"label": "Description", "field": "display_record.dates.notes.content", "boost": "3"},
+        {"label": "Creation Date", "field": "display_record.dates.expression", "matchField": "display_record.dates.label", "matchTerm": "creation"},
+        {"label": "Authority ID", "field": "display_record.identifiers.identifier", "matchField": "display_record.identifiers.type", "matchTerm": "local"},
+    ],
+
+    /*
+     * Fields for advanced search scoped search
+     */
+    advancedSearchFields: [
+        {"Title": "title"},
+        {"Creator": "display_record.names.title"},
+        {"Subject": "f_subjects"},
+        {"Type": "type"},
+        {"Description": "display_record.dates.notes.content"},
+        {"Creation Date": "display_record.dates.expression"},
+        {"Authority ID": "display_record.identifiers.identifier"}
     ],
 
     /*
