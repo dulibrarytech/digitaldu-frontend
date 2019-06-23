@@ -57,15 +57,9 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       type = queryData[index].type || "contains";
       bool = queryData[index].bool || "or";
 
-          console.log("TEST query index", index);
-          console.log("TEST terms", terms);
-          console.log("TEST field", field);
-          console.log("TEST type", type);
-          console.log("TEST bool", bool);
-
       // If field value is "all", get all the available search fields
       fields = Helper.getSearchFields(field)
-        console.log("TEST fields is", fields);
+
       if(terms == "") {
         terms = '*';
       }
@@ -147,7 +141,6 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
           matchFields.push(tempObj);
       } 
       boolObj.bool.should = matchFields; // ok
-        console.log("TEST matchFields", util.inspect(matchFields, {showHidden: false, depth: null}));
 
       // Add this query to the boolean filter must object
       if(bool == "and" && matchFields.length > 0) {

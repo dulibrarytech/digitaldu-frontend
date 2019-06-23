@@ -131,10 +131,9 @@ exports.getSearchResultDisplayFields = function(searchResult) {
  * @return 
  */
 exports.getResultsLabel = function(query, facets) {
-  let queryData = " ",
-      queryString = query[0].split(",")[0] || "";
+  let queryData = " ";
 
-  if(queryString == "" && facets) {
+  if(query == "" && facets) {
     for(let key in facets) {
       for(let index in facets[key]) {
         queryData += (" " + facets[key][index]);
@@ -143,7 +142,7 @@ exports.getResultsLabel = function(query, facets) {
     }
   }
   else {
-    queryData = queryString == "" ? "*" : queryString;
+    queryData = query == "" ? "*" : query;
   }
 
   return queryData; 
