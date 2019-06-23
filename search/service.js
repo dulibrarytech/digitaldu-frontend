@@ -33,11 +33,12 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
         booleanQuery = {
           "bool": {
             "should": [],
-            "must": []
+            "must": [],
+            "must_not": []
           }
         },
         boolObj;
-
+        
     /* 
      * Build the search fields object 
      * Use a match query for each word token, a match_phrase query for word group tokens, and a wildcard search for tokens that contain a '*'.
@@ -52,6 +53,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
           }
       };
 
+      // Get the query data from the current data object, or use default data
       terms = queryData[index].terms || "";
       field = queryData[index].field || "all";
       type = queryData[index].type || "contains";
@@ -60,6 +62,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       // If field value is "all", get all the available search fields
       fields = Helper.getSearchFields(field)
 
+      // Default empty queries to wildcard "all results" query
       if(terms == "") {
         terms = '*';
       }
@@ -143,12 +146,17 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       boolObj.bool.should = matchFields; // ok
 
       // Add this query to the boolean filter must object
-      if(bool == "and" && matchFields.length > 0) {
+      if(bool == "and") {
         booleanQuery.bool.must.push(boolObj);
       }
 
+      // Add this query to the boolean filter must_not object
+      else if(bool == "not") {
+        booleanQuery.bool.must_not.push(boolObj);
+      }
+
       // Add this query to the boolean filter should object
-      else if(matchFields.length > 0) {
+      else {
         booleanQuery.bool.should.push(boolObj);
       }
     }
