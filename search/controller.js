@@ -84,4 +84,14 @@ exports.search = function(req, res) {
 			});
 		}
 	});
-};
+}
+
+exports.advancedSearch = function(req, res) {
+	var data = {
+		error: null,
+		root_url: config.rootUrl,
+		searchFields: config.searchFields,
+		typeFields: config.searchTypes
+	};
+	return res.render('advanced-search', data);
+}

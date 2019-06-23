@@ -4,12 +4,12 @@
       <select name="field[]" class="search-element">
         <option value="all">All</option>
         <optgroup label="Specific Fields">
-        <% for (var i = 0; i < searchFields.length; i++) { %>
-          <% for (var key in searchFields[i]) { %>
-            <option value='<%- key %>'><%- key %></option>
+          <% for (var i = 0; i < searchFields.length; i++) { %>
+            <% for (var key in searchFields[i]) { %>
+              <option value='<%- key %>'><%- key %></option>
+            <% } %>
           <% } %>
-        <% } %>
-      </optgroup>
+        </optgroup>
       </select>
     </div>
     <div id="search-box" class="form-group">
@@ -21,4 +21,5 @@
     <input type="hidden" name="type[]" value="contains">
     <input type="hidden" name="bool[]" value="or">
   </form>
+  <span><a href="<%= root_url %>/advanced-search">Advanced Search</a></span>
 </div>

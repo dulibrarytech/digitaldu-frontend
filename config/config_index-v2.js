@@ -135,6 +135,10 @@ module.exports = {
         {"Type": "type"},
         {"Description": "abstract"}
     ],
+    searchTypes: [
+        {"Contains": "contains"},
+        {"Is": "is"}
+    ],
 
     /*
      * Fields for fulltext search (search all)

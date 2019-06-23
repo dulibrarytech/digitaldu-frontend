@@ -87,6 +87,10 @@ main {
   min-height: 100vh;
 }
 
+.content-section {
+  padding: 50px 0 50px 0;
+}
+
 .col-md-1-nostack {
   -ms-flex: 0 0 8.333333%;
     flex: 0 0 8.333333%;
@@ -451,6 +455,15 @@ div.banner-search form {
     padding-bottom:40px;
 }
 
+.searchform span a {
+    position: relative;
+    float: right;
+    top: 10px;
+    right: 11px;
+    color: white;
+    text-decoration: underline;
+}
+
 div.searchform #search-options {
   width: 20%;
 }
@@ -461,6 +474,18 @@ div.searchform #search-box {
 
 div.searchform #search-submit {
   width: 20%;
+}
+
+div#advanced-search-form {
+  margin-top: 30px;
+}
+
+div.page-form {
+  padding: 20px;
+}
+
+div.page-form .form-group {
+  margin-right: 10px;
 }
 
 div.sidebar-search #search-options {
@@ -694,11 +719,6 @@ div.viewer-wrapper {
 
 div.viewer-wrapper div {
     padding: 0;
-}
-
-div#content {
-    min-height: 600px;
-
 }
 
 /* Begin collection grid section */

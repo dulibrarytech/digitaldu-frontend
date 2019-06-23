@@ -1,0 +1,45 @@
+<% include partials/header %>
+<% include partials/title-banner %>
+
+<div class="container content-section">
+	<h3>Advanced Search</h3>
+	<div id="advanced-search-form" class="page-form">
+		<form class="form-inline" method="get" action="<%= root_url %>/search">
+			<div class="form-group">
+				<select name="field[]" class="search-element">
+					<option value="" disabled selected>Field</option>
+					<option value="all">All</option>
+					<optgroup label="Specific Fields">
+					  <% for (var i = 0; i < searchFields.length; i++) { %>
+					    <% for (var key in searchFields[i]) { %>
+					      <option value='<%- key %>'><%- key %></option>
+					    <% } %>
+					  <% } %>
+					</optgroup>
+				</select>
+			</div>
+			<div class="form-group">
+				<select name="type[]" class="search-element">
+					<optgroup label="Search Type Fields">
+					  <% for (var i = 0; i < typeFields.length; i++) { %>
+					    <% for (var key in typeFields[i]) { %>
+					      <option value='<%- key %>'><%- key %></option>
+					    <% } %>
+					  <% } %>
+					</optgroup>
+				</select>
+			</div>
+			<div id="search-box" class="form-group">
+		      <input class="search-element" type="text" name="q[]" placeholder="Keyword(s)" />
+		    </div>
+		</form>
+	</div>
+</div>
+
+<script>
+	$( document ).ready(function() {
+		console.log("HERE");
+	});
+</script>
+
+<% include partials/footer %>
