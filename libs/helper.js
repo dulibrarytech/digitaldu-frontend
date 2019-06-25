@@ -76,3 +76,33 @@ exports.parseJSONObjectValues = function(valueMap, jsonObject) {
 
 	return valuesObject;
 }
+
+// exports.getNestedObjectField = function(params, object) {
+//   var value = "n",
+//   	  targetObject = {},
+//       pathArray = params.path.split(".");
+
+//     console.log("TEST params in", params);
+//     console.log("TEST object in", object);
+
+//   let objects = null;
+//   for(var index of pathArray) {
+//   	// if(objects) {
+//   	// 	console.log("TEST objects", objects);
+//   	// }
+//   	// else {
+//   	 	object = object[index];
+//   	// }
+
+// 	// if(typeof object.length != 'undefined') {
+// 	// 	objects = object;
+// 	// }
+// 	// else {
+// 	// 	objects = null;
+// 	// }
+//   }
+//   	console.log("TEST reduced object", object);
+//   	console.log("TEST objects", objects);
+
+//   return value;
+// }

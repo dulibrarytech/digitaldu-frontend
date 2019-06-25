@@ -164,6 +164,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
         booleanQuery.bool.should.push(boolObj);
       }
     }
+      console.log("TEST booleanQuery", util.inspect(booleanQuery, {showHidden: false, depth: null}));
 
     // If facets are present, add them to the search
     if(facets) {
@@ -249,10 +250,11 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
     var facetAggregations = Helper.getFacetAggregationObject(config.facets);
 
     // Apply sortBy option
-    // var sortArr = [],
+    var sortArr = [];
     //     sortData = {
-    //       "order": "asc",
-    //       "ignore_unmapped" : true
+    //       "order": "asc"
+    //       // "ignore_unmapped" : true
+
     //     };
     // sortArr.push({
     //   "title": sortData
@@ -267,7 +269,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
         from : (pageNum - 1) * pageSize, 
         size : pageSize,
         query: queryObj,
-        // sort: sortArr,
+        sort: sortArr,
         aggregations: facetAggregations
       }
     }
@@ -314,8 +316,15 @@ exports.searchFacets = function (query, facets, page, callback) {
     });
 };
 
+/**
+ * Create a data object with result and facet data
+ *
+ * @param 
+ * @return 
+ */
 var returnResponseData = function(facets, response, callback) {
-  // Remove selected facet from the facet panelslist
+
+  // Remove selected facet from the facet panel list.  The list should not show a facet option if the facet has already been selected
   Helper.removeSelectedFacets(facets, response);
   
   // Return the aggregation results for the facet display
@@ -325,26 +334,30 @@ var returnResponseData = function(facets, response, callback) {
 
   try {
 
-    // Create the search results objects
+    // Create a normalized data object for the search results
     var results = [], tn, resultData, resultObj;
     for(var result of response.hits.hits) {
 
-      // Get the thumbnail
+      // Get the thumbnail for this search result
       tn = config.rootUrl + "/datastream/" + result._source.pid.replace('_', ':') + "/tn";
 
-      // Push a new result object to the results array
+      // Push a new result object to the results data array
       resultObj = {
         title: result._source.title || "No Title",
         tn: tn,
-        pid: result._source.pid
+        pid: result._source.pid,
+
       }
+
+      // Add the display record
       resultObj[config.displayRecordField] = result._source[config.displayRecordField] || {};
+
+      // Ad current result to the results array
       results.push(resultObj);
     }
 
     // Add the results array, send the response
     responseData['results'] = results;
-
     callback(null, responseData);
   }
   catch(error) {

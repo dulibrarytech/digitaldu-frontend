@@ -3,10 +3,10 @@
 
 <div class="container content-section">
 	<h3>Advanced Search</h3>
-	<div id="advanced-search-form" class="page-form">
+	<div class="page-form advanced-search-form">
 		<form id="advanced-search" method="get" action="<%= root_url %>/search">
 			<div id="advanced-search-query-row-1" class="form-inline">
-				<div id="advanced-search-bool-select" class="form-group">
+				<div class="form-group advanced-search-bool-select">
 					<select name="bool[]" class="search-element">
 						<optgroup label="Boolean Search Type">
 						  <% for (var i = 0; i < boolFields.length; i++) { %>
@@ -41,7 +41,7 @@
 						</optgroup>
 					</select>
 				</div>
-				<div id="search-box" class="form-group">
+				<div class="form-group search-box">
 			      <input class="search-element" type="text" name="q[]" placeholder="Keyword(s)" />
 			    </div>
 			</div>
@@ -60,7 +60,6 @@
 			let formRow = "<div class='form-inline'>";
 			formRow += $("#advanced-search-query-row-1").html();
 			formRow += "</div>";
-			console.log("TEST click", formRow);
 			$("#advanced-search").append(formRow);
 		});
 

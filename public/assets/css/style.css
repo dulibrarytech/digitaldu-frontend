@@ -488,7 +488,7 @@ div.searchform #search-options {
   width: 20%;
 }
 
-div.searchform #search-box {
+div.searchform .search-box {
   width: 60%;
 }
 
@@ -504,11 +504,11 @@ form#advanced-search .form-inline {
     margin-top: 20px;
 }
 
-div#advanced-search-form {
+div.advanced-search-form {
  /* margin-top: 30px;*/
 }
 
-div#advanced-search-query-row-1 div#advanced-search-bool-select {
+div#advanced-search-query-row-1 div.advanced-search-bool-select {
     display: none;
 }
 
@@ -538,7 +538,7 @@ div.sidebar-search #search-options {
   width: 20%;
 }
 
-div.sidebar-search #search-box {
+div.sidebar-search .search-box {
   width: 60%;
 }
 

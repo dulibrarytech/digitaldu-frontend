@@ -136,6 +136,12 @@ module.exports = {
         {"Description": "abstract"}
     ],
 
+    searchSortFields: {
+        "Title": {"path": "", "field": "title"},
+        "Creator": {"path": "", "field": "creator"},
+        "Date": {"path": "display_record.dates", "field": "expression", "matchField": "label", "matchValue": "creation"}
+    },
+
     /*
      * Advanced Search query options
      */
@@ -151,28 +157,29 @@ module.exports = {
         {"NOT": "not"}
     ],
 
+    // {"Label": "id"}
     advancedSearchFields: [
         {"Title": "title"},
-        {"Creator": "display_record.names.title"},
-        {"Subject": "f_subjects"},
+        {"Creator": "creator"},
+        {"Subject": "subject"},
         {"Type": "type"},
-        {"Description": "display_record.dates.notes.content"},
-        {"Creation Date": "display_record.dates.expression"},
-        {"Authority ID": "display_record.identifiers.identifier"}
+        {"Description": "description"},
+        {"Creation Date": "create_date"},
+        {"Authority ID": "authority_id"}
     ],
 
     /*
      * Fields for fulltext search (search all)
      */ 
     fulltextKeywordSearchFields: [
-        {"label": "Title", "field": "title", "boost": "4"},
-        {"label": "Creator", "field": "display_record.names.title", "boost": "2"},
+        {"label": "Title", "id": "title", "field": "title", "boost": "4"},
+        {"label": "Creator", "id": "creator", "field": "display_record.names.title", "boost": "2"},
         //{"label": "Creator", "field": "creator", "boost": "3"},
-        {"label": "Subject", "field": "f_subjects", "boost": "2"},
-        {"label": "Type", "field": "type", "boost": "2"},
-        {"label": "Description", "field": "display_record.dates.notes.content", "boost": "3"},
-        {"label": "Creation Date", "field": "display_record.dates.expression", "matchField": "display_record.dates.label", "matchTerm": "creation"},
-        {"label": "Authority ID", "field": "display_record.identifiers.identifier", "matchField": "display_record.identifiers.type", "matchTerm": "local"},
+        {"label": "Subject", "id": "subject", "field": "f_subjects", "boost": "2"},
+        {"label": "Type", "id": "type", "field": "type", "boost": "2"},
+        {"label": "Description", "id": "description", "field": "display_record.dates.notes.content", "boost": "3"},
+        {"label": "Creation Date", "id": "create_Date", "field": "display_record.dates.expression", "matchField": "display_record.dates.label", "matchTerm": "creation"},
+        {"label": "Authority ID", "id": "authority_id", "field": "display_record.identifiers.identifier", "matchField": "display_record.identifiers.type", "matchTerm": "local"},
     ],
 
     /*

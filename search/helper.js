@@ -220,7 +220,7 @@ exports.getSearchFields = function(fieldValue) {
   // Scoped search: Use the selected type in the search type dropdown
   else {
     for(var field of config.fulltextKeywordSearchFields) {
-      if(field.label.toLowerCase() == fieldValue.toLowerCase()) {
+      if(field.id.toLowerCase() == fieldValue.toLowerCase()) {
           fields.push(field);
       }
     }
@@ -248,4 +248,23 @@ exports.getSearchQueryDataObject = function(queryArray, fieldArray, typeArray, b
   }
 
   return queryDataArray;
+}
+
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
+exports.sortSearchResults = function(results, sortBy) {
+  var sorted = [],
+      titles = [];
+
+  // Get config value for sort by
+
+  for(var index in results) {
+
+  }
+
+  return sorted;
 }

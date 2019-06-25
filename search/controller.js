@@ -24,6 +24,7 @@ exports.search = function(req, res) {
 		facets = req.query.f || null,
 		page = req.query.page || 1,
 		pageSize = req.query.resultsPerPage || config.maxResultsPerPage,
+		sortBy = req.query.sort || null,
 		collection = req.query.collection || null,
 		showAll = req.query.showAll || [],
 		expandFacets = req.query.expand || [],
@@ -32,13 +33,16 @@ exports.search = function(req, res) {
 			to: req.query.to || new Date().getFullYear()
 		} : null;
 
-		console.log("TEST query", query);
-		console.log("TEST field", field);
-		console.log("TEST type", type);
-		console.log("TEST bool", bool);
+		// console.log("TEST query", query);
+		// console.log("TEST field", field);
+		// console.log("TEST type", type);
+		// console.log("TEST bool", bool);
 
 	var queryData = Helper.getSearchQueryDataObject(query, field, type, bool);
+
 	Service.searchIndex(queryData, facets, collection, page, pageSize, daterange, function(error, response) {
+
+		// View data
 		var data = {
 			error: null,
 			facets: {},
@@ -60,8 +64,6 @@ exports.search = function(req, res) {
 		}
 		else {
 
-			var path = config.rootUrl + req.url.substring(req.url.indexOf('search')-1);
-
 			data.options["expandFacets"] = expandFacets;
 			data.options["perPageCountOptions"] = config.resultCountOptions;
 			data.options["resultsViewOptions"] = config.resultsViewOptions;
@@ -70,19 +72,28 @@ exports.search = function(req, res) {
 			// Don't show the daterange limit option if there is a daterange parameter preent, or if there are no search results
 			data.options["showDateRange"] = (daterange || response.count == 0) ? false : config.showDateRangeLimiter;
 
+			// Add the metadata display field from the configuration, then add the results list to the view data
 			Metadata.addResultMetadataDisplays(response.results);
 			data.results = response.results;
+			//data.results = Helper.sortSearchResults(response.results, sortBy.split(","));
 
-			var facetList = Facets.getFacetList(response.facets, showAll);
+			// Create paginator data object, add it to the view data
+			let path = config.rootUrl + req.url.substring(req.url.indexOf('search')-1);
+			data.pagination = Paginator.create(data.results, data.page, pageSize, response.count, path);
+
+			// If facets have been used in the search query, convert the facet fields into a normalized data object for the breadcrumb display
 			if(facets) {
 				facets = Facets.getSearchFacetObject(facets);
 			}
 
+			// Get a normalized list of the facet data returned from the search.  
+			let facetList = Facets.getFacetList(response.facets, showAll);
 			Format.formatFacetDisplay(facetList, function(error, facetList) {
 				Format.formatFacetBreadcrumbs(facets, function(error, facets) {
+
+					// Add facets returned from the search to the view data
 					data.facets = Facets.create(facetList, config.rootUrl, showAll, expandFacets);
 					data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(facets, daterange, config.rootUrl); 
-					data.pagination = Paginator.create(response.results, data.page, pageSize, response.count, path);
 											
 					return res.render('results', data);
 				});
