@@ -61,16 +61,20 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
 
       // If field value is "all", get all the available search fields
       fields = Helper.getSearchFields(field)
-         console.log("TEST fields", fields);
+
       // Default empty queries to wildcard "all results" query
       if(terms == "") {
         terms = '*';
       }
 
+      if(type == "isnot") {
+        queryType = "must_not";
+      }
+
        // This is a string literal search if the query is contained by parentheses.  Use 'match_phrase'.  Must match the entire query
-      if((terms[0] == '"' && terms[ terms.length-1 ] == '"') || 
+      else if((terms[0] == '"' && terms[ terms.length-1 ] == '"') || 
           type == "is") {
-            console.log("match phrase");
+
         terms = terms.replace(/"/g, '');  
         queryType = "match_phrase";
       }

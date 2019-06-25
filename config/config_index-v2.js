@@ -142,6 +142,7 @@ module.exports = {
     searchTypes: [
         {"Contains": "contains"},
         {"Is": "is"}
+        // {"Is Not": "isnot"}
     ],
 
     booleanSearchFields: [

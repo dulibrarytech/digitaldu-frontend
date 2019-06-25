@@ -11,7 +11,7 @@
 						<optgroup label="Boolean Search Type">
 						  <% for (var i = 0; i < boolFields.length; i++) { %>
 						    <% for (var key in boolFields[i]) { %>
-						      <option value='<%- key %>'><%- key %></option>
+						      <option value='<%- boolFields[i][key] %>'><%- key %></option>
 						    <% } %>
 						  <% } %>
 						</optgroup>
@@ -19,12 +19,12 @@
 				</div>
 				<div class="form-group">
 					<select name="field[]" class="search-element">
-						<option value="" disabled selected>Field</option>
+						<!-- <option value="" disabled selected>Field</option> -->
 						<option value="all">All Fields</option>
 						<optgroup label="Specific Fields">
 						  <% for (var i = 0; i < searchFields.length; i++) { %>
 						    <% for (var key in searchFields[i]) { %>
-						      <option value='<%- key %>'><%- key %></option>
+						      <option value='<%- searchFields[i][key] %>'><%- key %></option>
 						    <% } %>
 						  <% } %>
 						</optgroup>
@@ -35,7 +35,7 @@
 						<optgroup label="Search Type">
 						  <% for (var i = 0; i < typeFields.length; i++) { %>
 						    <% for (var key in typeFields[i]) { %>
-						      <option value='<%- key %>'><%- key %></option>
+						      <option value='<%- typeFields[i][key] %>'><%- key %></option>
 						    <% } %>
 						  <% } %>
 						</optgroup>
@@ -47,8 +47,11 @@
 			</div>
 		    <input type="hidden" name="fulltext" value="true">
 		</form>
+		<div class="advanced-search-form-controls">
+			<div id="add-query-button" class="clickable icon-link-right" alt="Add A New Query"><i class="far fa-plus-square"></i>Add another query</div>
+			<div><button id="advanced-search-submit" type="button" class=".btn .btn-default .btn-large">Submit</button></div>
+		</div>
 	</div>
-	<span id="add-query-button" class="clickable icon-link-right" alt="Add A New Query"><i class="far fa-plus-square"></i>Add another query</span>
 </div>
 
 <script>
@@ -59,6 +62,10 @@
 			formRow += "</div>";
 			console.log("TEST click", formRow);
 			$("#advanced-search").append(formRow);
+		});
+
+		$("#advanced-search-submit").click(function(event) {
+			$("#advanced-search").submit();
 		});
 	});
 </script>
