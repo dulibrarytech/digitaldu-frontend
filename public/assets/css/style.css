@@ -256,6 +256,18 @@ main {
   border-color: #8b2332;
 }
 
+.clickable:hover {
+  cursor: pointer;
+}
+
+.icon-link-right i {
+  margin-right: 7px;
+}
+
+.icon-link-left i {
+  margin-left: 7px;
+}
+
 div#main-wrapper {
   max-width: 2000px;
   margin: 0 auto;
@@ -459,7 +471,7 @@ div.banner-search form {
     position: relative;
     float: right;
     top: 10px;
-    right: 11px;
+    right: 0;
     color: white;
     text-decoration: underline;
 }
@@ -476,8 +488,22 @@ div.searchform #search-submit {
   width: 20%;
 }
 
+form#advanced-search .form-inline {
+  margin-top: 20px;
+}
+
 div#advanced-search-form {
-  margin-top: 30px;
+ /* margin-top: 30px;*/
+}
+
+div#advanced-search-query-row-1 div#advanced-search-bool-select {
+  display: none;
+}
+
+#add-query-button {
+    position: relative;
+    left: 22px;
+    top: 10px;
 }
 
 div.page-form {

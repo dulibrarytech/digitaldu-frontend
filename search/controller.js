@@ -91,7 +91,8 @@ exports.advancedSearch = function(req, res) {
 		error: null,
 		root_url: config.rootUrl,
 		searchFields: config.advancedSearchFields,
-		typeFields: config.searchTypes
+		typeFields: config.searchTypes,
+		boolFields: config.booleanSearchFields
 	};
 	return res.render('advanced-search', data);
 }

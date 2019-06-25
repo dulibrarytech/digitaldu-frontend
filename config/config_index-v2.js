@@ -136,9 +136,28 @@ module.exports = {
         {"Description": "abstract"}
     ],
 
+    /*
+     * Advanced Search query options
+     */
     searchTypes: [
         {"Contains": "contains"},
         {"Is": "is"}
+    ],
+
+    booleanSearchFields: [
+        {"AND": "and"},
+        {"OR": "or"},
+        {"NOT": "not"}
+    ],
+
+    advancedSearchFields: [
+        {"Title": "title"},
+        {"Creator": "display_record.names.title"},
+        {"Subject": "f_subjects"},
+        {"Type": "type"},
+        {"Description": "display_record.dates.notes.content"},
+        {"Creation Date": "display_record.dates.expression"},
+        {"Authority ID": "display_record.identifiers.identifier"}
     ],
 
     /*
@@ -153,19 +172,6 @@ module.exports = {
         {"label": "Description", "field": "display_record.dates.notes.content", "boost": "3"},
         {"label": "Creation Date", "field": "display_record.dates.expression", "matchField": "display_record.dates.label", "matchTerm": "creation"},
         {"label": "Authority ID", "field": "display_record.identifiers.identifier", "matchField": "display_record.identifiers.type", "matchTerm": "local"},
-    ],
-
-    /*
-     * Fields for advanced search scoped search
-     */
-    advancedSearchFields: [
-        {"Title": "title"},
-        {"Creator": "display_record.names.title"},
-        {"Subject": "f_subjects"},
-        {"Type": "type"},
-        {"Description": "display_record.dates.notes.content"},
-        {"Creation Date": "display_record.dates.expression"},
-        {"Authority ID": "display_record.identifiers.identifier"}
     ],
 
     /*
