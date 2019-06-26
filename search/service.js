@@ -57,7 +57,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       terms = queryData[index].terms || "";
       field = queryData[index].field || "all";
       type = queryData[index].type || "contains";
-      bool = queryData[index].bool || "or";
+      bool = index == 0 ? "or" : queryData[index].bool || "or";
 
       // If field value is "all", get all the available search fields
       fields = Helper.getSearchFields(field)
@@ -164,7 +164,9 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
         booleanQuery.bool.should.push(boolObj);
       }
     }
-      console.log("TEST booleanQuery", util.inspect(booleanQuery, {showHidden: false, depth: null}));
+
+    // DEBUG
+    //console.log("TEST booleanQuery", util.inspect(booleanQuery, {showHidden: false, depth: null}));
 
     // If facets are present, add them to the search
     if(facets) {
@@ -346,7 +348,6 @@ var returnResponseData = function(facets, response, callback) {
         title: result._source.title || "No Title",
         tn: tn,
         pid: result._source.pid,
-
       }
 
       // Add the display record
