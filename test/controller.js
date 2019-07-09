@@ -3,6 +3,7 @@
 const async = require('async'),
 
 config = require('../config/' + process.env.CONFIGURATION_FILE),
+util = require('util'),
 DiscHelper = require('../discovery/helper.js'),
 DiscService = require('../discovery/service.js'),
 
@@ -10,8 +11,10 @@ SearchHelper = require('../search/helper.js'),
 SearchService = require('../search/service.js'),
 
 Viewer = require('../libs/viewer'),
+Helper = require('../libs/helper'),
 Facets = require('../libs/facets'),
 Paginator = require('../libs/paginator'),
+Metadata = require('../libs/metadata'),
 IIIF = require('../libs/IIIF');
 
 exports.test_UVViewer = function(req, res) {
@@ -100,3 +103,59 @@ exports.test_findRecordsNotInRange = function(req, res) {
 	res.send(JSON.stringify(notinrange));
 }
 
+exports.test_retrieveNestedObjectValue = function(req, res) {
+
+	let path = "display_record.subjects.terms.term",
+	matchKey = "type",
+	matchValue = "topical",
+	object = {},
+	displayRecord = {
+		"title": ["The Title", "Title 2"],
+		"subjects": []
+	};
+
+	displayRecord.subjects.push({
+		"authority": "local",
+        "title": "Patient Records",
+        "terms": []
+	});
+	displayRecord.subjects.push({
+		"authority": "lcnaf",
+        "title": "Denver (Colo.)",
+        "terms": []
+	});
+	displayRecord.subjects.push({
+		"authority": "lcsnaf",
+        "title": "Denver (Colo.)",
+        "terms": [],
+        "authid": "id"
+	});
+	displayRecord.subjects.push({
+		"authority": "naf",
+        "title": "Denver (Colo.)",
+        "authid": "id"
+	});
+	displayRecord.subjects[0].terms.push({
+		"type": "topical",
+        "term": "Patient Records"
+	});
+	displayRecord.subjects[1].terms.push({
+		"type": "topical",
+        "term": "Outpatient Records"
+	});
+	displayRecord.subjects[2].terms.push({
+		"type": "geographic",
+        "term": "Denver (Colo.)"
+	});
+	object["display_record"] = displayRecord;
+		console.log("TEST object in:", util.inspect(object, {showHidden: false, depth: null}));
+
+	let pathArray = "display_record.subjects.terms.term".split("."), bucket = [];
+	let returnVal = Helper.extractValues(pathArray, object, "type", "topical", bucket);
+
+	res.send(bucket || "ok");
+}
+
+exports.test_metadata_createMetadataDisplayObject = function(req, res) {
+
+}

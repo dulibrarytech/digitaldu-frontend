@@ -1,16 +1,22 @@
-const Test = require('../test/controller');
+const config = require('../config/' + process.env.CONFIGURATION_FILE),
+		Test = require('../test/controller');
 
 module.exports = function (app) {
-    app.route('/test/uviewer')
-        .get(Test.test_UVViewer);
-};
 
-module.exports = function (app) {
-    app.route('/test/kalturaviewer')
-        .get(Test.test_KalturaViewer);
-};
+	if(config.nodeEnv == "development") {
+		app.route('/test/uviewer')
+	        .get(Test.test_UVViewer);
 
-module.exports = function (app) {
-    app.route('/test/findRecordsNotInRange')
-        .get(Test.test_findRecordsNotInRange);
+	    app.route('/test/kalturaviewer')
+	        .get(Test.test_KalturaViewer);
+
+	    app.route('/test/findRecordsNotInRange')
+	        .get(Test.test_findRecordsNotInRange);
+
+	    app.route('/test/retrieveNestedObjectValue')
+	        .get(Test.test_retrieveNestedObjectValue);
+
+	    app.route('/test/metadata_createMetadataDisplayObject')
+	        .get(Test.test_metadata_createMetadataDisplayObject);
+	}
 };
