@@ -77,32 +77,40 @@ exports.parseJSONObjectValues = function(valueMap, jsonObject) {
 	return valuesObject;
 }
 
-// exports.getNestedObjectField = function(params, object) {
-//   var value = "n",
-//   	  targetObject = {},
-//       pathArray = params.path.split(".");
+var extractValues = function(pathArray, object, matchField, matchValue, condition, bucket) {
+	var nextKey,
+		nextObject,
+		nextArray;
 
-//     console.log("TEST params in", params);
-//     console.log("TEST object in", object);
+	if(pathArray.length == 1) {
+		if(matchField) {
+			if(condition == "true" && object[matchField] == matchValue) {
+				bucket.push(object[pathArray]);
+			}
+			else if(condition == "false" && object[matchField] != matchValue) {
+				bucket.push(object[pathArray]);
+			}
+		}
+		else {
+			bucket.push(object[pathArray]);
+		}
+	}
+	else {
+		nextArray = pathArray.slice();
+		nextKey = nextArray.shift();
+		nextObject = object[nextKey];
 
-//   let objects = null;
-//   for(var index of pathArray) {
-//   	// if(objects) {
-//   	// 	console.log("TEST objects", objects);
-//   	// }
-//   	// else {
-//   	 	object = object[index];
-//   	// }
-
-// 	// if(typeof object.length != 'undefined') {
-// 	// 	objects = object;
-// 	// }
-// 	// else {
-// 	// 	objects = null;
-// 	// }
-//   }
-//   	console.log("TEST reduced object", object);
-//   	console.log("TEST objects", objects);
-
-//   return value;
-// }
+		if(!nextObject) {
+			return 0;
+		}
+		else if(nextObject.length) {
+			for(var index in nextObject) {
+				extractValues(nextArray, nextObject[index], matchField, matchValue, condition, bucket);
+			}
+		}
+		else {
+			extractValues(nextArray, nextObject, matchField, matchValue, condition, bucket);
+		}
+	}
+}
+exports.extractValues = extractValues;
