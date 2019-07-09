@@ -271,8 +271,16 @@ module.exports = {
      * "Display field name": "index field key to match"
      */
     summaryDisplay: {
-        "Title": '{"title": ["VALUE"]}',
-        "Description": '{"notes": [{"content": "VALUE", "type": "abstract"}]}'
+        "Default": {
+            "Title": {
+                "path": "title"
+            },
+            "Description": {
+                "path": "notes.content",
+                "matchField": "type",
+                "matchValue": "abstract"
+            }
+        }
     },
 
     /*
@@ -280,9 +288,21 @@ module.exports = {
      * "Display field name": "index field key to match"
      */
     resultsDisplay: {
-        "Date": '{"dates":[{"expression": "VALUE", "label": "creation"}]}',
-        "Creator": '{"name": [ { "namePart": "VALUE", "role": "creator" } ]}',
-        "Description": '{"notes": [{"content": "VALUE", "type": "abstract"}]}'
+        "Default": {
+            "Creation Date": {
+                "path": "dates.expression",
+                "matchField": "label",
+                "matchValue": "creation"
+            },
+            "Creator": {
+                "path": "names.title"
+            },
+            "Description": {
+                "path": "notes.content",
+                "matchField": "type",
+                "matchValue": "abstract"
+            }
+        }
     },
 
     /*

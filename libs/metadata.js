@@ -20,30 +20,17 @@ var config = require('../config/' + process.env.CONFIGURATION_FILE),
  */
 exports.createSummaryDisplayObject = function(result) {
 	var displayObj = {},
-		displayRecord = result[config.displayRecordField];
+		displayRecord = result[config.displayRecordField] || {},
+		summaryDisplay = config.summaryDisplay["Default"] || {},
+		pathArray;	// TODO: Determine which display to use based on object, or other specification
 
-	// Get metadata object from result display record json
-	if(displayRecord && typeof displayRecord == "string") {
-		try {
-			displayRecord = JSON.parse(displayRecord);
-		}
-		catch(e) {
-			console.log("Error: invalid object display record for object: " + result.pid);
-		}
-	}
-	else if(displayRecord && typeof displayRecord == "object") {
-		displayRecord = displayRecord || null;
-	}
-
-	if(displayRecord) {
-		// Title
-		displayObj["Title"] = displayRecord["title"] || "";
-
-		// Description
-		for(var index in displayRecord["notes"] || {}) {
-			if(displayRecord["notes"][index].type == "abstract") {
-				displayObj["Description"] = displayRecord["notes"][index].content || "";
-			}
+	// Build the summary display
+	for(var key in summaryDisplay) {
+		let values = [];
+		pathArray = summaryDisplay[key].path.split(".");
+		Helper.extractValues(pathArray, displayRecord, summaryDisplay[key].matchField || null, summaryDisplay[key].matchValue || null, summaryDisplay[key].condition || "true", values);
+		if(values.length > 0) {
+			displayObj[key] = values;
 		}
 	}
 
@@ -62,6 +49,16 @@ exports.createMetadataDisplayObject = function(result, collections=[]) {
 		metadataDisplay = config.metadataDisplay["Default"] || {},
 		pathArray;	// TODO: Determine which display to use based on object, or other specification
 
+	// Include the titles of any parent collections
+	let titles = [];
+	for(var collection of collections) {
+		titles.push('<a href="' + config.rootUrl + '/collection/' + collection.pid + '">' + collection.name + '</a>');
+	}
+	if(titles.length > 0) {
+		displayObj["In Collections"] = titles;
+	}
+
+	// Build the metadata display
 	for(var key in metadataDisplay) {
 		let values = [];
 		pathArray = metadataDisplay[key].path.split(".");
@@ -81,52 +78,28 @@ exports.createMetadataDisplayObject = function(result, collections=[]) {
  * @return 
  */
 exports.addResultMetadataDisplays = function(resultArray) {
-	var metadata,
-	    displayFields = config.resultsDisplay,
-		displayRecord = {},
-		resultDisplayRecord;
+	var displayObj = {},
+		displayRecord,
+		resultsDisplay = config.resultsDisplay["Default"] || {},
+		metadata,
+		pathArray;	// TODO: Determine which display to use based on object, or other specification
 
-	for(var index of resultArray) {
-		metadata = {}
-		resultDisplayRecord = index[config.displayRecordField];
-		if(resultDisplayRecord && typeof resultDisplayRecord == "string") {
-			try {
-				displayRecord = JSON.parse(resultDisplayRecord);
-			}
-			catch(e) {
-				console.log("Error: invalid object display record for object: " + result.pid);
+	for(var result of resultArray) {
+		metadata = {};
+		displayRecord = result[config.displayRecordField] || {};
+
+		// Build the resuts display
+		for(var key in resultsDisplay) {
+			let values = [];
+			pathArray = resultsDisplay[key].path.split(".");
+			Helper.extractValues(pathArray, displayRecord, resultsDisplay[key].matchField || null, resultsDisplay[key].matchValue || null, resultsDisplay[key].condition || "true", values);
+			if(values.length > 0) {
+				metadata[key] = values;
 			}
 		}
-		else if(resultDisplayRecord && typeof resultDisplayRecord == "object") {
-			displayRecord = resultDisplayRecord || {};
-		}
 
-		if(displayRecord) {
-
-			// Creation date
-			for(let index in displayRecord["dates"] || {}) {
-				if(displayRecord["dates"][index].label == "creation") {
-					metadata["Creation Date"] = displayRecord["dates"][index].expression || "";
-				}
-			}
-
-			// Creator
-			for(let index in displayRecord["names"] || {}) {
-				if(typeof metadata["Creator"] == 'undefined') {
-					metadata["Creator"] = [];
-				}
-				metadata["Creator"].push(displayRecord["names"][index].title);
-			}
-
-			// Description
-			for(let index in displayRecord["notes"]) {
-				if(displayRecord["notes"][index].type == "abstract") {
-					metadata["Description"] = displayRecord["notes"][index].content;
-				}
-			}
-
-			index["metadata"] = metadata;
-		}
+		result["metadata"] = metadata;
 	}
+
 	return resultArray;
 }

@@ -82,19 +82,28 @@ var extractValues = function(pathArray, object, matchField, matchValue, conditio
 		nextObject,
 		nextArray;
 
+	// We have drilled into the specified field.  Locate the value
 	if(pathArray.length == 1) {
 		if(matchField) {
-			if(condition == "true" && object[matchField] == matchValue) {
+			if(object[pathArray] && 
+				condition == "true" && 
+				object[matchField] == matchValue) {
+
 				bucket.push(object[pathArray]);
 			}
-			else if(condition == "false" && object[matchField] != matchValue) {
+			else if(object[pathArray] && 
+					condition == "false" && 
+					object[matchField] != matchValue) {
+
 				bucket.push(object[pathArray]);
 			}
 		}
-		else {
+		else if(object[pathArray]) {
 			bucket.push(object[pathArray]);
 		}
 	}
+
+	// Keep digging
 	else {
 		nextArray = pathArray.slice();
 		nextKey = nextArray.shift();
