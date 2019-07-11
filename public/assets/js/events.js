@@ -13,6 +13,10 @@ $( document ).ready(function() {
 		searchUrl += "&view=" + $('#results-view-select').val();
 		window.location.replace(encodeURI(searchUrl));
 	});
+
+	$("#add-query-button").click(function(event) {
+		$("#add-query-button").blur();
+	});
 });
 
 
