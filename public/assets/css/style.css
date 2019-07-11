@@ -87,6 +87,12 @@ main {
   min-height: 100vh;
 }
 
+.btn-nostyle {
+    height: auto;
+    border-style: none;
+    background-color: initial;
+}
+
 .float-left {
   float: left;
 }
