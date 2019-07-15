@@ -34,7 +34,7 @@
             <h4>Results for: <span><%- query %></span></h4>
           </div>
           <div class="search-results-menu-element">
-            <select id="results-per-page" class="form-control">
+            <select id="results-per-page" class="form-control" title="Select Number of Results per Page">
                 <% for (var i = 0; i < options.perPageCountOptions.length; i++) { %>
                   <% if(options.perPageCountOptions[i] == options.pageSize) { %>
                     <option value="<%= options.perPageCountOptions[i] %>" selected><%= options.perPageCountOptions[i] %> per page</option>
@@ -46,7 +46,7 @@
           </div>
 
           <div class="search-results-menu-element">
-            <select id="results-view-select" class="form-control">
+            <select id="results-view-select" class="form-control" title="Select Results View">
                 <% for (var i = 0; i < options.resultsViewOptions.length; i++) { %>
                   <% if(options.resultsViewOptions[i] == view) { %>
                     <option value="<%= options.resultsViewOptions[i] %>" selected><%= options.resultsViewOptions[i] %> View</option>
