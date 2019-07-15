@@ -885,6 +885,10 @@ div.collection-breadcrumbs a {
     text-decoration: none;
 }
 
+div.collection-breadcrumbs a:hover {
+  text-decoration: underline;
+}
+
 div.collection-breadcrumbs,
 div.collection-breadcrumbs a,
 div.collection-breadcrumbs a:visited {
@@ -1252,4 +1256,8 @@ footer .footer-column {
 
 .footer-link-list label {
     text-decoration: underline;
+}
+
+a:hover {
+  text-decoration: underline;
 }

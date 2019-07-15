@@ -155,11 +155,11 @@ function createBreadcrumbTrail(data, dates, baseUrl) {
     var html = '<a id="new-search-link" href="' + baseUrl + '">Start Over</a>';
 
     for (var i = 0; i < data.length; i++) {
-        html += '<span><a href="javascript:document.location.href=removeFacet(\'' + data[i].type + '\', \'' + data[i].facet + '\', \'' + baseUrl + '\');"><strong style="color: red">X</strong></a>&nbsp&nbsp' + data[i].type + '&nbsp&nbsp<strong style="color: green"> > </strong>&nbsp&nbsp' + data[i].name + '</span>';   // good
+        html += '<span><a alt="remove facet" title="remove facet" href="javascript:document.location.href=removeFacet(\'' + data[i].type + '\', \'' + data[i].facet + '\', \'' + baseUrl + '\');"><strong style="color: red">X</strong></a>&nbsp&nbsp' + data[i].type + '&nbsp&nbsp<strong style="color: green"> > </strong>&nbsp&nbsp' + data[i].name + '</span>';   // good
     }
 
     for (i = 0; i < dates.length; i++) {
-        html += '<span><a href="javascript:document.location.href=removeDateRange(\'' + dates[i].from + '\', \'' + dates[i].to + '\');"><strong style="color: red">X</strong></a>&nbsp&nbspDate Range&nbsp&nbsp<strong style="color: green"> > </strong>&nbsp&nbsp' + dates[i].from + ' - ' + dates[i].to + '</span>';   // good
+        html += '<span><a alt="remove date range" title="remove date range" href="javascript:document.location.href=removeDateRange(\'' + dates[i].from + '\', \'' + dates[i].to + '\');"><strong style="color: red">X</strong></a>&nbsp&nbspDate Range&nbsp&nbsp<strong style="color: green"> > </strong>&nbsp&nbsp' + dates[i].from + ' - ' + dates[i].to + '</span>';   // good
     }
     return html;
 };
