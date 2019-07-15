@@ -10,12 +10,16 @@
 
 <div class="row no-side-margin section content">
   <div class="col-md-3">
-    <div class="result-facets facets">
-      <h4>Limit Your Search</h4>
-      <hr>
-      <% include partials/facets %>
-
-    </div>
+    <% if(results.length > 0) { %>
+      <div class="result-facets facets sidebar-section">
+        <h4>Limit Your Search</h4>
+        <hr>
+        <% include partials/facets %>
+        <% include partials/daterange-search %>
+      </div>
+    <% } else { %>
+      <% include partials/daterange-search %>
+    <% } %>
   </div>
 
   <div id="search-results-wrapper" class="col-md-9">
@@ -25,39 +29,104 @@
     <% } else { %>
 
       <% if(query.length >= 0) { %>
-        <h4>Results for: <span><%- query %></span></h4>
+        <div class="search-results-menu">
+          <div class="search-terms-label">
+            <h4>Results for: <span><%- query %></span></h4>
+          </div>
+          <div class="search-results-menu-element">
+            <select id="results-per-page" class="form-control">
+                <% for (var i = 0; i < options.perPageCountOptions.length; i++) { %>
+                  <% if(options.perPageCountOptions[i] == options.pageSize) { %>
+                    <option value="<%= options.perPageCountOptions[i] %>" selected><%= options.perPageCountOptions[i] %> per page</option>
+                  <% } else { %>
+                    <option value="<%= options.perPageCountOptions[i] %>"><%= options.perPageCountOptions[i] %> per page</option>
+                  <% } %>
+                <% } %>
+            </select>
+          </div>
+
+          <div class="search-results-menu-element">
+            <select id="results-view-select" class="form-control">
+                <% for (var i = 0; i < options.resultsViewOptions.length; i++) { %>
+                  <% if(options.resultsViewOptions[i] == view) { %>
+                    <option value="<%= options.resultsViewOptions[i] %>" selected><%= options.resultsViewOptions[i] %> View</option>
+                  <% } else { %>
+                    <option value="<%= options.resultsViewOptions[i] %>"><%= options.resultsViewOptions[i] %> View</option>
+                  <% } %>
+                <% } %>
+            </select>
+          </div>
+        </div>
       <% } %>
 
       <hr>
       <% include partials/paginator %>
 
-      <div class="search-results container">
-        <% if(results.length > 0) { %>
-          <% for (var i = 0; i < results.length; i++) { %>
+      <% if(typeof view != 'undefined' && view == "Grid") { %>
 
-            <div class="row search-result">
-              <div class="col-md-9 search-result-data">
-                <dl>
-                  <dt class="result-title"><%= (i+1)+((page-1)*10) %>.&nbsp&nbsp<a href="<%= root_url %>/object/<%= results[i].pid %>"><%= results[i].title %></a></dt>
-                    <dd></dd>
-                    <dt>Creator:</dt>
-                    <dd><%= results[i].creator %></dd>
-                    <dt>Description:</dt>
-                    <dd class="result-description"><%= results[i].abstract %></dd>
-                </dl>
-              </div>
-              <div class="col-md-3 search-result-tn">
-                  <a href="<%= root_url %>/object/<%= results[i].pid %>" title="<%= results[i].title %>"><img src="<%= results[i].tn %>" alt="<%= results[i].title %>"/></a>            
-              </div>
+        <div class="search-results-grid">
+          <% if(results.length > 0) { %>
+            <div class="row">
+              <% for (var i = 0; i < results.length; i++) { %>
+                <div class="col-sm-3 thumb">
+                  <dl class="item">
+                    <a href="<%= root_url %>/object/<%= results[i].pid %>">
+                      <dt>
+                        <div class="item-thumb">
+                          <img src="<%= results[i].tn %>" alt="<%= results[i].title %>">
+                        </div>
+                      </dt>
+                      <dd>
+                        <div class="item-details">
+                          <h4 class="item-title"><%= results[i].title %></h4>
+                        </div>
+                      </dd>
+                      <dd>
+                        <div class="item-details">
+                          <%= results[i].creator %>
+                        </div>
+                      </dd>
+                    </a>
+                  </dl>
+                </div>
+              <% } %>
             </div>
-
           <% } %>
-        <% } else { %>
-          <span>No results found</span>
-        <% } %>
-      </div>
+        </div>
+
+      <% } else { %>
+
+        <div class="search-results-list container">
+          <% if(results.length > 0) { %>
+            <% for (var i = 0; i < results.length; i++) { %>
+              <div class="row search-result">
+                <div class="col-md-9 search-result-data">
+                  <dl>
+                    <dt class="result-title"><%= (i+1)+((page-1)*options.pageSize) %>.&nbsp&nbsp<a href="<%= root_url %>/object/<%= results[i].pid %>"><%= results[i].title %></a></dt><dd></dd>
+
+                      <% for (var key in results[i].metadata) { %>
+                        <dt><%- key %>:</dt>
+                        <dd><%= results[i].metadata[key] %></dd>
+                      <% } %>
+
+
+
+                  </dl>
+                </div>
+                <div class="col-md-3 search-result-tn">
+                    <a href="<%= root_url %>/object/<%= results[i].pid %>" title="<%= results[i].title %>"><img src="<%= results[i].tn %>" alt="<%= results[i].title %>"/></a>            
+                </div>
+              </div>
+            <% } %>
+          <% } else { %>
+            <span>No results found</span>
+          <% } %>
+        </div>
+
+      <% } %>
     <% } %>
   </div>
 </div>
 
 <% include partials/footer %>
+

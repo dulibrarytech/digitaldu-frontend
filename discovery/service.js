@@ -13,7 +13,7 @@
 
 const es = require('../config/index');
 const fs = require('fs');
-const config = require('../config/config');
+const config = require('../config/' + process.env.CONFIGURATION_FILE);
 const request  = require("request");
 const Repository = require('../libs/repository');
 const Helper = require("./helper");
@@ -214,28 +214,21 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
             collection.facets = response.aggregations;
             collection.count = response.hits.total;
 
-            // Get the child object facets
-            getFacets(collectionID, function(error, facets) {
+            // Get this collection's title
+            fetchObjectByPid(collectionID, function(error, object) {
               if(error) {
+                collection.title = "";
                 callback(error, []);
               }
+              else if(!object) {
+                callback("Object not found", []);
+              }
+              else if(object.object_type != "collection") {
+                callback("Invalid collection: " + object.pid, []);
+              }
               else {
-                collection.facets = facets;
-
-                // Get this collection's title
-                fetchObjectByPid(collectionID, function(error, object) {
-                  if(error) {
-                    collection.title = "";
-                    callback(error, []);
-                  }
-                  else if(object.object_type != "collection") {
-                    callback("Invalid collection: " + object.pid, []);
-                  }
-                  else {
-                    collection.title = object.title[0];
-                    callback(null, collection);
-                  }
-                });
+                collection.title = object.title;
+                callback(null, collection);
               }
             });
           }
@@ -364,47 +357,128 @@ exports.getFacets = getFacets;
  * @param 
  * @return 
  */
-exports.getDatastream = function(objectID, datastreamID, callback) {
-  
-  // Find datastream ID by object type
-  if(datastreamID == "object") {
-    fetchObjectByPid(objectID, function(error, object) {
+exports.getDatastream = function(objectID, datastreamID, part, callback) {
 
-      // Get the datastream ID from the configuration based on the object mime type
-      datastreamID = Helper.getDsType(object.mime_type);
-      Repository.streamData(objectID, datastreamID, function(error, stream) {
-        if(error) {
-          callback(error, null);
-        }
-        else {
-          callback(null, stream);
-        }
-      });
-    });
+  // The objectID (pid) has a part ID, assign the part ID and remove it from the objectID
+  if(part == null && objectID.indexOf(config.compoundObjectPartID) > 0) {
+    part = objectID.substring(objectID.indexOf(config.compoundObjectPartID)+config.compoundObjectPartID.length);
+    objectID = objectID.split(config.compoundObjectPartID,1)[0];
   }
+  // Get the object data
+  fetchObjectByPid(objectID, function(error, object) {
+    if(object) {
 
-  // Stream using the requested datastream ID
-  else {
-    Repository.streamData(objectID, datastreamID, function(error, stream) {
-      if(error) {
-        callback(error, null);
+      // If there is a part value, retrieve the part data.  Redefine the object data with the part data
+      if(part && isNaN(part) === false) {
+        var sequence;
+        let objectPart = {
+          mime_type: object.display_record.parts[part-1].type,
+          object: object.display_record.parts[part-1].object,
+          thumbnail: object.display_record.parts[part-1].thumbnail
+        }
+        object = objectPart;
+        sequence = "-" + part;
       }
+
+      // If there are no parts in this object, do not append the sequence to the stream url
       else {
-        callback(null, stream);
+        sequence = "";
       }
-    });
-  } 
-}
 
-/**
- * 
- *
- * @param 
- * @return 
- */
-exports.getThumbnailPlaceholderStream = function(callback) {
-  var rstream = fs.createReadStream(config.tnPlaceholderPath);
-  callback(null, rstream);
+      // Request a thumbnail datastream
+      if(datastreamID == "tn") {
+        let type = Helper.getObjectType(object.mime_type);
+
+        // Stream image thumbnails from the repository
+        if(type == "largeImage" || type == "smallImage") {
+          Repository.streamData(object, datastreamID, function(error, stream) {
+            if(error) {
+              callback(error, null);
+            }
+            else {
+              callback(null, stream);
+            }
+          });
+        }
+
+        // Handle request for non-image thumbnail
+        else {
+
+          // Separate any namespace appendix from the pid.  Numeric pid + extension = thumbnail image file
+          let path = config.tnPath + objectID.match(/[0-9]+/)[0] + sequence + config.thumbnailFileExtension;
+
+          // Try to create a thumbnail image for this object
+          if(getThumbnailFromObject(object) != false) {
+            // TODO Attempt to get generated tn from viewer
+          }
+
+          // If a thumbnail can not be generated, check if a thumbnail image exists in the local image folder
+          else if(fs.existsSync(path) == false) {
+
+            // If a thumbnail image does not exist in the local folder, use the default thumbnail image
+            path = config.tnPath + config.defaultThumbnailImage;
+
+            // Check for object specific thumbnail in the configuration.  If listed, use this file
+            for(var index in config.thumbnailPlaceholderImages) {
+              if(config.thumbnailPlaceholderImages[index].includes(object.mime_type)) {
+                path = config.tnPath + index;
+              }
+            }
+          }
+
+          // Create the thumbnail stream
+          AppHelper.getFileStream(path, function(error, thumbnail) {
+              callback(null, thumbnail);
+          });
+        }
+      }
+
+      // Request a non thumbnail datastream
+      else {
+
+        // Check for a local object file: get the path
+        let file = null, path;
+        for(var extension in config.fileExtensions) {
+          if(config.fileExtensions[extension].includes(object.mime_type)) {
+            path = config.objectFilePath + objectID.match(/[0-9]+/)[0] + sequence + "." + extension;
+
+            if(fs.existsSync(path)) {
+              file = path;
+            }
+          }
+        }
+
+        // Stream the local object file if it is found
+        if(file) {
+          AppHelper.getFileStream(file, function(error, content) {
+              if(error) {
+                callback(error, null);
+              }
+              else {
+                callback(null, content);
+              }
+          }); 
+        }
+
+        // Stream the object data from the repository if no local file is found
+        else {
+          Repository.streamData(object, datastreamID, function(error, stream) {
+            if(error) {
+              callback(error, null);
+            }
+            else {
+              callback(null, stream);
+            }
+          });
+        }
+      }
+    }
+
+    // Object data could not be retrieved
+    else {
+      callback("Object not found, can not stream data", null);
+    }
+  });
 }
 
 /**
@@ -437,10 +511,12 @@ var getTitleString = function(pids, titles, callback) {
     if(error) {
       callback(error, titles);
     }
+    else if(response == null) {
+      callback("Object not found: ", pid, titles);
+    }
     else {
-
       titles.push({
-        name: response ? response.title[0] : "Untitled",
+        name: response ? response.title : pid,
         pid: pid
       });
 
@@ -457,6 +533,10 @@ var getTitleString = function(pids, titles, callback) {
 }
 exports.getTitleString = getTitleString;
 
+var getThumbnailFromObject = function(object) {
+  return false;
+}
+
 /**
  * 
  *
@@ -470,6 +550,9 @@ var getParentTrace = function(pid, collections, callback) {
 
       if(error) {
         callback(error, null);
+      }
+      else if(response == null) {
+        callback("Object not found:", pid, null);
       }
       else {
         // There is > 1 title associated with this object, use the first one
@@ -527,26 +610,27 @@ exports.getManifestObject = function(pid, callback) {
       };
 
       // Create children array for IIIF
-      var children = [], resourceUrl;
+      var parts = [], resourceUrl;
 
       // Compound objects
       if(AppHelper.isParentObject(object)) {
-        
         // Add the child objects of the main parent object
-        for(var key in object.children) {
-          resourceUrl = config.rootUrl + "/datastream/" + object.children[key].url + "/" + Helper.getDsType(object.children[key].mimetype);
+        for(var key in object.display_record.parts) {
+          resourceUrl = config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType(object.display_record.parts[key].type) + "/" + object.display_record.parts[key].order;
+          //resourceUrl = config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType(object.display_record.parts[key].type);
 
           // Add the data
           children.push({
-            label: object.children[key].title,
-            sequence: object.children[key].sequence || key,
-            description: object.children[key].description,
-            format: object.children[key].mimetype,
-            type: Helper.getIIIFObjectType(object.children[key].mimetype) || "",
-            resourceID: object.children[key].url,
-            downloadFileName: object.children[key].url.replace(":", "_"), // Temporarily use pid for filename, replacing ':'' with '_'
+            label: object.display_record.parts[key].title,
+            sequence: object.display_record.parts[key].order || key,
+            description: object.display_record.parts[key].caption,
+            format: object.display_record.parts[key].type,
+            type: Helper.getIIIFObjectType(object.display_record.parts[key].type) || "",
+            //resourceID: object.display_record.parts[key].object,
+            resourceID: object.pid + config.compoundObjectPartID + object.display_record.parts[key].order,
+            downloadFileName: object.display_record.parts[key].title,
             resourceUrl: resourceUrl,
-            thumbnailUrl: config.rootUrl + "/datastream/" + object.children[key].url + "/" + Helper.getDsType("thumbnail")
+            thumbnailUrl: config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType("thumbnail") + "/" + object.display_record.parts[key].order
           });
         }
       }
@@ -569,7 +653,6 @@ exports.getManifestObject = function(pid, callback) {
       }
 
       IIIF.getManifest(container, children, function(error, manifest) {
-        // TODO handle the error
         if(error) {
           callback(error, []);
         }

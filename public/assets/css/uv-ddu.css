@@ -1,0 +1,61 @@
+#uv {
+  width: 100%;
+}
+
+.uv {
+  overflow: hidden;
+  min-height: 800px;
+}
+
+.uv .rightPanel .top .title {
+  visibility: hidden;
+}
+
+.uv .leftPanel .views .thumbsView .thumbs .thumb.oneCol .wrap {
+  float: none !important;
+}
+
+.uv .leftPanel .views .thumbsView .thumbs .thumb.oneCol .label {
+  width: auto !important; 
+}
+
+.uv .leftPanel .top .title {
+  color: white;
+}
+
+.uv .content {
+  padding: 0px;
+}
+
+.uv .mainPanel {
+  overflow: hidden;
+}
+
+.uv .mainPanel .title {
+  overflow: initial !important;
+}
+
+#uv .btn-primary, #uv .overlay .close {
+    color: #fff;
+    background-color: #8b2332;
+    border-color: #8b2332;
+}
+
+#uv #content .container {
+  width: 100% !important;
+}
+
+#uv #content .container > div,
+#uv #content .container video {
+  max-height: 660px;
+}
+
+#uv .mainPanel .main {
+  margin-top: 30px;
+  padding-left: 12px;
+  /*height:auto !important;*/
+}
+
+.mejs__container {
+  margin-top: 0 !important;
+}

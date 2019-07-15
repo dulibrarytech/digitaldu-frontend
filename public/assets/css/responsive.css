@@ -33,7 +33,7 @@
     }
 
   .section {
-      margin-top: 40px;
+      /*margin-top: 40px;*/
   }
 
   .searchform {
@@ -155,7 +155,9 @@
 }
 
 @media screen and (max-width: 991px) {
-
+  form#daterange-form input {
+    width: 20%;
+  }
 }
 
 @media screen and (max-width: 1223px) {
@@ -218,7 +220,7 @@
     }
 
   .section {
-      margin-top: 50px;
+      /*margin-top: 50px;*/
   }
   
   .searchform {
@@ -269,7 +271,7 @@
     }
 
   .section {
-      margin-top: 50px;
+      /*margin-top: 50px;*/
   }
 
   .searchform {
@@ -315,7 +317,7 @@
     }
 
   .section {
-      margin-top: 70px;
+      /*margin-top: 70px;*/
   }
 
   .searchform {

@@ -7,67 +7,12 @@
 
 'use strict';
 
-const config = require('../config/config'),
-	  request = require('request');
+const config = require('../config/' + process.env.CONFIGURATION_FILE),
+	  request = require('request'),
+	  rs = require('request-stream');
 
 const host = config.repositoryUrl;
-
-/**
- * Get the Fedora datastream ID corresponding to the DigitalDU ID
- * Construct Fedora datastream url
- *
- * @param string datastream 	The digital du datstream identifier
- * @param string pid 	The object identifier
- * @return string 	The path to Fodora datastream 
- */
-exports.getFedoraDatastreamUrl = function(datastream, pid) {
-	var dsID = "";
-	datastream = datastream.toLowerCase();
-
-	switch(datastream) {
-		case "tn":
-			dsID = "TN";
-			break;
-		case "smallimage":
-		case "jpg":
-			dsID = "OBJ";
-			break;
-		case "largeimage":
-		case "tiff":
-		case "jp2":
-			dsID = "JP2";
-			break;
-		case "audio":
-		case "mp3":
-			dsID = "PROXY_MP3";
-			break;
-		case "video":
-		case "mp4":
-			dsID = "MP4";
-			break;
-		case "mov":
-			dsID = "MOV";
-			break;
-		case "pdf":
-			dsID = "OBJ";
-			break;
-		default: 
-			dsID = "OBJ";
-			break;
-	}
-
-	return host + "/fedora/objects/" + pid + "/datastreams/" + dsID + "/content";
-}
-
-/**
- * 
- *
- * @param 
- * @return 
- */
-exports.getDatastreamUrl = function(datastream, pid) {
-	return this.getFedoraDatastreamUrl(datastream, pid);
-}
+//http://archivesdu.duracloud.org/durastore/dip-store/dip-store/ 		// repo url
 
 /**
  * 
@@ -99,23 +44,38 @@ exports.getCollectionObjects = function(collectionID) {
  * @param 
  * @return 
  */
-exports.streamData = function(pid, dsid, callback) {
-
-	// Fedora
-	var url = this.getFedoraDatastreamUrl(dsid, pid);
-
-	// Get the stream 
-	var rs = require('request-stream');
-	rs(url, {}, function(err, res) {
-		if(err) {
-			callback("Could not open datastream. " + err + " Check connection to repository", null);
-		}
-		else {
-			callback(null, res);
-		}
-	});
+exports.getDatastreamUrl = function(datastream, pid) {
+	return host + "/" + pid;	
 }
 
+/**
+ * Datastream request
+ *
+ * @param 
+ * @return 
+ */
+exports.streamData = function(object, dsid, callback) {
+	var url;
 
+	if(dsid == "tn") {
+		url = host + "/" + object.thumbnail;
+	}
+	else {
+		url = host + "/" + object.object;
+	}
 
-
+	try {
+		// Get the stream 
+		rs(url, {}, function(err, res) {
+			if(err) {
+				callback("Could not open datastream. " + err + " Check connection to repository", null);
+			}
+			else {
+				callback(null, res);
+			}
+		});
+	}
+	catch(e) {
+		callback(e, null);
+	}
+}

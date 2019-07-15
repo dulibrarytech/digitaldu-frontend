@@ -7,7 +7,7 @@
  */
 
 'use strict';
-const config = require('../config/config');
+const config = require('../config/' + process.env.CONFIGURATION_FILE);
 
 /**
  * 
@@ -15,10 +15,12 @@ const config = require('../config/config');
  * @param 
  * @return 
  */
-exports.create = function(facets, baseUrl) {
+exports.create = function(facets, baseUrl, showAll=[], expand=[]) {
     var facetObj = {};
     for(var key in facets) {
-        facetObj[key] = createList(key, facets[key], baseUrl);
+        if(facets[key].length > 0) {
+            facetObj[key] = createList(key, facets[key], baseUrl, showAll, expand);
+        }
     }
     return facetObj;
 };
@@ -29,22 +31,27 @@ exports.create = function(facets, baseUrl) {
  * @param 
  * @return 
  */
-exports.getFacetBreadcrumbObject = function(selectedFacets) {
-    var breadcrumbs = [], buckets;
+exports.getFacetBreadcrumbObject = function(selectedFacets, dateRange=null, baseUrl) {
+    var facets = [], dates = [], buckets;
 
     // Create the object to populate the view elements
     for(var key in selectedFacets) {
         buckets = selectedFacets[key];
 
         for(var index of buckets) {
-            breadcrumbs.push({
+            facets.push({
                 type: key,
                 name: index.name,
                 facet: index.facet
             });
         }
-    }
-    return createBreadcrumbTrail(breadcrumbs);
+    }   
+
+    if(dateRange && typeof dateRange.from != 'undefined' && typeof dateRange.to != 'undefined') {
+        dates.push(dateRange);
+    } 
+
+    return createBreadcrumbTrail(facets, dates, baseUrl);
 };
 
 /**
@@ -58,6 +65,10 @@ exports.getFacetBreadcrumbObject = function(selectedFacets) {
     for(var key in esAggregetions) {
       list[key] = [];
       for(var item of esAggregetions[key].buckets) {
+
+        if(item.key == config.topLevelCollectionPID) {
+            continue;
+        }
 
         // View data
         item.type = key;
@@ -80,13 +91,20 @@ exports.getFacetBreadcrumbObject = function(selectedFacets) {
  * @return 
  */
  exports.getSearchFacetObject = function(searchFacets) {
-    var object = {}, facets = [];
+    var object = {}, facets = [], name;
     for(var key in searchFacets) {
       object[key] = [];
       facets = searchFacets[key];
       for(var index in facets) {
+        name = facets[index];
+        for(var label in config.facetLabelNormalization[key]) {
+            if(config.facetLabelNormalization[key][label].includes(facets[index])) {
+                name = label;
+            }
+        }
+
         object[key].push({
-          name: facets[index] || "",
+          name: name || "",
           facet: facets[index] || ""
         });
       }
@@ -100,23 +118,30 @@ exports.getFacetBreadcrumbObject = function(selectedFacets) {
  * @param 
  * @return 
  */
-function createList(facet, data, baseUrl) {
-    var i;
+function createList(facet, data, baseUrl, showAll, expand) {
     var html = '';
-    
+
     if(data.length > 0) {
-        html += '<div class="panel facet-panel panel-collapsed"><ul>';
-        for (i = 0; i < data.length; i++) {
+        html += expand.includes(facet) ? '<div id="' + facet + '-window" class="panel facet-panel panel-collapsed" style="display: block"><ul>' : '<div id="' + facet + '-window" class="panel facet-panel panel-collapsed"><ul>';
+
+        // Add the facet list item(s) if facets are present, and not empty
+        for (var i = 0; i < data.length; i++) {
             if(data[i].key != "") {
-                html += '<li><span class="facet-name"><a href="javascript:document.location.href=selectFacet(\'' + facet + '\', \'' + data[i].facet + '\', \'' + baseUrl + '\');">' + data[i].name + '</a></span><span class="facet-count">(' + data[i].doc_count + ')</span></li>';
+                html += '<li><span class="facet-name"><a href="javascript:document.location.href=selectFacet(\'' + facet + '\', \'' + data[i].facet + '\', \'' + baseUrl + '\');">' + data[i].name + '</a></span><span class="facet-count">(' + data[i].doc_count + ')</span></li>';                
             }
-            else {
-                html += "";
+        }
+
+        // If there is a length limit on this facet, and the facet list returned has more facets than the length limit, add the show all link
+        if(facet in config.facetLimitsByType && data.length >= config.facetLimitsByType[facet]) {
+            if(showAll.includes(facet)) {
+                html += '<li id="show-facets"><a href="javascript:document.location.href=showLessFacets(\'' + facet + '\')">Show Less</a></li>';
+            }
+            else if(showAll.includes(facet) === false) {
+                html += '<li id="show-facets"><a href="javascript:document.location.href=showAllFacets(\'' + facet + '\')">Show All</a></li>';
             }
         }
         html += '</ul></div>';
     }
-
     return html;
 };
 
@@ -126,13 +151,16 @@ function createList(facet, data, baseUrl) {
  * @param 
  * @return 
  */
-function createBreadcrumbTrail(data) {
-    var i;
-    var html = '';
-    for (i = 0; i < data.length; i++) {
-        html += '<span><a alt="remove facet" title="remove facet" href="javascript:document.location.href=removeFacet(\'' + data[i].type + '\', \'' + data[i].facet + '\');"><strong style="color: red">X</strong></a>&nbsp&nbsp' + data[i].type + '&nbsp&nbsp<strong style="color: green"> > </strong>&nbsp&nbsp' + data[i].name + '</span>';   // good
+function createBreadcrumbTrail(data, dates, baseUrl) {
+    var html = '<a id="new-search-link" href="' + baseUrl + '">Start Over</a>';
+
+    for (var i = 0; i < data.length; i++) {
+        html += '<span><a alt="remove facet" title="remove facet" href="javascript:document.location.href=removeFacet(\'' + data[i].type + '\', \'' + data[i].facet + '\', \'' + baseUrl + '\');"><strong style="color: red">X</strong></a>&nbsp&nbsp' + data[i].type + '&nbsp&nbsp<strong style="color: green"> > </strong>&nbsp&nbsp' + data[i].name + '</span>';   // good
     }
 
-    return data.length > 0 ? html : null;
+    for (i = 0; i < dates.length; i++) {
+        html += '<span><a alt="remove date range" title="remove date range" href="javascript:document.location.href=removeDateRange(\'' + dates[i].from + '\', \'' + dates[i].to + '\');"><strong style="color: red">X</strong></a>&nbsp&nbspDate Range&nbsp&nbsp<strong style="color: green"> > </strong>&nbsp&nbsp' + dates[i].from + ' - ' + dates[i].to + '</span>';   // good
+    }
+    return html;
 };
 

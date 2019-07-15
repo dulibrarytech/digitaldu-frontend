@@ -9,7 +9,7 @@
 'use strict';
 
 
-var config = require('../config/config');
+var config = require('../config/' + process.env.CONFIGURATION_FILE);
 var Repository = require('./repository');
 
 /**
@@ -20,6 +20,12 @@ var Repository = require('./repository');
  */
 exports.getObjectViewer = function(object, mimeType="") {
  	var viewer = "";
+
+ 	if(object == null) {
+ 		console.log("Viewer says: null object");
+ 		return viewer;
+ 	}
+
 	if(mimeType == "" && typeof object.mime_type != 'undefined') {
  		mimeType = object.mime_type;
  	}
@@ -71,10 +77,12 @@ exports.getObjectViewer = function(object, mimeType="") {
 exports.getCompoundObjectViewer = function(object) {
  	var viewer = "";
 
+ 	// IF video this is the kaltura player
+
  	// Get viewer for object mime type:
  	switch(config.compoundObjectViewer) {
  		case "universalviewer":
- 			viewer += getIIIFObjectViewer(object);
+ 			viewer += getIIIFObjectViewer(object, "1", config.universalViewerKalturaPlayer);
  			break;
 
  		default:
@@ -113,8 +121,9 @@ function getAudioPlayer(object, type) {
 			player += getKalturaViewer(object, {
 				partner_id: config.kalturaPartnerID,
 				uiconf_id: config.kalturaUI_ID,
-				entry_id: "1_pmh226et",	// DEV
-				unique_object_id: config.kalturaUniqueObjectID
+				entry_id: object.entry_id,
+				unique_object_id: config.kalturaUniqueObjectID,
+				title: object.title
 			});
 			break;
 		default:
@@ -158,14 +167,15 @@ function getVideoViewer(object) {
 			viewer += getJWPlayer(tn, stream, extension, config.jwplayerPathToLibrary);
 			break;
 		case "universalviewer":
-			viewer += getIIIFObjectViewer(object);
+			viewer += getIIIFObjectViewer(object, null, config.universalViewerKalturaPlayer);  // TODO add to config?
 			break;
 		case "kaltura":
 			viewer += getKalturaViewer(object, {
 				partner_id: config.kalturaPartnerID,
 				uiconf_id: config.kalturaUI_ID,
-				entry_id: "1_pmh226et",	// DEV
-				unique_object_id: config.kalturaUniqueObjectID
+				entry_id: object.entry_id,
+				unique_object_id: config.kalturaUniqueObjectID,
+				title: object.title
 			});
 			break;
 		default:
@@ -214,7 +224,7 @@ function getLargeImageViewer(object) {
 			break;
 
 		case "universalviewer":
-			viewer += getIIIFObjectViewer(object, config.openseadragonPathToLibrary, config.openseadragonImagePath, config.IIIFServerUrl);
+			viewer += getIIIFObjectViewer(object);
 			break;
 
 		default:
@@ -284,7 +294,44 @@ function getJWPlayer(thumbnailUrl, streamUrl, fileExtension, jwPlayerPath) {
  * @param 
  * @return 
  */
-function getIIIFObjectViewer(object, index=null) {
+function getIIIFObjectViewer(object, part=null, embedKalturaViewer=false) {
+
+	// Embed the Kaltura player in the Universalviewer	
+	let kalturaViewer = "", 
+		entryID = "",
+		eventTriggers = "";
+
+	// Option to embed the Kaltura player into this Universalviewer	instance
+	if(embedKalturaViewer) {
+
+		// If a part value is present, assume the object is compound, and view this part
+		if(part && isNaN(part) == false) {
+
+			// Locate the entry_id for the requested compound object part
+			for(var index in object.display_record.parts) {
+				if(object.display_record.parts[index].order == part) {
+					entryID = object.display_record.parts[index].entry_id;
+				}
+			}
+		}
+
+		// This is not a compound object.  Just grab the entry_id from the object
+		else {
+			entryID = object.entry_id || "";
+		}
+
+		// Get the player content
+		kalturaViewer = getKalturaViewer(object, {
+			partner_id: config.kalturaPartnerID,
+			uiconf_id: config.kalturaUI_ID,
+			entry_id: entryID,
+			unique_object_id: config.kalturaUniqueObjectID
+		});
+
+		// Add the event trigger to embed the Kaltura player 
+		eventTriggers += '$( "#uv").trigger( "uvloaded", [ ' + embedKalturaViewer + ', "' + object.pid + '", "' + config.universalViewerMediaElement + '", "' + kalturaViewer + '" ] );';
+	}
+
 	let viewer = '<div id="uv" class="uv"></div>';
 		viewer += '<script>';
 		viewer += 'window.addEventListener("uvLoaded", function (e) {';
@@ -293,6 +340,7 @@ function getIIIFObjectViewer(object, index=null) {
 		viewer += 'configUri: "' + config.rootUrl + '/libs/universalviewer/uv-config.json",';
 		viewer += 'root: "../..' + config.appPath + '/libs/universalviewer/uv",';
 		viewer += '}, new UV.URLDataProvider());';
+		viewer += eventTriggers;
 		viewer += '}, false);';
 		viewer += '</script>';
 	return viewer;
@@ -305,12 +353,21 @@ function getIIIFObjectViewer(object, index=null) {
  * @return 
  */
  function getKalturaViewer(object, params) {
- 	var cache_st = "1549920112",
- 		height = "100%",
- 		width = "100%";
+ 	var cache_st = "1559751114",
+ 		height = config.kalturaPlayerHeight,
+ 		width = "100%",
+ 		html = "";
 
- 	return '<script src="https://cdnapisec.kaltura.com/p/' + params.partner_id + '/sp/' + params.partner_id + "00" + '/embedIframeJs/uiconf_id/' + params.uiconf_id + '/partner_id/' + params.partner_id + '?autoembed=true&entry_id=' + params.entry_id + '&playerId=' + params.unique_object_id + '&cache_st=' + cache_st + '&width=' + width + '&height=' + height + '&flashvars[streamerType]=auto"></script>';
+ 	html += "<div class='kaltura-viewer'>";
+ 	if(params.title && params.title != "") {
+ 		html += "<h3>" + params.title + "</h3>";
+ 	}
+ 	html += "<iframe id='kaltura_player_1559861164' src='https://cdnapisec.kaltura.com/p/" + params.partner_id + "/sp/" + params.partner_id + '00' + "/embedIframeJs/uiconf_id/" + params.uiconf_id + "/partner_id/" + params.partner_id + "?iframeembed=true&playerId=" + params.unique_object_id + "&entry_id=" + params.entry_id + "&flashvars[leadWithHTML5]=true' width='" + width + "' height='" + height + "' allowfullscreen webkitallowfullscreen mozAllowFullScreen allow='autoplay *; fullscreen *; encrypted-media *' frameborder='0'></iframe>";
+ 	html += "</div>";
+
+ 	return html;
  }
+ exports.getKalturaViewer = getKalturaViewer;
 
  /**
  * 

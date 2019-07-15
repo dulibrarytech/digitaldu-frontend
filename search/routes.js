@@ -11,7 +11,9 @@ var Search = require('../search/controller');
 
 module.exports = function (app) {
 
-    // Search the discovery index
     app.route('/search')
         .get(Search.search);
+
+    app.route('/advanced-search')
+        .get(Search.advancedSearch);
 };

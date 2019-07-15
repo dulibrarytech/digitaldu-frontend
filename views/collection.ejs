@@ -26,9 +26,11 @@
 				<% include partials/sidebar-search %>
 			</div>
 			<div class="result-facets sidebar-section">
-				<h4>Filter By</h4>
-				<hr>
-				<% include partials/facets %>
+				<% if(facets) { %>
+					<h4>Filter By</h4>
+					<hr>
+					<% include partials/facets %>
+				<% } %>
 			</div>
 		<% } %>
 	</div>

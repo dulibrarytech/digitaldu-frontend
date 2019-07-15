@@ -34,10 +34,13 @@ module.exports = function (app) {
     app.route('/facets')
         .get(Discovery.getFacets);
 
+    app.route('/viewer/kaltura/:pid/:part')
+        .get(Discovery.getKalturaViewer);
+
     app.route('/datastream/:pid/:datastream')
         .get(Discovery.getDatastream);
 
-    app.route('/datastream/:pid/:datastream/:spoof')
+    app.route('/datastream/:pid/:datastream/:part')
         .get(Discovery.getDatastream);
 
     app.route('/iiif/:pid/manifest')

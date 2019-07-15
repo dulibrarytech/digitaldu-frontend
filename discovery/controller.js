@@ -8,7 +8,7 @@
 'use strict'
 
 const async = require('async'),
-    config = require('../config/config'),
+    config = require('../config/' + process.env.CONFIGURATION_FILE),
     Helper = require('./helper.js'),
     AppHelper = require("../libs/helper"),
     Service = require('./service.js'),
@@ -16,7 +16,8 @@ const async = require('async'),
     Facets = require('../libs/facets'),
     Paginator = require('../libs/paginator'),
     Metadata = require('../libs/metadata'),
-    Search = require('../search/service');
+    Search = require('../search/service'),
+    Format = require("../libs/format");
 
 exports.getFacets = function(req, res) {
     Service.getFacets(null, function(error, facets) {
@@ -98,8 +99,18 @@ exports.renderRootCollection = function(req, res) {
 				console.log(error);
 			}
 			else {
-				data.facets = Facets.create(facets, config.rootUrl);
+				var facetList = Facets.getFacetList(facets, []);
+
+				// Only show the specified front page display facets, remove others here
+				for(var key in facetList) {
+					if(config.frontPageFacets.includes(key) === false) {
+						delete facetList[key];
+					}
+				}
+
+				data.facets = Facets.create(facetList, config.rootUrl);
 				data.typeCount = Helper.getTypeFacetTotalsObject(facets);
+				data.facetThumbnails = config.facetThumbnails;
 			}
 			
 			return res.render('collections', data);
@@ -108,17 +119,19 @@ exports.renderRootCollection = function(req, res) {
 }
 
 exports.renderCollection = function(req, res) {
-
+	
 	Service.getCollectionHeirarchy(req.params.pid, function(parentCollections) {
 		var data = {
+			error: null,
+			facets: {},
 			facet_breadcrumb_trail: null,
 			collection_breadcrumb_trail: null,
 			current_collection_title: "",
 			current_collection: "",
-			facets: {},
-			error: null,
 			pagination: {},
-			root_url: config.rootUrl
+			root_url: config.rootUrl,
+			searchFields: config.searchFields,
+			options: {}
 		};
 			
 		var	pid = req.params.pid || "",
@@ -127,34 +140,49 @@ exports.renderCollection = function(req, res) {
 			reqFacets = req.query.f || null,
 			showAll = req.query.showAll || [];
 
+		data.collectionID = pid;
+		data.options["expandFacets"] = [];
+		data.options["perPageCountOptions"] = config.resultCountOptions;
+
 		// Get all collections in this community
 		Service.getObjectsInCollection(pid, page, reqFacets, function(error, response) {
 			if(error) {
 				console.log(error);
 				data.error = "Could not open collection.";
 				data.current_collection_title = "Error";
+				return res.render('collection', data);
 			}
 			else {
-				var facetList = Facets.getFacetList(response.facets, showAll);
-				delete facetList.Collections;
-				if(reqFacets) {
-					reqFacets = Facets.getSearchFacetObject(reqFacets);
-				}
-				// Add collections and collection data	
 				data.collections = response.list;
 				data.current_collection = pid;
 				data.current_collection_title = response.title || "Untitled";
 
-				// Add view data
-				data.pagination = Paginator.create(response.list, page, config.maxCollectionsPerPage, response.count, path);
-				data.facets = Facets.create(facetList, config.rootUrl);
-				data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(reqFacets);
-				data.collection_breadcrumb_trail = Helper.getCollectionBreadcrumbObject(parentCollections);
-				data.collectionID = pid;
-				data.searchFields = config.searchFields;
-			}
+				// Get the list of facets for this collection, remove the 'Collections' facets (Can re-add this field, if we ever show facets for nested collections: 
+				// ie there will be multiple collections facets present when one collection is open)
+				var facetList = Facets.getFacetList(response.facets, showAll);
+				delete facetList.Collections;
 
-			return res.render('collection', data);
+				// This variable should always be null here, as rendering the collection view is separate from a keyword search and no request facets should be present here.  
+				// The below code is to prevent a potential crash of the appication, just in case
+				if(reqFacets) {
+					reqFacets = Facets.getSearchFacetObject(reqFacets);
+				}
+
+				Format.formatFacetDisplay(facetList, function(error, facetList) {
+					// Add collections and collection data	
+					data.pagination = Paginator.create(response.list, page, config.maxCollectionsPerPage, response.count, path);
+					data.facets = Facets.create(facetList, config.rootUrl);
+					data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(reqFacets, null, config.rootUrl);
+					data.collection_breadcrumb_trail = Helper.getCollectionBreadcrumbObject(parentCollections);
+
+					// If there are no facets to display, set to null so the view does not show the facets section
+					if(AppHelper.isObjectEmpty(data.facets)) {
+						data.facets = null;
+					}
+
+					return res.render('collection', data);
+				});
+			}
 		});
 	});
 }
@@ -170,7 +198,6 @@ exports.renderObjectView = function(req, res) {
 		root_url: config.rootUrl
 	};
 
-	// let regex = /[a-zA-Z]*[:_][0-9]*/;
 	// if(!req.params.pid || /[a-zA-Z]*[:_][0-9]*/.test(req.params.pid) === false) {
 	// 	return res.sendStatus(400);
 	// }
@@ -182,6 +209,10 @@ exports.renderObjectView = function(req, res) {
 	Service.fetchObjectByPid(req.params.pid, function(error, response) {
 		if(error) {
 			data.error = error;
+			renderView(data);
+		}
+		else if(response == null) {
+			data.error = "Object not found: " + req.params.pid;
 			renderView(data);
 		}
 		else {
@@ -225,24 +256,13 @@ exports.renderObjectView = function(req, res) {
 					}
 
 					// Get titles of any collection parents
-					Service.getTitleString(object.is_member_of_collection, [], function(error, titleData) {
+					Service.getTitleString(object.is_member_of_collection, [], function(error, collectionTitles) {
 						if(error) {
 							console.log(error);
 						}
-						// Add the titles of the parent collections to the mods display, if any
-						let titles = [];
-						for(var title of titleData) {
-							titles.push('<a href="' + config.rootUrl + '/collection/' + title.pid + '">' + title.name + '</a>');
-						}
-						if(titles.length > 0) {
-							data.mods = {
-								'In Collections': titles
-							}
-						}
-
 						// Add summary data and object metadata to the mods display
 						data.summary = Metadata.createSummaryDisplayObject(object);
-						data.mods = Object.assign(data.mods, Metadata.createMetadataDisplayObject(object));
+						data.mods = Object.assign(data.mods, Metadata.createMetadataDisplayObject(object, collectionTitles));
 						renderView(data);
 					});
 				}
@@ -252,42 +272,18 @@ exports.renderObjectView = function(req, res) {
 };
 
 exports.getDatastream = function(req, res) {
-	var ds = req.params.datastream || "",
-		pid = req.params.pid || "";
+	var ds = req.params.datastream.toLowerCase() || "",
+		pid = req.params.pid || "",
+		part = req.params.part || null;
 
-	Service.getDatastream(pid, ds, function(error, stream) {
+	Service.getDatastream(pid, ds, part, function(error, stream) {
 		if(error) {
 			console.log(error);
-			if(ds.toLowerCase() == "tn") {
-				Service.getThumbnailPlaceholderStream(function(error, stream) {
-					if(error) {
-						console.log(error);
-						res.sendStatus(500);
-					}
-					else {
-						stream.pipe(res);
-					}
-				});
-			}
-			else {
-				stream.pipe(res);
-			}
+			res.sendStatus(404);
 		}
 		else {
-			if(stream.headers['content-type'] == "text/plain" && ds.toLowerCase() == "tn") {
-				Service.getThumbnailPlaceholderStream(function(error, stream) {
-					if(error) {
-						console.log(error);
-						res.sendStatus(500);
-					}
-					else {
-						stream.pipe(res);
-					}
-				});
-			}
-			else {
-				stream.pipe(res);
-			}
+			res.set('Accept-Ranges', 'bytes');
+			stream.pipe(res);
 		}
 	});
 }
@@ -306,6 +302,41 @@ exports.getIIIFManifest = function(req, res) {
 		}
 		else {
 			res.send("Item not found");
+		}
+	});
+}
+
+exports.getKalturaViewer = function(req, res) {
+	let pid = req.params.pid || "",
+		part = req.params.part || "1",
+		entryID = "";
+
+	// TODO add to service
+	Service.fetchObjectByPid(pid, function(error, object) {
+		if(error) {
+			console.log(error, pid);
+			res.send("<h4>Error loading viewer");
+		}
+		else if(object == null) {
+			console.log("Object not found", pid);
+			res.send("<h4>Error loading viewer, object not found");
+		}
+		else {
+			if(object.object_type == "compound") {
+				entryID = object.display_record.parts[part-1].entry_id;
+			}
+			else {
+				entryID = object.entry_id;
+			}
+
+			let kalturaViewer = Viewer.getKalturaViewer(object, {
+				partner_id: config.kalturaPartnerID,
+				uiconf_id: config.kalturaUI_ID,
+				entry_id: entryID,
+				unique_object_id: config.kalturaUniqueObjectID
+			});
+
+			res.send(kalturaViewer);
 		}
 	});
 }

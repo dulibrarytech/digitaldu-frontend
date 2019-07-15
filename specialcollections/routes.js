@@ -5,7 +5,7 @@
  *
  */
 
-var config = require('../config/config');
+var config = require('../config/' + process.env.CONFIGURATION_FILE);
 var data = {
 	base_url: config.baseUrl,
 	root_url: config.rootUrl

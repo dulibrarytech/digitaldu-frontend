@@ -9,7 +9,7 @@
 'use strict';
 
 const url = require('url');
-const config = require('../config/config');
+const config = require('../config/' + process.env.CONFIGURATION_FILE);
 
 /**
  * 
@@ -18,7 +18,6 @@ const config = require('../config/config');
  * @return 
  */
 exports.create = function(items, page, maxItems, totalItems, path) {
-
 	var pagination = {};
 	pagination['page'] = page || 1;
 

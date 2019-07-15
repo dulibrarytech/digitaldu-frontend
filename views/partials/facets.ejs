@@ -2,21 +2,21 @@
 	<!-- dynamic facet list -->
 	<% for(var key in facets) { %>	
 	  <% if(facets[key] != "") { %>
-	  	<button class="accordion" alt="<%= key %>">
-	      <h4><%= key %></h4><i class="fas fa-caret-right facet-caret"></i>
-		</button>
+	  	<% if(options.expandFacets.includes(key)) { %>
+	  	  <button class="accordion active" alt="<%= key %>" name="<%= key %>_collapsible">
+	  	  	<h4><%= key %></h4><i class="fas fa-caret-down facet-caret"></i>
+	  	<% } else { %>
+	  	  <button class="accordion" alt="<%= key %>" name="<%= key %>_collapsible">
+	  	  	<h4><%= key %></h4><i class="fas fa-caret-right facet-caret"></i>
+	  	<% } %>
+	    </button>
 		<%- facets[key] %>
 	  <% } %>
 	<% } %>
 
 	<script type="text/javascript">
-
 		function selectFacet(facetType, facet, baseUrl) {
-
-			// Url encode spaces for querystring
-			facet = facet.replace(' ', '%20');
-
-			var searchUrl = window.location.href,
+			var searchUrl = decodeURIComponent(window.location.href.replace(baseUrl, "")),
 				facetParam = "";
 
 			// Remove page param from url if it is there.  Facet update will show updated results from page 1
@@ -31,18 +31,18 @@
 			}
 			facetParam += "f[" + facetType + "][]=" + facet;
 
-			// Add the selected facet param to the search querystring, if it has not been added yetf
+			// Add the selected facet param to the search querystring, if it has not been added yet
 			if(searchUrl.indexOf(facetParam) <= 0) {
 				searchUrl += facetParam;
 			}
 
-			return searchUrl;
+			searchUrl = updateUrlExpandParams(searchUrl);
+			searchUrl = encodeURI(searchUrl);
+			return baseUrl + searchUrl;
 		};
 
 		function removeFacet(facetType, facet, baseUrl) {
-
-			// Get current search querystring
-			var searchUrl = window.location.href,
+			var searchUrl = decodeURIComponent(window.location.href.replace(baseUrl, "")),
 				facetParam = "";
 
 			// Remove page param from url if it is there.  Facet update will show updated results from page 1
@@ -50,7 +50,7 @@
 
 			// Create the facet parameter string.  Use ? if the url containd no parameters	
 			if(searchUrl.indexOf("?f") > 0) {
-				facetParam += "?f";
+				facetParam += "f";
 			}
 			else {
 				facetParam += "&f";
@@ -58,12 +58,29 @@
 
 			// Get the facet param string to remove from the search querystring
 			facetParam += "[" + facetType + "][]=" + facet;
-			facetParam = facetParam.replace(/\s/g, "%20");
 
 			// Remove the selected facet param from the search querystring
 			searchUrl = searchUrl.replace(facetParam, "");
+			
+			searchUrl = updateUrlExpandParams(searchUrl);
+			searchUrl = encodeURI(searchUrl);
+			return baseUrl + searchUrl;	
+		};
 
-			return searchUrl;
+		function showAllFacets(facetType) {
+			var searchUrl = decodeURIComponent(window.location.href);
+
+			// Show the spinner
+			document.getElementById("show-facets").innerHTML = "<img src='assets/img/spinner1.gif' height='33' width='33' />";
+			searchUrl = updateUrlExpandParams(searchUrl);
+			return encodeURI(searchUrl += "&showAll[]=" + facetType);
+		};
+
+		function showLessFacets(facetType) {
+			// Remove the showAll parameter for this facet
+			var url = decodeURIComponent(window.location.href);
+			url = updateUrlExpandParams(url);
+			return encodeURI(url.replace("&showAll[]=" + facetType, ""));
 		};
 
 	</script>

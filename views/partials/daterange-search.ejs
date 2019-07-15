@@ -1,0 +1,30 @@
+<% if(options.showDateRange) { %>
+	<button class="accordion" alt="Date Range" name="Date-Range_collapsible">
+		<h4>Date Range</h4><i class="fas fa-caret-right facet-caret"></i>
+	</button>
+	<div id="daterange-window" class="panel facet-panel panel-collapsed" style="display: none">
+		<form id="daterange-form" class="form-inline" action="javascript:submitDateRange()">
+			<input class="form-control" type="number" name="from" min="1" max="2050" maxlength="4"/>
+			<label>To:</label>
+			<input class="form-control" type="number" name="to" min="1" max="2050" maxlength="4"/>
+			<button class="btn btn-default" type="submit">Set</button>
+		</form>
+	</div>
+<% } %>
+
+<script type="text/javascript">
+	// Add date range to the query string
+	function submitDateRange() {
+		var decoded = decodeURIComponent(window.location.href);
+		//decoded = updateUrlExpandParams(decoded);
+		var url = decoded.replace(/&from=[0-9]+&to=[0-9]+/g, "") + "&" + $("#daterange-form").serialize();
+		return window.location.replace(encodeURI(url));
+	}
+
+	// Remove the date range from the query string
+	function removeDateRange(from, to) {
+		var searchUrl = decodeURIComponent(window.location.href);
+		//searchUrl = updateUrlExpandParams(searchUrl);
+		return encodeURI(searchUrl.replace(/&from=[0-9]+&to=[0-9]+/g, ""));
+	}
+</script>

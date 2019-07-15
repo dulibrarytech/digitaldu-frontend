@@ -34,3 +34,26 @@ $(document).ready(function() {
 	    });
 	}
 });
+
+function updateUrlExpandParams(url) {
+	var accordions = document.getElementsByClassName("accordion"), paramStr;
+
+	for(var i=0; i<accordions.length; i++) {
+		name = accordions[i].name.replace("_collapsible", "");
+		if(name == "") {
+			continue;
+		}
+		paramStr = "&expand[]=" + name;
+
+		// Add the expand param for this accordion if it is open and the param is not already present
+		if(accordions[i].classList.contains("active") && url.indexOf(paramStr) < 0) {
+			url += paramStr;
+		}
+
+		// Remove the expand param if the accordion is not open
+		else if(accordions[i].classList.contains("active") === false) {
+			url = url.replace(paramStr, "");
+		}
+	}
+	return url;
+}

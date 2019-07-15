@@ -1,0 +1,72 @@
+<% include partials/header %>
+<% include partials/title-banner %>
+
+<div class="container content-section">
+	<h3>Advanced Search</h3>
+	<div class="page-form advanced-search-form">
+		<form id="advanced-search" method="get" action="<%= root_url %>/search">
+			<div id="advanced-search-query-row-1" class="form-inline">
+				<div class="form-group advanced-search-bool-select">
+					<select name="bool[]" class="search-element">
+						<optgroup label="Boolean Search Type">
+						  <% for (var i = 0; i < boolFields.length; i++) { %>
+						    <% for (var key in boolFields[i]) { %>
+						      <option value='<%- boolFields[i][key] %>'><%- key %></option>
+						    <% } %>
+						  <% } %>
+						</optgroup>
+					</select>
+				</div>
+				<div class="form-group">
+					<select name="field[]" class="search-element">
+						<!-- <option value="" disabled selected>Field</option> -->
+						<option value="all">All Fields</option>
+						<optgroup label="Specific Fields">
+						  <% for (var i = 0; i < searchFields.length; i++) { %>
+						    <% for (var key in searchFields[i]) { %>
+						      <option value='<%- searchFields[i][key] %>'><%- key %></option>
+						    <% } %>
+						  <% } %>
+						</optgroup>
+					</select>
+				</div>
+				<div class="form-group">
+					<select name="type[]" class="search-element">
+						<optgroup label="Search Type">
+						  <% for (var i = 0; i < typeFields.length; i++) { %>
+						    <% for (var key in typeFields[i]) { %>
+						      <option value='<%- typeFields[i][key] %>'><%- key %></option>
+						    <% } %>
+						  <% } %>
+						</optgroup>
+					</select>
+				</div>
+				<div class="form-group search-box">
+			      <input class="search-element" type="text" name="q[]" placeholder="Keyword(s)" />
+			    </div>
+			</div>
+		    <input type="hidden" name="fulltext" value="true">
+		</form>
+		<div class="advanced-search-form-controls">
+			<div><button id="add-query-button" class="clickable icon-link-right btn-nostyle" alt="Add A New Query"><i class="far fa-plus-square"></i>Add another query</button></div>
+			<div><button id="advanced-search-submit" type="button" class=".btn .btn-default .btn-large">Submit</button></div>
+		</div>
+	</div>
+</div>
+
+<script>
+	$( document ).ready(function() {
+		$("#add-query-button").click(function(event) {
+			let formRow = "<div class='form-inline'>";
+			formRow += $("#advanced-search-query-row-1").html();
+			formRow += "</div>";
+			$("#advanced-search").append(formRow);
+		});
+
+		$("#advanced-search-submit").click(function(event) {
+			$("#advanced-search").submit();
+		});
+	});
+</script>
+
+<% include partials/footer %>

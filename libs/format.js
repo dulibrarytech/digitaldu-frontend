@@ -5,14 +5,22 @@
  */
 
 const Discovery = require('../discovery/service.js'),
-      config = require('../config/config.js');
+      config = require('../config/' + process.env.CONFIGURATION_FILE);
+
+var exampleFormatter = function(object) {
+  for(var key of object) {
+    // Do something
+  }
+  return object;
+}
 
 /*
  * Add custom format functions here
  */
 exports.formatFacetDisplay = function(object, callback) {
-  formatDateFacets(object["Date"]);
-  formatCollectionFacets(object["Collections"], function(error) {
+  formatTypeFacets(object["Type"] || []);
+  formatDateFacets(object["Date"] || []);
+  formatCollectionFacets(object["Collections"] || [], function(error) {
     if(error) {
       callback(error, null);
     }
@@ -27,26 +35,41 @@ exports.formatFacetBreadcrumbs = function(object, callback) {
     callback(null, {});
   }
   else {
-      formatCollectionBreadcrumbs(object["Collections"], function(error) {
+      formatDateFacets(object["Date"] || []);
+      formatCollectionBreadcrumbs(object["Collections"] || [], function(error) {
          callback(null, object);
       });
   }
 }
 
-var exampleFormatter = function(object) {
-  for(var key of object) {
-    // Do something
-  }
-  return object;
+var formatTypeFacets = function(typeFacets) {
+    var types = [];
+    for(var index of typeFacets) {
+      for(var key in config.facetLabelNormalization.Type) {
+        if(config.facetLabelNormalization.Type[key].includes(index.facet)) {
+          index.name = key;
+        }
+      }
+    }
+
+    return typeFacets;
 }
 
 var formatDateFacets = function(dateFacets) {
-    for(var index of dateFacets) {
-      // TODO 
-      // Regex for common date entries
-      // Normalize to one format:  detect, convert
-      // Leave in place but do not format outlier formats (Can add regex for uncommon outliers in future
-    }
+    var dates = [];
+    // for(var index of dateFacets) {
+      
+    //   // Isolate the year from mm/dd/yyyy entries
+    //   if(index.facet.indexOf("/") >= 0) {
+    //     index.name = index.facet.replace(/[0-9]+\//g, "");
+    //   }
+
+    //   // Remove non numeric characters and spaces
+    //   else {
+    //     index.name = index.facet.replace(/[a-zA-Z]+\ +/g, "");
+    //   }
+    // }
+
     return dateFacets;
 }
 
@@ -57,18 +80,27 @@ var formatCollectionFacets = function(collectionFacets, callback) {
     else {
       var pids = [];
       for(var index of collectionFacets) {
-        pids.push(index.key);
+          if(index.facet != config.topLevelCollectionPID) {
+            pids.push(index.key);
+          }
       }
 
-      Discovery.getTitleString(pids, [], function(error, data) {
-
-        for(var index in collectionFacets) {
-          collectionFacets[index].name = data[index].name;
-          collectionFacets[index].facet = pids[index];
-          collectionFacets[index].type = "Collection";
-        }
+      if(pids.length >= 1) {
+        Discovery.getTitleString(pids, [], function(error, data) {
+          if(data.length > 0) {
+            for(var index in collectionFacets) {
+              collectionFacets[index].name = data[index].name;
+              collectionFacets[index].facet = pids[index];
+              collectionFacets[index].type = "Collection";
+            }
+          }
+      
+          callback(null);
+        });
+      }
+      else {
         callback(null);
-      });
+      }
     }
 }
 

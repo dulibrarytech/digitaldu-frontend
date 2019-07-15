@@ -55,12 +55,6 @@ module.exports = {
     // Image to display if no thumbnail image exists in the repository
     tnPlaceholderPath: "files/tn-placeholder.jpg",
 
-    // Limit of facet results returned from a search
-    facetLimit: 200,
-    facetLimitsByType: {
-        "Collections": 15 
-    },
-
     /* 
      * Viewer to play audio files
      * [browser | jwplayer | universalviewer | kaltura]
@@ -71,7 +65,7 @@ module.exports = {
      * Viewer to display video files
      * [videojs | jwplayer | universalviewer | kaltura]
      */
-    videoViewer: "universalviewer",
+    videoViewer: "kaltura",
 
     /* 
      * Viewer to display pdf files
@@ -107,56 +101,66 @@ module.exports = {
     /*
      * Kaltura viewer settings
      */
-    kalturaUI_ID: "41433862",
+    kalturaUI_ID: "44058172",
     kalturaPartnerID: "2357732",
     //kalturaUniqueObjectID: "kaltura_du_12345",
     kalturaUniqueObjectID: "kaltura_player_1549920112",
+
+    // The index field that holdas the display record data
+    displayRecordField: "display_record",
 
     /*
      * Fields for fulltext search (search all)
      * 
      */ 
-    metadataKeywordFields: [
-        "display_record.abstract",
-        "display_record.accessCondition",
-        "display_record.classification",
-        "display_record.genre",
-        "display_record.identifier",
-        "display_record.language",
-        "display_record.location.url",
-        "display_record.name.namePart",
-        "display_record.name.role",
-        "display_record.note",
-        "display_record.originInfo.copyrightDate",
-        "display_record.originInfo.d_captured",
-        "display_record.originInfo.d_created",
-        // "display_record.originInfo.d_issued",    // Check index schema, no date format specified.  Throws error
-        "display_record.originInfo.frequency",
-        "display_record.originInfo.place",
-        "display_record.originInfo.publisher",
-        "display_record.physicalDescription.digitalOrigin",
-        "display_record.physicalDescription.extent",
-        "display_record.physicalDescription.form",
-        "display_record.physicalDescription.internetMediaType",
-        "display_record.physicalDescription.note",
-        "display_record.subject.city",
-        "display_record.subject.citySection",
-        "display_record.subject.continent",
-        "display_record.subject.country",
-        "display_record.subject.county",
-        "display_record.subject.genre",
-        "display_record.subject.geographic",
-        "display_record.subject.namePart",
-        "display_record.subject.occupation",
-        "display_record.subject.region",
-        "display_record.subject.role",
-        "display_record.subject.temporal",
-        "display_record.subject.topic",
-        "display_record.tableOfContents",
-        "display_record.targetAudience",
-        "display_record.title",
-        "display_record.typeOfResource"
+    searchKeywordFields: [
+        {"field": "title", "boost": "3"},
+        {"field": "abstract", "boost": "2"},
+        {"field": "creator", "boost": "2"},
+        {"field": "subject", "boost": "1"},
+        {"field": "display_record.accessCondition"},
+        {"field": "display_record.classification"},
+        {"field": "display_record.identifier"},
+        {"field": "display_record.language"},
+        {"field": "display_record.location.url"},
+        {"field": "display_record.name.namePart", "boost": "2"},
+        {"field": "display_record.note"},
+        {"field": "display_record.originInfo.d_captured"},
+        {"field": "display_record.originInfo.d_created"},
+        {"field": "display_record.originInfo.place", "boost": "1"},
+        {"field": "display_record.originInfo.publisher"},
+        {"field": "display_record.physicalDescription.digitalOrigin"},
+        {"field": "display_record.physicalDescription.extent"},
+        {"field": "display_record.physicalDescription.form"},
+        {"field": "display_record.physicalDescription.note"},
+        {"field": "display_record.subject.city"},
+        {"field": "display_record.subject.citySection"},
+        {"field": "display_record.subject.continent"},
+        {"field": "display_record.subject.country"},
+        {"field": "display_record.subject.county"},
+        {"field": "display_record.subject.genre"},
+        {"field": "display_record.subject.geographic"},
+        {"field": "display_record.subject.namePart"},
+        {"field": "display_record.subject.occupation"},
+        {"field": "display_record.subject.region"},
+        {"field": "display_record.subject.role"},
+        {"field": "display_record.subject.temporal"},
+        {"field": "display_record.subject.topic"},
+        {"field": "display_record.typeOfResource"},
+        {"field": "display_record.targetAudience"},
+        {"field": "display_record.physicalDescription.internetMediaType"}
     ],
+
+    /*
+     * Options for results per page
+     */
+    resultCountOptions: ["10", "20", "50", "100"],
+
+    resultsViewOptions: ["List", "Grid"],
+    defaultSearchResultsView: "List",
+    showDateRangeLimiter: true,
+
+    searchTermFuzziness: "1",
 
     /*
      * Fields for scoped search.  These will appear in 'Search Type' dropdown list
@@ -175,45 +179,100 @@ module.exports = {
      * "Facet name": "index field"
      */
     facets: {
-        // Index v1 external fields
         "Creator": "creator",
         "Subject": "subject",
         "Type": "type",
-
-        // Index v1 display record fields
         "Date": "display_record.originInfo.d_created",
-        "Collections": "is_member_of_collection"
+        "Collections": "is_member_of_collection",
+        "Authority ID": "display_record.subject.authority_id"
     },
+
+    /*
+     * Facets to display on the front page
+     */
+    frontPageFacets: ["Creator", "Subject", "Type"],
 
     facetOrdering: {
         "Date": "desc"
     },
+
+    // Limit of facet results returned from a search
+    facetLimit: 200,
+    facetLimitsByType: {
+        "Collections": 15 
+    },
+
+    facetDisplayLabel: {
+        "Type": {
+            "Still Image": "still image",
+            "Moving Image": "moving image",
+            "Text": "text",
+            "Sound Recording": "sound recording",
+            "Music Recording": "sound recording-musical",
+            "Nonmusic Recording": "sound recording-nonmusical",
+            "Map": "cartographic",
+            "Mixed Material": "mixed material",
+            "3D Object": "three dimensional object",
+            "Unknown": "[object Object]"
+        }
+    },
+
+    /*
+     * The date which is used in search results sorting, the date which the object is identified by
+     * Key must be "Date", value is location in index display object
+     * If multiple dates exist in the index, the first that appears will be used
+     */
+    objectDateField: "display_record.originInfo.d_created",
+    objectDateValue: {
+        //"Date": '{"dates":[{"date": "VALUE", "type": "creation"}]}'
+        "Date": '{"originInfo":[{"d_created": "VALUE"}]}'
+    },
+    datespanRange: "5", // "circa"
 
     /*
      * Fields to display in the summary data section (above Details link)
      * "Display field name": "index field key to match"
      */
     summaryDisplay: {
-        "Title": "title",
+        "Title": '{"title": ["VALUE"]}',
+        "Description": "abstract"
+    },
+
+    /*
+     * Fields to display in the summary data section (above Details link)
+     * "Display field name": "index field key to match"
+     */
+    resultsDisplay: {
+        "Date": '{"originInfo":[{"d_created": "VALUE"}]}',
+        "Creator": '{"name": [ { "namePart": "VALUE", "role": "creator" } ]}',
         "Description": "abstract"
     },
 
     /*
      * MODS fields to display in the Details section
-     * "Display field name": "index field"
+     * Must be valid json, can be application managed in the future (admin)
+     * "Display record key": "Display record value"
      */
-    metadataDisplay: {
-        "Title": ["title"],
-        "Creator": {"field": "name", "data": "namePart", "id": {"role": "creator"}},
-        "Corporate Creator": "nameCorporate",
-        "Publisher": "publisher",
-        "Type": "typeOfResource",
-        "Genre": "genre",
-        "Topic": "subjectTopic",
-        "Identifier": "identifier",
-        "Language": "language",
-        "Access Condition": "accessCondition",
-        "Subject": "subject"
+    metadataDisplayValues: {
+        "Title": '{"title": ["VALUE"]}',
+        "Creator": '{"name": [ { "namePart": "VALUE", "role": "creator" } ]}',
+        "Corporate Creator": '{"name": [ { "namePart": "VALUE", "role": "corporate" } ]}',
+        "Abstract": "abstract",
+        "Type": '{"typeOfResource":"VALUE"}',
+        "Publisher": '{"originInfo":[{"publisher": "VALUE"}]}',
+        "Place": '{"originInfo":[{"place": "VALUE"}]}',
+        "Date Created": '{"originInfo":[{"d_created": "VALUE"}]}',
+        "Date Issued": '{"originInfo":[{"d_issued": "VALUE"}]}',
+        "Subject": '{"subject":[ { "namePart": "VALUE" }]}',
+        "Topic": '{"subject": [ { "topic": "VALUE" } ]}',
+        "Genre": '{"subject": [ { "genre": "VALUE" } ]}',
+        "Geographic": '{"subject": [ { "geographic": "VALUE" } ]}',
+        "Origin": '{"physicalDescription":[ { "digitalOrigin": "VALUE" }]}',
+        "Extent": '{"physicalDescription":[ { "extent": "VALUE" }]}',
+        "Form": '{"physicalDescription":[ { "form": "VALUE" }]}',
+        "Local Identifier": '{"identifier":"VALUE"}',
+        "Access Condition": '{"accessCondition":"VALUE"}',
+        "Handle": '{"location":[ { "url": "VALUE" } ]}'
     },
 
     /*

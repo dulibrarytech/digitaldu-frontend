@@ -7,7 +7,7 @@
 
 'use strict';
 
-const 	config = require('../config/config'),
+const 	config = require('../config/' + process.env.CONFIGURATION_FILE),
 	 	request  = require("request"),
 		IIIF = require('../libs/IIIF');
 
@@ -89,6 +89,7 @@ exports.getManifest = function(container, objects, callback) {
 
 		}
 		else if(object.type == config.IIIFObjectTypes["pdf"]) {
+			elements.push(getPDFElement(object));
 			canvases.push(getPDFCanvas(container, object));
 		}
 		else {
@@ -136,7 +137,6 @@ var getImageData = function(objects, data=[], callback) {
 	else {
 		let object = objects[index],
 			url = config.IIIFServerUrl + "/iiif/2/" + object.resourceID; 
-			//url = 
 
 		request(url, function(error, response, body) {
 			if(error) {
