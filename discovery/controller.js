@@ -276,6 +276,12 @@ exports.getDatastream = function(req, res) {
 		pid = req.params.pid || "",
 		part = req.params.part || null;
 
+	// Detect part index appended to a compound object pid.  This is to allow IIIF url resolver to convey part index data by modifying the pid value
+	if(part == null && pid.indexOf("-") > 0) {
+		part = pid.substring(pid.indexOf("-")+1, pid.length);	
+		pid.split(config.compoundObjectPartID,1)[0];
+	}
+
 	Service.getDatastream(pid, ds, part, function(error, stream) {
 		if(error) {
 			console.log(error);

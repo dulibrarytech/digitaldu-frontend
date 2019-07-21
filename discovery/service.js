@@ -14,7 +14,6 @@
 const es = require('../config/index');
 const fs = require('fs');
 const config = require('../config/' + process.env.CONFIGURATION_FILE);
-const request  = require("request");
 const Repository = require('../libs/repository');
 const Helper = require("./helper");
 const AppHelper = require("../libs/helper");
@@ -358,12 +357,6 @@ exports.getFacets = getFacets;
  * @return 
  */
 exports.getDatastream = function(objectID, datastreamID, part, callback) {
-
-  // The objectID (pid) has a part ID, assign the part ID and remove it from the objectID
-  if(part == null && objectID.indexOf(config.compoundObjectPartID) > 0) {
-    part = objectID.substring(objectID.indexOf(config.compoundObjectPartID)+config.compoundObjectPartID.length);
-    objectID = objectID.split(config.compoundObjectPartID,1)[0];
-  }
   // Get the object data
   fetchObjectByPid(objectID, function(error, object) {
     if(object) {
@@ -387,50 +380,41 @@ exports.getDatastream = function(objectID, datastreamID, part, callback) {
 
       // Request a thumbnail datastream
       if(datastreamID == "tn") {
-        let type = Helper.getObjectType(object.mime_type);
-
-        // Stream image thumbnails from the repository
-        if(type == "largeImage" || type == "smallImage") {
-          Repository.streamData(object, datastreamID, function(error, stream) {
-            if(error) {
-              callback(error, null);
-            }
-            else {
-              callback(null, stream);
-            }
-          });
-        }
-
-        // Handle request for non-image thumbnail
-        else {
-
-          // Separate any namespace appendix from the pid.  Numeric pid + extension = thumbnail image file
-          let path = config.tnPath + objectID.match(/[0-9]+/)[0] + sequence + config.thumbnailFileExtension;
-
-          // Try to create a thumbnail image for this object
-          if(getThumbnailFromObject(object) != false) {
-            // TODO Attempt to get generated tn from viewer
+        AppHelper.streamRemoteData(IIIF.getThumbnailUri(objectID), function(error, status, response) {
+          if(error) {
+            callback(error, null);
           }
 
-          // If a thumbnail can not be generated, check if a thumbnail image exists in the local image folder
-          else if(fs.existsSync(path) == false) {
+          // Found a IIIF thumbnail image
+          else if(response && status == 200) {
+            callback(null, response);
+          }
 
-            // If a thumbnail image does not exist in the local folder, use the default thumbnail image
-            path = config.tnPath + config.defaultThumbnailImage;
+          // Check for a local thumbnail image.  If none present, use the placeholder image for this object
+          else {
+            // Separate any namespace appendix from the pid.  Numeric pid + extension = thumbnail image file
+            let path = config.tnPath + objectID.match(/[0-9]+/)[0] + sequence + config.thumbnailFileExtension;
 
-            // Check for object specific thumbnail in the configuration.  If listed, use this file
-            for(var index in config.thumbnailPlaceholderImages) {
-              if(config.thumbnailPlaceholderImages[index].includes(object.mime_type)) {
-                path = config.tnPath + index;
+            // If a thumbnail can not be generated, check if a thumbnail image exists in the local image folder
+            if(fs.existsSync(path) == false) {
+
+              // If a thumbnail image does not exist in the local folder, use the default thumbnail image
+              path = config.tnPath + config.defaultThumbnailImage;
+
+              // Check for object specific thumbnail in the configuration.  If listed, use this file
+              for(var index in config.thumbnailPlaceholderImages) {
+                if(config.thumbnailPlaceholderImages[index].includes(object.mime_type)) {
+                  path = config.tnPath + index;
+                }
               }
             }
-          }
 
-          // Create the thumbnail stream
-          AppHelper.getFileStream(path, function(error, thumbnail) {
-              callback(null, thumbnail);
-          });
-        }
+            // Create the thumbnail stream
+            AppHelper.getFileStream(path, function(error, thumbnail) {
+                callback(null, thumbnail);
+            });
+          }
+        });
       }
 
       // Request a non thumbnail datastream

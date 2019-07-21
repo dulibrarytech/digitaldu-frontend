@@ -47,7 +47,6 @@ var config = require('../config/' + process.env.CONFIGURATION_FILE);
       
     // This is a list of communities
     if(item.pid) {
-      //tn = Repository.getDatastreamUrl("tn", item.pid);
       tn = config.rootUrl + "/datastream/" + item.pid + "/tn";
       pid = item.pid
     }

@@ -1,3 +1,6 @@
+var rs = require('request-stream'),
+    fs = require('fs');
+
 exports.testObject = function(object) {
 	return (object && typeof object != "undefined");
 }
@@ -7,7 +10,6 @@ exports.isParentObject = function(object) {
 }
 
 exports.isObjectEmpty = function(object) {
-	//return (Object.entries(object).length === 0 && object.constructor === Object)
 	for(var key in object) {
         if(object.hasOwnProperty(key))
             return false;
@@ -16,67 +18,23 @@ exports.isObjectEmpty = function(object) {
 }
 
 exports.getFileStream = function(path, callback) {
-  var fs = require('fs');
-  var rstream = fs.createReadStream(path);
-  callback(null, rstream);
+  callback(null, fs.createReadStream(path));
 }
 
-// Extract values from jsonObject. Values to parse out are set in the valueMap:
-exports.parseJSONObjectValues = function(valueMap, jsonObject) {
-	var valuesObject = {};
-
-	// Locate nested fields in the index
-	for(var key in valueMap) {
-		var mapObject, recordItem, insert=true, showValue;
-
-		if(valueMap[key][0] == "{") {
-
-			try {
-				mapObject = JSON.parse(valueMap[key]) || {};
-			}
-			catch (e) {
-				console.log("Error: Could not parse configuration json object", valueMap);
-			}
-
-			for(var subKey in mapObject) {
-				recordItem = jsonObject[subKey] || [];
-
-				if(typeof recordItem[0] == "string") {
-					valuesObject[key] = recordItem;
-				}
-
-				else if(typeof recordItem[0] == "object") {
-					showValue = [];
-					for(var index in recordItem) {
-						for(var data in mapObject[subKey][0]) {
-							if(recordItem[index][data] != mapObject[subKey][0][data] && mapObject[subKey][0][data] != "VALUE") {
-								insert = false;
-							}
-
-							if(mapObject[subKey][0][data]== "VALUE" &&
-								typeof recordItem[index][data] != "undefined") {
-								showValue.push(recordItem[index][data]);
-							}
-						}
-					}
-					if(insert && showValue.length > 0) {
-						valuesObject[key] = showValue;
-					}
-				}
-			}
+exports.streamRemoteData = function(url, callback) {
+	rs(url, {}, function(err, res) {
+		if(err) {
+			callback("Could not open datastream. " + err + " Check connection to repository", null, null);
 		}
-
-		// Use the value from a flat field
 		else {
-			if(typeof jsonObject[valueMap[key]] != 'undefined') {
-				valuesObject[key] = jsonObject[valueMap[key]];
-			}
+			callback(null, res.statusCode, res);
 		}
-	}
-
-	return valuesObject;
+	});
 }
 
+/*
+ * The "Dial In"
+ */
 var extractValues = function(pathArray, object, matchField, matchValue, condition, bucket) {
 	var nextKey,
 		nextObject,

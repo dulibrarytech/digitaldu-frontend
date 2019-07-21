@@ -11,6 +11,10 @@ const 	config = require('../config/' + process.env.CONFIGURATION_FILE),
 	 	request  = require("request"),
 		IIIF = require('../libs/IIIF');
 
+exports.getThumbnailUri = function(objectID) {
+	return config.IIIFServerUrl + "/iiif/2/" + objectID + "/full/" + config.IIIFThumbnailWidth + "," + config.IIIFThumbnailHeight + "/0/default.jpg";
+}
+
 /**
  * 
  *

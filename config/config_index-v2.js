@@ -24,10 +24,26 @@ module.exports = {
     topLevelCollectionPID: "codu:root",
     topLevelCollectionName: "Root Collection",
     collectionMimeType: "collection",
-    compoundObjectPartID: "_part-",
+    compoundObjectPartID: "-",
 
     // IIIF
     IIIFUrl: process.env.IIIF_URL,
+
+    /*
+     * IIIF Object Types
+     * Type labels to appear in the IIIF manifest, for each object type
+     * Keys are not changeable by user
+     */
+    IIIFObjectTypes: {
+        "audio": "dctypes:Sound",
+        "video": "dctypes:MovingImage",
+        "smallImage": "dctypes:Image",
+        "largeImage": "dctypes:Image",
+        "pdf": "foaf:Document"
+    },
+
+    IIIFThumbnailWidth: "200",
+    IIIFThumbnailHeight: "250",
 
     // Search index name (type)
     searchIndexName: "data",
@@ -401,21 +417,5 @@ module.exports = {
         "smallImage": ["image/png", "image/jpg", "image/jpeg"],
         "largeImage": ["image/tiff", "image/jp2"],
         "pdf": ["application/pdf"]
-    },
-
-    /*
-     * IIIF Object Types
-     * Type labels to appear in the IIIF manifest, for each object type
-     * Keys are not changeable by user
-     */
-    IIIFObjectTypes: {
-        "audio": "dctypes:Sound",
-        "video": "dctypes:MovingImage",
-        "smallImage": "dctypes:Image",
-        "largeImage": "dctypes:Image",
-        "pdf": "foaf:Document"
-    },
-
-    IIIFThumbnailWidth: "600",
-    IIIFThumbnailHeight: "600"
+    }
 };
