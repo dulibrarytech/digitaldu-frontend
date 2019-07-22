@@ -25,12 +25,12 @@
   }
 
   .welcomeBox .title1 {
-      font-size: 30px;
-    }
+    font-size: 30px;
+  }
 
-    .welcomeBox .description {
-      font-size: 0.95em;
-    }
+  .welcomeBox .description {
+    font-size: 0.95em;
+  }
 
   .section {
       /*margin-top: 40px;*/

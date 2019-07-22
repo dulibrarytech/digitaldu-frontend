@@ -1,14 +1,23 @@
 var rs = require('request-stream'),
     fs = require('fs');
 
+/*
+ * 
+ */
 exports.testObject = function(object) {
 	return (object && typeof object != "undefined");
 }
 
+/*
+ * 
+ */
 exports.isParentObject = function(object) {
   return (object && object.object_type == "compound");
 }
 
+/*
+ * 
+ */
 exports.isObjectEmpty = function(object) {
 	for(var key in object) {
         if(object.hasOwnProperty(key))
@@ -17,10 +26,25 @@ exports.isObjectEmpty = function(object) {
     return true;
 }
 
+/*
+ * 
+ */
 exports.getFileStream = function(path, callback) {
-  callback(null, fs.createReadStream(path));
+  	callback(null, fs.createReadStream(path));
 }
 
+/*
+ * 
+ */
+exports.createLocalFile = function(path, data, callback) {
+  	fs.writeFile(path, data, function(err) {
+	    callback(err);
+	}); 
+}
+
+/*
+ * 
+ */
 exports.streamRemoteData = function(url, callback) {
 	rs(url, {}, function(err, res) {
 		if(err) {
@@ -33,7 +57,7 @@ exports.streamRemoteData = function(url, callback) {
 }
 
 /*
- * The "Dial In"
+ * 
  */
 var extractValues = function(pathArray, object, matchField, matchValue, condition, bucket) {
 	var nextKey,
@@ -47,17 +71,24 @@ var extractValues = function(pathArray, object, matchField, matchValue, conditio
 				condition == "true" && 
 				object[matchField] == matchValue) {
 
-				bucket.push(object[pathArray]);
+				if(bucket.includes(object[pathArray]) === false) {
+					bucket.push(object[pathArray]);
+				}
 			}
 			else if(object[pathArray] && 
 					condition == "false" && 
 					object[matchField] != matchValue) {
 
-				bucket.push(object[pathArray]);
+				if(bucket.includes(object[pathArray]) === false) {
+					bucket.push(object[pathArray]);
+				}
 			}
 		}
 		else if(object[pathArray]) {
-			bucket.push(object[pathArray]);
+
+			if(bucket.includes(object[pathArray]) === false) {
+				bucket.push(object[pathArray]);
+			}
 		}
 	}
 

@@ -8,7 +8,6 @@
 'use strict';
 
 const config = require('../config/' + process.env.CONFIGURATION_FILE),
-	  request = require('request'),
 	  rs = require('request-stream');
 
 const host = config.repositoryUrl;

@@ -2,11 +2,6 @@
  * @file 
  *
  * Discovery service functions
- *
- * @typedef {Object} Response
- * @property {boolean} status Function has executed successfully, no local or remote errors
- * @property {string} message A message to return to the caller
- * @property {Object} data Object containing the return data
  */
 
 'use strict';
@@ -380,47 +375,49 @@ exports.getDatastream = function(objectID, datastreamID, part, callback) {
 
       // Request a thumbnail datastream
       if(datastreamID == "tn") {
-        AppHelper.streamRemoteData(IIIF.getThumbnailUri(objectID), function(error, status, response) {
-          if(error) {
-            callback(error, null);
-          }
 
-          // Found a IIIF thumbnail image
-          else if(response && status == 200) {
-            callback(null, response);
-          }
+        // Check for a local thumbnail image
+        let path = config.tnPath + objectID.match(/[0-9]+/)[0] + sequence + config.thumbnailFileExtension;
+        if(fs.existsSync(path) == false) {
 
-          // Check for a local thumbnail image.  If none present, use the placeholder image for this object
-          else {
-            // Separate any namespace appendix from the pid.  Numeric pid + extension = thumbnail image file
-            let path = config.tnPath + objectID.match(/[0-9]+/)[0] + sequence + config.thumbnailFileExtension;
+          // No local image found, stream the thumbnail image from iiif api
+          AppHelper.streamRemoteData(IIIF.getThumbnailUri(objectID), function(error, status, response) {
+            
+            // All is good, return the stream
+            if(response && status == 200) {
+              // TODO: Cache the file in local filesystem when retrieved from iiif server?
+              callback(null, response);
+            }
 
-            // If a thumbnail can not be generated, check if a thumbnail image exists in the local image folder
-            if(fs.existsSync(path) == false) {
+            // Can not retrieve thumbnail image from iiif server
+            else {
+              if(error) {
+                console.log(error);
+              }
 
-              // If a thumbnail image does not exist in the local folder, use the default thumbnail image
+              // Get fallback path to default thumbnail image
               path = config.tnPath + config.defaultThumbnailImage;
 
-              // Check for object specific thumbnail in the configuration.  If listed, use this file
+              // Check for an object specific default thumbnai image.  If found, use it
               for(var index in config.thumbnailPlaceholderImages) {
                 if(config.thumbnailPlaceholderImages[index].includes(object.mime_type)) {
                   path = config.tnPath + index;
                 }
               }
-            }
 
-            // Create the thumbnail stream
-            AppHelper.getFileStream(path, function(error, thumbnail) {
-                callback(null, thumbnail);
-            });
-          }
-        });
+              // Create the thumbnail stream
+              AppHelper.getFileStream(path, function(error, thumbnail) {
+                  callback(null, thumbnail);
+              });
+            }
+          });
+        }
       }
 
       // Request a non thumbnail datastream
       else {
 
-        // Check for a local object file: get the path
+        // Check for a local object file
         let file = null, path;
         for(var extension in config.fileExtensions) {
           if(config.fileExtensions[extension].includes(object.mime_type)) {
@@ -444,7 +441,7 @@ exports.getDatastream = function(objectID, datastreamID, part, callback) {
           }); 
         }
 
-        // Stream the object data from the repository if no local file is found
+        // If no local file is found, stream the object data from the repository
         else {
           Repository.streamData(object, datastreamID, function(error, stream) {
             if(error) {
@@ -517,10 +514,6 @@ var getTitleString = function(pids, titles, callback) {
 }
 exports.getTitleString = getTitleString;
 
-var getThumbnailFromObject = function(object) {
-  return false;
-}
-
 /**
  * 
  *
@@ -573,6 +566,12 @@ exports.retrieveChildren = function(object, callback) {
   callback(object.children || []);
 }
 
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
 exports.getManifestObject = function(pid, callback) {
   var object = {}, children = [];
   fetchObjectByPid(pid, function(error, response) {
