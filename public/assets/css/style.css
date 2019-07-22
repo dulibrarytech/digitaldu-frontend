@@ -301,6 +301,10 @@ main > .wrapper {
   margin-bottom: 150px;
 }
 
+a.sm-title:hover {
+  text-decoration: none;
+}
+
 div.header-logo {
   height: 40px;
   width: 140px;
