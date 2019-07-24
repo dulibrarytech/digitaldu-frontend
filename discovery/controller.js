@@ -276,12 +276,15 @@ exports.getDatastream = function(req, res) {
 		pid = req.params.pid || "",
 		part = req.params.part || null;
 
+	// TODO: Check for auth key field in header
+
 	// Detect part index appended to a compound object pid.  This is to allow IIIF url resolver to convey part index data by modifying the pid value
 	if(part == null && pid.indexOf("-") > 0) {
 		part = pid.substring(pid.indexOf("-")+1, pid.length);	
 		pid.split(config.compoundObjectPartID,1)[0];
 	}
 
+	//Datastreams.getDatastream(pid, ds, part, function(error, stream) {
 	Service.getDatastream(pid, ds, part, function(error, stream) {
 		if(error) {
 			console.log(error);
@@ -292,6 +295,8 @@ exports.getDatastream = function(req, res) {
 			stream.pipe(res);
 		}
 	});
+
+	//Datastreams.getPrivateDatastream(pid, ds, part, function(error, stream) {
 }
 
 exports.getIIIFManifest = function(req, res) {

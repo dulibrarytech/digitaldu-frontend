@@ -27,9 +27,9 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
         mustMatchFields = [], 
         results = [], 
         restrictions = [],
+        filters = [],
         queryType,
         queryArray = [],
-        //queryData = [],
         booleanQuery = {
           "bool": {
             "should": [],
@@ -67,25 +67,24 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
         terms = '*';
       }
 
+      // Determine the elastic "query type" directive to use in the query:
       if(type == "isnot") {
+        // User selected to return results that do not match the query
         queryType = "must_not";
       }
-
-       // This is a string literal search if the query is contained by parentheses.  Use 'match_phrase'.  Must match the entire query
       else if((terms[0] == '"' && terms[ terms.length-1 ] == '"') || 
           type == "is") {
 
+        // This is a phrase search if the query is contained by quotation marks.  Use 'match_phrase'.  Must match the entire query
         terms = terms.replace(/"/g, '');  
         queryType = "match_phrase";
       }
-
-      // This is a wildcard search.  Use 'wildcard'.  Perform an Elasticsearch wildcard query
       else if(terms.indexOf('*') >= 0) {
+        // This is a wildcard search.  Use 'wildcard'.  Perform an Elasticsearch wildcard query
         queryType = "wildcard";
       }
-
-      // This is a regular term search.  Use 'match'.  Will match any word in the query with weighted results.  Closest matches or multiple word matches have higher weight
       else  {
+        // This is a regular term search.  Use 'match'.  Will match any word in the query with weighted results.  Closest matches or multiple word matches have higher weight
         queryType = "match";
       }
 
@@ -147,7 +146,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
           tempObj[queryType] = keywordObj;
           matchFields.push(tempObj);
       } 
-      boolObj.bool.should = matchFields; // ok
+      boolObj.bool.should = matchFields;
 
       // Add this query to the boolean filter must object
       if(bool == "and") {
@@ -165,40 +164,29 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       }
     }
 
-    // DEBUG
-    //console.log("TEST booleanQuery", util.inspect(booleanQuery, {showHidden: false, depth: null}));
-
-    // If facets are present, add them to the search
+    // If facets are present, apply filters to the search
     if(facets) {
-      var indexKey, count=0;
-      for(var key in facets) {
-        for(var index of facets[key]) {
-          let q = {};
+      var facetKey, count=0;
+      for(var facet in facets) {
+        for(var value of facets[facet]) {
+          let query = {};
           count++;
 
-          // Get the index key from the config facet list, using the stored facet name
-          indexKey = config.facets[key];
+          // Get the facet key from the configuration, using the facet name
+          facetKey = config.facets[facet];
 
-          // Add to the main ES query object
-          q[indexKey] = index;
-          mustMatchFields.push({
-            "match_phrase": q 
+          // Add to filters
+          query[facetKey] = value;
+          filters.push({
+            "match_phrase": query 
           });
         }
       }
     }
 
-    // If a collection id is present, scope search to that collection
-    if(collection) {
-      mustMatchFields.push({
-          "match_phrase": {
-            "is_member_of_collection": collection
-          }
-      });
-    }
-
+    //If a date range is present, add the date range query to the must match array
     if(daterange) {
-      mustMatchFields.push(Helper.getDateRangeQuery(daterange));
+      filters.push(Helper.getDateRangeQuery(daterange));
     }
 
     // Do not show collection objects
@@ -215,20 +203,15 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       }
     });
 
-    // Querystring and facet search
-    var queryObj = {};
+    // Querystring and facet search.  Add the filter query object if any filters are present
+    var queryObj = {}, 
+    filter = filters.length > 0 ? filters : {};
     if(queryData[0].terms != "" || facets) {
       queryObj = {
         "bool": {
-          //"should": matchFields,
-          "should": booleanQuery,
-          "must": mustMatchFields,
+          "must": booleanQuery,
           "must_not": restrictions,
-          "filter": {
-            "bool": {
-              "should": booleanQuery
-            }
-          }
+          "filter": filter
         }
       }
     }
@@ -242,11 +225,12 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       });
       queryObj = {
         "bool": {
-          "must": mustMatchFields,
+          "must": booleanQuery,
           "must_not": restrictions
         }
       }
     }
+      //console.log("TEST", util.inspect(queryObj, {showHidden: false, depth: null}));
 
     // Get elasticsearch aggregations object 
     var facetAggregations = Helper.getFacetAggregationObject(config.facets);

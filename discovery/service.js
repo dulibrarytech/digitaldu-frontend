@@ -380,6 +380,9 @@ exports.getDatastream = function(objectID, datastreamID, part, callback) {
         let path = config.tnPath + objectID.match(/[0-9]+/)[0] + sequence + config.thumbnailFileExtension;
         if(fs.existsSync(path) == false) {
 
+          // If not video: url = IIIF.getThumbnailUri(objectID)
+          // If video: url = [kaltura endpoint for video tn]
+
           // No local image found, stream the thumbnail image from iiif api
           AppHelper.streamRemoteData(IIIF.getThumbnailUri(objectID), function(error, status, response) {
             
@@ -398,7 +401,7 @@ exports.getDatastream = function(objectID, datastreamID, part, callback) {
               // Get fallback path to default thumbnail image
               path = config.tnPath + config.defaultThumbnailImage;
 
-              // Check for an object specific default thumbnai image.  If found, use it
+              // Check for an object specific default thumbnail image.  If found, use it
               for(var index in config.thumbnailPlaceholderImages) {
                 if(config.thumbnailPlaceholderImages[index].includes(object.mime_type)) {
                   path = config.tnPath + index;
