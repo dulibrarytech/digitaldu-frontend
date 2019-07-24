@@ -45,6 +45,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
      * Each query is placed in a separate bool object
      */
     var field, fields, type, terms, bool;
+      console.log("TEST qdata arr:", queryData);
     for(var index in queryData) {
       matchFields = [];
       boolObj = {
@@ -67,26 +68,8 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
         terms = '*';
       }
 
-      // Determine the elastic "query type" directive to use in the query:
-      if(type == "isnot") {
-        // User selected to return results that do not match the query
-        queryType = "must_not";
-      }
-      else if((terms[0] == '"' && terms[ terms.length-1 ] == '"') || 
-          type == "is") {
-
-        // This is a phrase search if the query is contained by quotation marks.  Use 'match_phrase'.  Must match the entire query
-        terms = terms.replace(/"/g, '');  
-        queryType = "match_phrase";
-      }
-      else if(terms.indexOf('*') >= 0) {
-        // This is a wildcard search.  Use 'wildcard'.  Perform an Elasticsearch wildcard query
-        queryType = "wildcard";
-      }
-      else  {
-        // This is a regular term search.  Use 'match'.  Will match any word in the query with weighted results.  Closest matches or multiple word matches have higher weight
-        queryType = "match";
-      }
+      // Get the Elastic query type to use for this query
+      queryType = Helper.getQueryType(queryData[index]);
 
       // Build elastic query.  If an array of fields is passed in, search in all of the fields that are in the array.
       if(Array.isArray(fields)) {
@@ -137,6 +120,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
             matchFields.push(tempObj);
           }
         }
+          console.log("TEST", util.inspect(matchFields, {showHidden: false, depth: null}));
       }
 
       // Search a single field

@@ -268,3 +268,23 @@ exports.sortSearchResults = function(results, sortBy) {
 
   return sorted;
 }
+
+exports.getQueryType = function(object) {
+  var queryType = "match";
+
+  // Determine the elastic "query type" to use in the query
+  if(object.type == "isnot") {
+    queryType = "must_not";
+  }
+  else if(object.type == "is") {
+    queryType = "match_phrase";
+  }
+  else if(object.terms.indexOf('*') >= 0) {
+    queryType = "wildcard";
+  }
+  else  {
+    queryType = "match";
+  }
+
+  return queryType;
+}
