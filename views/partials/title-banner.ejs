@@ -8,7 +8,10 @@
 
             <div class="col-md-4 banner-search">
                 <form method="get" action="<%= root_url %>/search">
-                    <input type="text" name="q" placeholder="Search Repository" title="Search Repository"/>
+                    <input type="text" name="q[]" placeholder="Search Repository" title="Search Repository"/>
+                    <input type="hidden" name="type[]" value="contains">
+                    <input type="hidden" name="bool[]" value="or">
+                    <input type="hidden" name="field[]" value="all">
                     <button type="submit" alt="Search" title="Submit"><i class="fas fa-search"></i></button>
                 </form>
             </div>

@@ -45,7 +45,6 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
      * Each query is placed in a separate bool object
      */
     var field, fields, type, terms, bool;
-      console.log("TEST qdata arr:", queryData);
     for(var index in queryData) {
       matchFields = [];
       boolObj = {
