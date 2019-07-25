@@ -91,14 +91,16 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
               "fuzziness": config.searchTermFuzziness
             };
 
+            // Add the field boost value if it is set
             if(field.boost) {
               queryObj["boost"] = field.boost;
             }
 
+            // Create the elastic match query object
             keywordObj[field.field] = queryObj;
             tempObj[queryType] = keywordObj;
 
-            // Create a must bool with the required index field match
+            // If a matchfield is present, add the control field to the query
             if(typeof field.matchField != 'undefined') {
               let mustQuery = {
                 "match_phrase": {}
@@ -106,21 +108,23 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
               mustQuery.match_phrase[field.matchField] = field.matchTerm;
               matchFields.push({
                 "bool": {
-                  "must": [tempObj,mustQuery]
+                  "must": [tempObj,mustQuery] // Both must match for the bool to be true
                 }
               });
             }
             else {
+
+              // Push the "match" query
               matchFields.push(tempObj);
             }
           }
+
           else {
             keywordObj[field.field] = terms;
             tempObj[queryType] = keywordObj;
             matchFields.push(tempObj);
           }
         }
-          console.log("TEST", util.inspect(matchFields, {showHidden: false, depth: null}));
       }
 
       // Search a single field
@@ -233,7 +237,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
 
     // Create elasticsearch data object
     var data = {  
-      index: config.elasticsearchIndex,
+      index: config.elasticsearchPublicIndex,
       type: config.searchIndexName,
       body: {
         from : (pageNum - 1) * pageSize, 
@@ -263,7 +267,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
  */
 exports.searchFacets = function (query, facets, page, callback) {
     client.search({
-            index: config.elasticsearchIndex,
+            index: config.elasticsearchPublicIndex,
             type: config.searchIndexName,
             body: {
                 "query": {

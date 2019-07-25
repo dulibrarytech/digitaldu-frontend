@@ -45,7 +45,6 @@ exports.search = function(req, res) {
 			pageData: null,
 			page: req.query.page || 1,
 			root_url: config.rootUrl,
-			collection_scope: "",
 			query: Helper.getResultsLabel(req.query.q, facets),
 			view: req.query.view || config.defaultSearchResultsView || "list",
 			options: {}

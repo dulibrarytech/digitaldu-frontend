@@ -23,7 +23,7 @@ exports.getFacets = function(req, res) {
     Service.getFacets(null, function(error, facets) {
     	let response = {};
         if(error) {
-        	console.log("Error");
+        	console.log(error);
         }
         else {
         	response = facets;
@@ -41,7 +41,7 @@ exports.renderCommunitiesView = function(req, res) {
 		if(error) {
 			console.log(error);
 			data['collections'] = [];
-			data['error'] = "Error: could not retrieve communities.";
+			data['error'] = "Error: could not retrieve communities. " + error;
 		}
 		else {
 			data['collections'] = response;
@@ -206,7 +206,7 @@ exports.renderObjectView = function(req, res) {
 		return res.render('object', data);
 	};
 
-	Service.fetchObjectByPid(req.params.pid, function(error, response) {
+	Service.fetchObjectByPid(config.elasticsearchPublicIndex, req.params.pid, function(error, response) {
 		if(error) {
 			data.error = error;
 			renderView(data);
@@ -217,13 +217,13 @@ exports.renderObjectView = function(req, res) {
 		}
 		else {
 			var object = response,
-				index = req.params.index && isNaN(parseInt(req.params.index)) === false ? req.params.index : 0;
+				part = req.params.index && isNaN(parseInt(req.params.index)) === false ? req.params.index : 0;
 
 			// Render a parent object with child objects
 			if(AppHelper.isParentObject(object)) {
 				switch(object.object_type) {
 					case "compound":
-						data.viewer = Viewer.getCompoundObjectViewer(object, index);
+						data.viewer = Viewer.getCompoundObjectViewer(object, part);
 						break;
 					case "book":
 						//data.viewer = CompoundViewer.getBookViewer(...);
@@ -240,8 +240,8 @@ exports.renderObjectView = function(req, res) {
 
 			// Render singular object
 			else {
-				// Can't lookup index of a non-parent object
-				if(index > 0) {
+				// Can't lookup part of a non-parent object
+				if(part > 0) {
 					data.error = "Object not found";
 					renderView(data);
 				}
@@ -274,9 +274,8 @@ exports.renderObjectView = function(req, res) {
 exports.getDatastream = function(req, res) {
 	var ds = req.params.datastream.toLowerCase() || "",
 		pid = req.params.pid || "",
-		part = req.params.part || null;
-
-	// TODO: Check for auth key field in header
+		part = req.params.part || null,
+		index = config.elasticsearchPublicIndex;
 
 	// Detect part index appended to a compound object pid.  This is to allow IIIF url resolver to convey part index data by modifying the pid value
 	if(part == null && pid.indexOf("-") > 0) {
@@ -284,8 +283,12 @@ exports.getDatastream = function(req, res) {
 		pid.split(config.compoundObjectPartID,1)[0];
 	}
 
+	if(req.headers["x-api-key"] && req.headers["x-api-key"] == config.apiKey) {
+		index = config.elasticsearchPrivateIndex;
+	}
+
 	//Datastreams.getDatastream(pid, ds, part, function(error, stream) {
-	Service.getDatastream(pid, ds, part, function(error, stream) {
+	Service.getDatastream(index, pid, ds, part, function(error, stream) {
 		if(error) {
 			console.log(error);
 			res.sendStatus(404);
@@ -295,8 +298,6 @@ exports.getDatastream = function(req, res) {
 			stream.pipe(res);
 		}
 	});
-
-	//Datastreams.getPrivateDatastream(pid, ds, part, function(error, stream) {
 }
 
 exports.getIIIFManifest = function(req, res) {
@@ -322,8 +323,7 @@ exports.getKalturaViewer = function(req, res) {
 		part = req.params.part || "1",
 		entryID = "";
 
-	// TODO add to service
-	Service.fetchObjectByPid(pid, function(error, object) {
+	Service.fetchObjectByPid(config.elasticsearchPublicIndex, pid, function(error, object) {
 		if(error) {
 			console.log(error, pid);
 			res.send("<h4>Error loading viewer");

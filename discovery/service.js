@@ -43,7 +43,7 @@ exports.getTopLevelCollections = function(pageNum=0, callback) {
 
         // If there are no results from the Repository, use the index to retrieve the top-level collection objects
         var data = {  
-          index: config.elasticsearchIndex,
+          index: config.elasticsearchPublicIndex,
           type: 'data',
           body: {
             from: 0,
@@ -172,7 +172,7 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
 
         // Use local index to find the collection children
         var data = {  
-          index: config.elasticsearchIndex,
+          index: config.elasticsearchPublicIndex,
           type: 'data',
           body: {
             from : (pageNum - 1) * config.maxCollectionsPerPage,
@@ -209,7 +209,7 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
             collection.count = response.hits.total;
 
             // Get this collection's title
-            fetchObjectByPid(collectionID, function(error, object) {
+            fetchObjectByPid(config.elasticsearchPublicIndex, collectionID, function(error, object) {
               if(error) {
                 collection.title = "";
                 callback(error, []);
@@ -247,23 +247,23 @@ var geChildCollectionPids = function(pid, callback) {
  * @param 
  * @return 
  */
-var fetchObjectByPid = function(pid, callback) {
+var fetchObjectByPid = function(index, pid, callback) {
   var objectData = {
     pid: null
   };
 
   // Get an exact match on the id and the namespace.  Extract both segments of the id, and require a match on both
   var temp, fields, matchFields = [], segments = pid.split(":");
-  for(var index in segments) {
+  for(var i in segments) {
     temp = {}, fields = {};
-    temp['pid'] = segments[index];
+    temp['pid'] = segments[i];
     fields['match'] = temp;
     matchFields.push(fields);
   }
 
   // Search for the pid segments as an "and" search.  This should only return one result.
   es.search({
-      index: config.elasticsearchIndex,
+      index: index,
       type: "data",
       body: {
         query: {
@@ -273,7 +273,6 @@ var fetchObjectByPid = function(pid, callback) {
         }
       }
   }, function (error, response) {
-
       if(error) {
         callback(error, null);
       }
@@ -309,7 +308,7 @@ var getFacets = function (collection=null, callback) {
     }
 
     var searchObj = {
-        index: config.elasticsearchIndex,
+        index: config.elasticsearchPublicIndex,
         type: 'data',
         body: {
             "size": 0,
@@ -351,9 +350,10 @@ exports.getFacets = getFacets;
  * @param 
  * @return 
  */
-exports.getDatastream = function(objectID, datastreamID, part, callback) {
+exports.getDatastream = function(indexName, objectID, datastreamID, part, callback) {
+
   // Get the object data
-  fetchObjectByPid(objectID, function(error, object) {
+  fetchObjectByPid(indexName, objectID, function(error, object) {
     if(object) {
 
       // If there is a part value, retrieve the part data.  Redefine the object data with the part data
@@ -491,7 +491,7 @@ var getTitleString = function(pids, titles, callback) {
   }
   pid = pidArray[ titles.length ];
   // Get the title data for the current pid
-  fetchObjectByPid(pid, function (error, response) {
+  fetchObjectByPid(config.elasticsearchPublicIndex, pid, function (error, response) {
     if(error) {
       callback(error, titles);
     }
@@ -524,7 +524,7 @@ exports.getTitleString = getTitleString;
  * @return 
  */
 var getParentTrace = function(pid, collections, callback) {
-  fetchObjectByPid(pid, function(error, response) {
+  fetchObjectByPid(config.elasticsearchPublicIndex, pid, function(error, response) {
       var title = "",
           url = config.rootUrl + "/collection/" + pid;
 
@@ -577,7 +577,7 @@ exports.retrieveChildren = function(object, callback) {
  */
 exports.getManifestObject = function(pid, callback) {
   var object = {}, children = [];
-  fetchObjectByPid(pid, function(error, response) {
+  fetchObjectByPid(config.elasticsearchPublicIndex, pid, function(error, response) {
     if(error) {
       callback(error, JSON.stringify({}));
     }
@@ -603,7 +603,6 @@ exports.getManifestObject = function(pid, callback) {
         // Add the child objects of the main parent object
         for(var key in object.display_record.parts) {
           resourceUrl = config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType(object.display_record.parts[key].type) + "/" + object.display_record.parts[key].order;
-          //resourceUrl = config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType(object.display_record.parts[key].type);
 
           // Add the data
           children.push({

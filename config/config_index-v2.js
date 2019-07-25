@@ -5,6 +5,9 @@ module.exports = {
     // Runtime environment
     nodeEnv: process.env.NODE_ENV,
 
+    // Keys
+    apiKey: process.env.API_KEY,
+
     // Domain and paths
     host: process.env.APP_HOST,
     appPath: process.env.CLIENT_PATH,
@@ -15,7 +18,8 @@ module.exports = {
     repositoryUrl: process.env.REPOSITORY,
     elasticsearchHost: process.env.ELASTICSEARCH_HOST,
     elasticsearchPort: process.env.ELASTICSEARCH_PORT,
-    elasticsearchIndex: process.env.ELASTICSEARCH_INDEX,
+    elasticsearchPublicIndex: process.env.ELASTICSEARCH_PUBLIC_INDEX,
+    elasticsearchPrivateIndex: process.env.ELASTICSEARCH_PRIVATE_INDEX,
     IIIFServerUrl: process.env.CANTALOUPE_URL,
     cantaloupePort: process.env.CANTALOUPE_PORT,
 

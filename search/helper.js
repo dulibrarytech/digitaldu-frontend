@@ -269,14 +269,23 @@ exports.sortSearchResults = function(results, sortBy) {
   return sorted;
 }
 
+/**
+ * Determine the elastic "query type" to use in the query
+ *
+ * @param 
+ * @return 
+ */
 exports.getQueryType = function(object) {
   var queryType = "match";
 
-  // Determine the elastic "query type" to use in the query
   if(object.type == "isnot") {
     queryType = "must_not";
   }
   else if(object.type == "is") {
+    queryType = "match_phrase";
+  }
+  else if(object.terms[0] == '"' && object.terms[ object.terms.length-1 ] == '"') {
+    object.terms = object.terms.replace(/"/g, '');
     queryType = "match_phrase";
   }
   else if(object.terms.indexOf('*') >= 0) {

@@ -15,7 +15,7 @@ client.cluster.health({},function(err,resp,status) {
 	}
 	else if(status == 200 && resp) {
 		console.log("Connected to Elastic cluster: " + config.elasticsearchHost + ':' + config.elasticsearchPort);
-		console.log("Using Elastic index: " + config.elasticsearchIndex);
+		console.log("Using Elastic index: " + config.elasticsearchPublicIndex);
 	}
 	else {
 		console.log("Error: Elastic connection status is: " + status + " while contacting index on " + config.elasticsearchHost + ':' + config.elasticsearchPort);
