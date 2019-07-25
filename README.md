@@ -40,22 +40,22 @@ All other content is released under [CC-BY-4.0](https://creativecommons.org/lice
     ```
         NODE_ENV=development
         NODE_TLS_REJECT_UNAUTHORIZED=1
-
-        APP_HOST=http://localhost
-        APP_PORT=9006
-
-        CLIENT_HOST=http://localhost:9006
-        CLIENT_PATH=
-
-        ELASTICSEARCH_HOST={HOST}
-        ELASTICSEARCH_PORT={PORT}
-        ELASTICSEARCH_INDEX={INDEX}
-
-        REPOSITORY={REPOSITORY}
-
-        CANTALOUPE_URL={CANTALOPE_URL}
-
-        IIIF_URL={IIIF_URL}
+        APP_HOST={nodejs app domain}
+        APP_PORT={nodejs app port}
+        API_KEY={frontend api key}
+        CLIENT_HOST={client domain - same as APP_HOST + APP_PORT unless dns is registered for client domain}
+        # Use leading slash
+        CLIENT_PATH={client relative path from domain}
+        CONFIGURATION_FILE={name of main app configuration file}
+        ELASTICSEARCH_HOST={elastic server domain}
+        ELASTICSEARCH_PORT={elastic server port}
+        ELASTICSEARCH_PUBLIC_INDEX={public elastic index}
+        ELASTICSEARCH_PRIVATE_INDEX={private elastic index}
+        REPOSITORY={duraspace dip-store url}
+        PDF_JS_VIEWER_PORT={port}
+        CANTALOUPE_URL={cantaloupe api domain}
+        CANTALOUPE_PORT={port}
+        IIIF_URL={iiif api}
     ```
     4. APP_HOST is the url to the server.  Do not add the port to this url, add that to APP_PORT.  Set APP_PORT to whatever port the nodejs app should run on.
     

@@ -283,6 +283,7 @@ exports.getDatastream = function(req, res) {
 		pid.split(config.compoundObjectPartID,1)[0];
 	}
 
+	// If a valid api key is passed in with the request, get data from the the private index
 	if(req.headers["x-api-key"] && req.headers["x-api-key"] == config.apiKey) {
 		index = config.elasticsearchPrivateIndex;
 	}
