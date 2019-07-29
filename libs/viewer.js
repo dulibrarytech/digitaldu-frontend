@@ -115,7 +115,7 @@ function getAudioPlayer(object, type) {
 			player += getJWPlayer(tn, stream, extension, config.jwplayerPathToLibrary);
 			break;
 		case "universalviewer":
-			player += getIIIFObjectViewer(object);
+			player += getIIIFObjectViewer(object, null, config.universalViewerKalturaPlayer);
 			break;
 		case "kaltura":
 			player += getKalturaViewer(object, {
@@ -167,7 +167,7 @@ function getVideoViewer(object) {
 			viewer += getJWPlayer(tn, stream, extension, config.jwplayerPathToLibrary);
 			break;
 		case "universalviewer":
-			viewer += getIIIFObjectViewer(object, null, config.universalViewerKalturaPlayer);  // TODO add to config?
+			viewer += getIIIFObjectViewer(object, null, config.universalViewerKalturaPlayer);
 			break;
 		case "kaltura":
 			viewer += getKalturaViewer(object, {
@@ -303,7 +303,6 @@ function getIIIFObjectViewer(object, part=null, embedKalturaViewer=false) {
 
 	// Option to embed the Kaltura player into this Universalviewer	instance
 	if(embedKalturaViewer) {
-
 		// If a part value is present, assume the object is compound, and view this part
 		if(part && isNaN(part) == false) {
 

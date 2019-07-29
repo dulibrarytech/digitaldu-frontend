@@ -91,7 +91,7 @@ module.exports = {
      * Viewer to play audio files
      * [browser | jwplayer | universalviewer | kaltura]
      */
-    audioPlayer: "kaltura",
+    audioPlayer: "universalviewer",
 
     /* 
      * Viewer to display video files
