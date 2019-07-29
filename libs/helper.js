@@ -29,31 +29,10 @@ exports.isObjectEmpty = function(object) {
 /*
  * 
  */
-exports.getFileStream = function(path, callback) {
-  	callback(null, fs.createReadStream(path));
-}
-
-/*
- * 
- */
 exports.createLocalFile = function(path, data, callback) {
   	fs.writeFile(path, data, function(err) {
 	    callback(err);
 	}); 
-}
-
-/*
- * 
- */
-exports.streamRemoteData = function(url, callback) {
-	rs(url, {}, function(err, res) {
-		if(err) {
-			callback("Could not open datastream. " + err + " Check connection to repository", null, null);
-		}
-		else {
-			callback(null, res.statusCode, res);
-		}
-	});
 }
 
 /*
