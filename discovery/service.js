@@ -375,7 +375,6 @@ exports.getDatastream = function(indexName, objectID, datastreamID, part, callba
 
       // Request a thumbnail datastream
       if(datastreamID == "tn") {
-
         // Check for a local thumbnail image
         let path = config.tnPath + objectID.match(/[0-9]+/)[0] + sequence + config.thumbnailFileExtension;
         if(fs.existsSync(path) == false) {
@@ -413,6 +412,13 @@ exports.getDatastream = function(indexName, objectID, datastreamID, part, callba
                   callback(null, thumbnail);
               });
             }
+          });
+        }
+
+        else {
+          // Stream thumbnail image from local folder
+          AppHelper.getFileStream(path, function(error, thumbnail) {
+              callback(null, thumbnail);
           });
         }
       }
