@@ -45,7 +45,6 @@ module.exports = {
         "largeImage": "dctypes:Image",
         "pdf": "foaf:Document"
     },
-
     IIIFThumbnailWidth: "200",
     IIIFThumbnailHeight: "250",
 

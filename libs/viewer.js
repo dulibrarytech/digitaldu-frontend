@@ -165,13 +165,7 @@ function getVideoViewer(object) {
 			viewer += getIIIFObjectViewer(object, null, config.universalViewerKalturaPlayer);
 			break;
 		case "kaltura":
-			viewer += getKalturaViewer(object, {
-				partner_id: config.kalturaPartnerID,
-				uiconf_id: config.kalturaUI_ID,
-				entry_id: object.entry_id,
-				unique_object_id: config.kalturaUniqueObjectID,
-				title: object.title
-			});
+			viewer += getKalturaViewer(object);
 			break;
 		default:
 			viewer += 'No video viewer is enabled.  Please check configuration</div>';
@@ -299,28 +293,20 @@ function getIIIFObjectViewer(object, part=null, embedKalturaViewer=false) {
 	// Option to embed the Kaltura player into this Universalviewer	instance
 	if(embedKalturaViewer) {
 		// If a part value is present, assume the object is compound, and view this part
+		let objectData = object;
 		if(part && isNaN(part) == false) {
 
 			// Locate the entry_id for the requested compound object part
 			for(var index in object.display_record.parts) {
 				if(object.display_record.parts[index].order == part) {
-					entryID = object.display_record.parts[index].entry_id;
+					//entryID = object.display_record.parts[index].entry_id;
+					objectData = object.display_record.parts[index];
 				}
 			}
 		}
 
-		// This is not a compound object.  Just grab the entry_id from the object
-		else {
-			entryID = object.entry_id || "";
-		}
-
 		// Get the player content
-		kalturaViewer = getKalturaViewer(object, {
-			partner_id: config.kalturaPartnerID,
-			uiconf_id: config.kalturaUI_ID,
-			entry_id: entryID,
-			unique_object_id: config.kalturaUniqueObjectID
-		});
+		kalturaViewer = getKalturaViewer(objectData);
 
 		// Add the event trigger to embed the Kaltura player 
 		eventTriggers += '$( "#uv").trigger( "uvloaded", [ ' + embedKalturaViewer + ', "' + object.pid + '", "' + config.universalViewerMediaElement + '", "' + kalturaViewer + '" ] );';

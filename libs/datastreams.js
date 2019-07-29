@@ -12,7 +12,14 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
 	Repository = require('../libs/repository'),
 	IIIF = require('../libs/IIIF');
 
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
 exports.getDatastream = function(object, objectID, datastreamID, part, callback) {
+  
   // If there is a part value, retrieve the part data.  Redefine the object data with the part data
   if(part && isNaN(part) === false) {
     var sequence;
@@ -32,6 +39,22 @@ exports.getDatastream = function(object, objectID, datastreamID, part, callback)
 
   // Request a thumbnail datastream
   if(datastreamID == "tn") {
+
+  	// Switch object type, calling function for each : collection, compound, object
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     // Check for a local thumbnail image
     let path = config.tnPath + objectID.match(/[0-9]+/)[0] + sequence + config.thumbnailFileExtension;
     if(fs.existsSync(path) == false) {
@@ -124,8 +147,11 @@ exports.getDatastream = function(object, objectID, datastreamID, part, callback)
   }
 }
 
-/*
+/**
  * 
+ *
+ * @param 
+ * @return 
  */
 var streamRemoteData = function(url, callback) {
 	rs(url, {}, function(err, res) {
@@ -138,8 +164,11 @@ var streamRemoteData = function(url, callback) {
 	});
 }
 
-/*
+/**
  * 
+ *
+ * @param 
+ * @return 
  */
 var getFileStream = function(path, callback) {
   	callback(null, fs.createReadStream(path));

@@ -335,20 +335,10 @@ exports.getKalturaViewer = function(req, res) {
 		}
 		else {
 			if(object.object_type == "compound") {
-				entryID = object.display_record.parts[part-1].entry_id;
-			}
-			else {
-				entryID = object.entry_id;
+				object = object.display_record.parts[part-1]
 			}
 
-			let kalturaViewer = Viewer.getKalturaViewer(object, {
-				partner_id: config.kalturaPartnerID,
-				uiconf_id: config.kalturaUI_ID,
-				entry_id: entryID,
-				unique_object_id: config.kalturaUniqueObjectID
-			});
-
-			res.send(kalturaViewer);
+			res.send(Viewer.getKalturaViewer(object));
 		}
 	});
 }
