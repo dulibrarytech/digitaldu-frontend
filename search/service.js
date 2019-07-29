@@ -62,11 +62,6 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       // If field value is "all", get all the available search fields
       fields = Helper.getSearchFields(field)
 
-      // Default empty queries to wildcard "all results" query
-      if(terms == "") {
-        terms = '*';
-      }
-
       // Get the Elastic query type to use for this query
       queryType = Helper.getQueryType(queryData[index]);
 
@@ -217,7 +212,9 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
         }
       }
     }
-      //console.log("TEST", util.inspect(queryObj, {showHidden: false, depth: null}));
+
+    // DEBUG
+    //console.log("TEST", util.inspect(queryObj, {showHidden: false, depth: null}));
 
     // Get elasticsearch aggregations object 
     var facetAggregations = Helper.getFacetAggregationObject(config.facets);

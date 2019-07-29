@@ -239,6 +239,11 @@ exports.getSearchQueryDataObject = function(queryArray, fieldArray, typeArray, b
   var queryDataArray = [];
 
   for(var index in queryArray) {
+    // Default empty queries to wildcard "all results" query
+    if(queryArray[index] == "") {
+      queryArray[index] = '*';
+    }
+
     queryDataArray.push({
       terms: queryArray[index],
       field: fieldArray[index],
