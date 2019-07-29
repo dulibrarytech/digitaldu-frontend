@@ -9,8 +9,9 @@
 'use strict';
 
 
-var config = require('../config/' + process.env.CONFIGURATION_FILE);
-var Repository = require('./repository');
+const config = require('../config/' + process.env.CONFIGURATION_FILE),
+	 Repository = require('./repository'),
+	 Kaltura = require('./kaltura');
 
 /**
  * 
@@ -118,13 +119,7 @@ function getAudioPlayer(object, type) {
 			player += getIIIFObjectViewer(object, null, config.universalViewerKalturaPlayer);
 			break;
 		case "kaltura":
-			player += getKalturaViewer(object, {
-				partner_id: config.kalturaPartnerID,
-				uiconf_id: config.kalturaUI_ID,
-				entry_id: object.entry_id,
-				unique_object_id: config.kalturaUniqueObjectID,
-				title: object.title
-			});
+			player += getKalturaViewer(object);
 			break;
 		default:
 			player += 'Viewer is down temporarily.  Please check configuration</div>';
@@ -351,20 +346,8 @@ function getIIIFObjectViewer(object, part=null, embedKalturaViewer=false) {
  * @param 
  * @return 
  */
- function getKalturaViewer(object, params) {
- 	var cache_st = "1559751114",
- 		height = config.kalturaPlayerHeight,
- 		width = "100%",
- 		html = "";
-
- 	html += "<div class='kaltura-viewer'>";
- 	if(params.title && params.title != "") {
- 		html += "<h3>" + params.title + "</h3>";
- 	}
- 	html += "<iframe id='kaltura_player_1559861164' src='https://cdnapisec.kaltura.com/p/" + params.partner_id + "/sp/" + params.partner_id + '00' + "/embedIframeJs/uiconf_id/" + params.uiconf_id + "/partner_id/" + params.partner_id + "?iframeembed=true&playerId=" + params.unique_object_id + "&entry_id=" + params.entry_id + "&flashvars[leadWithHTML5]=true' width='" + width + "' height='" + height + "' allowfullscreen webkitallowfullscreen mozAllowFullScreen allow='autoplay *; fullscreen *; encrypted-media *' frameborder='0'></iframe>";
- 	html += "</div>";
-
- 	return html;
+ function getKalturaViewer(object) {
+ 	return Kaltura.getViewerContent(object);
  }
  exports.getKalturaViewer = getKalturaViewer;
 

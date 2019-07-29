@@ -86,6 +86,48 @@ module.exports = {
         "pdf-tn.png": ["application/pdf"],
         "image-tn.png": ["image/tiff", "image/jp2", "image/jp3"]
     },
+    /*
+     *  streamOption: [index|iiif|kaltura|external]
+     *  locationUrl: if 'external' this is the path to the resource,
+     *  source: [repository|remote] if 'index' stream: 'repository' will use repository api to source uri, 'remote' will fetch full uri
+     */
+    thumbnails: {
+        // object_types
+        "collection": {
+            "streamOption": "index",
+            "locationUrl": "", 
+            "source": "repository"
+        },
+        "object": {
+            "fileTypes": {
+                "image": {
+                    "streamOption": "iiif",
+                    "locationUrl": "", 
+                    "source": ""
+                },
+                "audio": {
+                    "streamOption": "kaltura",
+                    "locationUrl": "", 
+                    "source": ""
+                },
+                "video": {
+                    "streamOption": "kaltura",
+                    "locationUrl": "", 
+                    "source": ""
+                },
+                "pdf": {
+                    "streamOption": "iiif",
+                    "locationUrl": "", 
+                    "source": ""
+                }
+            }
+        },
+        "compound": {
+            "streamOption": "index",
+            "locationUrl": "", 
+            "source": "repository"
+        }
+    },
 
     /* 
      * Viewer to play audio files
@@ -142,6 +184,10 @@ module.exports = {
     kalturaPartnerID: "2357732",
     kalturaUniqueObjectID: "kaltura_player_1559751114",
     kalturaPlayerHeight: "923px",  // Height without the transcript player
+    kalturaPlayerWidth: "100%",
+    showKalturaTitle: "false",
+    kalturaThumbnailWidth: "200",
+    kalturaThumbnailHeight: "250",
 
 
     // The index field that holdas the display record data

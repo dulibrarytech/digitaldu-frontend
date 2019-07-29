@@ -356,6 +356,11 @@ exports.getDatastream = function(indexName, objectID, datastreamID, part, callba
   fetchObjectByPid(indexName, objectID, function(error, object) {
     if(object) {
 
+      // TODO: move to external lib
+      // Datastream.getDatastream(objectData, objectID, datastreamID, part, function(error, stream) {
+
+        //});
+
       // If there is a part value, retrieve the part data.  Redefine the object data with the part data
       if(part && isNaN(part) === false) {
         var sequence;
@@ -378,6 +383,9 @@ exports.getDatastream = function(indexName, objectID, datastreamID, part, callba
         // Check for a local thumbnail image
         let path = config.tnPath + objectID.match(/[0-9]+/)[0] + sequence + config.thumbnailFileExtension;
         if(fs.existsSync(path) == false) {
+
+          // If type is collection
+          // Get tn 
 
           // If not video: url = IIIF.getThumbnailUri(objectID)
           // If video: url = [kaltura endpoint for video tn]
