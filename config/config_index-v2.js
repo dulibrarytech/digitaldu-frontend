@@ -87,43 +87,48 @@ module.exports = {
     },
     /*
      *  streamOption: [index|iiif|kaltura|external]
-     *  locationUrl: if 'external' this is the path to the resource,
+     *  uri: if 'external' this is the path to the resource,
      *  source: [repository|remote] if 'index' stream: 'repository' will use repository api to source uri, 'remote' will fetch full uri
      */
     thumbnails: {
         // object_types
         "collection": {
             "streamOption": "index",
-            "locationUrl": "", 
+            "uri": "", 
             "source": "repository"
         },
         "object": {
             "fileTypes": {
-                "image": {
+                "smallImage": {
                     "streamOption": "iiif",
-                    "locationUrl": "", 
+                    "uri": "", 
+                    "source": ""
+                },
+                "largeImage": {
+                    "streamOption": "iiif",
+                    "uri": "", 
                     "source": ""
                 },
                 "audio": {
                     "streamOption": "kaltura",
-                    "locationUrl": "", 
+                    "uri": "", 
                     "source": ""
                 },
                 "video": {
                     "streamOption": "kaltura",
-                    "locationUrl": "", 
+                    "uri": "", 
                     "source": ""
                 },
                 "pdf": {
                     "streamOption": "iiif",
-                    "locationUrl": "", 
+                    "uri": "", 
                     "source": ""
                 }
             }
         },
         "compound": {
             "streamOption": "index",
-            "locationUrl": "", 
+            "uri": "",
             "source": "repository"
         }
     },

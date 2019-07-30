@@ -10,6 +10,7 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
 	rs = require('request-stream'),
 	fs = require('fs'),
 	Repository = require('../libs/repository'),
+  Kaltura = require('../libs/kaltura'),
 	IIIF = require('../libs/IIIF');
 
 /**
@@ -26,7 +27,8 @@ exports.getDatastream = function(object, objectID, datastreamID, part, callback)
     let objectPart = {
       mime_type: object.display_record.parts[part-1].type,
       object: object.display_record.parts[part-1].object,
-      thumbnail: object.display_record.parts[part-1].thumbnail
+      thumbnail: object.display_record.parts[part-1].thumbnail,
+      object_type: "object"
     }
     object = objectPart;
     sequence = "-" + part;
@@ -39,65 +41,85 @@ exports.getDatastream = function(object, objectID, datastreamID, part, callback)
 
   // Request a thumbnail datastream
   if(datastreamID == "tn") {
-
-  	// Switch object type, calling function for each : collection, compound, object
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     // Check for a local thumbnail image
     let path = config.tnPath + objectID.match(/[0-9]+/)[0] + sequence + config.thumbnailFileExtension;
     if(fs.existsSync(path) == false) {
 
-      // If type is collection
-      // Get tn 
+      let fileType = "default";
+      for(var key in config.mimeTypes) {
+        if(config.mimeTypes[key].includes(object.mime_type)) {
+          fileType = key;
+        }
+      }
 
-      // If not video: url = IIIF.getThumbnailUri(objectID)
-      // If video: url = [kaltura endpoint for video tn]
+    	var settings = config.thumbnails[object.object_type] || null;
+      if(settings && settings.fileTypes) {
+        settings = settings.fileTypes[fileType] || null;
+      }
 
-      // No local image found, stream the thumbnail image from iiif api
-      streamRemoteData(IIIF.getThumbnailUri(objectID), function(error, status, response) {
-        
-        // All is good, return the stream
-        if(response && status == 200) {
-          // TODO: Cache the file in local filesystem when retrieved from iiif server?
-          callback(null, response);
+      let filePath = null, streamPath = null, uri;
+      if(settings == null) {
+        callback("Error retrieving datastream for " + objectID + ", can not find configuration settings for object type " + object.object_type, null);
+      }
+      else {
+        uri = settings.uri || "Uri has not been set";
+        switch(settings.streamOption || "") {
+          case "iiif":
+            uri = IIIF.getThumbnailUri(objectID);
+            break;
+
+          case "kaltura":
+            uri = Kaltura.getThumbnailUrl(object);
+            break;
+
+          case "external":
+            break;
+
+          case "index":
+            uri = object.thumbnail || uri;
+            break;
+
+          default:
+            callback("Error retrieving datastream for " + objectID + ", object type " + object.object_type + "is invalid", null);
+            break;
         }
 
-        // Can not retrieve thumbnail image from iiif server
-        else {
-          if(error) {
-            console.log(error);
-          }
-
-          // Get fallback path to default thumbnail image
-          path = config.tnPath + config.defaultThumbnailImage;
-
-          // Check for an object specific default thumbnail image.  If found, use it
-          for(var index in config.thumbnailPlaceholderImages) {
-            if(config.thumbnailPlaceholderImages[index].includes(object.mime_type)) {
-              path = config.tnPath + index;
+        if(settings.source == "repository") {
+          Repository.streamData(object, "tn", function(error, stream) {
+            if(error) {
+              callback(error, null);
             }
-          }
-
-          // Create the thumbnail stream
-          getFileStream(path, function(error, thumbnail) {
-              callback(null, thumbnail);
+            else {
+              // All is good, return the stream
+              if(stream && stream.statusCode == 200) {
+                // TODO: Cache the file in local filesystem when retrieved from iiif server?
+                callback(null, stream);
+              }
+              else {
+                streamDefaultThumbnail(object, callback);
+              }
+            }
           });
         }
-      });
+        else {
+          streamRemoteData(uri, function(error, status, response) {
+            if(error) {
+              console.log(error);
+            }
+            else {
+              // All is good, return the stream
+              if(response && status == 200) {
+                // TODO: Cache the file in local filesystem when retrieved from iiif server?
+                callback(null, response);
+              }
+              else {
+                streamDefaultThumbnail(object, callback);
+              }
+            }
+          });
+        }
+      }
     }
-
     else {
       // Stream thumbnail image from local folder
       getFileStream(path, function(error, thumbnail) {
@@ -172,5 +194,27 @@ var streamRemoteData = function(url, callback) {
  */
 var getFileStream = function(path, callback) {
   	callback(null, fs.createReadStream(path));
+}
+
+/**
+ * Get fallback path to default thumbnail image
+ *
+ * @param 
+ * @return 
+ */
+var streamDefaultThumbnail = function(object, callback) {
+  let path = config.tnPath + config.defaultThumbnailImage;
+
+  // Check for an object specific default thumbnail image.  If found, use it
+  for(var index in config.thumbnailPlaceholderImages) {
+    if(config.thumbnailPlaceholderImages[index].includes(object.mime_type)) {
+      path = config.tnPath + index;
+    }
+  }
+
+  // Create the thumbnail stream
+  getFileStream(path, function(error, thumbnail) {
+      callback(null, thumbnail);
+  });
 }
 
