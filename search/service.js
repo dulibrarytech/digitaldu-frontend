@@ -21,7 +21,7 @@ const es = require('../config/index'),
  * @param 
  * @return 
  */
-exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=1, pageSize=10, daterange=null, callback) {
+exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=1, pageSize=10, daterange=null, sort=null, callback) {
 
     var matchFields = [], 
         mustMatchFields = [], 
@@ -63,7 +63,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       fields = Helper.getSearchFields(field)
 
       // Get the Elastic query type to use for this query
-      queryType = Helper.getQueryType(queryData[index]);
+      queryType = getQueryType(queryData[index]);
 
       // Build elastic query.  If an array of fields is passed in, search in all of the fields that are in the array.
       if(Array.isArray(fields)) {
@@ -219,17 +219,20 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
     // Get elasticsearch aggregations object 
     var facetAggregations = Helper.getFacetAggregationObject(config.facets);
 
-    // Apply sortBy option
-    var sortArr = [];
-    //     sortData = {
-    //       "order": "asc"
-    //       // "ignore_unmapped" : true
+    // Apply sort option
+    let sortArr = [];
+    if(sort) {
+      let data = {},
+          field = config.searchSortFields[sort.field] + ".keyword" || null;
 
-    //     };
-    // sortArr.push({
-    //   "title": sortData
-    // });
-    //   console.log("TEST sortArr", sortArr);
+      if(field) {
+        data[field] = {
+          "order": sort.order
+          // "ignore_unmapped" : true
+        }
+      }
+      sortArr.push(data);
+    }
 
     // Create elasticsearch data object
     var data = {  
@@ -332,4 +335,33 @@ var returnResponseData = function(facets, response, callback) {
   catch(error) {
     callback(error, {});
   }
+}
+
+/**
+ * Determine the Elastic search type
+ *
+ * @param 
+ * @return 
+ */
+var getQueryType = function(object) {
+  var queryType = "match";
+
+  if(object.type == "isnot") {
+    queryType = "must_not";
+  }
+  else if(object.type == "is") {
+    queryType = "match_phrase";
+  }
+  else if(object.terms[0] == '"' && object.terms[ object.terms.length-1 ] == '"') {
+    object.terms = object.terms.replace(/"/g, '');
+    queryType = "match_phrase";
+  }
+  else if(object.terms.indexOf('*') >= 0) {
+    queryType = "wildcard";
+  }
+  else  {
+    queryType = "match";
+  }
+
+  return queryType;
 }

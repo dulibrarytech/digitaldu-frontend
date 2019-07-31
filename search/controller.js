@@ -24,7 +24,7 @@ exports.search = function(req, res) {
 		facets = req.query.f || null,
 		page = req.query.page || 1,
 		pageSize = req.query.resultsPerPage || config.maxResultsPerPage,
-		sortBy = req.query.sort || null,
+		sort = req.query.sort || null,
 		collection = req.query.collection || null,
 		showAll = req.query.showAll || [],
 		expandFacets = req.query.expand || [],
@@ -33,8 +33,10 @@ exports.search = function(req, res) {
 			to: req.query.to || new Date().getFullYear()
 		} : null;
 
-	var queryData = Helper.getSearchQueryDataObject(query, field, type, bool);
-	Service.searchIndex(queryData, facets, collection, page, pageSize, daterange, function(error, response) {
+	let sortBy = Helper.getSortDataArray(sort);
+	let queryData = Helper.getSearchQueryDataObject(query, field, type, bool);
+
+	Service.searchIndex(queryData, facets, collection, page, pageSize, daterange, sortBy, function(error, response) {
 
 		// View data
 		var data = {
@@ -68,7 +70,6 @@ exports.search = function(req, res) {
 			// Add the metadata display field from the configuration, then add the results list to the view data
 			Metadata.addResultMetadataDisplays(response.results);
 			data.results = response.results;
-			//data.results = Helper.sortSearchResults(response.results, sortBy.split(","));
 
 			// Create paginator data object, add it to the view data
 			let path = config.rootUrl + req.url.substring(req.url.indexOf('search')-1);

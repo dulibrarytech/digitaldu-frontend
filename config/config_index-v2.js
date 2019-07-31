@@ -210,9 +210,9 @@ module.exports = {
     ],
 
     searchSortFields: {
-        "Title": {"path": "", "field": "title"},
-        "Creator": {"path": "", "field": "creator"},
-        "Date": {"path": "display_record.dates", "field": "expression", "matchField": "label", "matchValue": "creation"}
+        "Title": "title",
+        "Creator": "creator",
+        "Date": "display_record.dates.expression"
     },
 
     /*

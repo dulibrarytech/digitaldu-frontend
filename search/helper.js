@@ -230,7 +230,7 @@ exports.getSearchFields = function(fieldValue) {
 }
 
 /**
- * Build the search query data array (for multiple advanced search queries, or a single search) from individual search url parameters
+ * Build the search query data array (for multiple advanced search queries, or a single search) from the search url parameters
  *
  * @param 
  * @return 
@@ -256,49 +256,19 @@ exports.getSearchQueryDataObject = function(queryArray, fieldArray, typeArray, b
 }
 
 /**
- * 
+ * Convert the params array into a data array for the search function
  *
  * @param 
  * @return 
  */
-exports.sortSearchResults = function(results, sortBy) {
-  var sorted = [],
-      titles = [];
-
-  // Get config value for sort by
-
-  for(var index in results) {
-
+exports.getSortDataArray = function(sort) {
+  let sortData = null;
+  if(sort && sort[0] && sort[1]) {
+    sort = sort.split(",");
+    sortData = {
+      field: sort[0],
+      order: sort[1]
+    }
   }
-
-  return sorted;
-}
-
-/**
- * Determine the elastic "query type" to use in the query
- *
- * @param 
- * @return 
- */
-exports.getQueryType = function(object) {
-  var queryType = "match";
-
-  if(object.type == "isnot") {
-    queryType = "must_not";
-  }
-  else if(object.type == "is") {
-    queryType = "match_phrase";
-  }
-  else if(object.terms[0] == '"' && object.terms[ object.terms.length-1 ] == '"') {
-    object.terms = object.terms.replace(/"/g, '');
-    queryType = "match_phrase";
-  }
-  else if(object.terms.indexOf('*') >= 0) {
-    queryType = "wildcard";
-  }
-  else  {
-    queryType = "match";
-  }
-
-  return queryType;
+  return sortData;
 }
