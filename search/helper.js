@@ -265,9 +265,13 @@ exports.getSortDataArray = function(sort) {
   let sortData = null;
   if(sort && sort[0] && sort[1]) {
     sort = sort.split(",");
-    sortData = {
-      field: sort[0],
-      order: sort[1]
+
+    // If the sort field value is "relevance", do not assign the sort data, this is the default search
+    if(sort[0] != "relevance") {
+      sortData = {
+        field: sort[0],
+        order: sort[1]
+      }
     }
   }
   return sortData;

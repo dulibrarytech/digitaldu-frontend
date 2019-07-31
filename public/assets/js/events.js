@@ -14,6 +14,12 @@ $( document ).ready(function() {
 		window.location.replace(encodeURI(searchUrl));
 	});
 
+	$('#sort-by-select').change(function(event) {
+		var searchUrl = decodeURIComponent(window.location.href).replace(/&sort=[a-zA-Z0-9,]+/g, "");
+		searchUrl += "&sort=" + $('#sort-by-select').val();
+		window.location.replace(encodeURI(searchUrl));
+	});
+
 	$("#add-query-button").click(function(event) {
 		$("#add-query-button").blur();
 	});

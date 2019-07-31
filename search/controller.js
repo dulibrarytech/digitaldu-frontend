@@ -49,6 +49,7 @@ exports.search = function(req, res) {
 			root_url: config.rootUrl,
 			query: Helper.getResultsLabel(req.query.q, facets),
 			view: req.query.view || config.defaultSearchResultsView || "list",
+			sortType: req.query.sort || "relevance",
 			options: {}
 		};
 
@@ -62,6 +63,7 @@ exports.search = function(req, res) {
 			data.options["expandFacets"] = expandFacets;
 			data.options["perPageCountOptions"] = config.resultCountOptions;
 			data.options["resultsViewOptions"] = config.resultsViewOptions;
+			data.options["sortByOptions"] = config.sortByOptions;
 			data.options["pageSize"] = pageSize;
 
 			// Don't show the daterange limit option if there is a daterange parameter preent, or if there are no search results

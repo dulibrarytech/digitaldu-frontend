@@ -200,6 +200,8 @@ module.exports = {
     /*
      * Fields for scoped search.  These will appear in 'Search Type' dropdown list
      * "Search type name": Index field to search"
+     *
+     * View option
      */ 
     searchFields: [
         {"Title": "title"},
@@ -213,6 +215,14 @@ module.exports = {
         "Title": "title",
         "Creator": "creator",
         "Date": "display_record.dates.expression"
+    },
+
+    // View option
+    sortByOptions: {
+        "Relevance": "relevance",
+        "Title (a - z)": "Title,asc",
+        "Title (z - a)": "Title,desc",
+        "Date": "Date,asc"
     },
 
     /*
