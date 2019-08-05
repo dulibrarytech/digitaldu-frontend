@@ -171,6 +171,15 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
           }
         });
 
+        // Sort collections by title a-z
+        let sortArr = [],
+            sortField = {};
+          
+        sortField["title.keyword"] = {
+          "order": "asc"
+        }
+        sortArr.push(sortField);
+
         // Use local index to find the collection children
         var data = {  
           index: config.elasticsearchPublicIndex,
@@ -184,6 +193,7 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
                   "must_not": restrictions
                 }
             },
+            sort: sortArr,
             aggs: facetAggregations
           }
         }
