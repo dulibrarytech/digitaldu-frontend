@@ -10,6 +10,7 @@
 
 
 var config = require('../config/' + process.env.CONFIGURATION_FILE),
+	metadataConfig = require('../config/config-metadata-displays'),
 	Helper = require('./helper');
 
 /**
@@ -21,7 +22,7 @@ var config = require('../config/' + process.env.CONFIGURATION_FILE),
 exports.createSummaryDisplayObject = function(result) {
 	var displayObj = {},
 		displayRecord = result[config.displayRecordField] || {},
-		summaryDisplay = config.summaryDisplay["Default"] || {},
+		summaryDisplay = metadataConfig.summaryDisplay["Default"] || {},
 		pathArray;	// TODO: Determine which display to use based on object, or other specification
 
 	// Build the summary display
@@ -45,9 +46,12 @@ exports.createSummaryDisplayObject = function(result) {
  */
 exports.createMetadataDisplayObject = function(result, collections=[]) {
 	var displayObj = {},
-		displayRecord = result[config.displayRecordField] || {},
-		metadataDisplay = config.metadataDisplay["Default"] || {},
-		pathArray;	// TODO: Determine which display to use based on object, or other specification
+		displayRecord = result[config.displayRecordField] || {};
+
+	// TODO: Determine which display to use based on object, or other specification
+	let parentCollectionID = collections[collections.length-1].pid || "codu:root",
+		collectionDisplay = metadataConfig.collectionDisplays[ parentCollectionID ] || "Default",
+		metadataDisplay = metadataConfig.metadataDisplay[collectionDisplay] || {};
 
 	// Include the titles of any parent collections
 	let titles = [];
@@ -59,9 +63,10 @@ exports.createMetadataDisplayObject = function(result, collections=[]) {
 	}
 
 	// Build the metadata display
+	let pathArray;
 	for(var key in metadataDisplay) {
 		let values = [];
-		pathArray = metadataDisplay[key].path.split(".");
+		pathArray = metadataDisplay[key].path.split(".") || [];
 		Helper.extractValues(pathArray, displayRecord, metadataDisplay[key].matchField || null, metadataDisplay[key].matchValue || null, metadataDisplay[key].condition || "true", values);
 		if(values.length > 0) {
 			displayObj[key] = values;
@@ -80,7 +85,7 @@ exports.createMetadataDisplayObject = function(result, collections=[]) {
 exports.addResultMetadataDisplays = function(resultArray) {
 	var displayObj = {},
 		displayRecord,
-		resultsDisplay = config.resultsDisplay["Default"] || {},
+		resultsDisplay = metadataConfig.resultsDisplay["Default"] || {},
 		metadata,
 		pathArray;	// TODO: Determine which display to use based on object, or other specification
 
