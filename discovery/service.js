@@ -140,19 +140,19 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
         // If facet data is present, add it to the search
         var matchFacetFields = [];
         if(facets) {
-          var indexKey, count=0;
-          for(var key in facets) {
-            for(var index of facets[key]) {
-              var q = {};
+          let facetKey, count=0;
+          for(let facet in facets) {
+            for(let value of facets[facet]) {
+              let query = {};
               count++;
 
-              // Get the index key from the config facet list, using the stored facet name
-              indexKey = config.facets[key];
+              // Get the facet key from the configuration, using the facet name
+              facetKey = config.facets[facet];
 
-              // Add to the main ES query object
-              q[indexKey] = index;
+              // Add to filters
+              query[facetKey] = value;
               matchFacetFields.push({
-                "match_phrase": q
+                "match_phrase": query 
               });
             }
           }
@@ -164,6 +164,7 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
             }
         });
 
+        // Do not show children of parent objects
         var restrictions = [];
         restrictions.push({
           "exists": {
@@ -174,7 +175,6 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
         // Sort collections by title a-z
         let sortArr = [],
             sortField = {};
-          
         sortField["title.keyword"] = {
           "order": "asc"
         }

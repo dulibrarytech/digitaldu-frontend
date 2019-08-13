@@ -148,9 +148,9 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
 
     // If facets are present, apply filters to the search
     if(facets) {
-      var facetKey, count=0;
-      for(var facet in facets) {
-        for(var value of facets[facet]) {
+      let facetKey, count=0;
+      for(let facet in facets) {
+        for(let value of facets[facet]) {
           let query = {};
           count++;
 
@@ -172,11 +172,11 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
     }
 
     // Do not show collection objects
-    restrictions.push({
-      "match": {
-        "object_type": "collection"
-      }
-    });
+    // restrictions.push({
+    //   "match": {
+    //     "object_type": "collection"
+    //   }
+    // });
 
     // Do not show objects that are children of compound objects
     restrictions.push({
