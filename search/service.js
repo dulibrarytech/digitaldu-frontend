@@ -172,7 +172,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
     }
 
     // Do not show collection objects
-    if(config.showCollectionObjectsInSearchResults) {
+    if(config.showCollectionObjectsInSearchResults == false) {
       restrictions.push({
         "match": {
           "object_type": "collection"
