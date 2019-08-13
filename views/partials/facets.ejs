@@ -1,5 +1,6 @@
 <div class="facets">
-	<!-- dynamic facet list -->
+	
+	<!-- Facet list -->
 	<% for(var key in facets) { %>	
 	  <% if(facets[key] != "") { %>
 	  	<% if(options.expandFacets.includes(key)) { %>
@@ -14,6 +15,7 @@
 	  <% } %>
 	<% } %>
 
+	<!-- Facet view functions -->
 	<script type="text/javascript">
 		function selectFacet(facetType, facet, baseUrl) {
 			var searchUrl = decodeURIComponent(window.location.href.replace(baseUrl, "")),

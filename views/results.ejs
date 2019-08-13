@@ -10,16 +10,14 @@
 
 <div class="row no-side-margin section content">
   <div class="col-md-3">
-    <% if(results.length > 0) { %>
-      <div class="result-facets facets sidebar-section">
+    <div class="result-facets facets sidebar-section">
+      <% if(results.length > 0) { %>
         <h4>Limit Your Search</h4>
         <hr>
-        <% include partials/facets %>
-        <% include partials/daterange-search %>
-      </div>
-    <% } else { %>
+      <% } %>
+      <% include partials/facets %>
       <% include partials/daterange-search %>
-    <% } %>
+    </div>
   </div>
 
   <div id="search-results-wrapper" class="col-md-9">
