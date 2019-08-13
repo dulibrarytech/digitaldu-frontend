@@ -1,5 +1,5 @@
 <div class="facets">
-	
+
 	<!-- Facet list -->
 	<% for(var key in facets) { %>	
 	  <% if(facets[key] != "") { %>
@@ -40,7 +40,8 @@
 
 			searchUrl = updateUrlExpandParams(searchUrl);
 			searchUrl = encodeURI(searchUrl);
-			return baseUrl + searchUrl;
+			//return baseUrl + searchUrl;
+			window.location.assign(searchUrl);
 		};
 
 		function removeFacet(facetType, facet, baseUrl) {
@@ -66,7 +67,8 @@
 			
 			searchUrl = updateUrlExpandParams(searchUrl);
 			searchUrl = encodeURI(searchUrl);
-			return baseUrl + searchUrl;	
+			//return baseUrl + searchUrl;	
+			window.location.assign(searchUrl);
 		};
 
 		function showAllFacets(facetType) {
@@ -75,14 +77,16 @@
 			// Show the spinner
 			document.getElementById("show-facets").innerHTML = "<img src='assets/img/spinner1.gif' height='33' width='33' />";
 			searchUrl = updateUrlExpandParams(searchUrl);
-			return encodeURI(searchUrl += "&showAll[]=" + facetType);
+			//return encodeURI(searchUrl += "&showAll[]=" + facetType);
+			window.location.assign(encodeURI(searchUrl += "&showAll[]=" + facetType));
 		};
 
 		function showLessFacets(facetType) {
 			// Remove the showAll parameter for this facet
 			var url = decodeURIComponent(window.location.href);
 			url = updateUrlExpandParams(url);
-			return encodeURI(url.replace("&showAll[]=" + facetType, ""));
+			//return encodeURI(url.replace("&showAll[]=" + facetType, ""));
+			window.location.assign(encodeURI(url.replace("&showAll[]=" + facetType, "")));
 		};
 
 	</script>

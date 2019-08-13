@@ -1,7 +1,6 @@
 <% include partials/header %>
 <% include partials/title-banner %>
 
-<!--   <div id="main" class="content container demo-test-view"> -->
 <div class="facet-breadcrumbs">
   <% if (facet_breadcrumb_trail) { %>
     <%- facet_breadcrumb_trail %>
@@ -58,10 +57,6 @@
           <div class="search-results-menu-element">
             <select id="sort-by-select" class="form-control" title="Select Sort Results By">
                 <% for (var key in options.sortByOptions) { %>
-                   
-
-
-
                     <% if(options.sortByOptions[key] == sortType) { %>
                       <option value="<%= options.sortByOptions[key] %>" selected>Sort By <%= key %></option>
                     <% } else { %>

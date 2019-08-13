@@ -127,17 +127,17 @@ function createList(facet, data, baseUrl, showAll, expand) {
         // Add the facet list item(s) if facets are present, and not empty
         for (var i = 0; i < data.length; i++) {
             if(data[i].key != "") {
-                html += '<li><span class="facet-name"><a href="javascript:document.location.href=selectFacet(\'' + facet + '\', \'' + data[i].facet + '\', \'' + baseUrl + '\');">' + data[i].name + '</a></span><span class="facet-count">(' + data[i].doc_count + ')</span></li>';                
+                html += '<li><span class="facet-name"><a onclick="selectFacet(\'' + facet + '\', \'' + data[i].facet + '\', \'' + baseUrl + '\')">' + data[i].name + '</a></span><span class="facet-count">(' + data[i].doc_count + ')</span></li>';                
             }
         }
 
         // If there is a length limit on this facet, and the facet list returned has more facets than the length limit, add the show all link
         if(facet in config.facetLimitsByType && data.length >= config.facetLimitsByType[facet]) {
             if(showAll.includes(facet)) {
-                html += '<li id="show-facets"><a href="javascript:document.location.href=showLessFacets(\'' + facet + '\')">Show Less</a></li>';
+                html += '<li id="show-facets"><a onclick="showLessFacets(\'' + facet + '\')">Show Less</a></li>';
             }
             else if(showAll.includes(facet) === false) {
-                html += '<li id="show-facets"><a href="javascript:document.location.href=showAllFacets(\'' + facet + '\')">Show All</a></li>';
+                html += '<li id="show-facets"><a onclick="showAllFacets(\'' + facet + '\')">Show All</a></li>';
             }
         }
         html += '</ul></div>';
@@ -155,11 +155,11 @@ function createBreadcrumbTrail(data, dates, baseUrl) {
     var html = '<a id="new-search-link" href="' + baseUrl + '">Start Over</a>';
 
     for (var i = 0; i < data.length; i++) {
-        html += '<span><a alt="remove facet" title="remove facet" href="javascript:document.location.href=removeFacet(\'' + data[i].type + '\', \'' + data[i].facet + '\', \'' + baseUrl + '\');"><strong style="color: red">X</strong></a>&nbsp&nbsp' + data[i].type + '&nbsp&nbsp<strong style="color: green"> > </strong>&nbsp&nbsp' + data[i].name + '</span>';   // good
+        html += '<span><a alt="remove facet" title="remove facet" onclick="removeFacet(\'' + data[i].type + '\', \'' + data[i].facet + '\', \'' + baseUrl + '\')"><strong style="color: red">X</strong></a>&nbsp&nbsp' + data[i].type + '&nbsp&nbsp<strong style="color: green"> > </strong>&nbsp&nbsp' + data[i].name + '</span>';   // good
     }
 
     for (i = 0; i < dates.length; i++) {
-        html += '<span><a alt="remove date range" title="remove date range" href="javascript:document.location.href=removeDateRange(\'' + dates[i].from + '\', \'' + dates[i].to + '\');"><strong style="color: red">X</strong></a>&nbsp&nbspDate Range&nbsp&nbsp<strong style="color: green"> > </strong>&nbsp&nbsp' + dates[i].from + ' - ' + dates[i].to + '</span>';   // good
+        html += '<span><a alt="remove date range" title="remove date range" onclick="removeDateRange(\'' + dates[i].from + '\', \'' + dates[i].to + '\')"><strong style="color: red">X</strong></a>&nbsp&nbspDate Range&nbsp&nbsp<strong style="color: green"> > </strong>&nbsp&nbsp' + dates[i].from + ' - ' + dates[i].to + '</span>';   // good
     }
     return html;
 };

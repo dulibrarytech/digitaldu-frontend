@@ -10,7 +10,7 @@
         <li class="list-group-item">
           <div class="row">
             <div class="col-md-2-nostack facet-thumbnail"><img src="<%= facetThumbnails.Type[key] %>" alt="<%= key %>"/></div>
-            <div class="col-md-8-nostack facet-name"><a href="javascript:document.location.href=selectFacet('Type', '<%= typeCount[key].key %>', '<%= root_url %>');"><%= key %></a></div>
+            <div class="col-md-8-nostack facet-name"><a onclick="selectFacet('Type', '<%= typeCount[key].key %>', '<%= root_url %>')"><%= key %></a></div>
             <div class="col-md-2-nostack facet-count"><div>(<%= typeCount[key].count %>)</div></div>
           </div>
         </li>
@@ -34,7 +34,8 @@
 
       // Get search querystring
       var searchUrl = encodeURI("/search?type=all&q=&f[" + facetType + "][]=" + facet);
-      return baseurl + searchUrl;
+      //return baseurl + searchUrl;
+      window.location.assign(baseurl + searchUrl);
     };
 
     function removeFacet(facetType, facet) {
@@ -47,7 +48,8 @@
 
       // Remove the selected facet param from the search querystring
       var searchUrl = encodeURI(url.replace(facetParam, ""));
-      return baseUrl + searchUrl;
+      //return baseUrl + searchUrl;
+      window.location.assign(baseurl + searchUrl);
     };
   </script>
 </div>
