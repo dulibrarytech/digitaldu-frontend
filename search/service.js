@@ -172,11 +172,13 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
     }
 
     // Do not show collection objects
-    // restrictions.push({
-    //   "match": {
-    //     "object_type": "collection"
-    //   }
-    // });
+    if(config.showCollectionObjectsInSearchResults) {
+      restrictions.push({
+        "match": {
+          "object_type": "collection"
+        }
+      });
+    }
 
     // Do not show objects that are children of compound objects
     restrictions.push({

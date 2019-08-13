@@ -202,18 +202,14 @@ exports.renderObjectView = function(req, res) {
 	// 	return res.sendStatus(400);
 	// }
 
-	const renderView = function(data) {
-		return res.render('object', data);
-	};
-
 	Service.fetchObjectByPid(config.elasticsearchPublicIndex, req.params.pid, function(error, response) {
 		if(error) {
 			data.error = error;
-			renderView(data);
+			res.render('object', data);
 		}
 		else if(response == null) {
 			data.error = "Object not found: " + req.params.pid;
-			renderView(data);
+			res.render('object', data);
 		}
 		else {
 			var object = response,
@@ -221,21 +217,7 @@ exports.renderObjectView = function(req, res) {
 
 			// Render a parent object with child objects
 			if(AppHelper.isParentObject(object)) {
-				switch(object.object_type) {
-					case "compound":
-						data.viewer = Viewer.getCompoundObjectViewer(object, part);
-						break;
-					case "book":
-						//data.viewer = CompoundViewer.getBookViewer(...);
-						break;	
-					default:
-						data.error = "Object not found";
-						break;
-				}
-
-				data.summary = Metadata.createSummaryDisplayObject(object);
-				data.mods = Metadata.createMetadataDisplayObject(object);
-				renderView(data);
+				data.viewer = Viewer.getCompoundObjectViewer(object, part);
 			}
 
 			// Render singular object
@@ -243,30 +225,26 @@ exports.renderObjectView = function(req, res) {
 				// Can't lookup part of a non-parent object
 				if(part > 0) {
 					data.error = "Object not found";
-					renderView(data);
+					res.render('object', data);
 				}
 				else {
-					let object = response;
-					data.object = object;
-
+	
 					// Get viewer
 					data.viewer = Viewer.getObjectViewer(object);
 					if(data.viewer == "") {
 						data.error = "Viewer is unavailable for this object.";
 					}
-
-					// Get titles of any collection parents
-					Service.getTitleString(object.is_member_of_collection, [], function(error, collectionTitles) {
-						if(error) {
-							console.log(error);
-						}
-						// Add summary data and object metadata to the mods display
-						data.summary = Metadata.createSummaryDisplayObject(object);
-						data.mods = Object.assign(data.mods, Metadata.createMetadataDisplayObject(object, collectionTitles));
-						renderView(data);
-					});
 				}
 			}
+
+			// Get array of parent collections for the parent collection breadcrumb list
+			Service.getCollectionHeirarchy(object.is_member_of_collection, function(collectionTitles) {
+
+				// Get metadata displays and render the view
+				data.summary = Metadata.createSummaryDisplayObject(object);
+				data.mods = Object.assign(data.mods, Metadata.createMetadataDisplayObject(object, collectionTitles));
+				res.render('object', data);
+			});
 		}
 	});
 };

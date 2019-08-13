@@ -148,7 +148,6 @@ exports.test_retrieveNestedObjectValue = function(req, res) {
         "term": "Denver (Colo.)"
 	});
 	object["display_record"] = displayRecord;
-		console.log("TEST object in:", util.inspect(object, {showHidden: false, depth: null}));
 
 	let pathArray = "display_record.subjects.terms.term".split("."), bucket = [];
 	let returnVal = Helper.extractValues(pathArray, object, "type", "topical", bucket);

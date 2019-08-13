@@ -48,10 +48,12 @@ exports.createMetadataDisplayObject = function(result, collections=[]) {
 	var displayObj = {},
 		displayRecord = result[config.displayRecordField] || {};
 
-	// TODO: Determine which display to use based on object, or other specification
-	let parentCollectionID = collections[collections.length-1].pid || "codu:root",
-		collectionDisplay = metadataConfig.collectionDisplays[ parentCollectionID ] || "Default",
-		metadataDisplay = metadataConfig.metadataDisplay[collectionDisplay] || {};
+	let topLevelCollection = collections[1] || null,	// Use the second collection in the list. The first one will be the root collection, which will use the default metadata display
+		parentCollectionID = topLevelCollection ? topLevelCollection.pid : "codu:root";
+
+	// Determine object display configuration based on the top level collection of this object (within the root collection)
+	let displayID = metadataConfig.collectionDisplays[ parentCollectionID ] || "default",
+		metadataDisplay = metadataConfig.metadataDisplay[ displayID ] || {};
 
 	// Include the titles of any parent collections
 	let titles = [];

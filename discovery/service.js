@@ -456,12 +456,13 @@ var getParentTrace = function(pid, collections, callback) {
           title = response.title || "Untitled Collection";
         }
         collections.push({pid: response.pid, name: title, url: url});
+          console.log("TEST pushed colleciton", collections);
 
         // There is > 1 collection parents associated with this object.  Use the first one for trace
         if(typeof response.is_member_of_collection == 'object') {
           getParentTrace(response.is_member_of_collection[0], collections, callback);
         }
-        else if(response.is_member_of_collection.indexOf("root") >= 0) {
+        else if(response.is_member_of_collection == config.topLevelCollectionPID) {
           collections.push({pid: config.topLevelCollectionPID, name: config.topLevelCollectionName, url: config.rootUrl});
           callback(collections.reverse());
         }
