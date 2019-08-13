@@ -41,7 +41,7 @@
 			searchUrl = updateUrlExpandParams(searchUrl);
 			searchUrl = encodeURI(searchUrl);
 			//return baseUrl + searchUrl;
-			window.location.assign(searchUrl);
+			window.location.assign(baseUrl + searchUrl);
 		};
 
 		function removeFacet(facetType, facet, baseUrl) {
@@ -68,7 +68,7 @@
 			searchUrl = updateUrlExpandParams(searchUrl);
 			searchUrl = encodeURI(searchUrl);
 			//return baseUrl + searchUrl;	
-			window.location.assign(searchUrl);
+			window.location.assign(baseUrl + searchUrl);
 		};
 
 		function showAllFacets(facetType) {

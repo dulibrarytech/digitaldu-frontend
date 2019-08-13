@@ -30,15 +30,15 @@
   <% } %>
 
   <script type="text/javascript">
-    function selectFacet(facetType, facet, baseurl) {
+    function selectFacet(facetType, facet, baseUrl) {
 
       // Get search querystring
       var searchUrl = encodeURI("/search?type=all&q=&f[" + facetType + "][]=" + facet);
-      //return baseurl + searchUrl;
-      window.location.assign(baseurl + searchUrl);
+      //return baseUrl + searchUrl;
+      window.location.assign(baseUrl + searchUrl);
     };
 
-    function removeFacet(facetType, facet) {
+    function removeFacet(facetType, facet, baseUrl) {
 
       // Get the facet param string to remove from the search querystring
       var facetParam = "&f[" + facetType + "][]=" + facet;
@@ -49,7 +49,7 @@
       // Remove the selected facet param from the search querystring
       var searchUrl = encodeURI(url.replace(facetParam, ""));
       //return baseUrl + searchUrl;
-      window.location.assign(baseurl + searchUrl);
+      window.location.assign(baseUrl + searchUrl);
     };
   </script>
 </div>
