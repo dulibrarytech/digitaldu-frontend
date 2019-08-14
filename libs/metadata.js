@@ -22,7 +22,7 @@ var config = require('../config/' + process.env.CONFIGURATION_FILE),
 exports.createSummaryDisplayObject = function(result) {
 	var displayObj = {},
 		displayRecord = result[config.displayRecordField] || {},
-		summaryDisplay = metadataConfig.summaryDisplay["Default"] || {},
+		summaryDisplay = metadataConfig.summaryDisplay["default"] || {},
 		pathArray;	// TODO: Determine which display to use based on object, or other specification
 
 	// Build the summary display
@@ -87,7 +87,7 @@ exports.createMetadataDisplayObject = function(result, collections=[]) {
 exports.addResultMetadataDisplays = function(resultArray) {
 	var displayObj = {},
 		displayRecord,
-		resultsDisplay = metadataConfig.resultsDisplay["Default"] || {},
+		resultsDisplay = metadataConfig.resultsDisplay["default"] || {},
 		metadata,
 		pathArray;	// TODO: Determine which display to use based on object, or other specification
 

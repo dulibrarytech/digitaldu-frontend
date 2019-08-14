@@ -456,7 +456,6 @@ var getParentTrace = function(pid, collections, callback) {
           title = response.title || "Untitled Collection";
         }
         collections.push({pid: response.pid, name: title, url: url});
-          console.log("TEST pushed colleciton", collections);
 
         // There is > 1 collection parents associated with this object.  Use the first one for trace
         if(typeof response.is_member_of_collection == 'object') {
