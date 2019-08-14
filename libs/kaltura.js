@@ -48,5 +48,5 @@ exports.getThumbnailUrl = function(object) {
 		width = config.kalturaThumbnailWidth,
 		height = config.kalturaThumbnailHeight;
 
-	return domain + "/p/" + partner_id + "/thumbnail/" + entry_id + "/width/" + width + "/height/" + height;
+	return domain + "/p/" + partner_id + "/thumbnail/entry_id/" + entry_id + "/width/" + width + "/height/" + height;
 }

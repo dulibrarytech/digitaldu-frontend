@@ -62,7 +62,7 @@ exports.getDatastream = function(object, objectID, datastreamID, part, callback)
         callback("Error retrieving datastream for " + objectID + ", can not find configuration settings for object type " + object.object_type, null);
       }
       else {
-        uri = settings.uri || "Uri has not been set";
+        uri = settings.uri || "Thumbnail has not been set for " + objectID;
         switch(settings.streamOption || "") {
           case "iiif":
             uri = IIIF.getThumbnailUri(objectID);
