@@ -18,13 +18,15 @@
 		var decoded = decodeURIComponent(window.location.href);
 		//decoded = updateUrlExpandParams(decoded);
 		var url = decoded.replace(/&from=[0-9]+&to=[0-9]+/g, "") + "&" + $("#daterange-form").serialize();
-		return window.location.replace(encodeURI(url));
+		//return window.location.replace(encodeURI(url));
+		window.location.assign(encodeURI(url));
 	}
 
 	// Remove the date range from the query string
 	function removeDateRange(from, to) {
 		var searchUrl = decodeURIComponent(window.location.href);
 		//searchUrl = updateUrlExpandParams(searchUrl);
-		return encodeURI(searchUrl.replace(/&from=[0-9]+&to=[0-9]+/g, ""));
+		//return encodeURI(searchUrl.replace(/&from=[0-9]+&to=[0-9]+/g, ""));
+		window.location.assign(encodeURI(searchUrl.replace(/&from=[0-9]+&to=[0-9]+/g, "")));
 	}
 </script>
