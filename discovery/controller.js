@@ -312,7 +312,8 @@ exports.getKalturaViewer = function(req, res) {
 			res.send("<h4>Error loading viewer, object not found");
 		}
 		else {
-			if(object.object_type == "compound") {
+
+			if(AppHelper.isParentObject(object)) {
 				object = object.display_record.parts[part-1]
 			}
 

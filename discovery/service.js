@@ -495,7 +495,7 @@ exports.getManifestObject = function(pid, callback) {
       callback(error, JSON.stringify({}));
     }
     else if(response) {
-      
+
       // Create object for IIIF
       var object = response;
       var container = {

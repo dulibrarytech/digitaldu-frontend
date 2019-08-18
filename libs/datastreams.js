@@ -25,12 +25,14 @@ exports.getDatastream = function(object, objectID, datastreamID, part, callback)
   // If there is a part value, retrieve the part data.  Redefine the object data with the part data
   if(part && isNaN(part) === false) {
     var sequence;
-    let objectPart = {
-      mime_type: object.display_record.parts[part-1].type,
-      object: object.display_record.parts[part-1].object,
-      thumbnail: object.display_record.parts[part-1].thumbnail,
-      object_type: "object"
-    }
+
+    let objectPart = object.display_record.parts[part-1];
+    objectPart["object_type"] = "object";
+
+    //  DEV Temporary, unless part object will contain the field 'type' for mime type value
+    objectPart["mime_type"] = objectPart.type;
+
+    // Get the datastream for the part object, 
     object = objectPart;
     sequence = "-" + part;
   }

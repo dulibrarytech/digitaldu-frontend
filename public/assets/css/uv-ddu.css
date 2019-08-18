@@ -59,3 +59,8 @@
 .mejs__container {
   margin-top: 0 !important;
 }
+
+.uv .leftPanel .views .thumbsView .thumbs .thumb.oneCol .wrap {
+    width: 90% !important;
+    /*max-height: 100% !important; */
+}
