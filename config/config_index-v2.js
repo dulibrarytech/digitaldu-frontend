@@ -363,7 +363,8 @@ module.exports = {
             "Map": ["cartographic"],
             "Mixed Material": ["mixed material", "application/pdf"],
             "3D Object": ["three dimensional object", "three dimensional object,[object Object]"],
-            "Unknown": ["[object Object]"]
+            "Unknown": ["[object Object]"],
+            "Collection": ["collection"]
         }
     },
 
