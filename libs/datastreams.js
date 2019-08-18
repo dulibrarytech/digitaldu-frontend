@@ -10,6 +10,7 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
 	rs = require('request-stream'),
 	fs = require('fs'),
 	Repository = require('../libs/repository'),
+  Helper = require('../libs/helper'),
   Kaltura = require('../libs/kaltura'),
 	IIIF = require('../libs/IIIF');
 
@@ -46,9 +47,14 @@ exports.getDatastream = function(object, objectID, datastreamID, part, callback)
     if(fs.existsSync(path) == false) {
 
       let fileType = "default";
-      for(var key in config.mimeTypes) {
-        if(config.mimeTypes[key].includes(object.mime_type)) {
-          fileType = key;
+      if(Helper.isParentObject(object)) {
+        fileType = "compound";
+      }
+      else {
+        for(var key in config.mimeTypes) {
+          if(config.mimeTypes[key].includes(object.mime_type)) {
+            fileType = key;
+          }
         }
       }
 
@@ -135,7 +141,7 @@ exports.getDatastream = function(object, objectID, datastreamID, part, callback)
     let file = null, path;
     for(var extension in config.fileExtensions) {
       if(config.fileExtensions[extension].includes(object.mime_type)) {
-        path = config.objectFilePath + objectID.match(/[0-9]+/)[0] + sequence + "." + extension;
+        path = config.objectCachePath + "/" + objectID.match(/[0-9]+/)[0] + sequence + "." + extension;
 
         if(fs.existsSync(path)) {
           file = path;

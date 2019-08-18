@@ -18,5 +18,8 @@ module.exports = function (app) {
 
 	    app.route('/test/metadata_createMetadataDisplayObject')
 	        .get(Test.test_metadata_createMetadataDisplayObject);
+
+	    app.route('/test/isCompound')
+	        .get(Test.test_isCompound);
 	}
 };

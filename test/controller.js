@@ -158,3 +158,11 @@ exports.test_retrieveNestedObjectValue = function(req, res) {
 exports.test_metadata_createMetadataDisplayObject = function(req, res) {
 
 }
+
+exports.test_isCompound = function(req, res) {
+	var pid = "800002";
+	DiscService.fetchObjectByPid("repo_demo", pid, function(error, object) {
+		console.log("TEST object", object);
+		res.send(Helper.isParentObject(object) == true ? "T" : "F");
+	});
+}

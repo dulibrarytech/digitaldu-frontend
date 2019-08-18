@@ -12,7 +12,7 @@ exports.testObject = function(object) {
  * 
  */
 exports.isParentObject = function(object) {
-  return (object && (object.is_compound || object.object_type == "compound"));
+  return (object && (object.is_compound || object.object_type == "compound" || object.type == "compound"));
 }
 
 /*

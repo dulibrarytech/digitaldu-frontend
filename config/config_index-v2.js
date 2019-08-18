@@ -30,24 +30,6 @@ module.exports = {
     collectionMimeType: "collection",
     compoundObjectPartID: "-",
 
-    // IIIF
-    IIIFUrl: process.env.IIIF_URL,
-
-    /*
-     * IIIF Object Types
-     * Type labels to appear in the IIIF manifest, for each object type
-     * Keys are not changeable by user
-     */
-    IIIFObjectTypes: {
-        "audio": "dctypes:Sound",
-        "video": "dctypes:MovingImage",
-        "smallImage": "dctypes:Image",
-        "largeImage": "dctypes:Image",
-        "pdf": "foaf:Document"
-    },
-    IIIFThumbnailWidth: "200",
-    IIIFThumbnailHeight: "250",
-
     // Search index name (type)
     searchIndexName: "data",
 
@@ -74,64 +56,6 @@ module.exports = {
 
     // Will appear in the view, if an item has no title information
     noTitlePlaceholder: "Untitled",
-
-    // Image to display if no thumbnail image exists in the repository
-    tnPath: "files/thumbnails/",
-    thumbnailFileExtension: ".png",
-    defaultThumbnailImage: "tn-placeholder.jpg",
-    thumbnailPlaceholderImages: {
-        "audio-tn.png": ["audio/mp3"],
-        "video-tn.png": ["video/mp4"],
-        "pdf-tn.png": ["application/pdf"],
-        "image-tn.png": ["image/tiff", "image/jp2", "image/jp3"]
-    },
-    /*
-     *  streamOption: [index|iiif|kaltura|external]
-     *  uri: if 'external' this is the path to the resource,
-     *  source: [repository|remote] if 'index' stream: 'repository' will use repository api to source uri, 'remote' will fetch full uri
-     */
-    thumbnails: {
-        // object_types
-        "collection": {
-            "streamOption": "index",
-            "uri": "", 
-            "source": "repository"
-        },
-        "object": {
-            "fileTypes": {
-                "smallImage": {
-                    "streamOption": "iiif",
-                    "uri": "", 
-                    "source": ""
-                },
-                "largeImage": {
-                    "streamOption": "iiif",
-                    "uri": "", 
-                    "source": ""
-                },
-                "audio": {
-                    "streamOption": "kaltura",
-                    "uri": "", 
-                    "source": ""
-                },
-                "video": {
-                    "streamOption": "kaltura",
-                    "uri": "", 
-                    "source": ""
-                },
-                "pdf": {
-                    "streamOption": "iiif",
-                    "uri": "", 
-                    "source": ""
-                }
-            }
-        },
-        "compound": {
-            "streamOption": "index",
-            "uri": "",
-            "source": "repository"
-        }
-    },
 
     /* 
      * Viewer to play audio files
@@ -181,6 +105,25 @@ module.exports = {
      */
     universalViewerKalturaPlayer: true,
 
+    // IIIF
+    IIIFUrl: process.env.IIIF_URL,
+
+    /*
+     * IIIF Object Types
+     * Type labels to appear in the IIIF manifest, for each object type
+     * Keys are not changeable by user
+     */
+    IIIFObjectTypes: {
+        "audio": "dctypes:Sound",
+        "video": "dctypes:MovingImage",
+        "smallImage": "dctypes:Image",
+        "largeImage": "dctypes:Image",
+        "pdf": "foaf:Document"
+    },
+    IIIFThumbnailWidth: "200",
+    IIIFThumbnailHeight: "250",
+
+
     /*
      * Kaltura viewer settings
      */
@@ -194,8 +137,67 @@ module.exports = {
     kalturaThumbnailHeight: "250",
 
 
-    // The index field that holdas the display record data
+    // The index field that contains the display record data
     displayRecordField: "display_record",
+
+    // Image to display if no thumbnail image exists in the repository
+    tnPath: "files/thumbnails/",
+    thumbnailFileExtension: ".png",
+    defaultThumbnailImage: "tn-placeholder.jpg",
+
+    thumbnailPlaceholderImages: {
+        "audio-tn.png": ["audio/mp3"],
+        "video-tn.png": ["video/mp4"],
+        "pdf-tn.png": ["application/pdf"],
+        "image-tn.png": ["image/tiff", "image/jp2", "image/jp3"]
+    },
+    /*
+     *  streamOption: [index|iiif|kaltura|external]
+     *  uri: if 'external' this is the path to the resource,
+     *  source: [repository|remote] if 'index' stream: 'repository' will use repository api to source uri, 'remote' will fetch full uri
+     */
+    thumbnails: {
+        // object_types
+        "collection": {
+            "streamOption": "index",
+            "uri": "", 
+            "source": "repository"
+        },
+        "object": {
+            "fileTypes": {
+                "smallImage": {
+                    "streamOption": "iiif",
+                    "uri": "", 
+                    "source": ""
+                },
+                "largeImage": {
+                    "streamOption": "iiif",
+                    "uri": "", 
+                    "source": ""
+                },
+                "audio": {
+                    "streamOption": "kaltura",
+                    "uri": "", 
+                    "source": ""
+                },
+                "video": {
+                    "streamOption": "kaltura",
+                    "uri": "", 
+                    "source": ""
+                },
+                "pdf": {
+                    "streamOption": "iiif",
+                    "uri": "", 
+                    "source": ""
+                },
+                "compound": {
+                    "streamOption": "index",
+                    "uri": "",
+                    "source": "repository"
+                }
+            }
+        }
+    },
 
     /*
      * Fields for scoped search.  These will appear in 'Search Type' dropdown list
@@ -235,14 +237,15 @@ module.exports = {
         {"Is": "is"}
         // {"Is Not": "isnot"}
     ],
-
     booleanSearchFields: [
         {"AND": "and"},
         {"OR": "or"},
         {"NOT": "not"}
     ],
 
-    // {"Label": "id"}
+    /*
+     * Targeted fields for the advanced search     
+     */ 
     advancedSearchFields: [
         {"Title": "title"},
         {"Creator": "creator"},
@@ -262,25 +265,36 @@ module.exports = {
         //{"label": "Creator", "field": "creator", "boost": "3"},
         {"label": "Subject", "id": "subject", "field": "f_subjects", "boost": "2"},
         {"label": "Type", "id": "type", "field": "type", "boost": "2"},
-        {"label": "Description", "id": "description", "field": "display_record.dates.notes.content", "boost": "3"},
+        {"label": "Description", "id": "description", "field": "display_record.notes.content", "boost": "3"},
         {"label": "Creation Date", "id": "create_Date", "field": "display_record.dates.expression", "matchField": "display_record.dates.label", "matchTerm": "creation"},
         {"label": "Authority ID", "id": "authority_id", "field": "display_record.identifiers.identifier", "matchField": "display_record.identifiers.type", "matchTerm": "local"},
     ],
 
     /*
-     * Options for results per page
+     * Options for number of search results to be displayed on each page
      */
     resultCountOptions: ["10", "20", "50", "100"],
 
+    /*
+     * Search result view list options
+     * 'List' and 'Grid' are available without further implementation
+     */
     resultsViewOptions: ["List", "Grid"],
     defaultSearchResultsView: "List",
-    showDateRangeLimiter: true,
 
+    /*
+     * Fuzz factor: number of fuzzy characters in the search terms
+     */
     searchTermFuzziness: "1",
+
+    /*
+     * Set to false if collection objects should be omitted from search results
+     */
     showCollectionObjectsInSearchResults: true,
 
     /*
-     * Facets to display
+     * Facets to display on the search results view
+     * Key is the facet label to be displayed, value is the path in the index
      * "Facet name": "index field"
      */
     facets: {
@@ -294,35 +308,33 @@ module.exports = {
     },
 
     /*
-     * Facets to display on the front page
+     * Specify ordering of the facet list
      */
-    frontPageFacets: ["Creator", "Subject", "Type"],
-
     facetOrdering: {
         "Date": "desc"
     },
 
-    // Limit of facet results returned from a search
+    /*
+     * Max number of facets displayed in the facet panel
+     */
     facetLimit: 200,
+
+    /*
+     * Max number of facets displayed by facet type
+     * If the value is less than the above 'facetLimit' value, a 'show all' link will be displayed to display the full set of facets
+     */
     facetLimitsByType: {
         "Collections": 15 
     },
 
-    facetLabelNormalization: {
-        "Type": {
-            "Still Image": ["still image", "image/tiff", "image/jp2", "image/jp3"],
-            "Moving Image": ["moving image", "moving_image", "video/mp4"],
-            "Text": ["text", "text/plain"],
-            "Sound Recording": ["sound recording", "sound recording,[object Object]", "audio/mp3"],
-            "Music Recording": ["sound recording-musical"],
-            "Nonmusic Recording": ["sound recording-nonmusical"],
-            "Map": ["cartographic"],
-            "Mixed Material": ["mixed material", "application/pdf"],
-            "3D Object": ["three dimensional object", "three dimensional object,[object Object]"],
-            "Unknown": ["[object Object]"]
-        }
-    },
+     /*
+     * Facets to display on the front page
+     */
+    frontPageFacets: ["Creator", "Subject", "Type"],
 
+    /*
+     * Thumbnail images for the frontpage facet panels
+     */
     facetThumbnails: {
         "Type": {
             "Still Image": "assets/img/picture-in-frame-TN.png",
@@ -338,20 +350,45 @@ module.exports = {
     },
 
     /*
-     * The date which is used in search results sorting, the date which the object is identified by
-     * Key must be "Date", value is location in index display object
-     * If multiple dates exist in the index, the first that appears will be used
+     * Create facet display labels to encompass multiple facet values
      */
-    objectDateValue: {
-        "Date": '{"dates":[{"expression": "VALUE", "label": "creation"}]}'
-        //"Date": '{"originInfo":[{"d_created": "VALUE"}]}'
+    facetLabelNormalization: {
+        "Type": {
+            "Still Image": ["still image", "image/tiff", "image/jp2", "image/jp3"],
+            "Moving Image": ["moving image", "moving_image", "video/mp4"],
+            "Text": ["text", "text/plain"],
+            "Sound Recording": ["sound recording", "sound recording,[object Object]", "audio/mp3"],
+            "Music Recording": ["sound recording-musical"],
+            "Nonmusic Recording": ["sound recording-nonmusical"],
+            "Map": ["cartographic"],
+            "Mixed Material": ["mixed material", "application/pdf"],
+            "3D Object": ["three dimensional object", "three dimensional object,[object Object]"],
+            "Unknown": ["[object Object]"]
+        }
     },
-    beginDateField: "display_record.dates.begin",
-    endDateField: "display_record.dates.end",
 
     /*
-     * Register datastreams here.  These may not all be available
-     * Available datastreams are defined in the Repository interface
+     * Date index fields
+     */
+    beginDateField: "display_record.dates.begin",
+    endDateField: "display_record.dates.end",
+    showDateRangeLimiter: true,
+
+    /*
+     * Mime Types for each object type
+     * Object type determines which viewer is used for each mime type
+     * *** Object types are not changeable by user ***
+     */
+    mimeTypes: {
+        "audio": ["audio/mpeg", "audio/x-wav", "audio/mp3"],
+        "video": ["video/mp4", "video/quicktime", "video/mov"],
+        "smallImage": ["image/png", "image/jpg", "image/jpeg"],
+        "largeImage": ["image/tiff", "image/jp2"],
+        "pdf": ["application/pdf"]
+    },
+
+    /*
+     * Available datastreams by object mimetype
      */
      datastreams: {
         "tn": "thumbnail",
@@ -364,24 +401,19 @@ module.exports = {
         "pdf": ["application/pdf"]
      },
 
+     /*
+      * Location of the object file cache
+      */
+     objectCachePath: "files/object",
+
+     /*
+      * File extensions for the local cache.  A request for a datastream will first check the local cache to see if a source file is present.
+      * File extension is determined by the object's mimetype
+      */
      fileExtensions: {
         "jp2": ["image/tiff"],
         "mp3": ["audio/mp3"],
         "mp4": ["video/mp4"],
         "pdf": ["application/pdf"]
-     },
-     objectFilePath: "files/object/",
-
-    /*
-     * Mime Types for each object type
-     * Object type determines which viewer is used for each mime type
-     * Keys are not changeable by user
-     */
-    mimeTypes: {
-        "audio": ["audio/mpeg", "audio/x-wav", "audio/mp3"],
-        "video": ["video/mp4", "video/quicktime", "video/mov"],
-        "smallImage": ["image/png", "image/jpg", "image/jpeg"],
-        "largeImage": ["image/tiff", "image/jp2"],
-        "pdf": ["application/pdf"]
-    }
+     }
 };
