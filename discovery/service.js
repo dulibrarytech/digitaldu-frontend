@@ -495,7 +495,7 @@ exports.getManifestObject = function(pid, callback) {
       callback(error, JSON.stringify({}));
     }
     else if(response) {
-        console.log("TEST object", response);
+      
       // Create object for IIIF
       var object = response;
       var container = {
@@ -509,7 +509,7 @@ exports.getManifestObject = function(pid, callback) {
           "Description": object.display_record.notes.content
         }
       };
-        console.log("TEST container", container);
+
       // Create children array for IIIF
       var parts = [], resourceUrl;
 

@@ -315,12 +315,13 @@ var returnResponseData = function(facets, response, callback) {
 
       // Get the thumbnail for this search result
       tn = config.rootUrl + "/datastream/" + result._source.pid.replace('_', ':') + "/tn";
-
+        
       // Push a new result object to the results data array
       resultObj = {
         title: result._source.title || "No Title",
         tn: tn,
         pid: result._source.pid,
+        objectType: result._source.object_type
       }
 
       // Add the display record

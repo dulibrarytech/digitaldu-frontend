@@ -79,7 +79,7 @@
               <% for (var i = 0; i < results.length; i++) { %>
                 <div class="col-sm-3 thumb">
                   <dl class="item">
-                    <a href="<%= root_url %>/object/<%= results[i].pid %>">
+                    <a href="<%= root_url %>/<%= results[i].objectType %>/<%= results[i].pid %>">
                       <dt>
                         <div class="item-thumb">
                           <img src="<%= results[i].tn %>" alt="<%= results[i].title %>">
@@ -104,22 +104,18 @@
         </div>
 
       <% } else { %>
-
         <div class="search-results-list container">
           <% if(results.length > 0) { %>
             <% for (var i = 0; i < results.length; i++) { %>
               <div class="row search-result">
                 <div class="col-md-9 search-result-data">
                   <dl>
-                    <dt class="result-title"><%= (i+1)+((page-1)*options.pageSize) %>.&nbsp&nbsp<a href="<%= root_url %>/object/<%= results[i].pid %>"><%= results[i].title %></a></dt><dd></dd>
+                    <dt class="result-title"><%= (i+1)+((page-1)*options.pageSize) %>.&nbsp&nbsp<a href="<%= root_url %>/<%= results[i].objectType %>/<%= results[i].pid %>"><%= results[i].title %></a></dt><dd></dd>
 
                       <% for (var key in results[i].metadata) { %>
                         <dt><%- key %>:</dt>
                         <dd><%= results[i].metadata[key] %></dd>
                       <% } %>
-
-
-
                   </dl>
                 </div>
                 <div class="col-md-3 search-result-tn">
