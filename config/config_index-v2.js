@@ -208,7 +208,7 @@ module.exports = {
     searchFields: [
         {"Title": "title"},
         {"Creator": "creator"},
-        {"Subject": "subject"},
+        {"Subject": "f_subjects"},
         {"Type": "type"},
         {"Description": "abstract"}
     ],
@@ -244,30 +244,33 @@ module.exports = {
     ],
 
     /*
-     * Targeted fields for the advanced search     
-     */ 
-    advancedSearchFields: [
-        {"Title": "title"},
-        {"Creator": "creator"},
-        {"Subject": "subject"},
-        {"Type": "type"},
-        {"Description": "description"},
-        {"Creation Date": "create_date"},
-        {"Authority ID": "authority_id"}
-    ],
-
-    /*
      * Fields for fulltext search (search all)
      */ 
     fulltextKeywordSearchFields: [
         {"label": "Title", "id": "title", "field": "title", "boost": "4"},
-        {"label": "Creator", "id": "creator", "field": "display_record.names.title", "boost": "2"},
-        //{"label": "Creator", "field": "creator", "boost": "3"},
+        // {"label": "Creator", "id": "creator", "field": "display_record.names.title", "boost": "2"},
+        {"label": "Creator", "field": "creator", "boost": "3"},
         {"label": "Subject", "id": "subject", "field": "f_subjects", "boost": "2"},
         {"label": "Type", "id": "type", "field": "type", "boost": "2"},
-        {"label": "Description", "id": "description", "field": "display_record.notes.content", "boost": "3"},
-        {"label": "Creation Date", "id": "create_Date", "field": "display_record.dates.expression", "matchField": "display_record.dates.label", "matchTerm": "creation"},
+        {"label": "Description", "id": "abstract", "field": "abstract", "boost": "3"},
+        {"label": "Language", "id": "language", "field": "display_record.t_language", "boost": "5"},
+        {"label": "Creation Date", "id": "create_date", "field": "display_record.dates.expression", "matchField": "display_record.dates.label", "matchTerm": "creation"},
         {"label": "Authority ID", "id": "authority_id", "field": "display_record.identifiers.identifier", "matchField": "display_record.identifiers.type", "matchTerm": "local"},
+    ],
+
+    /*
+     * Fulltext fields for the advanced search field selection box
+     * { "Label" : "fulltext keyword 'field' from fulltext search field list" }     
+     */ 
+    advancedSearchFields: [
+        {"Title": "title"},
+        {"Creator": "creator"},
+        {"Subject": "f_subjects"},
+        {"Type": "type"},
+        {"Description": "abstract"},
+        {"Creation Date": "create_date"},
+        {"Language": "language"},
+        {"Authority ID": "authority_id"}
     ],
 
     /*
