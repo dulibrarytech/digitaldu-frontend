@@ -300,8 +300,8 @@ module.exports = {
     facets: {
         "Creator": "display_record.names.title",
         "Subject": "f_subjects",
-        // "Type": "type",
-        "Type": "mime_type",
+        "Type": "type",
+        // "Type": "mime_type",
         "Date": "display_record.dates.expression",
         "Collections": "is_member_of_collection",
         "Authority ID": "display_record.subjects.authority_id"
