@@ -131,21 +131,24 @@ exports.getSearchResultDisplayFields = function(searchResult) {
  * @return 
  */
 exports.getResultsLabel = function(query, facets) {
-  let queryData = " ";
+  // let queryLabel = " ";
 
-  if(query == "" && facets) {
-    for(let key in facets) {
-      for(let index in facets[key]) {
-        queryData += (" " + facets[key][index]);
-      }
-      queryData += ";";
-    }
-  }
-  else {
-    queryData = query == "" ? "*" : query;
-  }
+  // if(query == "" && facets) {
+  //   for(let key in facets) {
+  //     for(let index in facets[key]) {
+  //       queryLabel += (" " + facets[key][index]);
+  //     }
+  //     queryLabel += ";";
+  //   }
+  // }
+  // else {
+  //   queryLabel = query == "" ? "*" : query;
+  // }
 
-  return queryData; 
+  // return queryLabel; 
+
+  // 8-18-19 Not showing the facet query in the 'results for' label
+  return query == "" ? "*" : query;
 }
 
 /**
