@@ -244,15 +244,16 @@ module.exports = {
     ],
 
     /*
-     * Fields for fulltext search (search all)
+     * Fulltext search fields 
+     * "search all" 
      */ 
     fulltextKeywordSearchFields: [
-        {"label": "Title", "id": "title", "field": "title", "boost": "4"},
+        {"label": "Title", "id": "title", "field": "title", "boost": "1"},
         // {"label": "Creator", "id": "creator", "field": "display_record.names.title", "boost": "2"},
         {"label": "Creator", "id": "creator", "field": "creator", "boost": "3"},
         {"label": "Subject", "id": "subject", "field": "f_subjects", "boost": "2"},
         {"label": "Type", "id": "type", "field": "type", "boost": "2"},
-        {"label": "Description", "id": "abstract", "field": "abstract", "boost": "3"},
+        {"label": "Description", "id": "description", "field": "abstract", "boost": "3"},
         {"label": "Language", "id": "language", "field": "display_record.t_language.text", "boost": "5"},
         {"label": "Creation Date", "id": "create_date", "field": "display_record.dates.expression", "matchField": "display_record.dates.label", "matchTerm": "creation"},
         {"label": "Authority ID", "id": "authority_id", "field": "display_record.identifiers.identifier", "matchField": "display_record.identifiers.type", "matchTerm": "local"},
@@ -260,14 +261,14 @@ module.exports = {
 
     /*
      * Fulltext fields for the advanced search field selection box
-     * { "Label" : "fulltext keyword 'field' from fulltext search field list" }     
+     * { "Label" : "fulltext keyword id from fulltext field list" }     
      */ 
     advancedSearchFields: [
         {"Title": "title"},
         {"Creator": "creator"},
         {"Subject": "f_subjects"},
         {"Type": "type"},
-        {"Description": "abstract"},
+        {"Description": "description"},
         {"Creation Date": "create_date"},
         {"Language": "language"},
         {"Authority ID": "authority_id"}
@@ -349,6 +350,7 @@ module.exports = {
             "Map": "assets/img/map-TN.png",
             "Mixed Material": "assets/img/document-icon-free-0-TN.jpg",
             "3D Object": "assets/img/objects-icon-TN.png"
+            // "Collection": "assets/img/collections-icon-TN.png"
         }
     },
 

@@ -138,13 +138,11 @@ exports.getDatastream = function(object, objectID, datastreamID, part, callback)
 
   // Request a non thumbnail datastream
   else {
-
     // Check for a local object file
     let file = null, path;
     for(var extension in config.fileExtensions) {
       if(config.fileExtensions[extension].includes(object.mime_type)) {
         path = config.objectCachePath + "/" + objectID.match(/[0-9]+/)[0] + sequence + "." + extension;
-
         if(fs.existsSync(path)) {
           file = path;
         }

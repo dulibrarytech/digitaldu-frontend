@@ -279,3 +279,32 @@ exports.getSortDataArray = function(sort) {
   }
   return sortData;
 }
+
+/**
+ * Determine the Elastic search type
+ *
+ * @param 
+ * @return 
+ */
+exports.getQueryType = function(object) {
+  var queryType = "match";
+
+  if(object.type == "isnot") {
+    queryType = "must_not";
+  }
+  else if(object.type == "is") {
+    queryType = "match_phrase";
+  }
+  else if(object.terms[0] == '"' && object.terms[ object.terms.length-1 ] == '"') {
+    object.terms = object.terms.replace(/"/g, '');
+    queryType = "match_phrase";
+  }
+  else if(object.terms.indexOf('*') >= 0) {
+    queryType = "wildcard";
+  }
+  else  {
+    queryType = "match";
+  }
+
+  return queryType;
+}

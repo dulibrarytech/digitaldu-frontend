@@ -45,6 +45,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
      * Each query is placed in a separate bool object
      */
     var field, fields, type, terms, bool;
+
     for(var index in queryData) {
       matchFields = [];
       boolObj = {
@@ -63,7 +64,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       fields = Helper.getSearchFields(field)
 
       // Get the Elastic query type to use for this query
-      queryType = getQueryType(queryData[index]);
+      queryType = Helper.getQueryType(queryData[index]);
 
       // Build elastic query.  If an array of fields is passed in, search in all of the fields that are in the array.
       if(Array.isArray(fields)) {
@@ -81,7 +82,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
           if(queryType == "match") {
             queryObj = {
               "query": terms,
-              "operator": "and",
+              "operator": "or",
               "fuzziness": config.searchTermFuzziness
             };
 
@@ -120,14 +121,11 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
           }
         }
       }
-
-      // Search a single field
       else {
-          let keywordObj = {}, tempObj = {};
-          keywordObj[type] = terms;
-          tempObj[queryType] = keywordObj;
-          matchFields.push(tempObj);
+        callback("Error: invalid search field configuration", {});
       } 
+
+      // Assign the query to the main query object's bool array
       boolObj.bool.should = matchFields;
 
       // Add this query to the boolean filter must object
@@ -216,7 +214,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
     }
 
     // DEBUG
-    //console.log("TEST", util.inspect(queryObj, {showHidden: false, depth: null}));
+    //console.log("TEST queryObj:", util.inspect(queryObj, {showHidden: false, depth: null}));
 
     // Get elasticsearch aggregations object 
     var facetAggregations = Helper.getFacetAggregationObject(config.facets);
@@ -338,33 +336,4 @@ var returnResponseData = function(facets, response, callback) {
   catch(error) {
     callback(error, {});
   }
-}
-
-/**
- * Determine the Elastic search type
- *
- * @param 
- * @return 
- */
-var getQueryType = function(object) {
-  var queryType = "match";
-
-  if(object.type == "isnot") {
-    queryType = "must_not";
-  }
-  else if(object.type == "is") {
-    queryType = "match_phrase";
-  }
-  else if(object.terms[0] == '"' && object.terms[ object.terms.length-1 ] == '"') {
-    object.terms = object.terms.replace(/"/g, '');
-    queryType = "match_phrase";
-  }
-  else if(object.terms.indexOf('*') >= 0) {
-    queryType = "wildcard";
-  }
-  else  {
-    queryType = "match";
-  }
-
-  return queryType;
 }
