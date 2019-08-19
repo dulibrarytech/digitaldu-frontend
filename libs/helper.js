@@ -50,7 +50,7 @@ var extractValues = function(pathArray, object, matchField, matchValue, conditio
 				condition == "true" && 
 				object[matchField] == matchValue) {
 
-				if(bucket.includes(object[pathArray]) === false) {
+				if(bucket.includes(object[pathArray]) === false && object[pathArray].length > 0) {
 					bucket.push(object[pathArray]);
 				}
 			}
@@ -58,14 +58,14 @@ var extractValues = function(pathArray, object, matchField, matchValue, conditio
 					condition == "false" && 
 					object[matchField] != matchValue) {
 
-				if(bucket.includes(object[pathArray]) === false) {
+				if(bucket.includes(object[pathArray]) === false && object[pathArray].length > 0) {
 					bucket.push(object[pathArray]);
 				}
 			}
 		}
 		else if(object[pathArray]) {
 
-			if(bucket.includes(object[pathArray]) === false) {
+			if(bucket.includes(object[pathArray]) === false && object[pathArray].length > 0) {
 				bucket.push(object[pathArray]);
 			}
 		}

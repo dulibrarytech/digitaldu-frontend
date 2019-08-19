@@ -502,7 +502,7 @@ exports.getManifestObject = function(pid, callback) {
         resourceID: object.pid,
         downloadFileName: object.pid.replace(":", "_"), // Temporarily use pid for filename, replacing ':'' with '_'
         title: object.title,
-        description: object.display_record.notes[0].content,
+        description: object.abstract,
         metadata: {
           "Title": object.title,
           "Creator": object.display_record.names.title,

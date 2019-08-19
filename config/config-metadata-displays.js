@@ -88,7 +88,7 @@ module.exports = {
             "Resource URI": {
                 "path": "uri"
             },
-            "Authority ID": {
+            "Call Number": {
                 "path": "identifiers.identifier",
                 "matchField": "type",
                 "matchValue": "local"
