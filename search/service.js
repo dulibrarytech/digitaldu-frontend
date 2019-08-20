@@ -22,14 +22,13 @@ const es = require('../config/index'),
  * @return 
  */
 exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=1, pageSize=10, daterange=null, sort=null, callback) {
-
+      console.log("TEST querydata", queryData);
     var matchFields = [], 
         mustMatchFields = [], 
         results = [], 
         restrictions = [],
         filters = [],
         queryType,
-        queryArray = [],
         booleanQuery = {
           "bool": {
             "should": [],
@@ -37,28 +36,41 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
             "must_not": []
           }
         },
-        boolObj;
+        currentQuery;
+      
         
     /* 
      * Build the search fields object 
      * Use a match query for each word token, a match_phrase query for word group tokens, and a wildcard search for tokens that contain a '*'.
      * Each query is placed in a separate bool object
      */
+    // Search data for each query
     var field, fields, type, terms, bool;
+
+    // Objects for building the nested boolean queries
+    var curObj = booleanQuery,
+        prevBool, curBool, queryArray, boolType, nestedBool;
 
     for(var index in queryData) {
       matchFields = [];
-      boolObj = {
-          "bool": {
-            "should": []
-          }
-      };
+      currentQuery = {};
 
       // Get the query data from the current data object, or use default data
       terms = queryData[index].terms || "";
       field = queryData[index].field || "all";
       type = queryData[index].type || "contains";
-      bool = index == 0 ? "or" : queryData[index].bool || "or";
+      //bool = index == 0 ? "or" : queryData[index].bool || "or";
+
+      // Use the boolean selection from the next query to determine the boolean combination of next query and present query
+      bool = queryData[parseInt(index)+1] ? queryData[parseInt(index)+1].bool : queryData[index].bool || "or";
+      prevBool = queryData[index].bool;
+      curBool = queryData[parseInt(index)+1] || null;
+
+      // If the next bool is "not" use current query bool 
+      // TODO: Find a better way to do this
+      if(bool == "not") {
+        bool = index == 0 ? "or" : queryData[index].bool || "or";
+      }
 
       // If field value is "all", get all the available search fields
       fields = Helper.getSearchFields(field)
@@ -126,21 +138,52 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       } 
 
       // Assign the query to the main query object's bool array
-      boolObj.bool.should = matchFields;
+      currentQuery = matchFields[0];
 
       // Add this query to the boolean filter must object
       if(bool == "and") {
-        booleanQuery.bool.must.push(boolObj);
+        queryArray = curObj.bool.must;
+        boolType = "must";
       }
 
       // Add this query to the boolean filter must_not object
-      else if(bool == "not") {
-        booleanQuery.bool.must_not.push(boolObj);
+      else if(prevBool == "not") {
+        booleanQuery.bool.must_not.push(currentQuery);
+        boolType = "must_not";
       }
 
       // Add this query to the boolean filter should object
       else {
-        booleanQuery.bool.should.push(boolObj);
+        queryArray = curObj.bool.should;
+        boolType = "should";
+      }
+
+      // First iteration, just push the query to the current boolean array
+      if(prevBool == null) {
+        queryArray.push(currentQuery);
+      }
+
+      // No change in boolean condition, just push the query to the current boolean array
+      else if(prevBool == curBool) {
+        queryArray.push(currentQuery);
+      }
+
+      // Change in boolean terms, create a new boolean object to nest in the current boolean array.  Push the query to the new object, use the new object's boolean array as the current array
+      else {
+
+        // NOT queries have already been pushed to the must_not array, ignore them here
+        if (boolType != "must_not"){
+          nestedBool = {
+            "bool": {
+
+            }
+          };
+          nestedBool.bool[boolType] = [];
+
+          queryArray.push(nestedBool);
+          queryArray = nestedBool.bool[boolType];
+          queryArray.push(currentQuery);
+        }
       }
     }
 
@@ -213,7 +256,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       }
     }
 
-    // DEBUG
+    // DEBUG - Output the full structure of the query object
     //console.log("TEST queryObj:", util.inspect(queryObj, {showHidden: false, depth: null}));
 
     // Get elasticsearch aggregations object 

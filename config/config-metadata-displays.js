@@ -102,7 +102,7 @@ module.exports = {
         },
 
         "digital_pioneers" : {
-            "D.P. Title": {
+            "Digital Pioneers display Title": {
                 "path": "title"
             }
         }
