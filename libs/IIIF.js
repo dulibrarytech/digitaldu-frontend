@@ -39,12 +39,6 @@ exports.getManifest = function(container, objects, callback) {
 		});
 	}
 
-	manifest['description'] = []; 
-	manifest.description.push({
-		"@value": container.description,
-		"@language": "en"
-	});
-
 	manifest['license'] = "https://creativecommons.org/licenses/by/3.0/"; 
 	manifest['logo'] = "https://www.du.edu/_resources/images/nav/logo2.gif";
 	manifest['sequences'] = [];

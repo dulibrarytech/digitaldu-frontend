@@ -498,17 +498,18 @@ exports.getManifestObject = function(pid, callback) {
 
       // Create object for IIIF
       var object = response;
+      
       var container = {
         resourceID: object.pid,
         downloadFileName: object.pid.replace(":", "_"), // Temporarily use pid for filename, replacing ':'' with '_'
         title: object.title,
-        description: object.abstract,
         metadata: {
           "Title": object.title,
-          "Creator": object.display_record.names.title,
-          "Description": object.display_record.notes.content
+          "Creator": object.creator,
+          "Description": object.abstract
         }
       };
+        console.log("TEST container", container);
 
       // Create children array for IIIF
       var parts = [], resourceUrl;
