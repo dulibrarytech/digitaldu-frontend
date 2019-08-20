@@ -518,7 +518,7 @@ div.advanced-search-form {
  /* margin-top: 30px;*/
 }
 
-div#advanced-search-query-row-1 div.advanced-search-bool-select {
+#advanced-search .form-inline:first-child div.advanced-search-bool-select {
     display: none;
 }
 

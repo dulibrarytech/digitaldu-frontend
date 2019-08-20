@@ -22,7 +22,6 @@ const es = require('../config/index'),
  * @return 
  */
 exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=1, pageSize=10, daterange=null, sort=null, callback) {
-      console.log("TEST querydata", queryData);
     var matchFields = [], 
         mustMatchFields = [], 
         results = [], 
@@ -49,7 +48,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
 
     // Objects for building the nested boolean queries
     var curObj = booleanQuery,
-        prevBool, curBool, queryArray, boolType, nestedBool;
+        prevBool, queryArray, boolType, nestedBool;
 
     for(var index in queryData) {
       matchFields = [];
@@ -59,12 +58,10 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       terms = queryData[index].terms || "";
       field = queryData[index].field || "all";
       type = queryData[index].type || "contains";
-      //bool = index == 0 ? "or" : queryData[index].bool || "or";
 
       // Use the boolean selection from the next query to determine the boolean combination of next query and present query
       bool = queryData[parseInt(index)+1] ? queryData[parseInt(index)+1].bool : queryData[index].bool || "or";
       prevBool = queryData[index].bool;
-      curBool = queryData[parseInt(index)+1] || null;
 
       // If the next bool is "not" use current query bool 
       // TODO: Find a better way to do this
@@ -78,7 +75,9 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       // Get the Elastic query type to use for this query
       queryType = Helper.getQueryType(queryData[index]);
 
-      // Build elastic query.  If an array of fields is passed in, search in all of the fields that are in the array.
+      /*
+       * Build the elastic query
+       */
       if(Array.isArray(fields)) {
         /*
          * Loop the keywords, adding each to the main query array under the specified query type (match, wildcard, match_phrase)
@@ -137,6 +136,11 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
         callback("Error: invalid search field configuration", {});
       } 
 
+      /*
+       * Add the query to the boolean object:
+       * Multiple queries with different boolean types will be nested in existing boolean objects
+       */
+
       // Assign the query to the main query object's bool array
       currentQuery = matchFields[0];
 
@@ -164,28 +168,37 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       }
 
       // No change in boolean condition, just push the query to the current boolean array
-      else if(prevBool == curBool) {
+      else if(prevBool == bool) {
         queryArray.push(currentQuery);
       }
 
       // Change in boolean terms, create a new boolean object to nest in the current boolean array.  Push the query to the new object, use the new object's boolean array as the current array
       else {
 
-        // NOT queries have already been pushed to the must_not array, ignore them here
+        // NOT queries have already been pushed to the top-level must_not array, ignore them here
         if (boolType != "must_not"){
           nestedBool = {
             "bool": {
-
+              "should": [],
+              "must": []
             }
           };
           nestedBool.bool[boolType] = [];
 
+          // Nest the new boolean object, set the current query array to the new boolean object's query array
           queryArray.push(nestedBool);
-          queryArray = nestedBool.bool[boolType];
           queryArray.push(currentQuery);
+          queryArray = nestedBool.bool[boolType];
+
+          // 'Step down' the current object to the newest nested level
+          curObj = nestedBool;
         }
       }
     }
+
+    /*
+     * Add facets and filters:
+     */
 
     // If facets are present, apply filters to the search
     if(facets) {

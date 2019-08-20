@@ -19,7 +19,6 @@
 				</div>
 				<div class="form-group">
 					<select name="field[]" class="search-element" title="Select field to search">
-						<!-- <option value="" disabled selected>Field</option> -->
 						<option value="all">All Fields</option>
 						<optgroup label="Specific Fields">
 						  <% for (var i = 0; i < searchFields.length; i++) { %>
@@ -46,6 +45,7 @@
 			    </div>
 			</div>
 		    <input type="hidden" name="fulltext" value="true">
+		    <input type="hidden" name="advancedSearch" value="true">
 		</form>
 		<div class="advanced-search-form-controls">
 			<div><button id="add-query-button" class="clickable icon-link-right btn-nostyle" alt="Add A New Query"><i class="far fa-plus-square"></i>Add another query</button></div>
@@ -58,8 +58,9 @@
 	$( document ).ready(function() {
 		$("#add-query-button").click(function(event) {
 			let formRow = "<div class='form-inline'>";
-			formRow += $("#advanced-search-query-row-1").html();
+			formRow += $("#advanced-search .form-inline:first-child").html();
 			formRow += "</div>";
+			
 			$("#advanced-search").append(formRow);
 		});
 
