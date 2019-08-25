@@ -22,8 +22,7 @@ const es = require('../config/index'),
  * @return 
  */
 exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=1, pageSize=10, daterange=null, sort=null, callback) {
-    var matchFields = [], 
-        mustMatchFields = [], 
+    var queryFields = [], 
         results = [], 
         restrictions = [],
         filters = [],
@@ -50,8 +49,9 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
     var curObj = booleanQuery,
         prevBool, queryArray, boolType, nestedBool;
 
+    // queryData is an array of the combined queries in the search.  A simple search will contain one query, an advanced search may contain multiple queries
     for(var index in queryData) {
-      matchFields = [];
+      queryFields = [];
       currentQuery = {};
 
       // Get the query data from the current data object, or use default data
@@ -59,12 +59,11 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       field = queryData[index].field || "all";
       type = queryData[index].type || "contains";
 
-      // Use the boolean selection from the next query to determine the boolean combination of next query and present query
+      // Determine the boolean term to join the current query with the next query in the array.  This term is found in the next query in the array
       bool = queryData[parseInt(index)+1] ? queryData[parseInt(index)+1].bool : queryData[index].bool || "or";
       prevBool = queryData[index].bool;
 
-      // If the next bool is "not" use current query bool 
-      // TODO: Find a better way to do this
+      // If the next bool is "not" use current query's boolean term
       if(bool == "not") {
         bool = index == 0 ? "or" : queryData[index].bool || "or";
       }
@@ -77,6 +76,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
 
       /*
        * Build the elastic query
+       * (REQ: fields terms querytype)
        */
       if(Array.isArray(fields)) {
         /*
@@ -106,43 +106,40 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
             keywordObj[field.field] = queryObj;
             tempObj[queryType] = keywordObj;
 
-            // If a matchfield is present, add the control field to the query
+            // matchField specifies a field in the index to use, when an index path points to differing index values.  Add a must query to select the specified match field
             if(typeof field.matchField != 'undefined') {
               let mustQuery = {
                 "match_phrase": {}
               };
               mustQuery.match_phrase[field.matchField] = field.matchTerm;
-              matchFields.push({
+              queryFields.push({
                 "bool": {
                   "must": [tempObj,mustQuery] // Both must match for the bool to be true
                 }
               });
             }
             else {
-
               // Push the "match" query
-              matchFields.push(tempObj);
+              queryFields.push(tempObj);
             }
           }
 
           else {
             keywordObj[field.field] = terms;
             tempObj[queryType] = keywordObj;
-            matchFields.push(tempObj);
+            queryFields.push(tempObj);
           }
         }
       }
       else {
         callback("Error: invalid search field configuration", {});
       } 
+      currentQuery = queryFields[0];
 
       /*
        * Add the query to the boolean object:
        * Multiple queries with different boolean types will be nested in existing boolean objects
        */
-
-      // Assign the query to the main query object's bool array
-      currentQuery = matchFields[0];
 
       // Add this query to the boolean filter must object
       if(bool == "and") {
@@ -152,6 +149,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
 
       // Add this query to the boolean filter must_not object
       else if(prevBool == "not") {
+        bool = 
         booleanQuery.bool.must_not.push(currentQuery);
         boolType = "must_not";
       }
@@ -270,7 +268,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
     }
 
     // DEBUG - Output the full structure of the query object
-    //console.log("TEST queryObj:", util.inspect(queryObj, {showHidden: false, depth: null}));
+    console.log("TEST queryObj:", util.inspect(queryObj, {showHidden: false, depth: null}));
 
     // Get elasticsearch aggregations object 
     var facetAggregations = Helper.getFacetAggregationObject(config.facets);

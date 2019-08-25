@@ -105,7 +105,7 @@ exports.getManifest = function(container, objects, callback) {
 			if(images.length > 0) {
 				let imageData;
 				for(let canvas of canvases) {
-					if(typeof canvas.images[0].resource.service != "undefined" && canvas.images[0].resource.service.profile != "undefined") {
+					if(canvas.images && typeof canvas.images[0].resource.service != "undefined" && canvas.images[0].resource.service.profile != "undefined") {
 						imageData = data.shift();
 						canvas.height = imageData.height;
 						canvas.width = imageData.width;
