@@ -258,7 +258,7 @@ exports.getDatastream = function(req, res) {
 	// Detect part index appended to a compound object pid.  This is to allow IIIF url resolver to convey part index data by modifying the pid value
 	if(part == null && pid.indexOf("-") > 0) {
 		part = pid.substring(pid.indexOf("-")+1, pid.length);	
-		pid.split(config.compoundObjectPartID,1)[0];
+		pid.split("-",1)[0];
 	}
 
 	// If a valid api key is passed in with the request, get data from the the private index

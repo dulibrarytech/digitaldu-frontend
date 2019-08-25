@@ -528,7 +528,7 @@ exports.getManifestObject = function(pid, callback) {
             format: object.display_record.parts[key].type,
             type: Helper.getIIIFObjectType(object.display_record.parts[key].type) || "",
             //resourceID: object.display_record.parts[key].object,
-            resourceID: object.pid + config.compoundObjectPartID + object.display_record.parts[key].order,
+            resourceID: object.pid + "-" + object.display_record.parts[key].order,
             downloadFileName: object.display_record.parts[key].title,
             resourceUrl: resourceUrl,
             thumbnailUrl: config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType("thumbnail") + "/" + object.display_record.parts[key].order
