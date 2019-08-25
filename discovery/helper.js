@@ -66,7 +66,7 @@ var config = require('../config/' + process.env.CONFIGURATION_FILE);
     }
 
     // Add collection or object path
-    if(item.object_type && item.object_type == config.collectionMimeType) {
+    if(item.object_type && item.object_type == "collection") {
       path = "/collection";
     }
     else {
