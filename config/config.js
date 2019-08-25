@@ -2,6 +2,12 @@
 
 module.exports = {
 
+    // Runtime environment
+    nodeEnv: process.env.NODE_ENV,
+
+    // Keys
+    apiKey: process.env.API_KEY,
+
     // Domain and paths
     host: process.env.APP_HOST,
     appPath: process.env.CLIENT_PATH,
@@ -12,18 +18,13 @@ module.exports = {
     repositoryUrl: process.env.REPOSITORY,
     elasticsearchHost: process.env.ELASTICSEARCH_HOST,
     elasticsearchPort: process.env.ELASTICSEARCH_PORT,
-    elasticsearchIndex: process.env.ELASTICSEARCH_INDEX,
+    elasticsearchPublicIndex: process.env.ELASTICSEARCH_PUBLIC_INDEX,
+    elasticsearchPrivateIndex: process.env.ELASTICSEARCH_PRIVATE_INDEX,
     IIIFServerUrl: process.env.CANTALOUPE_URL,
     cantaloupePort: process.env.CANTALOUPE_PORT,
 
-    // Repository settings
-    institutionPrefix: "codu",
     topLevelCollectionPID: "codu:root",
     topLevelCollectionName: "Root Collection",
-    collectionMimeType: "collection",
-
-    // IIIF
-    IIIFUrl: process.env.IIIF_URL,
 
     // Search index name (type)
     searchIndexName: "data",
@@ -47,13 +48,10 @@ module.exports = {
     searchFieldNamespace: "",
 
     // Search in the specified metadata keyword fields.  These fields will not appear in the Search Type selections.  Search All is not scoped to the selections that appear in the Search Type list.  
-    fulltextMetadataSearch: true,
+    //fulltextMetadataSearch: true,
 
     // Will appear in the view, if an item has no title information
     noTitlePlaceholder: "Untitled",
-
-    // Image to display if no thumbnail image exists in the repository
-    tnPlaceholderPath: "files/tn-placeholder.jpg",
 
     /* 
      * Viewer to play audio files
@@ -65,7 +63,7 @@ module.exports = {
      * Viewer to display video files
      * [videojs | jwplayer | universalviewer | kaltura]
      */
-    videoViewer: "kaltura",
+    videoViewer: "universalviewer",
 
     /* 
      * Viewer to display pdf files
@@ -99,209 +97,12 @@ module.exports = {
     jwplayerPathToLibrary: "/libs/jwplayer_du/jwplayer-du.js",
 
     /*
-     * Kaltura viewer settings
+     * Universalviewer settings
      */
-    kalturaUI_ID: "44058172",
-    kalturaPartnerID: "2357732",
-    //kalturaUniqueObjectID: "kaltura_du_12345",
-    kalturaUniqueObjectID: "kaltura_player_1549920112",
+    universalViewerKalturaPlayer: true,
 
-    // The index field that holdas the display record data
-    displayRecordField: "display_record",
-
-    /*
-     * Fields for fulltext search (search all)
-     * 
-     */ 
-    searchKeywordFields: [
-        {"field": "title", "boost": "3"},
-        {"field": "abstract", "boost": "2"},
-        {"field": "creator", "boost": "2"},
-        {"field": "subject", "boost": "1"},
-        {"field": "display_record.accessCondition"},
-        {"field": "display_record.classification"},
-        {"field": "display_record.identifier"},
-        {"field": "display_record.language"},
-        {"field": "display_record.location.url"},
-        {"field": "display_record.name.namePart", "boost": "2"},
-        {"field": "display_record.note"},
-        {"field": "display_record.originInfo.d_captured"},
-        {"field": "display_record.originInfo.d_created"},
-        {"field": "display_record.originInfo.place", "boost": "1"},
-        {"field": "display_record.originInfo.publisher"},
-        {"field": "display_record.physicalDescription.digitalOrigin"},
-        {"field": "display_record.physicalDescription.extent"},
-        {"field": "display_record.physicalDescription.form"},
-        {"field": "display_record.physicalDescription.note"},
-        {"field": "display_record.subject.city"},
-        {"field": "display_record.subject.citySection"},
-        {"field": "display_record.subject.continent"},
-        {"field": "display_record.subject.country"},
-        {"field": "display_record.subject.county"},
-        {"field": "display_record.subject.genre"},
-        {"field": "display_record.subject.geographic"},
-        {"field": "display_record.subject.namePart"},
-        {"field": "display_record.subject.occupation"},
-        {"field": "display_record.subject.region"},
-        {"field": "display_record.subject.role"},
-        {"field": "display_record.subject.temporal"},
-        {"field": "display_record.subject.topic"},
-        {"field": "display_record.typeOfResource"},
-        {"field": "display_record.targetAudience"},
-        {"field": "display_record.physicalDescription.internetMediaType"}
-    ],
-
-    /*
-     * Options for results per page
-     */
-    resultCountOptions: ["10", "20", "50", "100"],
-
-    resultsViewOptions: ["List", "Grid"],
-    defaultSearchResultsView: "List",
-    showDateRangeLimiter: true,
-
-    searchTermFuzziness: "1",
-
-    /*
-     * Fields for scoped search.  These will appear in 'Search Type' dropdown list
-     * "Search type name": Index field to search"
-     */ 
-    searchFields: [
-        {"Title": "title"},
-        {"Creator": "creator"},
-        {"Subject": "subject"},
-        {"Type": "type"},
-        {"Description": "abstract"}
-    ],
-
-    /*
-     * Facets to display
-     * "Facet name": "index field"
-     */
-    facets: {
-        "Creator": "creator",
-        "Subject": "subject",
-        "Type": "type",
-        "Date": "display_record.originInfo.d_created",
-        "Collections": "is_member_of_collection",
-        "Authority ID": "display_record.subject.authority_id"
-    },
-
-    /*
-     * Facets to display on the front page
-     */
-    frontPageFacets: ["Creator", "Subject", "Type"],
-
-    facetOrdering: {
-        "Date": "desc"
-    },
-
-    // Limit of facet results returned from a search
-    facetLimit: 200,
-    facetLimitsByType: {
-        "Collections": 15 
-    },
-
-    facetDisplayLabel: {
-        "Type": {
-            "Still Image": "still image",
-            "Moving Image": "moving image",
-            "Text": "text",
-            "Sound Recording": "sound recording",
-            "Music Recording": "sound recording-musical",
-            "Nonmusic Recording": "sound recording-nonmusical",
-            "Map": "cartographic",
-            "Mixed Material": "mixed material",
-            "3D Object": "three dimensional object",
-            "Unknown": "[object Object]"
-        }
-    },
-
-    /*
-     * The date which is used in search results sorting, the date which the object is identified by
-     * Key must be "Date", value is location in index display object
-     * If multiple dates exist in the index, the first that appears will be used
-     */
-    objectDateField: "display_record.originInfo.d_created",
-    objectDateValue: {
-        //"Date": '{"dates":[{"date": "VALUE", "type": "creation"}]}'
-        "Date": '{"originInfo":[{"d_created": "VALUE"}]}'
-    },
-    datespanRange: "5", // "circa"
-
-    /*
-     * Fields to display in the summary data section (above Details link)
-     * "Display field name": "index field key to match"
-     */
-    summaryDisplay: {
-        "Title": '{"title": ["VALUE"]}',
-        "Description": "abstract"
-    },
-
-    /*
-     * Fields to display in the summary data section (above Details link)
-     * "Display field name": "index field key to match"
-     */
-    resultsDisplay: {
-        "Date": '{"originInfo":[{"d_created": "VALUE"}]}',
-        "Creator": '{"name": [ { "namePart": "VALUE", "role": "creator" } ]}',
-        "Description": "abstract"
-    },
-
-    /*
-     * MODS fields to display in the Details section
-     * Must be valid json, can be application managed in the future (admin)
-     * "Display record key": "Display record value"
-     */
-    metadataDisplayValues: {
-        "Title": '{"title": ["VALUE"]}',
-        "Creator": '{"name": [ { "namePart": "VALUE", "role": "creator" } ]}',
-        "Corporate Creator": '{"name": [ { "namePart": "VALUE", "role": "corporate" } ]}',
-        "Abstract": "abstract",
-        "Type": '{"typeOfResource":"VALUE"}',
-        "Publisher": '{"originInfo":[{"publisher": "VALUE"}]}',
-        "Place": '{"originInfo":[{"place": "VALUE"}]}',
-        "Date Created": '{"originInfo":[{"d_created": "VALUE"}]}',
-        "Date Issued": '{"originInfo":[{"d_issued": "VALUE"}]}',
-        "Subject": '{"subject":[ { "namePart": "VALUE" }]}',
-        "Topic": '{"subject": [ { "topic": "VALUE" } ]}',
-        "Genre": '{"subject": [ { "genre": "VALUE" } ]}',
-        "Geographic": '{"subject": [ { "geographic": "VALUE" } ]}',
-        "Origin": '{"physicalDescription":[ { "digitalOrigin": "VALUE" }]}',
-        "Extent": '{"physicalDescription":[ { "extent": "VALUE" }]}',
-        "Form": '{"physicalDescription":[ { "form": "VALUE" }]}',
-        "Local Identifier": '{"identifier":"VALUE"}',
-        "Access Condition": '{"accessCondition":"VALUE"}',
-        "Handle": '{"location":[ { "url": "VALUE" } ]}'
-    },
-
-    /*
-     * Register datastreams here.  These may not all be available
-     * Available datastreams are defined in the Repository interface
-     */
-     datastreams: {
-        "tn": "thumbnail",
-        "jpg": ["image/jpeg", "image/jpg"],
-        "tiff": ["image/tiff"],
-        "mp3": ["audio/mp3", "audio/mpeg", "audio/x-wav"],
-        "mp4": ["video/mp4"],
-        "mov": ["video/mov"],
-        "quicktime": ["video/quicktime"],
-        "pdf": ["application/pdf"]
-     },
-
-    /*
-     * Mime Types for each object type
-     * Object type determines which viewer is used for each mime type
-     * Keys are not changeable by user
-     */
-    mimeTypes: {
-        "audio": ["audio/mpeg", "audio/x-wav", "audio/mp3"],
-        "video": ["video/mp4", "video/quicktime", "video/mov"],
-        "smallImage": ["image/png", "image/jpg", "image/jpeg"],
-        "largeImage": ["image/tiff", "image/jp2"],
-        "pdf": ["application/pdf"]
-    },
+    // IIIF
+    IIIFUrl: process.env.IIIF_URL,
 
     /*
      * IIIF Object Types
@@ -315,7 +116,306 @@ module.exports = {
         "largeImage": "dctypes:Image",
         "pdf": "foaf:Document"
     },
+    IIIFThumbnailWidth: "200",
+    IIIFThumbnailHeight: "250",
 
-    IIIFThumbnailWidth: "600",
-    IIIFThumbnailHeight: "600"
+
+    /*
+     * Kaltura viewer settings
+     */
+    kalturaUI_ID: "44058172",
+    kalturaPartnerID: "2357732",
+    kalturaUniqueObjectID: "kaltura_player_1559751114",
+    kalturaPlayerHeight: "923px",  // Height without the transcript player
+    kalturaPlayerWidth: "100%",
+    showKalturaTitle: false,
+    kalturaThumbnailWidth: "200",
+    kalturaThumbnailHeight: "250",
+
+
+    // The index field that contains the display record data
+    displayRecordField: "display_record",
+
+    // Image to display if no thumbnail image exists in the repository
+    tnPath: "files/thumbnails/",
+    thumbnailFileExtension: ".png",
+    defaultThumbnailImage: "tn-placeholder.jpg",
+
+    thumbnailPlaceholderImages: {
+        "audio-tn.png": ["audio/mp3"],
+        "video-tn.png": ["video/mp4"],
+        "pdf-tn.png": ["application/pdf"],
+        "image-tn.png": ["image/tiff", "image/jp2", "image/jp3"]
+    },
+    /*
+     *  streamOption: [index|iiif|kaltura|external]
+     *  uri: if 'external' this is the path to the resource,
+     *  source: [repository|remote] if 'index' stream: 'repository' will use repository api to source uri, 'remote' will fetch full uri
+     */
+    thumbnails: {
+        // object_types
+        "collection": {
+            "streamOption": "index",
+            "uri": "", 
+            "source": "repository"
+        },
+        "object": {
+            "fileTypes": {
+                "smallImage": {
+                    "streamOption": "iiif",
+                    "uri": "", 
+                    "source": ""
+                },
+                "largeImage": {
+                    "streamOption": "iiif",
+                    "uri": "", 
+                    "source": ""
+                },
+                "audio": {
+                    "streamOption": "kaltura",
+                    "uri": "", 
+                    "source": ""
+                },
+                "video": {
+                    "streamOption": "kaltura",
+                    "uri": "", 
+                    "source": ""
+                },
+                "pdf": {
+                    "streamOption": "iiif",
+                    "uri": "", 
+                    "source": ""
+                },
+                "compound": {
+                    "streamOption": "index",
+                    "uri": "",
+                    "source": "repository"
+                }
+            }
+        }
+    },
+
+    /*
+     * Fields for scoped search.  These will appear in 'Search Type' dropdown list
+     * "Search type name": Index field to search"
+     *
+     * View option
+     */ 
+    searchFields: [
+        {"Title": "title"},
+        {"Creator": "creator"},
+        {"Subject": "f_subjects"},
+        {"Type": "type"},
+        {"Description": "abstract"}
+    ],
+
+    searchSortFields: {
+        "Title": "title",
+        "Creator": "creator",
+        "Date": "display_record.dates.expression",
+        "ArchivesspaceID": "display_record.identifiers.identifier"
+    },
+
+    // View option
+    sortByOptions: {
+        "Relevance": "relevance",
+        "Title (a - z)": "Title,asc",
+        "Title (z - a)": "Title,desc",
+        "Date": "Date,asc",
+        "Archivesspace ID": "ArchivesspaceID,asc"
+    },
+
+    /*
+     * Advanced Search query options
+     */
+    searchTypes: [
+        {"Contains": "contains"},
+        {"Is": "is"}
+        // {"Is Not": "isnot"}
+    ],
+    booleanSearchFields: [
+        {"AND": "and"},
+        {"OR": "or"},
+        {"NOT": "not"}
+    ],
+
+    /*
+     * Fulltext search fields 
+     * "search all" 
+     */ 
+    fulltextKeywordSearchFields: [
+        {"label": "Title", "id": "title", "field": "title", "boost": "1"},
+        // {"label": "Creator", "id": "creator", "field": "display_record.names.title", "boost": "2"},
+        {"label": "Creator", "id": "creator", "field": "creator", "boost": "3"},
+        {"label": "Subject", "id": "subject", "field": "f_subjects", "boost": "2"},
+        {"label": "Type", "id": "type", "field": "type", "boost": "2"},
+        {"label": "Description", "id": "description", "field": "abstract", "boost": "3"},
+        {"label": "Language", "id": "language", "field": "display_record.t_language.text", "boost": "5"},
+        {"label": "Creation Date", "id": "create_date", "field": "display_record.dates.expression", "matchField": "display_record.dates.label", "matchTerm": "creation"},
+        {"label": "Authority ID", "id": "authority_id", "field": "display_record.identifiers.identifier", "matchField": "display_record.identifiers.type", "matchTerm": "local"},
+    ],
+
+    /*
+     * Fulltext fields for the advanced search field selection box
+     * { "Label" : "fulltext keyword id from fulltext field list" }     
+     */ 
+    advancedSearchFields: [
+        {"Title": "title"},
+        {"Creator": "creator"},
+        {"Subject": "f_subjects"},
+        {"Type": "type"},
+        {"Description": "description"},
+        {"Creation Date": "create_date"},
+        {"Language": "language"},
+        {"Authority ID": "authority_id"}
+    ],
+
+    /*
+     * Options for number of search results to be displayed on each page
+     */
+    resultCountOptions: ["10", "20", "50", "100"],
+
+    /*
+     * Search result view list options
+     * 'List' and 'Grid' are available without further implementation
+     */
+    resultsViewOptions: ["List", "Grid"],
+    defaultSearchResultsView: "List",
+
+    /*
+     * Fuzz factor: number of fuzzy characters in the search terms
+     */
+    searchTermFuzziness: "1",
+
+    /*
+     * Set to false if collection objects should be omitted from search results
+     */
+    showCollectionObjectsInSearchResults: true,
+
+    /*
+     * Facets to display on the search results view
+     * Key is the facet label to be displayed, value is the path in the index
+     * "Facet name": "index field"
+     */
+    facets: {
+        "Creator": "display_record.names.title",
+        "Subject": "f_subjects",
+        "Type": "type",
+        // "Type": "mime_type",
+        "Date": "display_record.dates.expression",
+        "Collections": "is_member_of_collection",
+        "Authority ID": "display_record.subjects.authority_id"
+    },
+
+    /*
+     * Specify ordering of the facet list
+     */
+    facetOrdering: {
+        "Date": "desc"
+    },
+
+    /*
+     * Max number of facets displayed in the facet panel
+     */
+    facetLimit: 200,
+
+    /*
+     * Max number of facets displayed by facet type
+     * If the value is less than the above 'facetLimit' value, a 'show all' link will be displayed to display the full set of facets
+     */
+    facetLimitsByType: {
+        "Collections": 15 
+    },
+
+     /*
+     * Facets to display on the front page
+     */
+    frontPageFacets: ["Creator", "Subject", "Type"],
+
+    /*
+     * Thumbnail images for the frontpage facet panels
+     */
+    facetThumbnails: {
+        "Type": {
+            "Still Image": "assets/img/picture-in-frame-TN.png",
+            "Moving Image": "assets/img/film-camera-TN.png",
+            "Text": "assets/img/old-book-TN.png",
+            "Sound Recording": "assets/img/Sound-Wave-icon-TN.png",
+            "Music Recording": "assets/img/45_rpm_record-TN.png",
+            "Nonmusic Recording": "assets/img/mic-TN.png",
+            "Map": "assets/img/map-TN.png",
+            "Mixed Material": "assets/img/document-icon-free-0-TN.jpg",
+            "3D Object": "assets/img/objects-icon-TN.png"
+            // "Collection": "assets/img/collections-icon-TN.png"
+        }
+    },
+
+    /*
+     * Create facet display labels to encompass multiple facet values
+     */
+    facetLabelNormalization: {
+        "Type": {
+            "Still Image": ["still image", "image/tiff", "image/jp2", "image/jp3"],
+            "Moving Image": ["moving image", "moving_image", "video/mp4"],
+            "Text": ["text", "text/plain"],
+            "Sound Recording": ["sound recording", "sound recording,[object Object]", "audio/mp3"],
+            "Music Recording": ["sound recording-musical"],
+            "Nonmusic Recording": ["sound recording-nonmusical"],
+            "Map": ["cartographic"],
+            "Mixed Material": ["mixed material", "application/pdf"],
+            "3D Object": ["three dimensional object", "three dimensional object,[object Object]"],
+            "Unknown": ["[object Object]"],
+            "Collection": ["collection"]
+        }
+    },
+
+    /*
+     * Date index fields
+     */
+    beginDateField: "display_record.dates.begin",
+    endDateField: "display_record.dates.end",
+    showDateRangeLimiter: true,
+
+    /*
+     * Mime Types for each object type
+     * Object type determines which viewer is used for each mime type
+     * *** Object types are not changeable by user ***
+     */
+    mimeTypes: {
+        "audio": ["audio/mpeg", "audio/x-wav", "audio/mp3"],
+        "video": ["video/mp4", "video/quicktime", "video/mov"],
+        "smallImage": ["image/png", "image/jpg", "image/jpeg"],
+        "largeImage": ["image/tiff", "image/jp2"],
+        "pdf": ["application/pdf"]
+    },
+
+    /*
+     * Available datastreams by object mimetype
+     */
+     datastreams: {
+        "tn": "thumbnail",
+        "jpg": ["image/jpeg", "image/jpg"],
+        "tiff": ["image/tiff"],
+        "mp3": ["audio/mp3", "audio/mpeg", "audio/x-wav"],
+        "mp4": ["video/mp4"],
+        "mov": ["video/mov"],
+        "quicktime": ["video/quicktime"],
+        "pdf": ["application/pdf"]
+     },
+
+     /*
+      * Location of the object file cache
+      */
+     objectCachePath: "files/object",
+
+     /*
+      * File extensions for the local cache.  A request for a datastream will first check the local cache to see if a source file is present.
+      * File extension is determined by the object's mimetype
+      */
+     fileExtensions: {
+        "jp2": ["image/tiff"],
+        "mp3": ["audio/mp3"],
+        "mp4": ["video/mp4"],
+        "pdf": ["application/pdf"]
+     }
 };
