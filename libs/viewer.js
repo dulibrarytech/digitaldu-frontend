@@ -32,9 +32,9 @@ exports.getObjectViewer = function(object, mimeType="") {
  	}
 
  	var dataType = null;
- 	for(var key in config.mimeTypes) {
- 		if(config.mimeTypes[key].includes(mimeType)) {
- 			dataType = key;
+ 	for(let type in config.objectTypes) {
+ 		if(config.objectTypes[type].includes(mimeType)) {
+ 			dataType = type;
  		}
  	}
 

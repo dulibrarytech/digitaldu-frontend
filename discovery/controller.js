@@ -256,11 +256,16 @@ exports.getDatastream = function(req, res) {
 		index = config.elasticsearchPublicIndex;
 
 	// Detect part index appended to a compound object pid.  This is to allow IIIF url resolver to convey part index data by modifying the pid value
-	if(part == null && pid.indexOf("-") > 0) {
-		part = pid.substring(pid.indexOf("-")+1, pid.length);	
-		pid.split("-",1)[0];
-	}
+	let pidElements;
+	if(part == null && pid.indexOf(config.compoundObjectPartID) > 0) {
+		part = pid.substring(pid.indexOf(config.compoundObjectPartID)+1, pid.length);	
+		pid = pid.split(config.compoundObjectPartID,1)[0];
 
+		// pidElements = pid.split(config.compoundObjectPartID);
+		// part = pidElements[pidElements.length-1];
+		// pid = pid.substring(0,pid.length-(part.length+1));
+	}
+		
 	// If a valid api key is passed in with the request, get data from the the private index
 	if(req.headers["x-api-key"] && req.headers["x-api-key"] == config.apiKey) {
 		index = config.elasticsearchPrivateIndex;

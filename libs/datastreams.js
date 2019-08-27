@@ -21,7 +21,7 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
  * @return 
  */
 exports.getDatastream = function(object, objectID, datastreamID, part, callback) {
-  
+
   // If there is a part value, retrieve the part data.  Redefine the object data with the part data
   if(part && isNaN(part) === false) {
     var sequence;
@@ -32,9 +32,10 @@ exports.getDatastream = function(object, objectID, datastreamID, part, callback)
     //  DEV Temporary, unless part object will contain the field 'type' for mime type value
     objectPart["mime_type"] = objectPart.type;
 
-    // Get the datastream for the part object, 
+    // Get the data from the part object, set as object for datastream request
     object = objectPart;
-    sequence = "-" + part;
+    sequence = config.compoundObjectPartID + part;
+    objectID = objectID + sequence;
   }
 
   // If there are no parts in this object, do not append the sequence to the stream url
@@ -44,18 +45,18 @@ exports.getDatastream = function(object, objectID, datastreamID, part, callback)
 
   // Request a thumbnail datastream
   if(datastreamID == "tn") {
+    
     // Check for a local thumbnail image
-    let path = config.tnPath + objectID.match(/[0-9]+/)[0] + sequence + config.thumbnailFileExtension;
+    let path = config.tnPath + objectID.replace(":", "_") + config.thumbnailFileExtension;
     if(fs.existsSync(path) == false) {
-
       let fileType = "default";
       if(Helper.isParentObject(object)) {
         fileType = "compound";
       }
       else {
-        for(var key in config.mimeTypes) {
-          if(config.mimeTypes[key].includes(object.mime_type)) {
-            fileType = key;
+        for(let type in config.objectTypes) {
+          if(config.objectTypes[type].includes(object.mime_type)) {
+            fileType = type;
           }
         }
       }
@@ -165,7 +166,7 @@ exports.getDatastream = function(object, objectID, datastreamID, part, callback)
     else {
       Repository.streamData(object, datastreamID, function(error, stream) {
         if(error) {
-          callback(error, null);
+          callback("Repository stream data error: " + error, null);
         }
         else {
           callback(null, stream);

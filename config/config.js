@@ -23,6 +23,7 @@ module.exports = {
     IIIFServerUrl: process.env.CANTALOUPE_URL,
     cantaloupePort: process.env.CANTALOUPE_PORT,
 
+    // Top level collection settings
     topLevelCollectionPID: "codu:root",
     topLevelCollectionName: "Root Collection",
 
@@ -35,9 +36,6 @@ module.exports = {
     // Max search results on results page
     maxResultsPerPage: 10,
 
-    // Max number of page links shown in the page list
-    maxPaginatorPageLinks: 10,
-
     // Max characters in result description field
     resultMaxCharacters: 400,
 
@@ -47,10 +45,31 @@ module.exports = {
     // Namespace path to the indexed search fields, if the fields are not in top-level of item index object.  Include ALL periods
     searchFieldNamespace: "",
 
-    // Search in the specified metadata keyword fields.  These fields will not appear in the Search Type selections.  Search All is not scoped to the selections that appear in the Search Type list.  
-    //fulltextMetadataSearch: true,
+    /*
+     * Max number of page links shown in the page list
+     */
+    maxPaginatorPageLinks: 10,
 
-    // Will appear in the view, if an item has no title information
+    /*
+     * Options for number of search results to be displayed on each page
+     */
+    resultCountOptions: ["10", "20", "50", "100"],
+
+    /*
+     * Search result view list options
+     * 'List' and 'Grid' are available without further implementation
+     */
+    resultsViewOptions: ["List", "Grid"],
+    defaultSearchResultsView: "List",
+
+    /*
+     * Set to false if collection objects should be omitted from search results
+     */
+    showCollectionObjectsInSearchResults: true,
+
+    /*
+     * Will appear in the view, if an item has no title information
+     */
     noTitlePlaceholder: "Untitled",
 
     /* 
@@ -84,6 +103,7 @@ module.exports = {
      * [ universalviewer ]
      */
     compoundObjectViewer: "universalviewer",
+    compoundObjectPartID: "_",
 
     /*
      * Openseadragon viewer settings
@@ -132,6 +152,24 @@ module.exports = {
     kalturaThumbnailWidth: "200",
     kalturaThumbnailHeight: "250",
 
+    /*
+     * Date index fields
+     */
+    beginDateField: "display_record.dates.begin",
+    endDateField: "display_record.dates.end",
+    showDateRangeLimiter: true,
+
+    /*
+     * Define object types here, associte with object mime types
+     */
+    objectTypes: {
+        "audio": ["audio/mpeg", "audio/x-wav", "audio/mp3"],
+        "video": ["video/mp4", "video/quicktime", "video/mov"],
+        "smallImage": ["image/png", "image/jpg", "image/jpeg"],
+        "largeImage": ["image/tiff", "image/jp2"],
+        "pdf": ["application/pdf"]
+    },
+
 
     // The index field that contains the display record data
     displayRecordField: "display_record",
@@ -141,19 +179,26 @@ module.exports = {
     thumbnailFileExtension: ".png",
     defaultThumbnailImage: "tn-placeholder.jpg",
 
-    thumbnailPlaceholderImages: {
-        "audio-tn.png": ["audio/mp3"],
-        "video-tn.png": ["video/mp4"],
-        "pdf-tn.png": ["application/pdf"],
-        "image-tn.png": ["image/tiff", "image/jp2", "image/jp3"]
-    },
     /*
+     * Object specific default thumbnail images
+     * { "object type" : "image filename" }
+     */
+    thumbnailPlaceholderImages: {
+        "audio": "audio-tn.png",
+        "video": "video-tn.png",
+        "pdf": "pdf-tn.png",
+        "smallImage": "image-tn.png",
+        "largeImage": "image-tn.png"
+    },
+
+    /*
+     *  Declare thumbnail image sources here for each object type/file type
+     *
      *  streamOption: [index|iiif|kaltura|external]
      *  uri: if 'external' this is the path to the resource,
      *  source: [repository|remote] if 'index' stream: 'repository' will use repository api to source uri, 'remote' will fetch full uri
      */
     thumbnails: {
-        // object_types
         "collection": {
             "streamOption": "index",
             "uri": "", 
@@ -196,54 +241,10 @@ module.exports = {
     },
 
     /*
-     * Fields for scoped search.  These will appear in 'Search Type' dropdown list
-     * "Search type name": Index field to search"
-     *
-     * View option
-     */ 
-    searchFields: [
-        {"Title": "title"},
-        {"Creator": "creator"},
-        {"Subject": "f_subjects"},
-        {"Type": "type"},
-        {"Description": "abstract"}
-    ],
-
-    searchSortFields: {
-        "Title": "title",
-        "Creator": "creator",
-        "Date": "display_record.dates.expression",
-        "ArchivesspaceID": "display_record.identifiers.identifier"
-    },
-
-    // View option
-    sortByOptions: {
-        "Relevance": "relevance",
-        "Title (a - z)": "Title,asc",
-        "Title (z - a)": "Title,desc",
-        "Date": "Date,asc",
-        "Archivesspace ID": "ArchivesspaceID,asc"
-    },
-
-    /*
-     * Advanced Search query options
-     */
-    searchTypes: [
-        {"Contains": "contains"},
-        {"Is": "is"}
-        // {"Is Not": "isnot"}
-    ],
-    booleanSearchFields: [
-        {"AND": "and"},
-        {"OR": "or"},
-        {"NOT": "not"}
-    ],
-
-    /*
      * Fulltext search fields 
-     * "search all" 
+     * Define all seacrh fields here
      */ 
-    fulltextKeywordSearchFields: [
+    searchAllFields: [
         {"label": "Title", "id": "title", "field": "title", "boost": "1"},
         // {"label": "Creator", "id": "creator", "field": "display_record.names.title", "boost": "2"},
         {"label": "Creator", "id": "creator", "field": "creator", "boost": "3"},
@@ -256,13 +257,25 @@ module.exports = {
     ],
 
     /*
-     * Fulltext fields for the advanced search field selection box
-     * { "Label" : "fulltext keyword id from fulltext field list" }     
+     * Selectable search fields for the standard search.  These will appear in 'Search Type' dropdown list
+     * { "Label" : "searchAllFields.id" }
+     */ 
+    searchFields: [
+        {"Title": "title"},
+        {"Creator": "creator"},
+        {"Subject": "subject"},
+        {"Type": "type"},
+        {"Description": "description"}
+    ],
+
+    /*
+     * Selectable search fields for the advanced search
+     * { "Label" : "searchAllFields.id" }     
      */ 
     advancedSearchFields: [
         {"Title": "title"},
         {"Creator": "creator"},
-        {"Subject": "f_subjects"},
+        {"Subject": "subject"},
         {"Type": "type"},
         {"Description": "description"},
         {"Creation Date": "create_date"},
@@ -271,16 +284,40 @@ module.exports = {
     ],
 
     /*
-     * Options for number of search results to be displayed on each page
+     * Search result sort fields
+     * { "Display Label" : "path.to.index.field" }
      */
-    resultCountOptions: ["10", "20", "50", "100"],
+     searchSortFields: {
+        "Title": "title",
+        "Creator": "creator",
+        "Date": "display_record.dates.expression",
+        "ArchivesspaceID": "display_record.identifiers.identifier"
+    },
 
     /*
-     * Search result view list options
-     * 'List' and 'Grid' are available without further implementation
+     * Options to appear in the search sort dropdown menu
+     * { "Display Label" : "searchSortField display label, [asc|desc]" }
      */
-    resultsViewOptions: ["List", "Grid"],
-    defaultSearchResultsView: "List",
+    sortByOptions: {
+        "Relevance": "relevance", // default
+        "Title (a - z)": "Title,asc",
+        "Title (z - a)": "Title,desc",
+        "Date": "Date,asc",
+        "Archivesspace ID": "ArchivesspaceID,asc"
+    },
+
+    /*
+     * Advanced Search query options
+     */
+    searchTypes: [
+        {"Contains": "contains"},
+        {"Is": "is"}
+    ],
+    booleanSearchFields: [
+        {"AND": "and"},
+        {"OR": "or"},
+        {"NOT": "not"}
+    ],
 
     /*
      * Fuzz factor: number of fuzzy characters in the search terms
@@ -288,14 +325,8 @@ module.exports = {
     searchTermFuzziness: "1",
 
     /*
-     * Set to false if collection objects should be omitted from search results
-     */
-    showCollectionObjectsInSearchResults: true,
-
-    /*
      * Facets to display on the search results view
-     * Key is the facet label to be displayed, value is the path in the index
-     * "Facet name": "index field"
+     * { "Facet Label" : "path.to.index.field" }
      */
     facets: {
         "Creator": "display_record.names.title",
@@ -308,7 +339,7 @@ module.exports = {
     },
 
     /*
-     * Specify ordering of the facet list
+     * Specify ordering of the facet lists
      */
     facetOrdering: {
         "Date": "desc"
@@ -351,7 +382,7 @@ module.exports = {
     },
 
     /*
-     * Create facet display labels to encompass multiple facet values
+     * Create facet display labels to select multiple facet values
      */
     facetLabelNormalization: {
         "Type": {
@@ -370,27 +401,8 @@ module.exports = {
     },
 
     /*
-     * Date index fields
-     */
-    beginDateField: "display_record.dates.begin",
-    endDateField: "display_record.dates.end",
-    showDateRangeLimiter: true,
-
-    /*
-     * Mime Types for each object type
-     * Object type determines which viewer is used for each mime type
-     * *** Object types are not changeable by user ***
-     */
-    mimeTypes: {
-        "audio": ["audio/mpeg", "audio/x-wav", "audio/mp3"],
-        "video": ["video/mp4", "video/quicktime", "video/mov"],
-        "smallImage": ["image/png", "image/jpg", "image/jpeg"],
-        "largeImage": ["image/tiff", "image/jp2"],
-        "pdf": ["application/pdf"]
-    },
-
-    /*
-     * Available datastreams by object mimetype
+     * Assign datastreams for objects by object mimetype
+     * For dynamic generation of the /datastream uri (internal use only). The datastreams listed here will be appended to the uri (/datastream/{PID}/{datastreams key})
      */
      datastreams: {
         "tn": "thumbnail",
@@ -410,7 +422,6 @@ module.exports = {
 
      /*
       * File extensions for the local cache.  A request for a datastream will first check the local cache to see if a source file is present.
-      * File extension is determined by the object's mimetype
       */
      fileExtensions: {
         "jp2": ["image/tiff"],

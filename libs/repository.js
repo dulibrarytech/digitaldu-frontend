@@ -11,7 +11,7 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
 	  rs = require('request-stream');
 
 const host = config.repositoryUrl;
-//http://archivesdu.duracloud.org/durastore/dip-store/dip-store/ 		// repo url
+//http://archivesdu.duracloud.org/durastore/dip-store/dip-store/ 		// repo uri
 
 /**
  * 
@@ -56,14 +56,18 @@ exports.getDatastreamUrl = function(datastream, pid) {
 exports.streamData = function(object, dsid, callback) {
 	var url;
 
-	if(dsid == "tn") {
-		url = host + "/" + object.thumbnail;
-	}
-	else {
-		url = host + "/" + object.object;
-	}
-
 	try {
+		if(!object) { throw "Object is null" }
+
+		if(dsid == "tn") {
+			//if(!object.thumbnail || object.thumbnail.length < 1) { throw "Object thumbnail uri not set " + object.pid }
+			url = host + "/" + object.thumbnail;
+		}
+		else {
+			//if(!object.object || object.object.length < 1) { throw "Object source uri not set " + object.pid }
+			url = host + "/" + object.object;
+		}
+
 		// Get the stream 
 		rs(url, {}, function(err, res) {
 			if(err) {

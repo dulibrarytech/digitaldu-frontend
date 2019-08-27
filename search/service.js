@@ -69,7 +69,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       }
 
       // If field value is "all", get all the available search fields
-      fields = Helper.getSearchFields(field)
+      fields = Helper.getSearchFields(field);
 
       // Get the Elastic query type to use for this query
       queryType = Helper.getQueryType(queryData[index]);
@@ -268,7 +268,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
     }
 
     // DEBUG - Output the full structure of the query object
-    console.log("TEST queryObj:", util.inspect(queryObj, {showHidden: false, depth: null}));
+    //console.log("TEST queryObj:", util.inspect(queryObj, {showHidden: false, depth: null}));
 
     // Get elasticsearch aggregations object 
     var facetAggregations = Helper.getFacetAggregationObject(config.facets);

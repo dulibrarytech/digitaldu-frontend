@@ -362,7 +362,6 @@ exports.getFacets = getFacets;
  * @return 
  */
 exports.getDatastream = function(indexName, objectID, datastreamID, part, callback) {
-
   // Get the object data
   fetchObjectByPid(indexName, objectID, function(error, object) {
     if(object) {
@@ -509,7 +508,6 @@ exports.getManifestObject = function(pid, callback) {
           "Description": object.abstract
         }
       };
-        console.log("TEST container", container);
 
       // Create children array for IIIF
       var parts = [], resourceUrl;
@@ -528,7 +526,7 @@ exports.getManifestObject = function(pid, callback) {
             format: object.display_record.parts[key].type,
             type: Helper.getIIIFObjectType(object.display_record.parts[key].type) || "",
             //resourceID: object.display_record.parts[key].object,
-            resourceID: object.pid + "-" + object.display_record.parts[key].order,
+            resourceID: object.pid + config.compoundObjectPartID + object.display_record.parts[key].order,
             downloadFileName: object.display_record.parts[key].title,
             resourceUrl: resourceUrl,
             thumbnailUrl: config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType("thumbnail") + "/" + object.display_record.parts[key].order

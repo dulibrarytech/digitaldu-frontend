@@ -197,12 +197,12 @@ exports.getFacetAggregationObject = function(facets) {
  */
 exports.getIIIFObjectType = function(mimeType) {
   let objectTypes = config.IIIFObjectTypes, 
-      mimeTypes = config.mimeTypes,
+      localObjectTypes = config.objectTypes,
       objectType = null;
 
-  for(var key in mimeTypes) {
-    if(mimeTypes[key].includes(mimeType)) {
-      objectType = objectTypes[key];
+  for(var type in localObjectTypes) {
+    if(localObjectTypes[type].includes(mimeType)) {
+      objectType = objectTypes[type];
     }
   }
 
@@ -231,8 +231,8 @@ exports.getDsType = function(mimeType) {
 
 exports.getObjectType = function(mimeType) {
   let type = "";
-  for(var key in config.mimeTypes) {
-    if(config.mimeTypes[key].includes(mimeType)) {
+  for(var key in config.objectTypes) {
+    if(config.objectTypes[key].includes(mimeType)) {
       type = key;
     }
   }
