@@ -2,3 +2,5 @@
 .env
 node_modules/
 *.sh
+files/thumbnails/*
+files/object/*
