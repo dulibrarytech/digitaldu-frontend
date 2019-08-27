@@ -70,7 +70,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
 
       // If field value is "all", get all the available search fields
       fields = Helper.getSearchFields(field);
-
+      
       // Get the Elastic query type to use for this query
       queryType = Helper.getQueryType(queryData[index]);
 
@@ -132,7 +132,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
         }
       }
       else {
-        callback("Error: invalid search field configuration", {});
+        console.log("Error: invalid search field configuration", {});
       } 
       currentQuery = queryFields[0];
 

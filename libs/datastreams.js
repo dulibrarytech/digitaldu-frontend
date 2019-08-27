@@ -45,7 +45,6 @@ exports.getDatastream = function(object, objectID, datastreamID, part, callback)
 
   // Request a thumbnail datastream
   if(datastreamID == "tn") {
-    
     // Check for a local thumbnail image
     let path = config.tnPath + objectID.replace(":", "_") + config.thumbnailFileExtension;
     if(fs.existsSync(path) == false) {
@@ -79,6 +78,9 @@ exports.getDatastream = function(object, objectID, datastreamID, part, callback)
 
           case "kaltura":
             uri = Kaltura.getThumbnailUrl(object);
+
+
+
             break;
 
           case "external":

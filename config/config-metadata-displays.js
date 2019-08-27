@@ -15,7 +15,7 @@ module.exports = {
                 "matchField": "type",
                 "matchValue": "abstract"
             }
-        }
+        },
     },
 
     /*
@@ -36,6 +36,14 @@ module.exports = {
                 "path": "notes.content",
                 "matchField": "type",
                 "matchValue": "abstract"
+            }
+        },
+        "collection": {
+            "Creator": {
+                "path": "creator"
+            },
+            "Description": {
+                "path": "abstract"
             }
         }
     },

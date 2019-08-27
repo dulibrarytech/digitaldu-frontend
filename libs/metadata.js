@@ -87,11 +87,17 @@ exports.createMetadataDisplayObject = function(result, collections=[]) {
 exports.addResultMetadataDisplays = function(resultArray) {
 	var displayObj = {},
 		displayRecord,
-		resultsDisplay = metadataConfig.resultsDisplay["default"] || {},
+		resultsDisplay,
 		metadata,
 		pathArray;	// TODO: Determine which display to use based on object, or other specification
 
 	for(var result of resultArray) {
+		if(result.objectType == "collection") {
+			resultsDisplay = metadataConfig.resultsDisplay["collection"] || {}
+		}
+		else {
+			resultsDisplay = metadataConfig.resultsDisplay["default"] || {}
+		}
 		metadata = {};
 		displayRecord = result[config.displayRecordField] || {};
 

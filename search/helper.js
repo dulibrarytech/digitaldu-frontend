@@ -217,12 +217,12 @@ exports.getSearchFields = function(fieldValue) {
 
   // Non-scoped search: Search in all of the fields in the fulltext search
   if(fieldValue.toLowerCase() == 'all') {
-    fields = config.fulltextKeywordSearchFields;
+    fields = config.searchAllFields;
   }
 
   // Scoped search: Use the selected type in the search type dropdown
   else {
-    for(var field of config.fulltextKeywordSearchFields) {
+    for(var field of config.searchAllFields) {
       if(field.id.toLowerCase() == fieldValue.toLowerCase()) {
           fields.push(field);
       }
