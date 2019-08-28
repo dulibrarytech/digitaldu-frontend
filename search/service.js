@@ -149,7 +149,6 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
 
       // Add this query to the boolean filter must_not object
       else if(prevBool == "not") {
-        bool = 
         booleanQuery.bool.must_not.push(currentQuery);
         boolType = "must_not";
       }
