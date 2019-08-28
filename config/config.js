@@ -2,19 +2,27 @@
 
 module.exports = {
 
-    // Runtime environment
+    /*
+     * Runtime environment
+     */
     nodeEnv: process.env.NODE_ENV,
 
-    // Keys
+    /*
+     * Keys
+     */
     apiKey: process.env.API_KEY,
 
-    // Domain and paths
+    /*
+     * Domain and paths
+     */
     host: process.env.APP_HOST,
     appPath: process.env.CLIENT_PATH,
     baseUrl: process.env.CLIENT_HOST,
     rootUrl: process.env.CLIENT_HOST + process.env.CLIENT_PATH,
 
-    // External services
+    /*
+     * External services
+     */
     repositoryUrl: process.env.REPOSITORY,
     elasticsearchHost: process.env.ELASTICSEARCH_HOST,
     elasticsearchPort: process.env.ELASTICSEARCH_PORT,
@@ -23,27 +31,36 @@ module.exports = {
     IIIFServerUrl: process.env.CANTALOUPE_URL,
     cantaloupePort: process.env.CANTALOUPE_PORT,
 
-    // Top level collection settings
+    /*
+     * Root collection
+     */
     topLevelCollectionPID: "codu:root",
     topLevelCollectionName: "Root Collection",
 
-    // Search index name (type)
+    /*
+     * Index type name
+     */
     searchIndexName: "data",
 
-    // Search results limit
+    /*
+     * Search results limit
+     */
     maxDisplayResults: 1000,
 
-    // Max search results on results page
+    /*
+     * Max search results on results page
+     */
     maxResultsPerPage: 10,
 
-    // Max characters in result description field
+    /*
+     * Max characters in result description field
+     */
     resultMaxCharacters: 400,
 
-    // Collection results per page
+    /*
+     * Collection results per page
+     */
     maxCollectionsPerPage: 12,
-
-    // Namespace path to the indexed search fields, if the fields are not in top-level of item index object.  Include ALL periods
-    searchFieldNamespace: "",
 
     /*
      * Max number of page links shown in the page list

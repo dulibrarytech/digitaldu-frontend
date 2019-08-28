@@ -187,7 +187,7 @@ exports.getDatastream = function(object, objectID, datastreamID, part, callback)
 var streamRemoteData = function(url, callback) {
 	rs(url, {}, function(err, res) {
 		if(err) {
-			callback("Could not open datastream. " + err + " Check connection to repository", null, null);
+			callback("Could not open datastream. " + err, null, null);
 		}
 		else {
 			callback(null, res.statusCode, res);
