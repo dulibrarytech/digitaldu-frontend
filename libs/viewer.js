@@ -78,12 +78,16 @@ exports.getObjectViewer = function(object, mimeType="") {
 exports.getCompoundObjectViewer = function(object) {
  	var viewer = "";
 
- 	// IF video this is the kaltura player
+ 	// If not an a/v object, do not embed the Kaltura player
+ 	let embedKaltura = false;
+ 	if(config.objectTypes.audio.includes(object.mime_type) || config.objectTypes.video.includes(object.mime_type)) {
+ 		embedKaltura = config.universalViewerKalturaPlayer;
+ 	}
 
  	// Get viewer for object mime type:
  	switch(config.compoundObjectViewer) {
  		case "universalviewer":
- 			viewer += getIIIFObjectViewer(object, "1", config.universalViewerKalturaPlayer);
+ 			viewer += getIIIFObjectViewer(object, "1", embedKaltura);
  			break;
 
  		default:
