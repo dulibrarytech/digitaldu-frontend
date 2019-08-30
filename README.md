@@ -74,6 +74,7 @@ All other content is released under [CC-BY-4.0](https://creativecommons.org/lice
 
 ## Project Documentation
 
+* [v.1.0.0-beta pre release Repository Demo](https://youtu.be/1LGOQYEfz5I)
 * [Documentation - Digital Repository Object Lifecycle Structure](https://docs.google.com/document/d/1lQcEt3_slGvSKYmw3hKKGtm9HiLsLEytdbC7oEI0xVo/edit?usp=sharing) - document that describes the different supported object types and their structure - Last Updated: 2019 July
 * [Digital Collections BETA Architecture](https://drive.google.com/open?id=1J-06znPbHNQkKQ9gOB22Vtv7Rj8xDExX) - diagram that shows how our ecosystem, the repository frontend and backend is a component of this system - Last Updated: 2019 May
 * [Digital Collections Use Cases](https://docs.google.com/spreadsheets/d/1EpKlDTfdVN2T460gfSVKJ5L_QNAFh70Nl9litHS7src/edit?usp=sharing) - use cases for the repository sofware and the ecosystem, frequently updated - Last Updated: August 2019
