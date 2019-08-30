@@ -30,13 +30,7 @@ All other content is released under [CC-BY-4.0](https://creativecommons.org/lice
 
 ### Acknowledgments
 
-@freyesdulib
-
-@kimpham54
-
-@jackflaps
-
-@josephlabrecque
+@freyesdulib, @kimpham54, @jackflaps, @josephlabrecque
 
 
 ### Local Development Setup
