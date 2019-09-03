@@ -319,6 +319,8 @@ module.exports = {
         "Relevance": "relevance", // default
         "Title (a - z)": "Title,asc",
         "Title (z - a)": "Title,desc",
+        "Creator (a - z)": "Creator,asc",
+        "Creator (z - a)": "Creator,desc",
         "Date": "Date,asc",
         "Archivesspace ID": "ArchivesspaceID,asc"
     },
