@@ -1,7 +1,7 @@
  /**
  * @file 
  *
- * Search results view controller.  This is the main search function for the () application
+ * Discovery View Controller Functions
  *
  */
 
@@ -16,6 +16,29 @@ const async = require('async'),
     Metadata = require('../libs/metadata'),
     Format = require("../libs/format");
 
+/**
+ * Renders the search results view
+ * Performs search with request parameters and application settings
+ * Formats search result data for the search results view
+ * 
+ * @param {Object} req - Express.js request object
+ * @param {Array.<String>} req.query.q - Query keyword strings, one for each search query
+ * @param {Array.<String>} req.query.field - Search fields (defined in the configuration), one for each search query
+ * @param {Array.<String>} req.query.type - Search types (defined in the configuration), one for each search query
+ * @param {Array.<String>} req.query.bool - Bool to use to combine current query with previous query.  In a single query search, this value has no effect
+ * @param {Object} req.query.f - DDU Facet object (ex {"{facet name or ID}": ["{facet value}", "{facet value}", ...]}) Currently selected facets
+ * @param {String} req.query.page - Page number of results to return.  Will use this page number in the Elastic search  Must be numeric
+ * @param {String} resultsPerPage - Specify number of results per page directly with this value.  Must be numeric
+ * @param {String} req.query.sort - (ex "sort field,asc|desc")
+ * @param {String} req.query.collection - Collection PID to scope search resuts to.  No longer in use, use collection facet
+ * @param {Array.<String>} req.query.showAll - If a list limit has been specified in the configuration for a given facet, adding its name to this array will cancel the limit.  Search will return full facet list
+ * @param {Array.<String>} req.query.expand - Include a facet name in this array to force expand the collapsible facet panel in the view.  this keeps the expanded state consistent after view reloads
+ * @param {String} req.query.from - Daterange 'search from' date.  Year only (ex YYYY).  Invalid or incorrect date values will be ignored.  Default value is "0"
+ * @param {String} req.query.to - Daterange 'search to' date.  Year only (ex YYYY).  Invalid or incorrect date values will be ignored.  Default value is the current year
+ * @param {Object} res - Express.js response object
+ *
+ * @return {undefined}
+ */
 exports.search = function(req, res) {
 	var query = req.query.q || [""],
 		field = req.query.field || ["all"], 
@@ -35,10 +58,9 @@ exports.search = function(req, res) {
 
 	let sortBy = Helper.getSortDataArray(sort);
 	let queryData = Helper.getSearchQueryDataObject(query, field, type, bool);
-
 	Service.searchIndex(queryData, facets, collection, page, pageSize, daterange, sortBy, function(error, response) {
 
-		// View data
+		// Assign view data
 		var data = {
 			error: null,
 			facets: {},
@@ -47,7 +69,7 @@ exports.search = function(req, res) {
 			pageData: null,
 			page: req.query.page || 1,
 			root_url: config.rootUrl,
-			query: Helper.getResultsLabel(req.query.q, facets),
+			query: Helper.getResultsLabel(query, facets),
 			view: req.query.view || config.defaultSearchResultsView || "list",
 			sortType: req.query.sort || "relevance",
 			options: {}
@@ -98,6 +120,15 @@ exports.search = function(req, res) {
 	});
 }
 
+/**
+ * Renders the advanced search view
+ * Get form field data from the configuration
+ *
+ * @param {Object} req - Express.js request object
+ * @param {Object} res - Express.js response object
+ *
+ * @return {undefined}
+ */
 exports.advancedSearch = function(req, res) {
 	var data = {
 		error: null,

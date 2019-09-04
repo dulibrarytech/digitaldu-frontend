@@ -1,10 +1,9 @@
- /**
+/**
  * @file 
  *
  * Discovery Routes
  *
  */
-
 'use strict'
 
 var Discovery = require('../discovery/controller');

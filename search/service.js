@@ -1,7 +1,7 @@
  /**
  * @file 
  *
- * Search module service functions
+ * Search Service Functions
  *
  */
 
@@ -16,13 +16,44 @@ const es = require('../config/index'),
       Helper = require("./helper");
 
 /**
- * 
+ * Search the index
+ * Perform a search with query data and search specifications
  *
- * @param 
- * @return 
+ * @param {Array.<queryData>} queryData - Array of data for multiple combined queries
+ * @param {Object} facets - DDU Facet object (ex {"{facet name or ID}": ["{facet value}", "{facet value}", ...]}) Currently selected facets
+ * @param {String} collection - Collection PID to scope search resuts to.  No longer in use, use collection facet
+ * @param {Array.<queryData>} pageNum - Page number of results to return.  Will use this page number in the Elastic search  Must be numeric
+ * @param {Array.<queryData>} pageSize - Specify number of results per page directly with this value.  Must be numeric
+ * @param {dateRange} daterange
+ * @param {sort} sort
+ *
+ * @typedef (Object) dateRange
+ * @property {String} from - Daterange 'search from' date.  Year only [YYYY]
+ * @property {String} to - Daterange 'search to' date.  Year only [YYYY]
+ *
+ * @typedef (Object) sort
+ * @property {String} field - Index field to sort search results by
+ * @property {String} order - Order of sort ["asc"|"desc"]
+ *
+ * @typedef (Object) queryData - Data to perform a single query
+ * @property {String} terms - Search terms
+ * @property {String} field - Search in this index field; "all" to search in all configured search fields {"all"|[index field]}
+ * @property {String} type - Search type ["contains|is"]
+ * @property {String} bool - Bool to use to combine current query with previous query ["or"|"and"|"not"]
+ *
+ * @typedef (Object) searchResults - This object is the search results data object
+ * @property {String} title - Result object title
+ * @property {String} tn - Uri to result objcet thumbnail datastream
+ * @property {String} pid - Result object pid
+ * @property {String} objectType - Result object 'object_type' ["object"|"collection"]
+ * @property {Object} display_record - Result object index display record
+ *
+ * @callback callback
+ * @param {String|null} Error message or null
+ * @param {Array.<searchResults>|null} Search results object, Null if error
  */
 exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=1, pageSize=10, daterange=null, sort=null, callback) {
-    var queryFields = [], 
+    var queryFields = [],
         results = [], 
         restrictions = [],
         filters = [],
@@ -306,87 +337,45 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
         callback(error, {});
       }
       else {
-        returnResponseData(facets, response, callback);
-      }
-    });
-}
-
-/**
- * 
- *
- * @param 
- * @return 
- */
-exports.searchFacets = function (query, facets, page, callback) {
-    client.search({
-            index: config.elasticsearchPublicIndex,
-            type: config.searchIndexName,
-            body: {
-                "query": {
-                    "bool": {
-                        "must": {
-                            "multi_match": {
-                                "operator": "and",
-                                "fields": facets,
-                                "query": query
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    ).then(function (body) {
-        callback(null, body);
-    }, function (error) {
-        callback(error, {});
-    });
-};
-
-/**
- * Create a data object with result and facet data
- *
- * @param 
- * @return 
- */
-var returnResponseData = function(facets, response, callback) {
-
-  // Remove selected facet from the facet panel list.  The list should not show a facet option if the facet has already been selected
-  Helper.removeSelectedFacets(facets, response);
-  
-  // Return the aggregation results for the facet display
-  var responseData = {};
-  responseData['facets'] = Helper.removeEmptyFacetKeys(response.aggregations);
-  responseData['count'] = response.hits.total;
-
-  try {
-
-    // Create a normalized data object for the search results
-    var results = [], tn, resultData, resultObj;
-    for(var result of response.hits.hits) {
-
-      // Get the thumbnail for this search result
-      tn = config.rootUrl + "/datastream/" + result._source.pid.replace('_', ':') + "/tn";
+        // Remove selected facet from the facet panel list.  The list should not show a facet option if the facet has already been selected
+        Helper.removeSelectedFacets(facets, response);
         
-      // Push a new result object to the results data array
-      resultObj = {
-        title: result._source.title || "No Title",
-        tn: tn,
-        pid: result._source.pid,
-        objectType: result._source.object_type
+        // Return the aggregation results for the facet display
+        var responseData = {};
+        responseData['facets'] = Helper.removeEmptyFacetKeys(response.aggregations);
+        responseData['count'] = response.hits.total;
+
+        try {
+
+          // Create a normalized data object for the search results
+          var results = [], tn, resultData, resultObj;
+          for(var result of response.hits.hits) {
+
+            // Get the thumbnail for this search result
+            tn = config.rootUrl + "/datastream/" + result._source.pid.replace('_', ':') + "/tn";
+              
+            // Push a new result object to the results data array
+            resultObj = {
+              title: result._source.title || "No Title",
+              tn: tn,
+              pid: result._source.pid,
+              objectType: result._source.object_type
+            }
+
+            // Add the display record
+            resultObj[config.displayRecordField] = result._source[config.displayRecordField] || {};
+
+            // Ad current result to the results array
+            results.push(resultObj);
+          }
+
+          // Add the results array, send the response
+          responseData['results'] = results;
+          callback(null, responseData);
+        }
+        catch(error) {
+          callback(error, {});
+        }
       }
-
-      // Add the display record
-      resultObj[config.displayRecordField] = result._source[config.displayRecordField] || {};
-
-      // Ad current result to the results array
-      results.push(resultObj);
-    }
-
-    // Add the results array, send the response
-    responseData['results'] = results;
-    callback(null, responseData);
-  }
-  catch(error) {
-    callback(error, {});
-  }
+    });
 }

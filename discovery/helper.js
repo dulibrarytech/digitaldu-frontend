@@ -4,7 +4,6 @@
  * Discovery Helper Functions
  *
  */
-
 'use strict'
 
 var config = require('../config/' + process.env.CONFIGURATION_FILE);
@@ -14,11 +13,11 @@ var config = require('../config/' + process.env.CONFIGURATION_FILE);
  *
  * @param {Array} objects - Array of Elastic search result _source objects
  *
-* @typedef (Object) viewData - List of 'view data' objects
+ * @typedef (Object) viewData - List of 'view data' objects
  * @property {String} pid - Object pid
  * @property {String} tn - Object TN image source path
  * @property {String} title - Object title
- * @property {String} path - {"/collection"|"/object"} based on object type
+ * @property {String} path - Object type path (ex "/object" or "/collection") Used to create the link to the object in the view
  *
  * @return {viewData}
  */
@@ -102,8 +101,14 @@ exports.sortSearchResultObjects = function(objects) {
  /**
  * Wrapper function for createBreadcrumbLinks
  *
- * @param {Array.<{pid: String - The collection pid, name: String - The collection name, url: String - Absolute path to the collection's view}>} collections
- * @return {String|null} The html string, null if the collections array is empty
+ * @param {Array.<collectionData>}
+ *
+ * @typedef (Object) collectionData - Data to create one collection breadcrumb link
+ * @property {String} pid - The collection pid
+ * @property {String} name - The collection name, to be displayed in the breadcrumb
+ * @property {String} url - Absolute path to the collection's view
+ *
+ * @return {String|null} The html string for the breadcrumb list, null if the collections array is empty
  */
 exports.getCollectionBreadcrumbObject = function(collections) {
     return createBreadcrumbLinks(collections);
@@ -112,8 +117,14 @@ exports.getCollectionBreadcrumbObject = function(collections) {
 /**
  * Creates an html breadcrumb link list for an array of collections
  *
- * @param {Array.<{pid: String - The collection pid, name: String - The collection name, url: String - Absolute path to the collection's view}>} collections
- * @return {String|null} The html string, null if the collections array is empty
+ * @param {Array.<collectionData>}
+ *
+ * @typedef (Object) collectionData - Data to create one collection breadcrumb link
+ * @property {String} pid - The collection pid
+ * @property {String} name - The collection name, to be displayed in the breadcrumb
+ * @property {String} url - Absolute path to the collection's view
+ *
+ * @return {String|null} The html string for the breadcrumb list, null if the collections array is empty
  */
 function createBreadcrumbLinks(collections) {
     var html = "";

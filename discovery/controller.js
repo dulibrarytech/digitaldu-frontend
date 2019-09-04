@@ -1,10 +1,10 @@
- 'use strict'
- /**
+/**
  * @file 
  *
  * Discovery View Controller Functions
  *	
  */
+'use strict'
 
 const async = require('async'),
     config = require('../config/' + process.env.CONFIGURATION_FILE),
@@ -24,7 +24,7 @@ const async = require('async'),
  * Retrieves all objects in the root collection
  * 
  * @param {Object} req - Express.js request object
- * @param {Number} req.query.page - Returns this page of results if pagination is in use
+ * @param {String} req.query.page - Returns this page of results if pagination is in use
  * @param {Object} res - Express.js response object
  *
  * @return {undefined}
@@ -84,8 +84,8 @@ exports.renderRootCollection = function(req, res) {
  * Retrieves all objects in the requested collection
  * 
  * @param {Object} req - Express.js request object
- * @param {Object} req.query.f - DDU Facet object {"{facet name or ID}": ["{facet value}", "{facet value}", ...]} Currently selected facets
- * @param {Number} req.query.page - If object results for requested collection exceed page limit, show this page of object results
+ * @param {Object} req.query.f - DDU Facet object (ex {"{facet name or ID}": ["{facet value}", "{facet value}", ...]}) Currently selected facets
+ * @param {String} req.query.page - If object results for requested collection exceed page limit, show this page of object results
  * @param {Array} req.query.showAll - Array of facet names: If a name is listed, the entire list of facets will be shown in the facet panel. For use if list has been limited
  * @param {Object} res - Express.js response object
  *

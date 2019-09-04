@@ -1,7 +1,7 @@
  /**
  * @file 
  *
- * Search module helper functions
+ * Search Helper Functions
  *
  */
 
@@ -11,10 +11,10 @@ var config = require('../config/' + process.env.CONFIGURATION_FILE),
     appHelper = require('../libs/helper');
 
 /**
- * 
+ * Creates an Elastic 'aggs' query for an Elastic query object 
  *
- * @param 
- * @return 
+ * @param {Object} facets - DDU facet fields configuration
+ * @return {Object} Elastic DSL aggregations query object
  */
 exports.getFacetAggregationObject = function(facets) {
   var facetAggregations = {}, field;
@@ -30,10 +30,13 @@ exports.getFacetAggregationObject = function(facets) {
 }
 
 /**
- * 
+ * Removes any facets appearing in 'facets' object from the Elastic response object agregations buckets 
+ * Updates results object as reference
  *
- * @param 
- * @return 
+ * @param {Object} facets - DDU Facet object (ex {"{facet name or ID}": ["{facet value}", "{facet value}", ...]}) Currently selected facets
+ * @param {Object} results - Elastic search response object
+ *
+ * @return {undefined}
  */
 exports.removeSelectedFacets = function(facets, results) {
   for(var facetKey in facets) {
@@ -50,10 +53,11 @@ exports.removeSelectedFacets = function(facets, results) {
 }
 
 /**
- * 
+ * Removes any aggregation keys with empty values from the Elastic search response aggregations object
  *
- * @param 
- * @return 
+ * @param {Object} facets - Elastic search response aggregations object
+ *
+ * @return {Object} - Updated Elastic search response aggregations object
  */
 exports.removeEmptyFacetKeys = function(facets) {
   var buckets;
@@ -69,66 +73,13 @@ exports.removeEmptyFacetKeys = function(facets) {
 }
 
 /**
- * Defunct
+ * Get data for the search results keywords label
+ * If there are multiple queries in the array, this is an advanced search.  Use the first query for the results querystring label
  *
- * @param 
- * @return 
- */
-exports.getSearchResultDisplayFields = function(searchResult) {
-  var fields = {
-    title: "",
-    description: "",
-    creator: ""
-  };
-
-  var displayRecord = {};
-
-  try {
-    // Get Display Record data
-      if(searchResult._source.display_record && typeof searchResult._source.display_record == 'string') {
-        displayRecord = JSON.parse(searchResult._source.display_record);
-      }
-      else if(searchResult._source.display_record && typeof searchResult._source.display_record == 'object') {
-        displayRecord = searchResult._source.display_record;
-      }
-
-      // Find the title
-      if(searchResult._source.title && searchResult._source.title != "") {
-        fields.title = searchResult._source.title;
-      }
-      else if(displayRecord.title &&  displayRecord.title != "") {
-        fields.title = displayRecord.title;
-      }
-
-      // Find the description
-      if(searchResult._source.modsDescription && searchResult._source.modsDescription != "") {
-        fields.description = searchResult._source.modsDescription;
-      }
-      else if(displayRecord.abstract && displayRecord.abstract != "") {
-        fields.description = displayRecord.abstract;
-      }
-
-      // Find the creator
-      if(searchResult._source.creator && searchResult._source.creator != "") {
-        fields.creator = searchResult._source.creator;
-      }
-      else if(displayRecord.creator && displayRecord.creator != "") {
-        fields.creator = displayRecord.creator;
-      }
-  }
-  catch(error) {
-    console.log("Error: " + error);
-  }
-
-    return fields;
-}
-
-/**
- * Create the 'results for:' label for search results
- * If there are multiple queries in the array, this is an advanved search.  Use the first query for the results querystring label
+ * @param {Array.<String>} query - Array of search terms, one for each query
+ * @param {Object} facets - DDU Facet object (ex {"{facet name or ID}": ["{facet value}", "{facet value}", ...]}) Currently selected facets
  *
- * @param 
- * @return 
+ * @return {String} The results label
  */
 exports.getResultsLabel = function(query, facets) {
   // let queryLabel = " ";
@@ -148,14 +99,19 @@ exports.getResultsLabel = function(query, facets) {
   // return queryLabel; 
 
   // 8-18-19 Not showing the facet query in the 'results for' label
-  return query == "" ? "*" : query;
+  return query[0] == "" ? "*" : query;
 }
 
 /**
- * 
+ * Create an Elastic date range query from search date range values
  *
- * @param 
- * @return 
+ * @param {daterange} daterange - From and to values defining the daterange
+ *
+ * @typedef (Object) daterange
+ * @property {String} from - Daterange 'search from' date.  Year only [YYYY]
+ * @property {String} to - Daterange 'search to' date.  Year only [YYYY]
+ *
+ * @return {Object} Elastic daterange query object
  */
 exports.getDateRangeQuery = function(daterange) {
   var dateQuery = {
@@ -207,10 +163,13 @@ exports.getDateRangeQuery = function(daterange) {
 }
 
 /**
- * 
+ * Retrieve search field(s) from the configuration
  *
- * @param 
- * @return 
+ * @param {String} fieldValue - A search field label from the configuration
+ * If a search field label is passed in, the corresponding search field data will be retrieved from the configuration 
+ * If fieldValue is "all", all search fields will be retrieved from the configuration 
+ *
+ * @return {Array.<Object>} Array of search fields defined in the configuration
  */
 exports.getSearchFields = function(fieldValue) {
   var fields = [];
@@ -234,14 +193,26 @@ exports.getSearchFields = function(fieldValue) {
 
 /**
  * Build the search query data array (for multiple advanced search queries, or a single search) from the search url parameters
+ * Combines the data in the four input arrays into one query data object per array index
  *
- * @param 
- * @return 
+ * @param {Array.<String>} queryArray - Query strings, one per query
+ * @param {Array.<String>} fieldArray - Search fields, one per query
+ * @param {Array.<String>} typeArray - Search types, one per query
+ * @param {Array.<String>} boolArray - Query boolean terms, one per query
+ *
+ * @typedef (Object) queryData
+ * @property {String} terms - Query string
+ * @property {String} field - Search field
+ * @property {String} type - Search type
+ * @property {String} bool - Query boolean term 
+ *
+ * @return {Array.<queryData>} queryDataArray
  */
 exports.getSearchQueryDataObject = function(queryArray, fieldArray, typeArray, boolArray) {
   var queryDataArray = [];
 
   for(var index in queryArray) {
+
     // Default empty queries to wildcard "all results" query
     if(queryArray[index] == "") {
       queryArray[index] = '*';
@@ -259,14 +230,20 @@ exports.getSearchQueryDataObject = function(queryArray, fieldArray, typeArray, b
 }
 
 /**
- * Convert the params array into a data array for the search function
+ * Convert the sort params array into a data array for the search function
+ * Sorting by "relevance" will return null, no sorting is required
  *
- * @param 
- * @return 
+ * @param {String} sort - The sort string: two terms delimited by "," (ex "sort field,sort type" or "Title,asc")
+ *
+ * @typedef (Object) sortData
+ * @property {String} field - First value of comma delimited "sort" string
+ * @property {String} order - Second value of comma delimited "sort" string
+ *
+ * @return {sortData|null} - The sort data object.  Null will be returned if the sort value is "relevance"
  */
 exports.getSortDataArray = function(sort) {
   let sortData = null;
-  if(sort && sort[0] && sort[1]) {
+  if(sort && sort != "") {
     sort = sort.split(",");
 
     // If the sort field value is "relevance", do not assign the sort data, this is the default search
@@ -281,25 +258,32 @@ exports.getSortDataArray = function(sort) {
 }
 
 /**
- * Determine the Elastic search type
+ * Determine the Elastic search type for a query
  *
- * @param 
- * @return 
+ * @param {queryData} - Query data object
+ *
+ * @typedef (Object) queryData
+ * @property {String} terms - Query string
+ * @property {String} field - Search field
+ * @property {String} type - Search type
+ * @property {String} bool - Query boolean term
+ *
+ * @return {String} - The Elastic query type DSL field
  */
-exports.getQueryType = function(object) {
+exports.getQueryType = function(queryData) {
   var queryType = "match";
 
-  if(object.type == "isnot") {
+  if(queryData.type == "isnot") {
     queryType = "must_not";
   }
-  else if(object.type == "is") {
+  else if(queryData.type == "is") {
     queryType = "match_phrase";
   }
-  else if(object.terms[0] == '"' && object.terms[ object.terms.length-1 ] == '"') {
-    object.terms = object.terms.replace(/"/g, '');
+  else if(queryData.terms[0] == '"' && queryData.terms[ queryData.terms.length-1 ] == '"') {
+    queryData.terms = queryData.terms.replace(/"/g, '');
     queryType = "match_phrase";
   }
-  else if(object.terms.indexOf('*') >= 0) {
+  else if(queryData.terms.indexOf('*') >= 0) {
     queryType = "wildcard";
   }
   else  {

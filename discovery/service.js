@@ -4,7 +4,6 @@
  * Discovery Service Functions
  *
  */
-
 'use strict';
 
 const es = require('../config/index');
@@ -19,11 +18,17 @@ const IIIF = require("../libs/IIIF");
 /**
  * Create a list of the root level collections
  *
- * @param {number} pageNum - If 0, return all root collections. If >= 1, use elasticsearch page results (TODO)
+ * @param {String} pageNum - Get this page of result collections
  *
  * @typedef (Object) collections - Collection data
  * @property {Array} list - Array of collection objects
- * @property {Number} count - Number of collections in top level colletion
+ * @property {Number} count - Number of collections in top level collection
+ *
+ * @typedef (Object) viewData - List of 'view data' objects
+ * @property {String} pid - Object pid
+ * @property {String} tn - Object TN image source path
+ * @property {String} title - Object title
+ * @property {String} path - Object type path (ex "/object" or "/collection") Used to create the link to the object in the view
  *
  * @callback callback
  * @param {String|null} Error message or null
@@ -62,6 +67,7 @@ exports.getTopLevelCollections = function(pageNum=0, callback) {
 
         //Query the index for root collection members
         getObjectsInCollection(config.topLevelCollectionPID, pageNum, null, function(error, collections) {
+              console.log("TEST li", collections.list);
           if(error) {
             callback(error, null);
 
@@ -77,13 +83,19 @@ exports.getTopLevelCollections = function(pageNum=0, callback) {
 /**
  * Create a list of the objects in a collection
  *
- * @param {number} pageNum - Get this page of result objects.  0, return all collections.
+ * @param {String} pageNum - Get this page of result objects.  0, return all collections.
  *
  * @typedef (Object) collection - Collection data
  * @property {String} title - Title of the collection to be displayed in the view
- * @property {Number} count - Number of objects in the collection
+ * @property {String} count - Number of objects in the collection
  * @property {Object} facets - Elastic response aggregations object
- * @property {Array} list - List of collection 'view data' objects
+ * @property {Array.<viewData>} list - List of collection 'view data' objects
+ *
+ * @typedef (Object) viewData - List of 'view data' objects
+ * @property {String} pid - Object pid
+ * @property {String} tn - Object TN image source path
+ * @property {String} title - Object title
+ * @property {String} path - Object type path (ex "/object" or "/collection") Used to create the link to the object in the view
  *
  * @callback callback
  * @param {String|null} Error message or null
