@@ -510,21 +510,21 @@ exports.getManifestObject = function(pid, callback) {
       // Compound objects
       if(AppHelper.isParentObject(object)) {
         // Add the child objects of the main parent object
-        for(var key in object.display_record.parts) {
-          resourceUrl = config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType(object.display_record.parts[key].type) + "/" + object.display_record.parts[key].order;
+        let parts = AppHelper.getCompoundObjectPart(object, -1) || [];
+        for(var key in parts) {
+          resourceUrl = config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType(parts[key].type) + "/" + parts[key].order;
 
           // Add the data
           children.push({
-            label: object.display_record.parts[key].title,
-            sequence: object.display_record.parts[key].order || key,
-            description: object.display_record.parts[key].caption,
-            format: object.display_record.parts[key].type,
-            type: Helper.getIIIFObjectType(object.display_record.parts[key].type) || "",
-            //resourceID: object.display_record.parts[key].object,
-            resourceID: object.pid + config.compoundObjectPartID + object.display_record.parts[key].order,
-            downloadFileName: object.display_record.parts[key].title,
+            label: parts[key].title,
+            sequence: parts[key].order || key,
+            description: parts[key].caption,
+            format: parts[key].type,
+            type: Helper.getIIIFObjectType(parts[key].type) || "",
+            resourceID: object.pid + config.compoundObjectPartID + parts[key].order || "",
+            downloadFileName: parts[key].title,
             resourceUrl: resourceUrl,
-            thumbnailUrl: config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType("thumbnail") + "/" + object.display_record.parts[key].order
+            thumbnailUrl: config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType("thumbnail") + "/" + parts[key].order
           });
         }
       }

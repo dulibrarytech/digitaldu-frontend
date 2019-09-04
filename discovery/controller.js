@@ -327,8 +327,7 @@ exports.getKalturaViewer = function(req, res) {
 		else {
 			// If the object is found, check if it is a compound object.  If it is, and a part has been requested, get the part object
 			if(AppHelper.isParentObject(object) && part) {
-				object = object.display_record.parts[part-1];
-				//object = AppHelper.getCompoundObjectPart(object, part);
+				object = AppHelper.getCompoundObjectPart(object, part);
 			}
 
 			// Get the iframe html for the object and return it to the client

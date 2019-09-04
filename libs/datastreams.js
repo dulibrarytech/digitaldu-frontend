@@ -12,7 +12,8 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
 	Repository = require('../libs/repository'),
   Helper = require('../libs/helper'),
   Kaltura = require('../libs/kaltura'),
-	IIIF = require('../libs/IIIF');
+	IIIF = require('../libs/IIIF'),
+  AppHelper = require("../libs/helper");
 
 /**
  * 
@@ -25,17 +26,19 @@ exports.getDatastream = function(object, objectID, datastreamID, part, callback)
   // If there is a part value, retrieve the part data.  Redefine the object data with the part data
   if(part && isNaN(part) === false) {
     var sequence;
+    let objectPart = AppHelper.getCompoundObjectPart(object, part);
 
-    let objectPart = object.display_record.parts[part-1];
-    objectPart["object_type"] = "object";
+    // Get the data from the part object, set as object for datastream request. If part is not found, part will be ignored and input object will be used to stream data
+    if(objectPart) {
+      objectPart["object_type"] = "object";
 
-    //  DEV Temporary, unless part object will contain the field 'type' for mime type value
-    objectPart["mime_type"] = objectPart.type;
+      //  DEV Temporary, unless part object will contain the field 'type' for mime type value
+      objectPart["mime_type"] = objectPart.type;
 
-    // Get the data from the part object, set as object for datastream request
-    object = objectPart;
-    sequence = config.compoundObjectPartID + part;
-    objectID = objectID + sequence;
+      object = objectPart;
+      sequence = config.compoundObjectPartID + part;
+      objectID = objectID + sequence;
+    }
   }
 
   // If there are no parts in this object, do not append the sequence to the stream url

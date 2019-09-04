@@ -11,7 +11,8 @@
 
 const config = require('../config/' + process.env.CONFIGURATION_FILE),
 	 Repository = require('./repository'),
-	 Kaltura = require('./kaltura');
+	 Kaltura = require('./kaltura'),
+	 AppHelper = require("../libs/helper");
 
 /**
  * 
@@ -291,7 +292,6 @@ function getIIIFObjectViewer(object, part=null, embedKalturaViewer=false) {
 
 	// Embed the Kaltura player in the Universalviewer	
 	let kalturaViewer = "", 
-		entryID = "",
 		eventTriggers = "";
 
 	// Option to embed the Kaltura player into this Universalviewer	instance
@@ -300,11 +300,10 @@ function getIIIFObjectViewer(object, part=null, embedKalturaViewer=false) {
 		let objectData = object;
 		if(part && isNaN(part) == false) {
 
-			// Locate the entry_id for the requested compound object part
-			for(var index in object.display_record.parts) {
-				if(object.display_record.parts[index].order == part) {
-					//entryID = object.display_record.parts[index].entry_id;
-					objectData = object.display_record.parts[index];
+			let parts = AppHelper.getCompoundObjectPart(object, -1) || [];
+			for(var index in parts) {
+				if(parts[index].order == part) {
+					objectData = parts[index];
 				}
 			}
 		}
