@@ -10,79 +10,48 @@
 var config = require('../config/' + process.env.CONFIGURATION_FILE);
 
 /**
- * Create array of 'view data' objects, one for each result item in the input results array
+ * Create array of 'view data' objects, one for each result item in the input object array
  *
- * @param {Array} results - Array of Elastic search results
- * @return {Array} List of 'view data' objects
+ * @param {Array} objects - Array of Elastic search result _source objects
+ *
+* @typedef (Object) viewData - List of 'view data' objects
+ * @property {String} pid - Object pid
+ * @property {String} tn - Object TN image source path
+ * @property {String} title - Object title
+ * @property {String} path - {"/collection"|"/object"} based on object type
+ *
+ * @return {viewData}
  */
- exports.createItemList = function(results) {
-  var itemList = [], tn, pid, title, description, display, path;
-  for(var item of results) {
-      
-    // Get the title and description data from the item
-    if(item.title && item.title != "") {
-      title = item.title || config.noTitlePlaceholder;
-      description = item.description || "";
-    }
+ exports.getObjectLinkDisplayList = function(objects) {
+  var objectList = [], tn, pid, title, path;
+  for(var object of objects) {
 
-    // If the title field is absent from this item, try to get the title from the display record
-    else if(item.display_record && typeof item.display_record == 'string') {
-        try {
-          display = JSON.parse(item.display_record);
-        }
-        catch(e) {
-          console.log("Error: invalid display record JSON on object: " + item.pid);
-          continue;
-        }
-
-        title = display.title || config.noTitlePlaceholder;
-        description = display.description || display.abstract || "";
-    }
-
-    // Use the default values
-    else {
+    title = object.title || null;
+    if(!title || title == "") {
       title = config.noTitlePlaceholder;
-      description = "";
-    }
-      
-    // This is a list of communities
-    if(item.pid) {
-      tn = config.rootUrl + "/datastream/" + item.pid + "/tn";
-      pid = item.pid
     }
 
-    // This is a list of objects
-    else if(item.mime_type) {
-      //tn = Repository.getDatastreamUrl("tn", item.pid);
-      tn = config.rootUrl + "/datastream/" + item.pid + "/tn";
-      pid = item.pid
+    pid = object.pid || "";
+    if(!pid) {
+      console.log("Error: Object " + object + " has no pid value");
     }
+    tn = config.rootUrl + "/datastream/" + object.pid + "/tn";
 
-    // This is a list of collections
-    else {
-      //tn = Repository.getDatastreamUrl("tn", item.pid);
-      tn = config.rootUrl + "/datastream/" + item.pid + "/tn";
-      pid = item.id
+    if(!object.object_type) {
+      console.log("Error: Object " + object + " has no object_type value");
     }
+    path = "/" + object.object_type || "";
 
-    // Add collection or object path
-    if(item.object_type && item.object_type == "collection") {
-      path = "/collection";
-    }
-    else {
-      path = "/object";
-    }
-
-    // Push the current item to the list
-    itemList.push({
+    // Push the current object view data to the list
+    objectList.push({
         pid: pid,
         tn: tn,
         title: title,
-        description: description,
         path: path
       });
   }
-  return itemList;
+
+  return objectList;
 }
 
  /**

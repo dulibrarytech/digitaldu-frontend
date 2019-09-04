@@ -39,7 +39,7 @@ exports.getTopLevelCollections = function(pageNum=0, callback) {
         count: 0
       }
       if(response && response.length > 0) {
-        collections.list = Helper.createItemList(JSON.parse(response));
+        collections.list = Helper.getObjectLinkDisplayList(JSON.parse(response));
         collections.count = collections.list.length;
         callback(null, collections);
       }
@@ -107,7 +107,7 @@ var getObjectsInCollection = function(collectionID, pageNum=1, facets=null, call
       // Validate repository response
       if(response && response.length > 0) {
         collection.count = response.list.length;
-        collection.list = Helper.createItemList(JSON.parse(response.list));
+        collection.list = Helper.getObjectLinkDisplayList(JSON.parse(response.list));
         collection.facets = response.facets || {};
         collection.title = response.title || "";
         callback(null, collection);
@@ -194,7 +194,7 @@ var getObjectsInCollection = function(collectionID, pageNum=1, facets=null, call
             }
 
             // Assign data to the response object
-            collection.list = Helper.createItemList(results); // Get the view data list from the elastic results array
+            collection.list = Helper.getObjectLinkDisplayList(results); // Get the view data list from the elastic results array
             collection.facets = response.aggregations;
             collection.count = response.hits.total;
 
