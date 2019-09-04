@@ -420,7 +420,7 @@ module.exports = {
     },
 
     /*
-     * Assign datastreams for objects by object mimetype
+     * Assign datastream IDs for objects by object mimetype
      * For dynamic generation of the /datastream uri (internal use only). The datastreams listed here will be appended to the uri (/datastream/{PID}/{datastreams key})
      */
      datastreams: {

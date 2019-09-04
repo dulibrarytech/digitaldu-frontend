@@ -1,11 +1,10 @@
+ 'use strict'
  /**
  * @file 
  *
- * Discovery view controller functions
- *
+ * Discovery View Controller Functions
+ *	
  */
-
-'use strict'
 
 const async = require('async'),
     config = require('../config/' + process.env.CONFIGURATION_FILE),
@@ -13,61 +12,23 @@ const async = require('async'),
     AppHelper = require("../libs/helper"),
     Service = require('./service.js'),
     Viewer = require('../libs/viewer'),
+    CompoundViewer = require('../libs/compound-viewer'),
     Facets = require('../libs/facets'),
     Paginator = require('../libs/paginator'),
     Metadata = require('../libs/metadata'),
     Search = require('../search/service'),
     Format = require("../libs/format");
 
-exports.getFacets = function(req, res) {
-    Service.getFacets(null, function(error, facets) {
-    	let response = {};
-        if(error) {
-        	console.log(error);
-        }
-        else {
-        	response = facets;
-        }
-        res.send(response);
-    });
-}
-
-exports.renderCommunitiesView = function(req, res) {
-	var data = {
-		root_url: config.rootUrl
-	};
-
-	Service.getTopLevelCollections(function(error, response) {
-		if(error) {
-			console.log(error);
-			data['collections'] = [];
-			data['error'] = "Error: could not retrieve communities. " + error;
-		}
-		else {
-			data['collections'] = response;
-		}
-		return res.render('collections', data);
-	});
-}
-
-exports.renderCommunity = function(req, res) {
-	var data = {
-		root_url: config.rootUrl
-	},
-	id = req.params.id;
-
-	Service.getCollectionsInCommunity(id, function(error, response) {
-		if(error) {
-			data['collections'] = [];
-			data['error'] = "Error: could not retrieve communities.";
-		}
-		else {
-			data['collections'] = response;
-		}
-		return res.render('collections', data);
-	});
-}
-
+/**
+ * Renders the front page
+ * Retrieves all objects in the root collection
+ * 
+ * @param {Object} req - Express.js request object
+ * @param {Number} req.query.page - Returns this page of results if pagination is in use
+ * @param {Object} res - Express.js response object
+ *
+ * @return {undefined}
+ */
 exports.renderRootCollection = function(req, res) {
 	var data = {
 		collections: [],
@@ -78,7 +39,7 @@ exports.renderRootCollection = function(req, res) {
 		error: null,
 		root_url: config.rootUrl
 	},
-	page = req.query.page || 0;	// Render all collecions, do not paginate
+	page = req.query.page || 1;
 
 	// Get all root collections
 	Service.getTopLevelCollections(page, function(error, response) {
@@ -113,13 +74,24 @@ exports.renderRootCollection = function(req, res) {
 				data.facetThumbnails = config.facetThumbnails;
 			}
 			
-			return res.render('collections', data);
+			res.render('collections', data);
 		});
 	});
 }
 
+/**
+ * Renders the collection view
+ * Retrieves all objects in the requested collection
+ * 
+ * @param {Object} req - Express.js request object
+ * @param {Object} req.query.f - DDU Facet object {"{facet name or ID}": ["{facet value}", "{facet value}", ...]} Currently selected facets
+ * @param {Number} req.query.page - If object results for requested collection exceed page limit, show this page of object results
+ * @param {Array} req.query.showAll - Array of facet names: If a name is listed, the entire list of facets will be shown in the facet panel. For use if list has been limited
+ * @param {Object} res - Express.js response object
+ *
+ * @return {undefined}
+ */
 exports.renderCollection = function(req, res) {
-	
 	Service.getCollectionHeirarchy(req.params.pid, function(parentCollections) {
 		var data = {
 			error: null,
@@ -157,18 +129,19 @@ exports.renderCollection = function(req, res) {
 				data.current_collection = pid;
 				data.current_collection_title = response.title || "Untitled";
 
-				// Get the list of facets for this collection, remove the 'Collections' facets (Can re-add this field, if we ever show facets for nested collections: 
-				// ie there will be multiple collections facets present when one collection is open)
+				/* Get the list of facets for this collection, remove the 'Collections' facets (Can re-add this field, if we ever show facets for nested collections: 
+				 * ie there will be multiple collections facets present when one collection is open) */
 				var facetList = Facets.getFacetList(response.facets, showAll);
 				delete facetList.Collections;
 
-				// This variable should always be null here, as rendering the collection view is separate from a keyword search and no request facets should be present here.  
-				// The below code is to prevent a potential crash of the appication, just in case
+				/* This variable should always be null here, as rendering the collection view is separate from a keyword search and no request facets should be present here.  
+				 * The below code is to prevent a potential crash of the appication, just in case */
 				if(reqFacets) {
 					reqFacets = Facets.getSearchFacetObject(reqFacets);
 				}
 
 				Format.formatFacetDisplay(facetList, function(error, facetList) {
+					
 					// Add collections and collection data	
 					data.pagination = Paginator.create(response.list, page, config.maxCollectionsPerPage, response.count, path);
 					data.facets = Facets.create(facetList, config.rootUrl);
@@ -187,8 +160,17 @@ exports.renderCollection = function(req, res) {
 	});
 }
 
+/**
+ * Renders the object view
+ * Retrieves object data for requested object
+ * 
+ * @param {Object} req - Express.js request object
+ * @param {String} req.params.pid - PID of the object to be rendered
+ * @param {Object} res - Express.js response object
+ *
+ * @return {undefined}
+ */
 exports.renderObjectView = function(req, res) {
-
 	var data = {
 		viewer: null,
 		object: null,
@@ -197,10 +179,6 @@ exports.renderObjectView = function(req, res) {
 		error: null,
 		root_url: config.rootUrl
 	};
-
-	// if(!req.params.pid || /[a-zA-Z]*[:_][0-9]*/.test(req.params.pid) === false) {
-	// 	return res.sendStatus(400);
-	// }
 
 	Service.fetchObjectByPid(config.elasticsearchPublicIndex, req.params.pid, function(error, response) {
 		if(error) {
@@ -217,7 +195,7 @@ exports.renderObjectView = function(req, res) {
 
 			// Render a parent object with child objects
 			if(AppHelper.isParentObject(object)) {
-				data.viewer = Viewer.getCompoundObjectViewer(object, part);
+				data.viewer = CompoundViewer.getCompoundObjectViewer(object, part);
 			}
 
 			// Render singular object
@@ -249,6 +227,17 @@ exports.renderObjectView = function(req, res) {
 	});
 };
 
+/**
+ * Pipes an object datastream to the client
+ * 
+ * @param {Object} req - Express.js request object
+ * @param {String} req.params.datastream - Datastream ID (defined in configuration)
+ * @param {String} req.params.pid - Object PID
+ * @param {String} req.params.part - If a compound object, fetch datastream for this part index (first part = index 1)
+ * @param {Object} res - Express.js response object
+ *
+ * @return {undefined}
+ */
 exports.getDatastream = function(req, res) {
 	var ds = req.params.datastream.toLowerCase() || "",
 		pid = req.params.pid || "",
@@ -271,7 +260,7 @@ exports.getDatastream = function(req, res) {
 		index = config.elasticsearchPrivateIndex;
 	}
 
-	//Datastreams.getDatastream(pid, ds, part, function(error, stream) {
+	// Get the datastream and pipe it
 	Service.getDatastream(index, pid, ds, part, function(error, stream) {
 		if(error) {
 			console.log(error);
@@ -284,6 +273,15 @@ exports.getDatastream = function(req, res) {
 	});
 }
 
+/**
+ * Gets a IIIF manifest for an object
+ * 
+ * @param {Object} req - Express.js request object
+ * @param {String} req.params.pid - Object PID
+ * @param {Object} res - Express.js response object
+ *
+ * @return {undefined}
+ */
 exports.getIIIFManifest = function(req, res) {
 	let pid = req.params.pid || "";
 	Service.getManifestObject(pid, function(error, manifest) {
@@ -302,11 +300,21 @@ exports.getIIIFManifest = function(req, res) {
 	});
 }
 
+/**
+ * Gets a Kaltura embedded iframe viewer for an object
+ * 
+ * @param {Object} req - Express.js request object
+ * @param {String} req.params.pid - Object PID
+ * @param {String} req.params.part - If a compound object, get viewer for this part index (first part = index 1)
+ * @param {Object} res - Express.js response object
+ *
+ * @return {undefined}
+ */
 exports.getKalturaViewer = function(req, res) {
 	let pid = req.params.pid || "",
-		part = req.params.part || "1",
-		entryID = "";
+		part = parseInt(req.params.part) || 1;
 
+	// Get the object data
 	Service.fetchObjectByPid(config.elasticsearchPublicIndex, pid, function(error, object) {
 		if(error) {
 			console.log(error, pid);
@@ -317,11 +325,13 @@ exports.getKalturaViewer = function(req, res) {
 			res.send("<h4>Error loading viewer, object not found");
 		}
 		else {
-
-			if(AppHelper.isParentObject(object)) {
-				object = object.display_record.parts[part-1]
+			// If the object is found, check if it is a compound object.  If it is, and a part has been requested, get the part object
+			if(AppHelper.isParentObject(object) && part) {
+				object = object.display_record.parts[part-1];
+				//object = AppHelper.getCompoundObjectPart(object, part);
 			}
 
+			// Get the iframe html for the object and return it to the client
 			res.send(Viewer.getKalturaViewer(object));
 		}
 	});

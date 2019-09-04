@@ -1,7 +1,7 @@
  /**
  * @file 
  *
- * Discovery helper functions
+ * Discovery Helper Functions
  *
  */
 
@@ -10,14 +10,14 @@
 var config = require('../config/' + process.env.CONFIGURATION_FILE);
 
 /**
- * Create view model data object for display items
+ * Create array of 'view data' objects, one for each result item in the input results array
  *
- * @param {object} items  The items to include in the list.  Item attributes must match index attributes.
- * @return 
+ * @param {Array} results - Array of Elastic search results
+ * @return {Array} List of 'view data' objects
  */
- exports.createItemList = function(items) {
+ exports.createItemList = function(results) {
   var itemList = [], tn, pid, title, description, display, path;
-  for(var item of items) {
+  for(var item of results) {
       
     // Get the title and description data from the item
     if(item.title && item.title != "") {
@@ -86,10 +86,10 @@ var config = require('../config/' + process.env.CONFIGURATION_FILE);
 }
 
  /**
- * Get the totals for all type facets, for the front page template (Matches the hard coded type facets)
+ * Get facet counts by name
  *
- * @param 
- * @return 
+ * @param {Array} facets - Elastic aggregations object
+ * @return {Object} Object of facet count data
  */
 exports.getTypeFacetTotalsObject = function(facets) {
   var totals = {};
@@ -107,11 +107,8 @@ exports.getTypeFacetTotalsObject = function(facets) {
   return totals;
 }
 
-/**
- * 
- *
- * @param 
- * @return 
+ /**
+ * Not in use
  */
 exports.sortSearchResultObjects = function(objects) {
 	var titles = [], sorted = [];
@@ -133,38 +130,38 @@ exports.sortSearchResultObjects = function(objects) {
 	return sorted;
 }
 
-/**
- * 
+ /**
+ * Wrapper function for createBreadcrumbLinks
  *
- * @param 
- * @return 
+ * @param {Array.<{pid: String - The collection pid, name: String - The collection name, url: String - Absolute path to the collection's view}>} collections
+ * @return {String|null} The html string, null if the collections array is empty
  */
 exports.getCollectionBreadcrumbObject = function(collections) {
     return createBreadcrumbLinks(collections);
 };
 
 /**
- * 
+ * Creates an html breadcrumb link list for an array of collections
  *
- * @param 
- * @return 
+ * @param {Array.<{pid: String - The collection pid, name: String - The collection name, url: String - Absolute path to the collection's view}>} collections
+ * @return {String|null} The html string, null if the collections array is empty
  */
-function createBreadcrumbLinks(data) {
+function createBreadcrumbLinks(collections) {
     var html = "";
-    for (var i = 0; i < data.length; i++) {
+    for (var i = 0; i < collections.length; i++) {
     	if(i>0) {
     		html += '&nbsp&nbsp<span>></span>&nbsp&nbsp';
     	}
-        html += '<a class="collection-link" href="' + data[i].url + '">' + data[i].name + '</a>';
+        html += '<a class="collection-link" href="' + collections[i].url + '">' + collections[i].name + '</a>';
     }
-    return data.length > 0 ? html : null;
+    return collections.length > 0 ? html : null;
 };
 
-/**
- * 
+ /**
+ * Creates an Elastic 'aggs' query for an Elastic query object 
  *
- * @param 
- * @return 
+ * @param {Object} facets - DDU facet fields configuration
+ * @return {Object} Elastic DSL aggregations query object
  */
 exports.getFacetAggregationObject = function(facets) {
 	var facetAggregations = {}, field;
@@ -176,24 +173,15 @@ exports.getFacetAggregationObject = function(facets) {
         "terms": field
       };
     }
+
     return facetAggregations;
 }
 
-/**
- * 
+ /**
+ * Finds the IIIF object type that corresponds with an object's mime type
  *
- * @param 
- * @return 
- */
-// exports.isParentObject = function(object) {
-//   return typeof object.children != 'undefined';
-// }
-
-/**
- * 
- *
- * @param 
- * @return 
+ * @param {String} mimeType - Object mime type (ex "audio/mp3")
+ * @return {String} IIIF object type
  */
 exports.getIIIFObjectType = function(mimeType) {
   let objectTypes = config.IIIFObjectTypes, 
@@ -209,11 +197,11 @@ exports.getIIIFObjectType = function(mimeType) {
   return objectType;
 }
 
-/**
- * 
+ /**
+ * Finds the DDU datastream ID that corresponds with an object's mime type
  *
- * @param 
- * @return 
+ * @param {String} mimeType - Object mime type (ex "audio/mp3")
+ * @return {String} DDU datastream ID
  */
 exports.getDsType = function(mimeType) {
   let datastreams = config.datastreams,
@@ -229,6 +217,12 @@ exports.getDsType = function(mimeType) {
   return datastream;
 }
 
+ /**
+ * Finds the DDU object type that corresponds with an object's mime type
+ *
+ * @param {String} mimeType - Object mime type (ex "audio/mp3")
+ * @return {String} DDU object type
+ */
 exports.getObjectType = function(mimeType) {
   let type = "";
   for(var key in config.objectTypes) {

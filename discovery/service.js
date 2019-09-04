@@ -1,7 +1,8 @@
  /**
  * @file 
  *
- * Discovery service functions
+ * Discovery Service Functions
+ *
  */
 
 'use strict';
@@ -16,15 +17,17 @@ const Datastreams = require("../libs/datastreams");
 const IIIF = require("../libs/IIIF");
 
 /**
- * Return a list of the root (or top) level collections
+ * Create a list of the root level collections
  *
- * @param {number} pageNum If 0, return all root collections. If >= 1, use elasticsearch page results (TODO)
- * @param {function} callback
+ * @param {number} pageNum - If 0, return all root collections. If >= 1, use elasticsearch page results (TODO)
  *
- * @typedef (Object) Response.data Collection data
- * @property {number} count Number of root collections found
- * @property {Array} list Array of collection objects
- * @return {Response} 
+ * @typedef (Object) collections - Collection data
+ * @property {Array} list - Array of collection objects
+ * @property {Number} count - Number of collections in top level colletion
+ *
+ * @callback callback
+ * @param {String|null} Error message or null
+ * @param {collections|null} Null if error
  */
 exports.getTopLevelCollections = function(pageNum=0, callback) {
   Repository.getRootCollections().catch(error => {
@@ -36,9 +39,9 @@ exports.getTopLevelCollections = function(pageNum=0, callback) {
         count: 0
       }
       if(response && response.length > 0) {
-        var list = Helper.createItemList(JSON.parse(response));
-
-        callback(null, list);
+        collections.list = Helper.createItemList(JSON.parse(response));
+        collections.count = collections.list.length;
+        callback(null, collections);
       }
       else {
 
@@ -57,7 +60,7 @@ exports.getTopLevelCollections = function(pageNum=0, callback) {
           }
         }
 
-        // Query the index for root collection members
+        //Query the index for root collection members
         es.search(data, function (error, response, status) {
           var responseData = {};
           if(error){
@@ -74,48 +77,41 @@ exports.getTopLevelCollections = function(pageNum=0, callback) {
             // Sort the results by title string in alphabetic order
             var sorted = Helper.sortSearchResultObjects(results);
             collections.count = response.hits.total;
-            collections.list = Helper.createItemList(sorted);
-
+            collections.list = Helper.createItemList(results);
             callback(null, collections);
           }
         });
+
+        // getObjectsInCollection(config.topLevelCollectionPID, pageNum, null, function(error, collections) {
+        //   if(error) {
+        //     callback(error, null);
+
+        //   }
+        //   else {
+        //     callback(null, collections);
+        //   }
+        // });
       }
   });
 }
 
 /**
- * Return a list of collections in the specified community
+ * Create a list of the objects in a collection
  *
- * @param {number} communityID
- * @param {function} callback
+ * @param {number} pageNum - Get this page of result objects.  0, return all collections.
  *
- * @typedef (Object) Response.data 
- * @property {Array} list List of collections in the community
- * @return {Response} 
+ * @typedef (Object) collection - Collection data
+ * @property {String} title - Title of the collection to be displayed in the view
+ * @property {Number} count - Number of objects in the collection
+ * @property {Object} facets - Elastic response aggregations object
+ * @property {Array} list - List of collection 'view data' objects
+ *
+ * @callback callback
+ * @param {String|null} Error message or null
+ * @param {collection|null} Null if error 
  */
-exports.getCollectionsInCommunity = function(communityID, callback) {
-  Repository.getCollections(communityID).catch(error => {
-    callback(error, null);
-  })
-  .then( response => {
-      if(response) {
-        var list = Helper.createItemList(JSON.parse(response));
-        callback(null, list);
-      }
-      else {
-        callback("Error retrieving collections", null);
-      }
-  });
-}
-
-/**
- * 
- *
- * @param 
- * @return 
- */
-exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, callback) {
-  Repository.getCollectionObjects(collectionID).catch(error => {
+var getObjectsInCollection = function(collectionID, pageNum=1, facets=null, callback) {
+  Repository.getCollectionObjects(collectionID, facets).catch(error => {
     callback(error, null);
   })
   .then( response => {
@@ -131,9 +127,11 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
 
       // Validate repository response
       if(response && response.length > 0) {
-        collection.count = response.length;
-        var list = Helper.createItemList(JSON.parse(response));
-        callback(null, list);
+        collection.count = response.list.length;
+        collection.list = Helper.createItemList(JSON.parse(response.list));
+        collection.facets = response.facets || {};
+        collection.title = response.title || "";
+        callback(null, collection);
       }
       else {
 
@@ -210,53 +208,56 @@ exports.getObjectsInCollection = function(collectionID, pageNum=1, facets=null, 
           }
           else {
             var results = [];
-            // Create the result list
+
+            // Create the results array
             for(var index of response.hits.hits) {
               results.push(index._source);
             }
 
-            collection.list = Helper.createItemList(results);
+            // Assign data to the response object
+            collection.list = Helper.createItemList(results); // Get the view data list from the elastic results array
             collection.facets = response.aggregations;
             collection.count = response.hits.total;
 
-            // Get this collection's title
-            fetchObjectByPid(config.elasticsearchPublicIndex, collectionID, function(error, object) {
-              if(error) {
-                collection.title = "";
-                callback(error, []);
-              }
-              else if(!object) {
-                callback("Object not found", []);
-              }
-              else if(object.object_type != "collection") {
-                callback("Invalid collection: " + object.pid, []);
-              }
-              else {
-                collection.title = object.title;
+            if(collectionID != config.topLevelCollectionPID) {
+              // Get this collection's title
+              fetchObjectByPid(config.elasticsearchPublicIndex, collectionID, function(error, object) {
+                if(error) {
+                  collection.title = "";
+                  callback(error, []);
+                }
+                else if(!object) {
+                  callback("Object not found", []);
+                }
+                else if(object.object_type != "collection") {
+                  callback("Invalid collection: " + object.pid, []);
+                }
+                else {
+                  collection.title = object.title;
+                  callback(null, collection);
+                }
+              });
+            }
+            else {
+                collection.title = config.topLevelCollectionName || "";
                 callback(null, collection);
-              }
-            });
+            }
           }
         });
       }
   });
 }
+exports.getObjectsInCollection = getObjectsInCollection;
 
 /**
- * Finds all child collections within a parent collection, and its children (recursive)
+ * Get the index data for an object
  *
- * @param 
- * @return 
- */
-var geChildCollectionPids = function(pid, callback) {
-
-}
-
-/**
- * 
+ * @param {String} index - Elastic index from which to retrieve object data
+ * @param {String} pid - PID of the object
  *
- * @param 
- * @return 
+ * @callback callback
+ * @param {String|null} Error message or null
+ * @param {Object|null} Elastic result data for the Object (index document source data) Null if error
  */
 var fetchObjectByPid = function(index, pid, callback) {
   var objectData = {
@@ -299,10 +300,13 @@ var fetchObjectByPid = function(index, pid, callback) {
 exports.fetchObjectByPid = fetchObjectByPid;
 
 /**
- * 
+ * Perform empty query Elastic search to get facet (aggregation) data for the entire index
  *
- * @param 
- * @return 
+ * @param {String} collection - Collection PID.  If present, will scope the full index facet data to the collection
+ *
+ * @callback callback
+ * @param {String|null} Error message or null
+ * @param {Object|null} Elastic aggregations object Null if error
  */
 var getFacets = function (collection=null, callback) {
 
@@ -356,10 +360,16 @@ var getFacets = function (collection=null, callback) {
 exports.getFacets = getFacets;
 
 /**
- * 
+ * Requests a datastream
  *
- * @param 
- * @return 
+ * @param {String} indexName - Name of index to retrieve object from
+ * @param {String} objectID - Object PID
+ * @param {String} datastreamID - DDU Datastream ID (defined in configuration)
+ * @param {String} part - Stream data for a compound object part
+ *
+ * @callback callback
+ * @param {String|null} Error message or null
+ * @param {Object|null} Data stream Null if error
  */
 exports.getDatastream = function(indexName, objectID, datastreamID, part, callback) {
   // Get the object data
@@ -378,20 +388,28 @@ exports.getDatastream = function(indexName, objectID, datastreamID, part, callba
 }
 
 /**
- * 
+ * Wrapper function for getParentTrace()
+ * Returns array of parent collection titles in heirarchical order (index 0 = top level collection)
  *
- * @param 
- * @return 
+ * @param {String} pid - Object PID
+ *
+ * @callback callback
+ * @param {String|null} Error message or null
+ * @param {Array|null} Array of parent object titles Null if error
  */
 exports.getCollectionHeirarchy = function(pid, callback) {
   getParentTrace(pid, [], callback);
 }
 
 /**
- * 
+ * Returns array of parent collection titles in heirarchical order (index 0 = top level collection)
  *
- * @param 
- * @return 
+ * @param {Array} pids - Array of object PIDs to retrieve title strings for
+ * @param {Array} titles - Array to fill with collection titles.  Must begin with an empty array
+ *
+ * @callback callback
+ * @param {String|null} Error message or null
+ * @param {Array|null} Array of parent collection titles.  The order of titles in this array will match order of input pids array Null if error
  */
 var getTitleString = function(pids, titles, callback) {
   var pidArray = [], pid;
@@ -402,6 +420,7 @@ var getTitleString = function(pids, titles, callback) {
     pidArray = pids;
   }
   pid = pidArray[ titles.length ];
+
   // Get the title data for the current pid
   fetchObjectByPid(config.elasticsearchPublicIndex, pid, function (error, response) {
     if(error) {
@@ -430,10 +449,14 @@ var getTitleString = function(pids, titles, callback) {
 exports.getTitleString = getTitleString;
 
 /**
- * 
+ * Returns array of parent collection titles in heirarchical order (index 0 = top level collection)
  *
- * @param 
- * @return 
+ * @param {String} pid - Object PID
+ * @param {Array} collections - Array to fill with parent collection titles.  Must begin with an empty array
+ *
+ * @callback callback
+ * @param {String|null} Error message or null
+ * @param {Array|null} Array of parent object titles Null if error
  */
 var getParentTrace = function(pid, collections, callback) {
   fetchObjectByPid(config.elasticsearchPublicIndex, pid, function(error, response) {
@@ -472,20 +495,13 @@ var getParentTrace = function(pid, collections, callback) {
 }
 
 /**
- * 
+ * Gets a IIIF manifest for an object
  *
- * @param 
- * @return 
- */
-exports.retrieveChildren = function(object, callback) {
-  callback(object.children || []);
-}
-
-/**
- * 
+ * @param {Array} pid - PID of object
  *
- * @param 
- * @return 
+ * @callback callback
+ * @param {String|null} Error message or null
+ * @param {Object|null} Manifest object (JSON) Null if error
  */
 exports.getManifestObject = function(pid, callback) {
   var object = {}, children = [];

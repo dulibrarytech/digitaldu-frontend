@@ -329,6 +329,7 @@ function getIIIFObjectViewer(object, part=null, embedKalturaViewer=false) {
 		viewer += '</script>';
 	return viewer;
 }
+exports.getIIIFObjectViewer = getIIIFObjectViewer;
 
 /**
  * 

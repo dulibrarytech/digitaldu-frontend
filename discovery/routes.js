@@ -1,7 +1,7 @@
  /**
  * @file 
  *
- * Discovery router
+ * Discovery Routes
  *
  */
 
@@ -19,9 +19,6 @@ module.exports = function (app) {
     app.route('/')
         .get(Discovery.renderRootCollection);
 
-    app.route('/community/:id')
-        .get(Discovery.renderCommunity);
-
     app.route('/collection/:pid')
         .get(Discovery.renderCollection);
 
@@ -30,9 +27,6 @@ module.exports = function (app) {
 
     app.route('/object/:pid/:index')
         .get(Discovery.renderObjectView);
-
-    app.route('/facets')
-        .get(Discovery.getFacets);
 
     app.route('/viewer/kaltura/:pid/:part')
         .get(Discovery.getKalturaViewer);
