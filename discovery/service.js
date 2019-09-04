@@ -61,36 +61,15 @@ exports.getTopLevelCollections = function(pageNum=0, callback) {
         }
 
         //Query the index for root collection members
-        es.search(data, function (error, response, status) {
-          var responseData = {};
-          if(error){
+        getObjectsInCollection(config.topLevelCollectionPID, pageNum, null, function(error, collections) {
+          if(error) {
             callback(error, null);
+
           }
           else {
-            var results = [];
-
-            // Create the result list
-            for(var index of response.hits.hits) {
-              results.push(index._source);
-            }
-
-            // Sort the results by title string in alphabetic order
-            var sorted = Helper.sortSearchResultObjects(results);
-            collections.count = response.hits.total;
-            collections.list = Helper.createItemList(results);
             callback(null, collections);
           }
         });
-
-        // getObjectsInCollection(config.topLevelCollectionPID, pageNum, null, function(error, collections) {
-        //   if(error) {
-        //     callback(error, null);
-
-        //   }
-        //   else {
-        //     callback(null, collections);
-        //   }
-        // });
       }
   });
 }
