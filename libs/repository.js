@@ -1,4 +1,4 @@
- /**
+/**
  * @file 
  *
  * Fedora Repository Interface 
@@ -10,8 +10,10 @@
 const config = require('../config/' + process.env.CONFIGURATION_FILE),
 	  rs = require('request-stream');
 
-const host = config.repositoryUrl;
-//http://archivesdu.duracloud.org/durastore/dip-store/dip-store/ 		// repo uri
+const path = config.repositoryPath,
+	  protocol = config.repositoryProtocol,
+	  uname = config.repositoryUser,
+	  pword = config.repositoryPassword;
 
 /**
  * 

@@ -55,7 +55,10 @@ All other content is released under [CC-BY-4.0](https://creativecommons.org/lice
         ELASTICSEARCH_PORT={elastic server port}
         ELASTICSEARCH_PUBLIC_INDEX={public elastic index}
         ELASTICSEARCH_PRIVATE_INDEX={private elastic index}
-        REPOSITORY={duraspace dip-store url}
+        REPOSITORY_PATH={duraspace dip-store url}
+        REPOSITORY_PROTOCOL={http|https}
+        REPOSITORY_USER={repository username}
+        REPOSITORY_PWD={repository password}
         PDF_JS_VIEWER_PORT={port}
         CANTALOUPE_URL={cantaloupe api domain}
         CANTALOUPE_PORT={port}

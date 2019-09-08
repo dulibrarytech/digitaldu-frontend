@@ -23,7 +23,10 @@ module.exports = {
     /*
      * External services
      */
-    repositoryUrl: process.env.REPOSITORY,
+    repositoryPath: process.env.REPOSITORY_PATH,
+    repositoryProtocol: process.env.REPOSITORY_PROTOCOL,
+    repositoryUser: process.env.REPOSITORY_USER,
+    repositoryPassword: process.env.REPOSITORY_PWD,
     elasticsearchHost: process.env.ELASTICSEARCH_HOST,
     elasticsearchPort: process.env.ELASTICSEARCH_PORT,
     elasticsearchPublicIndex: process.env.ELASTICSEARCH_PUBLIC_INDEX,
@@ -259,7 +262,12 @@ module.exports = {
 
     /*
      * Fulltext search fields 
-     * Define all seacrh fields here
+     * Define all search fields here
+     *
+     * @example - Index display record
+     *  
+     *
+     * @example - searchAllField object example
      */ 
     searchAllFields: [
         {"label": "Title", "id": "title", "field": "title", "boost": "1"},
@@ -275,7 +283,7 @@ module.exports = {
 
     /*
      * Selectable search fields for the standard search.  These will appear in 'Search Type' dropdown list
-     * { "Label" : "searchAllFields.id" }
+     * (ex { "Label" : "searchAllFields.id" })
      */ 
     searchFields: [
         {"Title": "title"},
