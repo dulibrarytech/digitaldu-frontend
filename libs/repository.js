@@ -11,7 +11,8 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
 	  rs = require('./request-stream'),
 	  fs = require('fs');
 
-const path = config.repositoryPath,
+const domain = config.repositoryDomain,
+	  path = config.repositoryPath,
 	  protocol = config.repositoryProtocol,
 	  uname = config.repositoryUser,
 	  pword = config.repositoryPassword;
@@ -57,7 +58,7 @@ exports.getDatastreamUrl = function(datastream, pid) {
  * @return 
  */
 exports.streamData = function(object, dsid, callback) {
-	var data = {}, url = "", auth = "";
+	var url = "", auth = "";
 
 	try {
 		if(!object) { throw "Object is null" }
@@ -66,7 +67,7 @@ exports.streamData = function(object, dsid, callback) {
 		if((uname && uname != "") && (pword && pword != "")) {
 			auth = uname + ":" + pword + "@";
 		}
-		url = protocol + "://" + auth + path;
+		url = protocol + "://" + auth + domain + path;
 
 		if(dsid == "tn") {
 			url += "/" + object.thumbnail;

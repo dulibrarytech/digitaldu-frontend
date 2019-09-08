@@ -23,6 +23,7 @@ module.exports = {
     /*
      * External services
      */
+    repositoryDomain: process.env.REPOSITORY_DOMAIN,
     repositoryPath: process.env.REPOSITORY_PATH,
     repositoryProtocol: process.env.REPOSITORY_PROTOCOL,
     repositoryUser: process.env.REPOSITORY_USER,

@@ -55,7 +55,8 @@ All other content is released under [CC-BY-4.0](https://creativecommons.org/lice
         ELASTICSEARCH_PORT={elastic server port}
         ELASTICSEARCH_PUBLIC_INDEX={public elastic index}
         ELASTICSEARCH_PRIVATE_INDEX={private elastic index}
-        REPOSITORY_PATH={duraspace dip-store url}
+        REPOSITORY_DOMAIN={duraspace domain}
+        REPOSITORY_PATH={relative duraspace dip-store url}
         REPOSITORY_PROTOCOL={http|https}
         REPOSITORY_USER={repository username}
         REPOSITORY_PWD={repository password}
