@@ -18,8 +18,9 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
 /**
  * 
  *
- * @param 
- * @return 
+ * @param {}
+ *
+ * @return {}
  */
 exports.getDatastream = function(object, objectID, datastreamID, part, callback) {
 
@@ -99,14 +100,15 @@ exports.getDatastream = function(object, objectID, datastreamID, part, callback)
         }
 
         if(settings.source == "repository") {
+            //console.log("TEST streaming data for object", object);
           Repository.streamData(object, "tn", function(error, stream) {
             if(error) {
               callback(error, null);
             }
             else {
               // All is good, return the stream
-              if(stream && stream.statusCode == 200) {
-                // TODO: Cache the file in local filesystem when retrieved from iiif server?
+              if(stream) {
+                // TODO: Cache the file in local filesystem when retrieved from iiif server
                 callback(null, stream);
               }
               else {
@@ -184,8 +186,9 @@ exports.getDatastream = function(object, objectID, datastreamID, part, callback)
 /**
  * 
  *
- * @param 
- * @return 
+ * @param {}
+ *
+ * @return {}
  */
 var streamRemoteData = function(url, callback) {
 	rs(url, {}, function(err, res) {
@@ -201,18 +204,20 @@ var streamRemoteData = function(url, callback) {
 /**
  * 
  *
- * @param 
- * @return 
+ * @param {}
+ *
+ * @return {}
  */
 var getFileStream = function(path, callback) {
   	callback(null, fs.createReadStream(path));
 }
 
 /**
- * Get fallback path to default thumbnail image
+ * 
  *
- * @param 
- * @return 
+ * @param {}
+ *
+ * @return {}
  */
 var streamDefaultThumbnail = function(object, callback) {
   let path = config.tnPath + config.defaultThumbnailImage;

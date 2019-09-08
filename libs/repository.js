@@ -1,4 +1,4 @@
-/**
+ /**
  * @file 
  *
  * Fedora Repository Interface 
@@ -8,7 +8,8 @@
 'use strict';
 
 const config = require('../config/' + process.env.CONFIGURATION_FILE),
-	  rs = require('request-stream');
+	  rs = require('./request-stream'),
+	  fs = require('fs');
 
 const path = config.repositoryPath,
 	  protocol = config.repositoryProtocol,
@@ -33,7 +34,7 @@ exports.getRootCollections = function() {
  * @param 
  * @return 
  */
-exports.getCollectionObjects = function(collectionID) {
+exports.getCollectionObjects = function(collectionID, facets) {
 	return new Promise(function(fulfill, reject) {
 		fulfill([]);
 	});
@@ -56,18 +57,22 @@ exports.getDatastreamUrl = function(datastream, pid) {
  * @return 
  */
 exports.streamData = function(object, dsid, callback) {
-	var url;
+	var data = {}, url = "", auth = "";
 
 	try {
 		if(!object) { throw "Object is null" }
 
+		// Add authentication credentials if present
+		if((uname && uname != "") && (pword && pword != "")) {
+			auth = uname + ":" + pword + "@";
+		}
+		url = protocol + "://" + auth + path;
+
 		if(dsid == "tn") {
-			//if(!object.thumbnail || object.thumbnail.length < 1) { throw "Object thumbnail uri not set " + object.pid }
-			url = host + "/" + object.thumbnail;
+			url += "/" + object.thumbnail;
 		}
 		else {
-			//if(!object.object || object.object.length < 1) { throw "Object source uri not set " + object.pid }
-			url = host + "/" + object.object;
+			url += "/" + object.object;
 		}
 
 		// Get the stream 
@@ -76,7 +81,13 @@ exports.streamData = function(object, dsid, callback) {
 				callback("Could not open datastream. " + err + " Check connection to repository", null);
 			}
 			else {
-				callback(null, res);
+				if(res.statusCode == 200) {
+					callback(null, res);
+				} 
+				else {
+					console.log("Can not stream data from repository for object " + object.pid || "" + ", request status " + res.statusCode);
+					callback(null, null);
+				}
 			}
 		});
 	}
