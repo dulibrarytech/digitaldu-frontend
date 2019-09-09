@@ -266,13 +266,37 @@ module.exports = {
      * Define all search fields here
      *
      * @example - Index display record
-     *  
+     *      "subjects": [
+     *           {
+     *               "authority": "lcsh",
+     *               "title": "Deciduous",
+     *               "terms": [
+     *                   {
+     *                       "type": "subject",
+     *                       "term": "Maine"
+     *                   }
+     *               ],
+     *               "authority_id": ""
+     *           },
+     *           {
+     *               "authority": "lcsh",
+     *               "title": "Forestry",
+     *               "terms": [
+     *                   {
+     *                       "type": "topic",
+     *                       "term": "Forests"
+     *                   }
+     *               ],
+     *               "authority_id": ""
+     *           }
+     *       ]
      *
      * @example - searchAllField object example
+     *         // Use the "term" field value if the sibling field "type" has the value "topic".  Other "term" values will be ignored
+     *         {"label": "Subject", "id": "subject", "field": "subjects.terms", "matchField": "subjects.terms.type", "matchTerm": "topic"} 
      */ 
     searchAllFields: [
         {"label": "Title", "id": "title", "field": "title", "boost": "1"},
-        // {"label": "Creator", "id": "creator", "field": "display_record.names.title", "boost": "2"},
         {"label": "Creator", "id": "creator", "field": "creator", "boost": "3"},
         {"label": "Subject", "id": "subject", "field": "f_subjects", "boost": "2"},
         {"label": "Type", "id": "type", "field": "type", "boost": "2"},
@@ -350,7 +374,7 @@ module.exports = {
     /*
      * Fuzz factor: number of fuzzy characters in the search terms
      */
-    searchTermFuzziness: "1",
+    searchTermFuzziness: "2",
 
     /*
      * Facets to display on the search results view
