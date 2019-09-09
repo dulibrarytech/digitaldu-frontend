@@ -67,7 +67,6 @@ exports.getTopLevelCollections = function(pageNum=0, callback) {
 
         //Query the index for root collection members
         getObjectsInCollection(config.topLevelCollectionPID, pageNum, null, function(error, collections) {
-              console.log("TEST li", collections.list);
           if(error) {
             callback(error, null);
 

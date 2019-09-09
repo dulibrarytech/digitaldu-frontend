@@ -100,7 +100,6 @@ exports.getDatastream = function(object, objectID, datastreamID, part, callback)
         }
 
         if(settings.source == "repository") {
-            //console.log("TEST streaming data for object", object);
           Repository.streamData(object, "tn", function(error, stream) {
             if(error) {
               callback(error, null);
@@ -172,12 +171,12 @@ exports.getDatastream = function(object, objectID, datastreamID, part, callback)
     // If no local file is found, stream the object data from the repository
     else {
       Repository.streamData(object, datastreamID, function(error, stream) {
-        if(error) {
-          callback("Repository stream data error: " + error, null);
+        if(error || !stream) {
+          callback("Repository stream data error: " + (error || "Resource not found for " + objectID), null);
         }
         else {
-          callback(null, stream);
-        }
+            callback(null, stream);
+          }
       });
     }
   }

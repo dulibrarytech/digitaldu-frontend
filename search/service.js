@@ -90,7 +90,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       field = queryData[index].field || "all";
       type = queryData[index].type || "contains";
 
-      // Determine the boolean term to join the current query with the next query in the array.  This term is found in the next query in the array
+      // Determine the boolean term to join the current query with the next query in the array
       bool = queryData[parseInt(index)+1] ? queryData[parseInt(index)+1].bool : queryData[index].bool || "or";
       prevBool = queryData[index].bool;
 
