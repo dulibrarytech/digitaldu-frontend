@@ -171,7 +171,7 @@ var getObjectsInCollection = function(collectionID, pageNum=1, facets=null, call
         // Use local index to find the collection children
         var data = {  
           index: config.elasticsearchPublicIndex,
-          type: 'data',
+          type: config.searchIndexType,
           body: {
             from : (pageNum - 1) * config.maxCollectionsPerPage,
             size : config.maxCollectionsPerPage,
@@ -186,7 +186,7 @@ var getObjectsInCollection = function(collectionID, pageNum=1, facets=null, call
           }
         }
 
-        // Get children objects of this collection
+        // Get child objects of this collection
         es.search(data, function (error, response, status) {
 
           var responseData = {};
@@ -266,7 +266,7 @@ var fetchObjectByPid = function(index, pid, callback) {
   // Search for the pid segments as an "and" search.  This should only return one result.
   es.search({
       index: index,
-      type: "data",
+      type: config.searchIndexType,
       body: {
         query: {
           "bool": {
@@ -314,7 +314,7 @@ var getFacets = function (collection=null, callback) {
 
     var searchObj = {
         index: config.elasticsearchPublicIndex,
-        type: 'data',
+        type: config.searchIndexType,
         body: {
             "size": 0,
             "aggregations": aggs,

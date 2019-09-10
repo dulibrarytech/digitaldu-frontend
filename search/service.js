@@ -321,7 +321,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
     // Create elasticsearch data object
     var data = {  
       index: config.elasticsearchPublicIndex,
-      type: config.searchIndexName,
+      type: config.searchIndexType,
       body: {
         from : (pageNum - 1) * pageSize, 
         size : pageSize,

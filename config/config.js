@@ -44,7 +44,7 @@ module.exports = {
     /*
      * Index type name
      */
-    searchIndexName: "data",
+    searchIndexType: "data",
 
     /*
      * Search results limit
