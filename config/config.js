@@ -116,7 +116,7 @@ module.exports = {
      * Viewer to display large image files (tiff, jp2)
      * [browser | openseadragon | universalviewer]
      */
-    largeImageViewer: "universalviewer",
+    largeImageViewer: "openseadragon",
 
     /* 
      * Viewer to display compound objects
@@ -128,12 +128,14 @@ module.exports = {
 
     /*
      * Openseadragon viewer settings
+     * Path relative to /public folder
      */
     openseadragonPathToLibrary: "/libs/openseadragon/openseadragon.min.js",
     openseadragonImagePath: "/libs/openseadragon/images/",
 
     /* 
      * JWPlayer Settings
+     * Path relative to /public folder
      */
     jwplayerPathToLibrary: "/libs/jwplayer_du/jwplayer-du.js",
 
@@ -142,7 +144,9 @@ module.exports = {
      */
     universalViewerKalturaPlayer: true,
 
-    // IIIF
+    /*
+     * IIIF API 
+     */
     IIIFUrl: process.env.IIIF_URL,
 
     /*
@@ -191,11 +195,15 @@ module.exports = {
         "pdf": ["application/pdf"]
     },
 
-
-    // The index field that contains the display record data
+    /*
+     * The index field that contains the display record data
+     */
     displayRecordField: "display_record",
 
-    // Image to display if no thumbnail image exists in the repository
+    /*
+     * Image to display if no thumbnail image exists in the repository
+     * Before a thumbnail is rendered, this location is checked for a source file before requesting it from the repository
+     */
     tnPath: "files/thumbnails/",
     thumbnailFileExtension: ".png",
     defaultThumbnailImage: "tn-placeholder.jpg",
@@ -303,7 +311,7 @@ module.exports = {
         {"label": "Description", "id": "description", "field": "abstract", "boost": "3"},
         {"label": "Language", "id": "language", "field": "display_record.t_language.text", "boost": "5"},
         {"label": "Creation Date", "id": "create_date", "field": "display_record.dates.expression", "matchField": "display_record.dates.label", "matchTerm": "creation"},
-        {"label": "Authority ID", "id": "authority_id", "field": "display_record.identifiers.identifier", "matchField": "display_record.identifiers.type", "matchTerm": "local"},
+        {"label": "Authority ID", "id": "authority_id", "field": "display_record.identifiers.identifier", "matchField": "display_record.identifiers.type", "matchTerm": "local"}
     ],
 
     /*
@@ -417,6 +425,7 @@ module.exports = {
 
     /*
      * Thumbnail images for the frontpage facet panels
+     * Path is relative to the /public folder
      */
     facetThumbnails: {
         "Type": {
@@ -454,7 +463,9 @@ module.exports = {
 
     /*
      * Assign datastream IDs for objects by object mimetype
-     * For dynamic generation of the /datastream uri (internal use only). The datastreams listed here will be appended to the uri (/datastream/{PID}/{datastreams key})
+     * For dynamic generation of the /datastream uri (internal use only). 
+     * The datastreams listed here will be appended to the uri (/datastream/{PID}/{datastreams key}), and the repository interface will receive the datastream key
+     * Currently, the Duraspace repository interface does not use this data
      */
      datastreams: {
         "tn": "thumbnail",
@@ -469,6 +480,9 @@ module.exports = {
 
      /*
       * Location of the object file cache
+      * Object files must be named {PID}.{file extension} ex: 12345.jpg
+      * Configure file extensions for object mime types below
+      * Before an object is rendered, this location is checked for a source file before requesting it from the repository
       */
      objectCachePath: "files/object",
 

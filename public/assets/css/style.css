@@ -782,6 +782,11 @@ div#pdf-viewer > iframe {
     height: 800px;
 }
 
+#openseadragon1 {
+    width: 60%;
+    height: 40vw;
+}
+
 /* Begin collection grid section */
 div#home-collections {
     margin: 0;

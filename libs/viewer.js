@@ -214,7 +214,7 @@ function getLargeImageViewer(object) {
 			break;
 
 		case "openseadragon":
-			viewer += getOpenSeadragonViewer(object, imagePath, imageServerUrl);
+			viewer += getOpenSeadragonViewer(object);
 			break;
 
 		case "universalviewer":
@@ -347,20 +347,20 @@ exports.getIIIFObjectViewer = getIIIFObjectViewer;
  * @param 
  * @return 
  */
- function getOpenSeadragonViewer(object, osdPath, imagePath, serverUrl) {
+ function getOpenSeadragonViewer(object) {
 	var viewer = "";
 
  	viewer += "<span id='display-message' >Loading image, please wait...</span>";
 	viewer += '<div id="large-image-viewer" class="viewer-section">'
 	viewer += '<div id="viewer-content-wrapper"><div id="openseadragon1" class="viewer-content" style="width: 96%; margin: 0 auto"><span id="large-image-viewer-loading"></span></div>';
 	viewer += '</div>';
-	viewer += '<script src="' + osdPath + '"></script>';
+	viewer += '<script src="' + config.openseadragonPathToLibrary + '"></script>';
 	viewer += '<script>var viewer = OpenSeadragon({'
 	viewer +=     'id: "openseadragon1",'
-	viewer +=     'prefixUrl: "' + imagePath + '",'
+	viewer +=     'prefixUrl: "' + config.openseadragonImagePath + '",'
 	viewer +=     'immediateRender: true,'
 	viewer +=     'showNavigator: true,'
-	viewer +=     'tileSources: "' + serverUrl + '/iiif/2/' + object.pid + '"'
+	viewer +=     'tileSources: "' + config.IIIFServerUrl + '/iiif/2/' + object.pid + '"'
 	viewer += '});'
 	viewer += 'viewer.addHandler("tile-loaded", function(event) {document.getElementById("display-message").style.display = "none"})'
 	viewer += '</script>';
