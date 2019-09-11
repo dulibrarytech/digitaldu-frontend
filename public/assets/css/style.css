@@ -777,6 +777,11 @@ div.viewer-wrapper div {
     padding: 0;
 }
 
+div#pdf-viewer > iframe {
+    width: 90%;
+    height: 800px;
+}
+
 /* Begin collection grid section */
 div#home-collections {
     margin: 0;
