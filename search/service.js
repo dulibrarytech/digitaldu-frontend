@@ -52,7 +52,7 @@ const es = require('../config/index'),
  * @param {String|null} Error message or null
  * @param {Array.<searchResults>|null} Search results object, Null if error
  */
-exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=1, pageSize=10, daterange=null, sort=null, callback) {
+exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=1, pageSize=10, daterange=null, sort=null, isAdvanced=false, callback) {
     var queryFields = [],
         results = [], 
         restrictions = [],
@@ -124,9 +124,13 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
           if(queryType == "match") {
             queryObj = {
               "query": terms,
-              "operator": "or",
-              "fuzziness": config.searchTermFuzziness
+              "operator": "or"
             };
+
+            // Add fuzz factor if this is not an advanced search
+            if(isAdvanced == false) {
+              queryObj["fuzziness"] = config.searchTermFuzziness;
+            }
 
             // Add the field boost value if it is set
             if(field.boost) {

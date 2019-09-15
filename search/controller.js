@@ -51,6 +51,7 @@ exports.search = function(req, res) {
 		collection = req.query.collection || null,
 		showAll = req.query.showAll || [],
 		expandFacets = req.query.expand || [],
+		advancedSearch = req.query.advancedSearch && req.query.advancedSearch == "true" ? true : false,
 		daterange = (req.query.from || req.query.to) && (parseInt(req.query.from) < parseInt(req.query.to)) ? {
 			from: req.query.from || 0,
 			to: req.query.to || new Date().getFullYear()
@@ -58,7 +59,7 @@ exports.search = function(req, res) {
 
 	let sortBy = Helper.getSortDataArray(sort);
 	let queryData = Helper.getSearchQueryDataObject(query, field, type, bool);
-	Service.searchIndex(queryData, facets, collection, page, pageSize, daterange, sortBy, function(error, response) {
+	Service.searchIndex(queryData, facets, collection, page, pageSize, daterange, sortBy, advancedSearch, function(error, response) {
 
 		// Assign view data
 		var data = {
