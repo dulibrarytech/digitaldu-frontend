@@ -81,25 +81,22 @@ exports.removeEmptyFacetKeys = function(facets) {
  *
  * @return {String} The results label
  */
-exports.getResultsLabel = function(query, facets) {
-  // let queryLabel = " ";
+exports.getResultsLabel = function(query, facets, bool) {
+  let queryLabel = " ";
 
-  // if(query == "" && facets) {
-  //   for(let key in facets) {
-  //     for(let index in facets[key]) {
-  //       queryLabel += (" " + facets[key][index]);
-  //     }
-  //     queryLabel += ";";
-  //   }
-  // }
-  // else {
-  //   queryLabel = query == "" ? "*" : query;
-  // }
+  if(query.length > 0) {
+    for(let index in query) {
+      if(query[index].length == 0) {
+        query[index] = "*";
+      }
+      if(bool[index] && bool[index].toLowerCase() == "not") {
+        queryLabel += "NOT ";
+      }
+      queryLabel += (query[index] + ((index == query.length-1) ? " " : "; "));
+    }
+  }
 
-  // return queryLabel; 
-
-  // 8-18-19 Not showing the facet query in the 'results for' label
-  return query[0] == "" ? "*" : query;
+  return queryLabel; 
 }
 
 /**
