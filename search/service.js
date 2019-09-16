@@ -67,21 +67,27 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
         },
         currentQuery;
       
-        
     /* 
      * Build the search fields object 
      * Use a match query for each word token, a match_phrase query for word group tokens, and a wildcard search for tokens that contain a '*'.
      * Each query is placed in a separate bool object
      */
+
     // Search data for each query
     var field, fields, type, terms, bool;
 
-    // Objects for building the nested boolean queries
-    var curObj = booleanQuery,
-        prevBool, queryArray, boolType, nestedBool;
+    // Elastic boolean objects
+    var shouldArray = [], 
+        mustBoolean = {
+          bool: {
+            must: []
+          }
+        },
+        mustNotArray = [];
 
     // queryData is an array of the combined queries in the search.  A simple search will contain one query, an advanced search may contain multiple queries
-    for(var index in queryData) {
+    // for(var index in queryData) {
+    for(var index in queryData.reverse()) {
       queryFields = [];
       currentQuery = {};
 
@@ -89,15 +95,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       terms = queryData[index].terms || "";
       field = queryData[index].field || "all";
       type = queryData[index].type || "contains";
-
-      // Determine the boolean term to join the current query with the next query in the array
-      bool = queryData[parseInt(index)+1] ? queryData[parseInt(index)+1].bool : queryData[index].bool || "or";
-      prevBool = queryData[index].bool;
-
-      // If the next bool is "not" use current query's boolean term
-      if(bool == "not") {
-        bool = index == 0 ? "or" : queryData[index].bool || "or";
-      }
+      bool = queryData[index].bool || "or";
 
       // If field value is "all", get all the available search fields
       fields = Helper.getSearchFields(field);
@@ -169,64 +167,35 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       else {
         console.log("Error: invalid search field configuration", {});
       } 
-      currentQuery = queryFields[0];
+      currentQuery = queryFields;
 
       /*
-       * Add the query to the boolean object:
-       * Multiple queries with different boolean types will be nested in existing boolean objects
+       * Add the query to the boolean object
        */
-
-      // Add this query to the boolean filter must object
-      if(bool == "and") {
-        queryArray = curObj.bool.must;
-        boolType = "must";
+      if(bool == "or") {
+        shouldArray = shouldArray.concat(currentQuery);
       }
-
-      // Add this query to the boolean filter must_not object
-      else if(prevBool == "not") {
-        booleanQuery.bool.must_not.push(currentQuery);
-        boolType = "must_not";
-      }
-
-      // Add this query to the boolean filter should object
-      else {
-        queryArray = curObj.bool.should;
-        boolType = "should";
-      }
-
-      // First iteration, just push the query to the current boolean array
-      if(prevBool == null) {
-        queryArray.push(currentQuery);
-      }
-
-      // No change in boolean condition, just push the query to the current boolean array
-      else if(prevBool == bool) {
-        queryArray.push(currentQuery);
-      }
-
-      // Change in boolean terms, create a new boolean object to nest in the current boolean array.  Push the query to the new object, use the new object's boolean array as the current array
-      else {
-
-        // NOT queries have already been pushed to the top-level must_not array, ignore them here
-        if (boolType != "must_not"){
-          nestedBool = {
-            "bool": {
-              "should": [],
-              "must": []
+      else if(bool == "and") {
+        if(currentQuery.length > 1) {
+          mustBoolean.bool.must.push({
+            bool: {
+              should: currentQuery
             }
-          };
-          nestedBool.bool[boolType] = [];
-
-          // Nest the new boolean object, set the current query array to the new boolean object's query array
-          queryArray.push(nestedBool);
-          queryArray.push(currentQuery);
-          queryArray = nestedBool.bool[boolType];
-
-          // 'Step down' the current object to the newest nested level
-          curObj = nestedBool;
+          });
         }
+        else {
+          mustBoolean.bool.must.push(currentQuery[0]);
+        }
+        shouldArray.push(mustBoolean);
+      }
+      else if(bool == "not") {
+        mustNotArray = mustNotArray.concat(currentQuery);
       }
     }
+
+    // Add the subquery boolean objects to the main boolean object
+    booleanQuery.bool.should = shouldArray;
+    booleanQuery.bool.must_not = mustNotArray;
 
     /*
      * Add facets and filters:
