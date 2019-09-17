@@ -79,25 +79,24 @@ All other content is released under [CC-BY-4.0](https://creativecommons.org/lice
 
 ##### Index Document Required Fields for Each Object 
 
-"pid": {string} Unique identifier for the object
-"is_member_of_collection" {string} The PID of the collection object that this object is a member of
-"thumbnail" {string} Path to the object's thumbnail image resource.  This can be an absolute path or relative path, depending on the repository interface in use.  This path is accessed by the repository interface. For the out-of-the-box Duraspace repository interface, this is the relative path to the dip-store object 
-"object" {string} Path to the object's data resource.  This can be an absolute path or relative path, depending on the repository interface in use.  This path is accessed by the repository interface.  For the out-of-the-box Duraspace repository interface, this is the relative path to the dip-store object 
-"mime_type" {string} Mimetype of the object (ex. image/tiff)
-"object_type": {string} "object" or "collection"
-"is_compound": {boolean} Flag to identify a compound object (an object with constituent parts)
-"display_record": {object} Object with metadata display fields.  This is accessed to build the metadata displays for the object: Search result display, objet view summary, object metadata display
-"parts": {array} Array of constituent part objects of a parent compound object.  Objects that are not compound do not require this field
+* "pid": {string} Unique identifier for the object
+* "is_member_of_collection" {string} The PID of the collection object that this object is a member of
+* "thumbnail" {string} Path to the object's thumbnail image resource.  This can be an absolute path or relative path, depending on the repository interface in use.  This path is accessed by the repository interface. For the out-of-the-box Duraspace repository interface, this is the relative path to the dip-store object 
+* "object" {string} Path to the object's data resource.  This can be an absolute path or relative path, depending on the repository interface in use.  This path is accessed by the repository interface.  For the out-of-the-box Duraspace repository interface, this is the relative path to the dip-store object 
+* "mime_type" {string} Mimetype of the object (ex. image/tiff)
+* "object_type": {string} "object" or "collection"
+* "is_compound": {boolean} Flag to identify a compound object (an object with constituent parts)
+* "display_record": {object} Object with metadata display fields.  This is accessed to build the metadata displays for the object: Search result display, objet view summary, object metadata display
+* "parts": {array} Array of constituent part objects of a parent compound object.  Objects that are not compound do not require this field
 
 ##### Compound Object Required Fields
 
-"mime_type": Mime type of the part object
-"order": Sequence number of the part object
-"title" Title of the part object, if any
-"caption" Caption of the part object, if any
-"thumbnail" {string} Path to the part object's thumbnail image resource.  This can be an absolute path or relative path, depending on the repository interface in use.  This path is accessed by the repository interface. For the out-of-the-box Duraspace repository interface, this is the relative path to the dip-store object 
-"object" {string} Path to the part object's data resource.  This can be an absolute path or relative path, depending on the repository interface in use.  This path is accessed by the repository interface. For the out-of-the-box Duraspace repository interface, this is the relative path to the dip-store object 
-
+* "mime_type": Mime type of the part object
+* "order": Sequence number of the part object
+* "title" Title of the part object, if any
+* "caption" Caption of the part object, if any
+* "thumbnail" {string} Path to the part object's thumbnail image resource.  This can be an absolute path or relative path, depending on the repository interface in use.  This path is accessed by the repository interface. For the out-of-the-box Duraspace repository interface, this is the relative path to the dip-store object 
+* "object" {string} Path to the part object's data resource.  This can be an absolute path or relative path, depending on the repository interface in use.  This path is accessed by the repository interface. For the out-of-the-box Duraspace repository interface, this is the relative path to the dip-store object 
 
 ## Project Documentation
 
