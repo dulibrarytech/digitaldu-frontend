@@ -16,26 +16,33 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
   AppHelper = require("../libs/helper");
 
 /**
- * 
+ * Get a datastream for an object
  *
- * @param {}
+ * @param {Array.<Object>} object - index document source
+ * @param {Array.<String>} objectID - object PID
+ * @param {Array.<String>} datastreamID - datastream ID
+ * @param {Array.<String|null>} part - Part sequence order value if compound object, null if single object
  *
- * @return {}
+ * @callback callback
+ * @param {String|null} Error message or null
+ * @param {datastream|null} Null if error
+ *
+ * @return {undefined}
  */
 exports.getDatastream = function(object, objectID, datastreamID, part, callback) {
-
   // If there is a part value, retrieve the part data.  Redefine the object data with the part data
   if(part && isNaN(part) === false) {
     var sequence;
-    let objectPart = AppHelper.getCompoundObjectPart(object, part);
 
     // Get the data from the part object, set as object for datastream request. If part is not found, part will be ignored and input object will be used to stream data
+    let objectPart = AppHelper.getCompoundObjectPart(object, part);
     if(objectPart) {
       objectPart["object_type"] = "object";
 
       //  DEV Temporary, unless part object will contain the field 'type' for mime type value
       objectPart["mime_type"] = objectPart.type;
 
+      // Use the object part to retrieve the datastream
       object = objectPart;
       sequence = config.compoundObjectPartID + part;
       objectID = objectID + sequence;
@@ -51,7 +58,10 @@ exports.getDatastream = function(object, objectID, datastreamID, part, callback)
   if(datastreamID == "tn") {
     // Check for a local thumbnail image
     let path = config.tnPath + objectID.replace(":", "_") + config.thumbnailFileExtension;
+
+    // Thumbnail image has not been found in local cache TODO: cache implementation
     if(fs.existsSync(path) == false) {
+      // Find the 'file type' for the thumbnail configuration
       let fileType = "default";
       if(Helper.isParentObject(object)) {
         fileType = "compound";
@@ -64,11 +74,13 @@ exports.getDatastream = function(object, objectID, datastreamID, part, callback)
         }
       }
 
+      // Get the thumbnail configuration settings for this file type
     	var settings = config.thumbnails[object.object_type] || null;
       if(settings && settings.fileTypes) {
         settings = settings.fileTypes[fileType] || null;
       }
 
+      // Get the thumbnail uri based on the configuration settings
       let filePath = null, streamPath = null, uri;
       if(settings == null) {
         callback("Error retrieving datastream for " + objectID + ", can not find configuration settings for object type " + object.object_type, null);
@@ -82,9 +94,6 @@ exports.getDatastream = function(object, objectID, datastreamID, part, callback)
 
           case "kaltura":
             uri = Kaltura.getThumbnailUrl(object);
-
-
-
             break;
 
           case "external":
@@ -99,6 +108,7 @@ exports.getDatastream = function(object, objectID, datastreamID, part, callback)
             break;
         }
 
+        // Stream the uri from the repository or external source
         if(settings.source == "repository") {
           Repository.streamData(object, "tn", function(error, stream) {
             if(error) {
@@ -107,7 +117,7 @@ exports.getDatastream = function(object, objectID, datastreamID, part, callback)
             else {
               // All is good, return the stream
               if(stream) {
-                // TODO: Cache the file in local filesystem when retrieved from iiif server
+                // TODO: cache implementation
                 callback(null, stream);
               }
               else {
@@ -135,8 +145,10 @@ exports.getDatastream = function(object, objectID, datastreamID, part, callback)
         }
       }
     }
+
+    // Thumbnail image file has been found in the local cache
     else {
-      // Stream thumbnail image from local folder
+      // Stream thumbnail image from local folder TODO: cache implementation
       getFileStream(path, function(error, thumbnail) {
           callback(null, thumbnail);
       });
@@ -145,7 +157,7 @@ exports.getDatastream = function(object, objectID, datastreamID, part, callback)
 
   // Request a non thumbnail datastream
   else {
-    // Check for a local object file
+    // Check for a local object file TODO: cache implementation
     let file = null, path;
     for(var extension in config.fileExtensions) {
       if(config.fileExtensions[extension].includes(object.mime_type)) {
@@ -183,14 +195,19 @@ exports.getDatastream = function(object, objectID, datastreamID, part, callback)
 }
 
 /**
- * 
+ * Request data from uri
  *
- * @param {}
+ * @param {String} uri - Uri of data source
  *
- * @return {}
+ * @callback callback
+ * @param {String|null} - Error message or null
+ * @param {http status code|null} - Response status code, Null if error
+ * @param {response|null} Response data, Null if error
+ *
+ * @return {undefined}
  */
-var streamRemoteData = function(url, callback) {
-	rs(url, {}, function(err, res) {
+var streamRemoteData = function(uri, callback) {
+	rs(uri, {}, function(err, res) {
 		if(err) {
 			callback("Could not open datastream. " + err, null, null);
 		}
@@ -201,22 +218,30 @@ var streamRemoteData = function(url, callback) {
 }
 
 /**
- * 
+ * Get a file stream from a local file
  *
- * @param {}
+ * @param {String} path - Path to file in local folder
  *
- * @return {}
+ * @callback callback
+ * @param {String|null} - Error message or null
+ * @param {file stream|null} - Node 'fs' readStream, Null if error
+ *
+ * @return {undefined}
  */
 var getFileStream = function(path, callback) {
   	callback(null, fs.createReadStream(path));
 }
 
 /**
- * 
+ * Check for an object-specific default thumbnail image.  If none is found, stream the default generic thumbnail image
  *
- * @param {}
+ * @param {Object} object - index document source
  *
- * @return {}
+ * @callback callback
+ * @param {String|null} - Error message or null
+ * @param {file stream|null} - Node 'fs' readStream, Null if error
+ *
+ * @return {undefined}
  */
 var streamDefaultThumbnail = function(object, callback) {
   let path = config.tnPath + config.defaultThumbnailImage;
@@ -230,7 +255,8 @@ var streamDefaultThumbnail = function(object, callback) {
 
   // Create the thumbnail stream
   getFileStream(path, function(error, thumbnail) {
-      callback(null, thumbnail);
+    if(error) {callback(error, null);}
+    else{callback(null, thumbnail);}
   });
 }
 

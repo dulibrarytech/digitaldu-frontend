@@ -1,3 +1,10 @@
+ /**
+ * @file 
+ *
+ * express.js
+ * Discovery app express.js bootstrap file
+ */
+
 'use strict';
 
 var http = require('http'),

@@ -13,7 +13,7 @@ var config = require('../config/' + process.env.CONFIGURATION_FILE);
  *
  * @param {Array} objects - Array of Elastic search result _source objects
  *
- * @typedef (Object) viewData - List of 'view data' objects
+ * @typedef {Object} viewData - List of 'view data' objects
  * @property {String} pid - Object pid
  * @property {String} tn - Object TN image source path
  * @property {String} title - Object title
@@ -103,7 +103,7 @@ exports.sortSearchResultObjects = function(objects) {
  *
  * @param {Array.<collectionData>}
  *
- * @typedef (Object) collectionData - Data to create one collection breadcrumb link
+ * @typedef {Object} collectionData - Data to create one collection breadcrumb link
  * @property {String} pid - The collection pid
  * @property {String} name - The collection name, to be displayed in the breadcrumb
  * @property {String} url - Absolute path to the collection's view
@@ -119,7 +119,7 @@ exports.getCollectionBreadcrumbObject = function(collections) {
  *
  * @param {Array.<collectionData>}
  *
- * @typedef (Object) collectionData - Data to create one collection breadcrumb link
+ * @typedef {Object} collectionData - Data to create one collection breadcrumb link
  * @property {String} pid - The collection pid
  * @property {String} name - The collection name, to be displayed in the breadcrumb
  * @property {String} url - Absolute path to the collection's view

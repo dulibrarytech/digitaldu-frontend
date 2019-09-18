@@ -1,6 +1,5 @@
 /*
- * format.js
- * Format class
+ * Format 
  * Custom format functions
  */
 
@@ -126,6 +125,4 @@ var formatCollectionBreadcrumbs = function(breadcrumbFacets, callback) {
       callback(null);
     });
   }
-
-  //callback(null);
 }

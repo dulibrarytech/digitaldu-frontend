@@ -13,11 +13,10 @@ const 	config = require('../config/' + process.env.CONFIGURATION_FILE),
     	AppHelper = require("../libs/helper");
 
 /**
- * 
+ * Get compound object viewer html 
  *
- * @param {}
- *
- * @return {}
+ * @param {Object} object - index document
+ * @return {String} - viewer html string
  */
 exports.getCompoundObjectViewer = function(object) {
  	var viewer = "";
@@ -29,13 +28,11 @@ exports.getCompoundObjectViewer = function(object) {
  	}
 
  	if(validateCompoundObject(object)) {
-
  		// Get viewer for object mime type:
 	 	switch(config.compoundObjectViewer) {
 	 		case "universalviewer":
 	 			viewer += Viewer.getIIIFObjectViewer(object, "1", embedKaltura);
 	 			break;
-
 	 		default:
 	 			console.log("Viewer error: No compound viewer found.  Please check configuration");
 	 			viewer = "";
@@ -50,22 +47,11 @@ exports.getCompoundObjectViewer = function(object) {
 }
 
 /**
- * 
+ * Determines if a compound object's children meet a certain criteria
+ * Currently, only audio and video objects, or small and large images can be combined in a compound object.  All other combinations of child object types are invalid
  *
- * @param {}
- *
- * @return {}
- */
-exports.getBookViewer = function(object, index) {
-
-}
-
-/**
- * 
- *
- * @param {}
- *
- * @return {}
+ * @param {Object} object - index document
+ * @return {Boolean} - true if valid, false if not
  */
 var validateCompoundObject = function(object) {
 	var isValid = false,
@@ -106,11 +92,11 @@ var validateCompoundObject = function(object) {
 exports.validateCompoundObject = validateCompoundObject;
 
 /**
- * 
+ * Validate an array of object parts against a list of object types
  *
- * @param {}
- *
- * @return {}
+ * @param {Array.<Object>} parts - Array of part objects
+ * @param {Array.<String>} objectTypes - Array of object type strings
+ * @return {Boolean} - true if combination of parts is valid, false if not
  */
 var validateCompoundObjectParts = function(parts, objectTypes) {
 	var acceptedMimeTypes = [], 

@@ -1,3 +1,11 @@
+ /**
+ * @file 
+ *
+ * index.js
+ * Discovery app Elastic bootstrap file
+ * npm elasticsearch client
+ */
+
 'use strict'
 
 const config = require('../config/' + process.env.CONFIGURATION_FILE);

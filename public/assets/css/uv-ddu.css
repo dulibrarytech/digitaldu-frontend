@@ -13,6 +13,12 @@
 
 .uv .leftPanel .views .thumbsView .thumbs .thumb.oneCol .wrap {
   float: none !important;
+  max-height: none !important;
+}
+
+.uv .wrap {
+  height: auto !important;
+  min-height: 100px !important;
 }
 
 .uv .leftPanel .views .thumbsView .thumbs .thumb.oneCol .label {

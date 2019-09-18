@@ -188,9 +188,9 @@ function getVideoViewer(object) {
  * @return 
  */
 function getSmallImageViewer(object) {
-	var viewer = '<div id="small-image-viewer" class="viewer-section">';
-
-	var image = Repository.getDatastreamUrl("jpg", object.pid);
+	var viewer = '<div id="small-image-viewer" class="viewer-section">',
+		// image = Repository.getDatastreamUrl("jpg", object.pid);
+		image = config.rootUrl + "/datastream/" + object.pid + "/jpg";
 
 	viewer += '<div id="viewer-content-wrapper" class="small-image"><img class="viewer-content" src="' + image + '"/></div>';
 	viewer += '</div>';

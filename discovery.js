@@ -1,3 +1,10 @@
+ /**
+ * @file 
+ *
+ * discovery.js
+ * Discovery app node bootstrap file
+ */
+
 'use strict';
 
 require('dotenv').load();

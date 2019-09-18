@@ -1,3 +1,10 @@
+ /**
+ * @file 
+ *
+ * config.sample.js
+ * Discovery app example configuration file
+ */
+
 'use strict';
 
 module.exports = {

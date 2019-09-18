@@ -1,3 +1,10 @@
+ /**
+ * @file 
+ *
+ * config.js
+ * Discovery app configuration file
+ */
+
 'use strict';
 
 module.exports = {
@@ -114,9 +121,9 @@ module.exports = {
 
     /* 
      * Viewer to display large image files (tiff, jp2)
-     * [browser | openseadragon | universalviewer]
+     * [openseadragon | universalviewer]
      */
-    largeImageViewer: "openseadragon",
+    largeImageViewer: "universalviewer",
 
     /* 
      * Viewer to display compound objects
@@ -311,7 +318,7 @@ module.exports = {
         {"label": "Description", "id": "description", "field": "abstract", "boost": "3"},
         {"label": "Language", "id": "language", "field": "display_record.t_language.text", "boost": "5"},
         {"label": "Creation Date", "id": "create_date", "field": "display_record.dates.expression", "matchField": "display_record.dates.label", "matchTerm": "creation"},
-        {"label": "Authority ID", "id": "authority_id", "field": "display_record.identifiers.identifier", "matchField": "display_record.identifiers.type", "matchTerm": "local"}
+        {"label": "Archivesspace ID", "id": "authority_id", "field": "display_record.identifiers.identifier", "matchField": "display_record.identifiers.type", "matchTerm": "local"}
     ],
 
     /*
@@ -338,7 +345,7 @@ module.exports = {
         {"Description": "description"},
         {"Creation Date": "create_date"},
         {"Language": "language"},
-        {"Authority ID": "authority_id"}
+        {"Archivesspace ID": "authority_id"}
     ],
 
     /*
@@ -436,9 +443,9 @@ module.exports = {
             "Music Recording": "assets/img/45_rpm_record-TN.png",
             "Nonmusic Recording": "assets/img/mic-TN.png",
             "Map": "assets/img/map-TN.png",
-            "Mixed Material": "assets/img/document-icon-free-0-TN.jpg",
-            "3D Object": "assets/img/objects-icon-TN.png"
-            // "Collection": "assets/img/collections-icon-TN.png"
+            "Mixed Material": "assets/img/pdf2-icon-TN.png",
+            "3D Object": "assets/img/objects-icon-TN.png",
+            "Collection": "assets/img/filebox-icon-TN.png"
         }
     },
 

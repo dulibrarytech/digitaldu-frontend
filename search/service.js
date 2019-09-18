@@ -27,23 +27,23 @@ const es = require('../config/index'),
  * @param {dateRange} daterange
  * @param {sort} sort
  *
- * @typedef (Object) dateRange
+ * @typedef {Object} dateRange
  * @property {String} from - Daterange 'search from' date.  Year only [YYYY]
  * @property {String} to - Daterange 'search to' date.  Year only [YYYY]
  *
- * @typedef (Object) sort
+ * @typedef {Object} sort
  * @property {String} field - Index field to sort search results by
  * @property {String} order - Order of sort ["asc"|"desc"]
  *
- * @typedef (Object) queryData - Data to perform a single query
+ * @typedef {Object} queryData - Data to perform a single query
  * @property {String} terms - Search terms
  * @property {String} field - Search in this index field; "all" to search in all configured search fields {"all"|[index field]}
  * @property {String} type - Search type ["contains|is"]
  * @property {String} bool - Bool to use to combine current query with previous query ["or"|"and"|"not"]
  *
- * @typedef (Object) searchResults - This object is the search results data object
+ * @typedef {Object} searchResults - This object is the search results data object
  * @property {String} title - Result object title
- * @property {String} tn - Uri to result objcet thumbnail datastream
+ * @property {String} tn - Uri to result object thumbnail datastream
  * @property {String} pid - Result object pid
  * @property {String} objectType - Result object 'object_type' ["object"|"collection"]
  * @property {Object} display_record - Result object index display record
@@ -72,7 +72,6 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
      * Use a match query for each word token, a match_phrase query for word group tokens, and a wildcard search for tokens that contain a '*'.
      * Each query is placed in a separate bool object
      */
-
     // Search data for each query
     var field, fields, type, terms, bool;
 
@@ -86,7 +85,6 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
         mustNotArray = [];
 
     // queryData is an array of the combined queries in the search.  A simple search will contain one query, an advanced search may contain multiple queries
-    // for(var index in queryData) {
     for(var index in queryData.reverse()) {
       queryFields = [];
       currentQuery = {};
@@ -103,41 +101,38 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       // Get the Elastic query type to use for this query
       queryType = Helper.getQueryType(queryData[index]);
 
-      /*
-       * Build the elastic query
-       * (REQ: fields terms querytype)
-       */
+      // Build the elastic query
       if(Array.isArray(fields)) {
         /*
          * Loop the keywords, adding each to the main query array under the specified query type (match, wildcard, match_phrase)
          * For match queries, check for a boost value in the keyword object and add it to the query if the value is present
          */
-        let keywordObj, tempObj, queryObj;
+        let fieldObj, keywordObj, queryObj;
         for(var field of fields) {
+          fieldObj = {};
           keywordObj = {};
-          tempObj = {};
           queryObj = {};
 
           // Get boost value if it exists in this field object
           if(queryType == "match") {
-            queryObj = {
+            keywordObj = {
               "query": terms,
               "operator": "or"
             };
 
             // Add fuzz factor if this is not an advanced search
             if(isAdvanced == false) {
-              queryObj["fuzziness"] = config.searchTermFuzziness;
+              keywordObj["fuzziness"] = config.searchTermFuzziness;
             }
 
             // Add the field boost value if it is set
             if(field.boost) {
-              queryObj["boost"] = field.boost;
+              keywordObj["boost"] = field.boost;
             }
 
             // Create the elastic match query object
-            keywordObj[field.field] = queryObj;
-            tempObj[queryType] = keywordObj;
+            fieldObj[field.field] = keywordObj;
+            queryObj[queryType] = fieldObj;
 
             // matchField specifies a field in the index to use, when an index path points to differing index values.  Add a must query to select the specified match field
             if(typeof field.matchField != 'undefined') {
@@ -147,20 +142,20 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
               mustQuery.match_phrase[field.matchField] = field.matchTerm;
               queryFields.push({
                 "bool": {
-                  "must": [tempObj,mustQuery] // Both must match for the bool to be true
+                  "must": [queryObj,mustQuery] // Both must match for the bool to be true
                 }
               });
             }
             else {
               // Push the "match" query
-              queryFields.push(tempObj);
+              queryFields.push(queryObj);
             }
           }
 
           else {
-            keywordObj[field.field] = terms;
-            tempObj[queryType] = keywordObj;
-            queryFields.push(tempObj);
+            fieldObj[field.field] = terms;
+            queryObj[queryType] = fieldObj;
+            queryFields.push(queryObj);
           }
         }
       }
@@ -172,9 +167,12 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       /*
        * Add the query to the boolean object
        */
+      // Add to the 'should' array
       if(bool == "or") {
         shouldArray = shouldArray.concat(currentQuery);
       }
+
+      // Must queries must be nested in a second boolean object, which is inserted into the 'should' array
       else if(bool == "and") {
         if(currentQuery.length > 1) {
           mustBoolean.bool.must.push({
@@ -188,6 +186,8 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
         }
         shouldArray.push(mustBoolean);
       }
+
+      // Add to the 'must_not' array
       else if(bool == "not") {
         mustNotArray = mustNotArray.concat(currentQuery);
       }
@@ -200,7 +200,6 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
     /*
      * Add facets and filters:
      */
-
     // If facets are present, apply filters to the search
     if(facets) {
       let facetKey, count=0;
@@ -271,7 +270,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
     }
 
     // DEBUG - Output the full structure of the query object
-    //console.log("TEST queryObj:", util.inspect(queryObj, {showHidden: false, depth: null}));
+    //console.log("TEST query object:", util.inspect(queryObj, {showHidden: false, depth: null}));
 
     // Get elasticsearch aggregations object 
     var facetAggregations = Helper.getFacetAggregationObject(config.facets);

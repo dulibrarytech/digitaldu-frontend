@@ -104,7 +104,7 @@ exports.getResultsLabel = function(query, facets, bool) {
  *
  * @param {daterange} daterange - From and to values defining the daterange
  *
- * @typedef (Object) daterange
+ * @typedef {Object} daterange
  * @property {String} from - Daterange 'search from' date.  Year only [YYYY]
  * @property {String} to - Daterange 'search to' date.  Year only [YYYY]
  *
@@ -197,7 +197,7 @@ exports.getSearchFields = function(fieldValue) {
  * @param {Array.<String>} typeArray - Search types, one per query
  * @param {Array.<String>} boolArray - Query boolean terms, one per query
  *
- * @typedef (Object) queryData
+ * @typedef {Object} queryData
  * @property {String} terms - Query string
  * @property {String} field - Search field
  * @property {String} type - Search type
@@ -232,7 +232,7 @@ exports.getSearchQueryDataObject = function(queryArray, fieldArray, typeArray, b
  *
  * @param {String} sort - The sort string: two terms delimited by "," (ex "sort field,sort type" or "Title,asc")
  *
- * @typedef (Object) sortData
+ * @typedef {Object} sortData
  * @property {String} field - First value of comma delimited "sort" string
  * @property {String} order - Second value of comma delimited "sort" string
  *
@@ -259,7 +259,7 @@ exports.getSortDataArray = function(sort) {
  *
  * @param {queryData} - Query data object
  *
- * @typedef (Object) queryData
+ * @typedef {Object} queryData
  * @property {String} terms - Query string
  * @property {String} field - Search field
  * @property {String} type - Search type

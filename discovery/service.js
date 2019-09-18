@@ -20,11 +20,11 @@ const IIIF = require("../libs/IIIF");
  *
  * @param {String} pageNum - Get this page of result collections
  *
- * @typedef (Object) collections - Collection data
+ * @typedef {Object} collections - Collection data
  * @property {Array} list - Array of collection objects
  * @property {Number} count - Number of collections in top level collection
  *
- * @typedef (Object) viewData - List of 'view data' objects
+ * @typedef {Object} viewData - List of 'view data' objects
  * @property {String} pid - Object pid
  * @property {String} tn - Object TN image source path
  * @property {String} title - Object title
@@ -84,13 +84,13 @@ exports.getTopLevelCollections = function(pageNum=0, callback) {
  *
  * @param {String} pageNum - Get this page of result objects.  0, return all collections.
  *
- * @typedef (Object) collection - Collection data
+ * @typedef {Object} collection - Collection data
  * @property {String} title - Title of the collection to be displayed in the view
  * @property {String} count - Number of objects in the collection
  * @property {Object} facets - Elastic response aggregations object
  * @property {Array.<viewData>} list - List of collection 'view data' objects
  *
- * @typedef (Object) viewData - List of 'view data' objects
+ * @typedef {Object} viewData - List of 'view data' objects
  * @property {String} pid - Object pid
  * @property {String} tn - Object TN image source path
  * @property {String} title - Object title

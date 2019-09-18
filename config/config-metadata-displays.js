@@ -1,3 +1,10 @@
+ /**
+ * @file 
+ *
+ * config-metadata.js
+ * Metadata display configuration file
+ */
+
 'use strict';
 
 module.exports = { 
