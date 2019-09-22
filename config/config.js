@@ -383,7 +383,8 @@ module.exports = {
         "Title (z - a)": "Title,desc",
         "Creator (a - z)": "Creator,asc",
         "Creator (z - a)": "Creator,desc",
-        "Creation Date": "Creation Date,asc",
+        "Creation Date (asc)": "Creation Date,asc",
+        "Creation Date (desc)": "Creation Date,desc",
         "Archivesspace ID": "ArchivesspaceID,asc"
     },
 
