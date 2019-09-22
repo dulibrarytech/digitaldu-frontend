@@ -279,15 +279,40 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
     let sortArr = [];
     if(sort) {
       let data = {},
-          field = config.searchSortFields[sort.field] + ".keyword" || null;
+          field = config.searchSortFields[sort.field] || null;
 
       if(field) {
-        data[field] = {
-          "order": sort.order
-          // "ignore_unmapped" : true
+        if(field.matchField && field.matchField.length > 0) {
+          // build nested data sort query
+          let filterObj = {
+            "term": {}
+          };
+
+          // Get the parent path dot-delimited string
+          let nestedTypePathArr = field.path.split("."), nestedPath = "";
+          for(let i = 0; i < nestedTypePathArr.length-1; i++) {
+            nestedPath += nestedTypePathArr[i];
+            if(i != nestedTypePathArr.length-2) {
+              nestedPath += ".";
+            }
+          }
+
+          // Build the sort query object
+          filterObj.term[field.matchField + ".keyword"] = field.matchTerm;
+          data[field.path + ".keyword"] = {
+            "order": sort.order,
+            "nested_path": nestedPath,
+            "nested_filter": filterObj
+          }
+        }
+        else {
+          // Sort on non nested data
+          data[field.path + ".keyword"] = {
+            "order": sort.order
+          }
         }
       }
-      sortArr.push(data);
+      sortArr.push(data); // sortData
     }
 
     // Create elasticsearch data object

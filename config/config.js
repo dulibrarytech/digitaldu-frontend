@@ -352,11 +352,25 @@ module.exports = {
      * Search result sort fields
      * { "Display Label" : "path.to.index.field" }
      */
-     searchSortFields: {
-        "Title": "title",
-        "Creator": "creator",
-        "Date": "display_record.dates.expression",
-        "ArchivesspaceID": "display_record.identifiers.identifier"
+    searchSortFields: {
+        "Title": {
+            "path": "title",
+            "matchField": "",
+            "matchTerm": ""
+        },
+        "Creator": {
+            "path": "creator"
+        },
+        "Creation Date": {
+            "path": "display_record.dates.expression",
+            "matchField": "display_record.dates.label",
+            "matchTerm": "creation"
+        },
+        "ArchivesspaceID": {
+            "path": "display_record.identifiers.identifier",
+            "matchField": "",
+            "matchTerm": ""
+        }
     },
 
     /*
@@ -369,7 +383,7 @@ module.exports = {
         "Title (z - a)": "Title,desc",
         "Creator (a - z)": "Creator,asc",
         "Creator (z - a)": "Creator,desc",
-        "Date": "Date,asc",
+        "Creation Date": "Creation Date,asc",
         "Archivesspace ID": "ArchivesspaceID,asc"
     },
 
