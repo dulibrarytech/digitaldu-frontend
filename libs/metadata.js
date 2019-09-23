@@ -111,6 +111,9 @@ exports.addResultMetadataDisplays = function(resultArray) {
 			}
 		}
 
+		if(Helper.isObjectEmpty(metadata)) {
+			metadata["Description"] = "No data available";
+		}
 		result["metadata"] = metadata;
 	}
 

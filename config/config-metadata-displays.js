@@ -26,7 +26,7 @@ module.exports = {
     },
 
     /*
-     * Fields to display in the summary data section (above Details link)
+     * Fields to display for search result items
      * "Display field name": "index field key to match"
      */
     resultsDisplay: {
@@ -47,10 +47,12 @@ module.exports = {
         },
         "collection": {
             "Creator": {
-                "path": "creator"
+                "path": "names.title"
             },
             "Description": {
-                "path": "abstract"
+                "path": "notes.content",
+                "matchField": "type",
+                "matchValue": "abstract"
             }
         }
     },
