@@ -350,7 +350,13 @@ module.exports = {
 
     /*
      * Search result sort fields
-     * { "Display Label" : "path.to.index.field" }
+     * Ex. Will sort on names.namePart value if names.role == 'creator'
+     * { "Creator" : {
+     *          "path": "names.namePart",
+     *          "matchField": "names.role",
+     *          "matchValue": "creator"
+     *     }
+     * }
      */
     searchSortFields: {
         "Title": {
