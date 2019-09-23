@@ -297,12 +297,15 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
             }
           }
 
-          // Build the sort query object
-          filterObj.term[field.matchField + ".keyword"] = field.matchTerm;
-          data[field.path + ".keyword"] = {
-            "order": sort.order,
-            "nested_path": nestedPath,
-            "nested_filter": filterObj
+          // Apply the sort if all of the required values are present and valid
+          if(field.matchTerm && field.matchTerm.length > 0 && nestedPath.length > 0) {
+            // Build the sort query object
+            filterObj.term[field.matchField + ".keyword"] = field.matchTerm;
+            data[field.path + ".keyword"] = {
+              "order": sort.order,
+              "nested_path": nestedPath,
+              "nested_filter": filterObj
+            }
           }
         }
         else {
@@ -312,6 +315,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
           }
         }
       }
+
       sortArr.push(data); // sortData
     }
 
@@ -330,7 +334,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
 
     // Query the index
     es.search(data, function (error, response, status) {
-      if (error || typeof response == 'undefined'){
+      if (error || typeof response == 'undefined') {
         callback(error, {});
       }
       else {
