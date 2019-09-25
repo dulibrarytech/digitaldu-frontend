@@ -280,7 +280,7 @@ exports.getQueryType = function(queryData) {
     queryData.terms = queryData.terms.replace(/"/g, '');
     queryType = "match_phrase";
   }
-  else if(queryData.terms.indexOf('*') >= 0) {
+  else if(queryData.terms.indexOf('*') >= 0 || queryData.terms.indexOf('?') >= 0) {
     queryType = "wildcard";
   }
   else  {

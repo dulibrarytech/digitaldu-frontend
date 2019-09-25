@@ -107,11 +107,13 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
          * Loop the keywords, adding each to the main query array under the specified query type (match, wildcard, match_phrase)
          * For match queries, check for a boost value in the keyword object and add it to the query if the value is present
          */
-        let fieldObj, keywordObj, queryObj;
+        let fieldObj, keywordObj, queryObj, nestedQuery, nestedQueryObj;
         for(var field of fields) {
           fieldObj = {};
           keywordObj = {};
           queryObj = {};
+          nestedQuery = {};
+          nestedQueryObj = {};
 
           // Get boost value if it exists in this field object
           if(queryType == "match") {
@@ -121,7 +123,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
             };
 
             // Add fuzz factor if this is not an advanced search
-            if(isAdvanced == false) {
+            if(isAdvanced == false && /[0-9]+/.test(terms) === false) {
               keywordObj["fuzziness"] = config.searchTermFuzziness;
             }
 
@@ -134,28 +136,57 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
             fieldObj[field.field] = keywordObj;
             queryObj[queryType] = fieldObj;
 
-            // matchField specifies a field in the index to use, when an index path points to differing index values.  Add a must query to select the specified match field
-            if(typeof field.matchField != 'undefined') {
+            // 
+            let mustArray = [];
+            if(field.matchField && field.matchTerm) {
               let mustQuery = {
                 "match_phrase": {}
               };
               mustQuery.match_phrase[field.matchField] = field.matchTerm;
-              queryFields.push({
+              mustArray.push(queryObj);
+              mustArray.push(mustQuery);
+              queryObj = {
                 "bool": {
-                  "must": [queryObj,mustQuery] // Both must match for the bool to be true
+                  "must": mustArray
                 }
-              });
+              };
             }
+
+            // Build a nested query for nested data ypes
+            if(field.isNestedType == "true") {
+              nestedQueryObj = {
+                "nested": {
+                  "path": field.field.substring(0,field.field.lastIndexOf(".")),
+                  "score_mode": "avg",
+                  "query": queryObj
+                }
+              }
+              queryFields.push(nestedQueryObj);
+            }
+
             else {
-              // Push the "match" query
               queryFields.push(queryObj);
             }
           }
 
           else {
-            fieldObj[field.field] = terms;
-            queryObj[queryType] = fieldObj;
-            queryFields.push(queryObj);
+            if(field.isNestedType == "true") {
+              fieldObj[field.field] = terms;
+              queryObj[queryType] = fieldObj;
+              nestedQueryObj = {
+                "nested": {
+                  "path": field.field.substring(0,field.field.lastIndexOf(".")),
+                  "score_mode": "avg",
+                  "query": queryObj
+                }
+              }
+              queryFields.push(nestedQueryObj);
+            }
+            else {
+              fieldObj[field.field] = terms;
+              queryObj[queryType] = fieldObj;
+              queryFields.push(queryObj);
+            }
           }
         }
       }
@@ -288,22 +319,13 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
             "term": {}
           };
 
-          // Get the parent path dot-delimited string
-          let nestedTypePathArr = field.path.split("."), nestedPath = "";
-          for(let i = 0; i < nestedTypePathArr.length-1; i++) {
-            nestedPath += nestedTypePathArr[i];
-            if(i != nestedTypePathArr.length-2) {
-              nestedPath += ".";
-            }
-          }
-
           // Apply the sort if all of the required values are present and valid
-          if(field.matchTerm && field.matchTerm.length > 0 && nestedPath.length > 0) {
+          if(field.matchTerm && field.matchTerm.length > 0) {
             // Build the sort query object
             filterObj.term[field.matchField + ".keyword"] = field.matchTerm;
             data[field.path + ".keyword"] = {
               "order": sort.order,
-              "nested_path": nestedPath,
+              "nested_path": field.path.substring(0,field.path.lastIndexOf(".")),
               "nested_filter": filterObj
             }
           }
@@ -359,6 +381,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
             resultObj = {
               title: result._source.title || "No Title",
               tn: tn,
+              collection: result._source.is_member_of_collection,
               pid: result._source.pid,
               objectType: result._source.object_type
             }

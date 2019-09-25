@@ -18,7 +18,7 @@
 					</select>
 				</div>
 				<div class="form-group">
-					<select name="field[]" class="search-element" title="Select field to search">
+					<select name="field[]" id="advanced-search-field-select-1" class="search-element advanced-search-field-select" title="Select field to search" onchange="changeAdvSearchTypeSel(this)">
 						<option value="all">All Fields</option>
 						<optgroup label="Specific Fields">
 						  <% for (var i = 0; i < searchFields.length; i++) { %>
@@ -30,7 +30,7 @@
 					</select>
 				</div>
 				<div class="form-group">
-					<select name="type[]" class="search-element" title="Select search scope">
+					<select name="type[]" id="advanced-search-type-select-1" class="search-element advanced-search-type-select" title="Select search scope">
 						<optgroup label="Search Type">
 						  <% for (var i = 0; i < typeFields.length; i++) { %>
 						    <% for (var key in typeFields[i]) { %>
@@ -54,14 +54,30 @@
 	</div>
 </div>
 
+<!-- Custom advanced search form behavior -->
 <script>
+	var changeAdvSearchTypeSel = function(element) {
+		// let id = element.id,
+		// 	index = id.substring(29),
+		// 	selValue = $("#" + id + " option:selected").text();
+
+		// if(selValue == "Archivesspace ID") {
+		// 	// Remove 'Contains' option
+		// 	let typeOpts = $("#advanced-search-type-select-" + index).children().children();
+		// 	$(typeOpts[0]).remove();
+		// }
+	}
+
 	$( document ).ready(function() {
 		$("#add-query-button").click(function(event) {
 			let formRow = "<div class='form-inline'>";
 			formRow += $("#advanced-search .form-inline:first-child").html();
 			formRow += "</div>";
-			
 			$("#advanced-search").append(formRow);
+
+			// Set the id fields with the row index
+			$("#advanced-search .form-inline:last-child .advanced-search-field-select").attr("id", "advanced-search-field-select-" + parseInt($("#advanced-search .form-inline").length));
+			$("#advanced-search .form-inline:last-child .advanced-search-type-select").attr("id", "advanced-search-type-select-" + parseInt($("#advanced-search .form-inline").length));
 		});
 
 		$("#advanced-search-submit").click(function(event) {

@@ -11,6 +11,7 @@
 
 var config = require('../config/' + process.env.CONFIGURATION_FILE),
 	metadataConfig = require('../config/config-metadata-displays'),
+	Discovery = require('../discovery/service.js'),
 	Helper = require('./helper');
 
 /**
@@ -89,7 +90,8 @@ exports.addResultMetadataDisplays = function(resultArray) {
 		displayRecord,
 		resultsDisplay,
 		metadata,
-		pathArray;	// TODO: Determine which display to use based on object, or other specification
+		pathArray,
+		parentCollection = null;
 
 	for(var result of resultArray) {
 		if(result.objectType == "collection") {
@@ -100,6 +102,7 @@ exports.addResultMetadataDisplays = function(resultArray) {
 		}
 		metadata = {};
 		displayRecord = result[config.displayRecordField] || {};
+		parentCollection = result.collection || null;
 
 		// Build the resuts display
 		for(var key in resultsDisplay) {

@@ -31,7 +31,7 @@ module.exports = {
      */
     resultsDisplay: {
         "default": {
-            "Creation Date": {
+            "Date": {
                 "path": "dates.expression",
                 "matchField": "label",
                 "matchValue": "creation"

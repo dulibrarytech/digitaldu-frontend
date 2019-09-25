@@ -314,11 +314,12 @@ module.exports = {
         {"label": "Title", "id": "title", "field": "title", "boost": "1"},
         {"label": "Creator", "id": "creator", "field": "creator", "boost": "3"},
         {"label": "Subject", "id": "subject", "field": "f_subjects", "boost": "2"},
+        {"label": "Topic", "id": "topic", "field": "display_record.subjects.terms.term", "matchField": "display_record.subjects.terms.type", "matchTerm": "topical"},
         {"label": "Type", "id": "type", "field": "type", "boost": "2"},
         {"label": "Description", "id": "description", "field": "abstract", "boost": "3"},
         {"label": "Language", "id": "language", "field": "display_record.t_language.text", "boost": "5"},
-        {"label": "Creation Date", "id": "create_date", "field": "display_record.dates.expression", "matchField": "display_record.dates.label", "matchTerm": "creation"},
-        {"label": "Archivesspace ID", "id": "authority_id", "field": "display_record.identifiers.identifier", "matchField": "display_record.identifiers.type", "matchTerm": "local"}
+        {"label": "Creation Date", "id": "create_date", "field": "display_record.dates.expression", "isNestedType": "true", "matchField": "display_record.dates.label", "matchTerm": "creation"},
+        {"label": "Call Number", "id": "call_number", "field": "display_record.identifiers.identifier", "isNestedType": "true", "matchField": "display_record.identifiers.type", "matchTerm": "local"}
     ],
 
     /*
@@ -345,7 +346,8 @@ module.exports = {
         {"Description": "description"},
         {"Creation Date": "create_date"},
         {"Language": "language"},
-        {"Archivesspace ID": "authority_id"}
+        {"Call Number": "call_number"},
+        {"Topic": "topic"}
     ],
 
     /*
@@ -372,10 +374,10 @@ module.exports = {
             "matchField": "display_record.dates.label",
             "matchTerm": "creation"
         },
-        "ArchivesspaceID": {
+        "Call Number": {
             "path": "display_record.identifiers.identifier",
-            "matchField": "",
-            "matchTerm": ""
+            "matchField": "display_record.identifiers.type",
+            "matchTerm": "local"
         }
     },
 
@@ -391,7 +393,7 @@ module.exports = {
         "Creator (z - a)": "Creator,desc",
         "Creation Date (asc)": "Creation Date,asc",
         "Creation Date (desc)": "Creation Date,desc",
-        "Archivesspace ID": "ArchivesspaceID,asc"
+        "Call Number (asc)": "Call Number,asc"
     },
 
     /*
