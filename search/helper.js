@@ -156,7 +156,12 @@ exports.getDateRangeQuery = function(daterange) {
       }
   });
 
-  return dateQuery;
+  return config.nestedDateField ? {
+    nested: {
+      path: "display_record.dates",
+      query: dateQuery
+    }
+  } : dateQuery;
 }
 
 /**

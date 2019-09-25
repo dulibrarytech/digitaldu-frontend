@@ -115,7 +115,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
           nestedQuery = {};
           nestedQueryObj = {};
 
-          // Get boost value if it exists in this field object
+          // Add additional parameters match queries
           if(queryType == "match") {
             keywordObj = {
               "query": terms,
@@ -132,61 +132,43 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
               keywordObj["boost"] = field.boost;
             }
 
-            // Create the elastic match query object
             fieldObj[field.field] = keywordObj;
-            queryObj[queryType] = fieldObj;
-
-            // 
-            let mustArray = [];
-            if(field.matchField && field.matchTerm) {
-              let mustQuery = {
-                "match_phrase": {}
-              };
-              mustQuery.match_phrase[field.matchField] = field.matchTerm;
-              mustArray.push(queryObj);
-              mustArray.push(mustQuery);
-              queryObj = {
-                "bool": {
-                  "must": mustArray
-                }
-              };
-            }
-
-            // Build a nested query for nested data ypes
-            if(field.isNestedType == "true") {
-              nestedQueryObj = {
-                "nested": {
-                  "path": field.field.substring(0,field.field.lastIndexOf(".")),
-                  "score_mode": "avg",
-                  "query": queryObj
-                }
-              }
-              queryFields.push(nestedQueryObj);
-            }
-
-            else {
-              queryFields.push(queryObj);
-            }
+          }
+          else {
+            fieldObj[field.field] = terms;
           }
 
-          else {
-            if(field.isNestedType == "true") {
-              fieldObj[field.field] = terms;
-              queryObj[queryType] = fieldObj;
-              nestedQueryObj = {
-                "nested": {
-                  "path": field.field.substring(0,field.field.lastIndexOf(".")),
-                  "score_mode": "avg",
-                  "query": queryObj
-                }
+          // Create the elastic query object
+          queryObj[queryType] = fieldObj;
+
+          // If field specifies a 'match field' create a must array to match the field exactly on a specified term, as well as on the main query fields/terms
+          if(field.matchField && field.matchTerm) {
+            let mustQuery = {
+              "match_phrase": {}
+            },
+            mustArray = [queryObj];
+            mustQuery.match_phrase[field.matchField] = field.matchTerm;
+            mustArray.push(mustQuery);
+            queryObj = {
+              "bool": {
+                "must": mustArray
               }
-              queryFields.push(nestedQueryObj);
+            };
+          }
+
+          // Build a nested query for nested data ypes
+          if(field.isNestedType == "true") {
+            nestedQueryObj = {
+              "nested": {
+                "path": field.field.substring(0,field.field.lastIndexOf(".")),
+                "score_mode": "avg",
+                "query": queryObj
+              }
             }
-            else {
-              fieldObj[field.field] = terms;
-              queryObj[queryType] = fieldObj;
-              queryFields.push(queryObj);
-            }
+            queryFields.push(nestedQueryObj);
+          }
+          else {
+            queryFields.push(queryObj);
           }
         }
       }

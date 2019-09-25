@@ -190,6 +190,7 @@ module.exports = {
     beginDateField: "display_record.dates.begin",
     endDateField: "display_record.dates.end",
     showDateRangeLimiter: true,
+    nestedDateField: true,  // true if date data type is "nested"
 
     /*
      * Define object types here, associte with object mime types
@@ -298,7 +299,7 @@ module.exports = {
      *               "title": "Forestry",
      *               "terms": [
      *                   {
-     *                       "type": "topic",
+     *                       "type": "topic",``
      *                       "term": "Forests"
      *                   }
      *               ],
@@ -307,8 +308,11 @@ module.exports = {
      *       ]
      *
      * @example - searchAllField object example
-     *         // Use the "term" field value if the sibling field "type" has the value "topic".  Other "term" values will be ignored
-     *         {"label": "Subject", "id": "subject", "field": "subjects.terms", "matchField": "subjects.terms.type", "matchTerm": "topic"} 
+     *          // Use the "term" field value if the sibling field "type" has the value "topic".  Other "term" values will be ignored
+     *          {"label": "Subject", "id": "subject", "field": "subjects.terms", "matchField": "subjects.terms.type", "matchTerm": "topic"} 
+     *
+     *          // If field data is of type "nested", set the "isNestedType" param to true to enable searching within nested data
+     *          {"label": "Subject", "id": "subject", "field": "subjects.terms", "matchField": "subjects.terms.type", "matchTerm": "topic", "isNestedType": "true"} 
      */ 
     searchAllFields: [
         {"label": "Title", "id": "title", "field": "title", "boost": "1"},
