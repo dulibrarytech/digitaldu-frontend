@@ -57,15 +57,21 @@
 <!-- Custom advanced search form behavior -->
 <script>
 	var changeAdvSearchTypeSel = function(element) {
-		// let id = element.id,
-		// 	index = id.substring(29),
-		// 	selValue = $("#" + id + " option:selected").text();
+		let id = element.id,
+			index = id.substring(29),
+			selValue = $("#" + id + " option:selected").text();
 
-		// if(selValue == "Archivesspace ID") {
-		// 	// Remove 'Contains' option
-		// 	let typeOpts = $("#advanced-search-type-select-" + index).children().children();
-		// 	$(typeOpts[0]).remove();
-		// }
+		if(selValue == "Call Number") {
+			// Remove 'Contains' option
+			// let typeOpts = $("#advanced-search-type-select-" + index).children().children();
+			// $(typeOpts[0]).remove();
+		}
+
+		else if(selValue == "Collection") {
+			// Remove 'Contains' option
+			let typeOpts = $("#advanced-search-type-select-" + index).children().children();
+			$(typeOpts[0]).remove();
+		}
 	}
 
 	$( document ).ready(function() {
