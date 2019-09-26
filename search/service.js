@@ -84,7 +84,10 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
         },
         mustNotArray = [];
 
-    // queryData is an array of the combined queries in the search.  A simple search will contain one query, an advanced search may contain multiple queries
+    /*
+     * Iterate through the individual queries in the search request.  Advanced searches may have multiple queries.
+     * Append the queries in reverse order to provide the correct logic for joining multiple advanced search queries
+     */
     for(var index in queryData.reverse()) {
       queryFields = [];
       currentQuery = {};
@@ -101,12 +104,8 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       // Get the Elastic query type to use for this query
       queryType = Helper.getQueryType(queryData[index]);
 
-      // Build the elastic query
+      // Create a term query for each field to be searched.  These will be combined into a single should query.  A hit on any field will return a result
       if(Array.isArray(fields)) {
-        /*
-         * Loop the keywords, adding each to the main query array under the specified query type (match, wildcard, match_phrase)
-         * For match queries, check for a boost value in the keyword object and add it to the query if the value is present
-         */
         let fieldObj, keywordObj, queryObj, nestedQuery, nestedQueryObj;
         for(var field of fields) {
           fieldObj = {};
@@ -115,14 +114,14 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
           nestedQuery = {};
           nestedQueryObj = {};
 
-          // Add additional parameters match queries
+          // Add additional parameters to "match" queries
           if(queryType == "match") {
             keywordObj = {
               "query": terms,
               "operator": "or"
             };
 
-            // Add fuzz factor if this is not an advanced search
+            // Add fuzz factor if this is not an advanced search, and there are no numeric terms.  Numeric terms must match index data exactly
             if(isAdvanced == false && /[0-9]+/.test(terms) === false) {
               keywordObj["fuzziness"] = config.searchTermFuzziness;
             }

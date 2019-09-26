@@ -185,12 +185,18 @@ module.exports = {
     kalturaThumbnailHeight: "250",
 
     /*
-     * Date index fields
+     * Date range field configuration
+     * Specify a 'begin date' field and an 'end date' field to enable date range search queries
+     * If the date fields are nested and there are multiple date objects (ex. creation and publication) specify which date field to use:
+     * 'dateFieldMatchField' Field to determine date field to use in range query
+     * 'dateFieldMatchValue' Value to determine date field to use in range query
      */
     beginDateField: "display_record.dates.begin",
     endDateField: "display_record.dates.end",
     showDateRangeLimiter: true,
     nestedDateField: true,  // true if date data type is "nested"
+    dateFieldMatchField: "display_record.dates.label",
+    dateFieldMatchValue: "creation",
 
     /*
      * Define object types here, associte with object mime types

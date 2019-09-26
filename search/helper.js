@@ -113,10 +113,20 @@ exports.getResultsLabel = function(query, facets, bool) {
 exports.getDateRangeQuery = function(daterange) {
   var dateQuery = {
       "bool": {
-        "should": []
+        "should": [],
+        "must": []
       }
     },
     beginRange = {}, endRange = {};
+
+    // Add the match field query if a match field has been set
+    if(config.dateFieldMatchField && config.dateFieldMatchField.length > 0) {
+      let matchField = {};
+      matchField[config.dateFieldMatchField] = config.dateFieldMatchValue;
+      dateQuery.bool.must.push({
+        "match_phrase": matchField
+      });
+    }
 
     // QI Check if begin date is included in the range
     beginRange[config.beginDateField] = {
@@ -150,6 +160,7 @@ exports.getDateRangeQuery = function(daterange) {
     temp.push({
       "range": endRange
     });
+
     dateQuery.bool.should.push({
       "bool": {
         "must": temp
@@ -158,7 +169,7 @@ exports.getDateRangeQuery = function(daterange) {
 
   return config.nestedDateField ? {
     nested: {
-      path: "display_record.dates",
+      path: config.beginDateField.substring(0,config.beginDateField.lastIndexOf(".")),
       query: dateQuery
     }
   } : dateQuery;
