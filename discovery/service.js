@@ -163,7 +163,7 @@ var getObjectsInCollection = function(collectionID, pageNum=1, facets=null, call
         // Sort collections by title a-z
         let sortArr = [],
             sortField = {};
-        sortField["title.keyword"] = {
+        sortField[config.collectionSortFields["Title"].path] = {
           "order": "asc"
         }
         sortArr.push(sortField);

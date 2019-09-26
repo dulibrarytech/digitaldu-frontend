@@ -391,6 +391,12 @@ module.exports = {
         }
     },
 
+    collectionSortFields: {
+        "Title": {
+            "path": "title.keyword"
+        }
+    },
+
     /*
      * Options to appear in the search sort dropdown menu
      * { "Display Label" : "searchSortField display label, [asc|desc]" }
@@ -404,6 +410,11 @@ module.exports = {
         "Creation Date (asc)": "Creation Date,asc",
         "Creation Date (desc)": "Creation Date,desc",
         "Call Number (asc)": "Call Number,asc"
+    },
+
+    collectionSortByOptions: {
+        "Title (a - z)": "Title,asc",
+        "Title (z - a)": "Title,desc"
     },
 
     /*

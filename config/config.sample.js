@@ -362,12 +362,23 @@ module.exports = {
         }
     },
 
+    collectionSortFields: {
+        "Title": {
+            "path": "title.keyword"
+        }
+    },
+
     /*
      * Options to appear in the search sort dropdown menu
      * { "Display Label" : "searchSortField display label, [asc|desc]" }
      */
     sortByOptions: {
         "Relevance": "relevance", // default
+        "Title (a - z)": "Title,asc",
+        "Title (z - a)": "Title,desc"
+    },
+
+    collectionSortByOptions: {
         "Title (a - z)": "Title,asc",
         "Title (z - a)": "Title,desc"
     },
