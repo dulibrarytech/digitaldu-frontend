@@ -41,6 +41,9 @@ module.exports = function (app) {
 
     app.route('/iiif/:pid/manifest.json')
         .get(Discovery.getIIIFManifest);
+
+    app.route('/advanced-search')
+        .get(Discovery.advancedSearch);
 };
 
 

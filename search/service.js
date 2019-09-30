@@ -155,7 +155,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
             };
           }
 
-          // Build a nested query for nested data ypes
+          // Build a nested query for nested data types
           if(field.isNestedType == "true") {
             nestedQueryObj = {
               "nested": {

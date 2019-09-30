@@ -571,3 +571,42 @@ exports.getManifestObject = function(pid, callback) {
     }
   });
 }
+
+exports.getAutocompleteData = function(callback) {
+  var data = {};
+  getCollectionList(function(error, list) {
+    if(error) {console.log(error)}
+    else {data["collectionData"] = list};
+    callback(null, data);
+  })
+}
+
+var getCollectionList = function(callback) {
+  es.search({
+      index: config.elasticsearchPublicIndex,
+      type: config.searchIndexType,
+      _source: ["pid"],
+      body: {
+        query: {
+          "match_phrase": {
+            "object_type": "collection"
+          }
+        }
+      }
+  }, function (error, response) {
+      if(error) {
+        callback(error, null);
+      }
+      else {
+        let results = response.hits.hits || [], pids = [], titles = [];
+        for(let i in results) {
+          pids.push(results[i]._source.pid);
+        }
+
+        // Get an array of collection data that correspond with the pids in the pids array
+        getTitleString(pids, [], function(error, response) {
+          callback(null, response);
+        });
+      }
+  });
+}

@@ -161,6 +161,23 @@ exports.renderCollection = function(req, res) {
 }
 
 /**
+ * Gets an array of all collection names
+ *
+ * @return {undefined}
+ */
+exports.getCollectionList = function(req, res) {
+	Service.getAutocompleteData(function(error, list) {
+		if(error) {
+			console.log(error);
+			res.send([]);
+		}
+		else {
+			res.send(list);
+		}
+	});
+}
+
+/**
  * Renders the object view
  * Retrieves object data for requested object
  * 
@@ -329,5 +346,33 @@ exports.getKalturaViewer = function(req, res) {
 			// Get the iframe html for the object and return it to the client
 			res.send(Viewer.getKalturaViewer(object));
 		}
+	});
+}
+
+/**
+ * Renders the advanced search view
+ * Get form field data from the configuration
+ *
+ * @param {Object} req - Express.js request object
+ * @param {Object} res - Express.js response object
+ *
+ * @return {undefined}
+ */
+exports.advancedSearch = function(req, res) {
+	Service.getAutocompleteData(function(error, acData) {
+		if(error) {
+			console.log(error);
+		}
+		
+		var data = {
+			error: null,
+			root_url: config.rootUrl,
+			searchFields: config.advancedSearchFields,
+			typeFields: config.searchTypes,
+			boolFields: config.booleanSearchFields,
+			autocompleteData: JSON.stringify(acData)
+		};
+
+		return res.render('advanced-search', data);
 	});
 }

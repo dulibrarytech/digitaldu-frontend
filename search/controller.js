@@ -57,6 +57,8 @@ exports.search = function(req, res) {
 			to: req.query.to || new Date().getFullYear()
 		} : null;
 
+		console.log("TEST field", field)
+
 	let sortBy = Helper.getSortDataArray(sort);
 	let queryData = Helper.getSearchQueryDataObject(query, field, type, bool);
 	Service.searchIndex(queryData, facets, collection, page, pageSize, daterange, sortBy, advancedSearch, function(error, response) {
@@ -119,24 +121,4 @@ exports.search = function(req, res) {
 			});
 		}
 	});
-}
-
-/**
- * Renders the advanced search view
- * Get form field data from the configuration
- *
- * @param {Object} req - Express.js request object
- * @param {Object} res - Express.js response object
- *
- * @return {undefined}
- */
-exports.advancedSearch = function(req, res) {
-	var data = {
-		error: null,
-		root_url: config.rootUrl,
-		searchFields: config.advancedSearchFields,
-		typeFields: config.searchTypes,
-		boolFields: config.booleanSearchFields
-	};
-	return res.render('advanced-search', data);
 }

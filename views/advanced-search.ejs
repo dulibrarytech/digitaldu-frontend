@@ -41,7 +41,7 @@
 					</select>
 				</div>
 				<div class="form-group search-box">
-			      <input class="search-element" type="text" title="Keywords" name="q[]" placeholder="Keyword(s)" />
+			      <input id="advanced-search-box-1" class="search-element advanced-search-box" type="text" title="Keywords" name="q[]" placeholder="Keyword(s)"/>
 			    </div>
 			</div>
 		    <input type="hidden" name="fulltext" value="true">
@@ -71,22 +71,62 @@
 			// Remove 'Contains' option
 			let typeOpts = $("#advanced-search-type-select-" + index).children().children();
 			$(typeOpts[0]).remove();
+
+			// Get list of collection names for autocmplete
+			var autocompleteData = <%- autocompleteData %>, collectionNames = [];
+			for(var i in autocompleteData.collectionData) {
+				collectionNames.push(autocompleteData.collectionData[i].name);
+			}
+
+			// Init the jquery autocomplete library, with update to only show suggestions that match the current input characters
+		    $( "#advanced-search-box-" + index ).autocomplete({
+		    	source: function(req, responseFn) {
+		        var re = $.ui.autocomplete.escapeRegex(req.term);
+		        var matcher = new RegExp( "^" + re, "i" );
+		        var a = $.grep( collectionNames, function(item,index){
+		            return matcher.test(item);
+		        });
+		        responseFn( a );
+		      }
+		    });
 		}
 	}
 
 	$( document ).ready(function() {
+		// 'Add new query' button
 		$("#add-query-button").click(function(event) {
 			let formRow = "<div class='form-inline'>";
 			formRow += $("#advanced-search .form-inline:first-child").html();
 			formRow += "</div>";
 			$("#advanced-search").append(formRow);
 
-			// Set the id fields with the row index
+			// Set the form element id values with a row index suffix
 			$("#advanced-search .form-inline:last-child .advanced-search-field-select").attr("id", "advanced-search-field-select-" + parseInt($("#advanced-search .form-inline").length));
 			$("#advanced-search .form-inline:last-child .advanced-search-type-select").attr("id", "advanced-search-type-select-" + parseInt($("#advanced-search .form-inline").length));
+			$("#advanced-search .form-inline:last-child .advanced-search-box").attr("id", "advanced-search-box-" + parseInt($("#advanced-search .form-inline").length));
 		});
-
+		
+		// Form submission actions
 		$("#advanced-search-submit").click(function(event) {
+			var autocompleteData = <%- autocompleteData %>;
+			var searchFieldInputs = $('.advanced-search-field-select');
+
+			// Update form data per search field selection
+			for(var key in searchFieldInputs) {
+				if(isNaN(key) == false) {
+					let rowIndex = parseInt(key) + 1;
+					if($("#" + searchFieldInputs[key].id).val() == "collection") {
+						// Get the pid that corresponds with the selected collection title, replace the input value with the pid
+						var autocompleteData = <%- autocompleteData %>;
+						for(var i in autocompleteData.collectionData) {
+							if(autocompleteData.collectionData[i].name == $("#advanced-search-box-"+rowIndex).val()) {
+								$("#advanced-search-box-"+rowIndex).val(autocompleteData.collectionData[i].pid);
+							}
+						}
+					}
+				}
+			}
+
 			$("#advanced-search").submit();
 		});
 	});

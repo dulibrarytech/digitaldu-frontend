@@ -324,6 +324,7 @@ module.exports = {
      *          {"label": "Subject", "id": "subject", "field": "subjects.terms", "matchField": "subjects.terms.type", "matchTerm": "topic", "isNestedType": "true"} 
      */ 
     searchAllFields: [
+        {"label": "Collection", "id": "collection", "field": "is_member_of_collection"},
         {"label": "Title", "id": "title", "field": "title", "boost": "1"},
         {"label": "Description", "id": "description", "field": "abstract", "boost": "3"}
     ],
