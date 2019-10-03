@@ -194,7 +194,7 @@ module.exports = {
     beginDateField: "display_record.dates.begin",
     endDateField: "display_record.dates.end",
     showDateRangeLimiter: true,
-    nestedDateField: true,  // true if date data type is "nested"
+    nestedDateField: false,  // true if date data type is "nested"
     dateFieldMatchField: "display_record.dates.label",
     dateFieldMatchValue: "creation",
 
@@ -382,14 +382,14 @@ module.exports = {
             "path": "creator"
         },
         "Creation Date": {
-            "path": "display_record.dates.expression",
-            "matchField": "display_record.dates.label",
-            "matchTerm": "creation"
+            "path": "display_record.dates.expression"
+            // "matchField": "display_record.dates.label",
+            // "matchTerm": "creation"
         },
         "Call Number": {
-            "path": "display_record.identifiers.identifier",
-            "matchField": "display_record.identifiers.type",
-            "matchTerm": "local"
+            "path": "display_record.identifiers.identifier"
+            // "matchField": "display_record.identifiers.type",
+            // "matchTerm": "local"
         }
     },
 
@@ -439,17 +439,38 @@ module.exports = {
 
     /*
      * Facets to display on the search results view
-     * { "Facet Label" : "path.to.index.field" }
+     *
+     * @example
+     * { "Creator" : {
+     *          "path": "names.namePart",
+     *          "matchField": "names.role",
+     *          "matchValue": "creator"
+     *     }
+     * }
      */
     facets: {
-        "Creator": "display_record.names.title",
-        "Subject": "f_subjects",
-        "Type": "type",
-        // "Type": "mime_type",
-        "Date": "display_record.dates.expression",
-        "Collections": "is_member_of_collection",
-        "Authority ID": "display_record.subjects.authority_id"
+        "Creator": {
+            "path": "display_record.names.title"
+        },
+        "Subject": {
+            "path": "f_subjects"
+        },
+        "Type": {
+            "path": "type"
+        },
+        "Date": {
+            "path": "display_record.dates.expression",
+            "matchField": "display_record.dates.label",
+            "matchTerm": "creation"
+        },
+        "Collections": {
+            "path": "is_member_of_collection"
+        },
+        "Authority ID": {
+            "path": "display_record.subjects.authority_id"
+        }
     },
+
 
     /*
      * Specify ordering of the facet lists

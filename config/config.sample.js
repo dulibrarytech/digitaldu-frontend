@@ -227,6 +227,8 @@ module.exports = {
 
     /*
      * Object specific default thumbnail images
+     *
+     * @example
      * { "object type" : "image filename" }
      */
     thumbnailPlaceholderImages: {
@@ -240,6 +242,7 @@ module.exports = {
     /*
      *  Declare thumbnail image sources here for each object type/file type
      *
+     *  @example
      *  streamOption: [index|iiif|kaltura|external]
      *  uri: if 'external' this is the path to the resource,
      *  source: [repository|remote] if 'index' stream: 'repository' will use repository api to source uri, 'remote' will fetch full uri
@@ -290,7 +293,8 @@ module.exports = {
      * Fulltext search fields 
      * Define all search fields here
      *
-     * @example - Index display record
+     * @example 
+     * Index display record
      *      "subjects": [
      *           {
      *               "authority": "lcsh",
@@ -316,7 +320,8 @@ module.exports = {
      *           }
      *       ]
      *
-     * @example - searchAllField object example
+     * @example 
+     * searchAllField object example
      *         // Use the "term" field value if the sibling field "type" has the value "topic".  Other "term" values will be ignored
      *         {"label": "Subject", "id": "subject", "field": "subjects.terms", "matchField": "subjects.terms.type", "matchTerm": "topic"} 
      *
@@ -349,7 +354,8 @@ module.exports = {
 
     /*
      * Search result sort fields
-     * Ex. Will sort on names.namePart value if names.role == 'creator'
+     *
+     * @example
      * { "Creator" : {
      *          "path": "names.namePart",
      *          "matchField": "names.role",
@@ -371,6 +377,8 @@ module.exports = {
 
     /*
      * Options to appear in the search sort dropdown menu
+     *
+     * @example
      * { "Display Label" : "searchSortField display label, [asc|desc]" }
      */
     sortByOptions: {
@@ -404,12 +412,27 @@ module.exports = {
 
     /*
      * Facets to display on the search results view
-     * { "Facet Label" : "path.to.index.field" }
+     *
+     * @example
+     * { "Creator" : {
+     *          "path": "names.namePart",
+     *          "matchField": "names.role",
+     *          "matchValue": "creator"
+     *     }
+     * }
      */
     facets: {
-        "Type": "type",
-        "Date": "{path.to.date.field}",
-        "Collections": "is_member_of_collection"
+        "Type": {
+            "path": "type"
+        },
+        "Date": {
+            "path": "display_record.dates.expression",
+            "matchField": "display_record.dates.label",
+            "matchTerm": "creation"
+        },
+        "Collections": {
+            "path": "is_member_of_collection"
+        }
     },
 
     /*

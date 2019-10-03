@@ -57,8 +57,6 @@ exports.search = function(req, res) {
 			to: req.query.to || new Date().getFullYear()
 		} : null;
 
-		console.log("TEST field", field)
-
 	let sortBy = Helper.getSortDataArray(sort);
 	let queryData = Helper.getSearchQueryDataObject(query, field, type, bool);
 	Service.searchIndex(queryData, facets, collection, page, pageSize, daterange, sortBy, advancedSearch, function(error, response) {

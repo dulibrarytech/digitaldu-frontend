@@ -214,20 +214,34 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
      */
     // If facets are present, apply filters to the search
     if(facets) {
-      let facetKey, count=0;
+      let facetData, count=0;
       for(let facet in facets) {
         for(let value of facets[facet]) {
           let query = {};
           count++;
 
           // Get the facet key from the configuration, using the facet name
-          facetKey = config.facets[facet];
-
+          facetData = config.facets[facet];
           // Add to filters
-          query[facetKey] = value;
-          filters.push({
+          query[facetData.path] = value;
+
+          let filter = {
+            "bool": {
+              "must": []
+            }
+          }
+          filter.bool.must.push({
             "match_phrase": query 
           });
+
+          if(facetData.matchField && facetData.matchField.length > 0) {
+            query = {};
+            query[facetData.matchField] = facetData.matchTerm; 
+            filter.bool.must.push({
+              "match_phrase": query 
+            });
+          }
+          filters.push(filter);
         }
       }
     }

@@ -20,6 +20,7 @@ const client = new elasticsearch.Client( {
 client.cluster.health({},function(err,resp,status) {  
 	if(err) {
 		console.log("Elastic connection error:", err);
+		console.log("Could not connect to Elastic cluster");
 	}
 	else if(status == 200 && resp) {
 		console.log("Connected to Elastic cluster: " + config.elasticsearchHost + ':' + config.elasticsearchPort);
@@ -27,6 +28,7 @@ client.cluster.health({},function(err,resp,status) {
 	}
 	else {
 		console.log("Error: Elastic connection status is: " + status + " while contacting index on " + config.elasticsearchHost + ':' + config.elasticsearchPort);
+		console.log("Could not connect to Elastic cluster");
 	}
 });
 

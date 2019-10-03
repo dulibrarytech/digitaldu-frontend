@@ -14,6 +14,7 @@ const Helper = require("./helper");
 const AppHelper = require("../libs/helper");
 const Datastreams = require("../libs/datastreams");
 const IIIF = require("../libs/IIIF");
+const util = require('util');
 
 /**
  * Create a list of the root level collections
@@ -128,20 +129,28 @@ var getObjectsInCollection = function(collectionID, pageNum=1, facets=null, call
         // If facet data is present, add it to the search
         var matchFacetFields = [];
         if(facets) {
-          let facetKey, count=0;
+          let facetData, count=0;
           for(let facet in facets) {
             for(let value of facets[facet]) {
               let query = {};
               count++;
 
               // Get the facet key from the configuration, using the facet name
-              facetKey = config.facets[facet];
+              facetData = config.facets[facet];
 
               // Add to filters
-              query[facetKey] = value;
+              query[facetData.path] = value;
               matchFacetFields.push({
                 "match_phrase": query 
               });
+
+              if(facetData.matchField && facetData.matchField.length > 0) {
+                query = {};
+                query[facetData.matchField] = facetData.matchTerm; 
+                matchFacetFields.push({
+                  "match_phrase": query 
+                });
+              }
             }
           }
         }
@@ -305,7 +314,7 @@ var getFacets = function (collection=null, callback) {
     var matchFacetFields = [], restrictions = [];
     for(var key in config.facets) {
       field = {};
-      field['field'] = config.facets[key] + ".keyword";
+      field['field'] = config.facets[key].path + ".keyword";
       field['size'] = config.facetLimit;
       aggs[key] = {
         terms: field
