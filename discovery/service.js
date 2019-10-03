@@ -81,7 +81,7 @@ exports.getTopLevelCollections = function(pageNum=0, callback) {
 }
 
 /**
- * Create a list of the objects in a collection
+ * Get all objects in a collection, including facet data for collection members
  *
  * @param {String} pageNum - Get this page of result objects.  0, return all collections.
  *
@@ -127,7 +127,7 @@ var getObjectsInCollection = function(collectionID, pageNum=1, facets=null, call
       else {
 
         // If facet data is present, add it to the search
-        var matchFacetFields = [];
+        var facetFilters = [];
         if(facets) {
           let facetData, count=0;
           for(let facet in facets) {
@@ -140,34 +140,20 @@ var getObjectsInCollection = function(collectionID, pageNum=1, facets=null, call
 
               // Add to filters
               query[facetData.path] = value;
-              matchFacetFields.push({
+              facetFilters.push({
                 "match_phrase": query 
               });
 
               if(facetData.matchField && facetData.matchField.length > 0) {
                 query = {};
                 query[facetData.matchField] = facetData.matchTerm; 
-                matchFacetFields.push({
+                facetFilters.push({
                   "match_phrase": query 
                 });
               }
             }
           }
         }
-
-        matchFacetFields.push({
-            "match_phrase": {
-              "is_member_of_collection": collectionID
-            }
-        });
-
-        // Do not show children of parent objects
-        var restrictions = [];
-        restrictions.push({
-          "exists": {
-              "field": "is_child_of"
-          }
-        });
 
         // Sort collections by title a-z
         let sortArr = [],
@@ -186,8 +172,17 @@ var getObjectsInCollection = function(collectionID, pageNum=1, facets=null, call
             size : config.maxCollectionsPerPage,
             query: {
                 "bool": {
-                  "must": matchFacetFields,
-                  "must_not": restrictions
+                  "must": {
+                      "match_phrase": {
+                        "is_member_of_collection": collectionID
+                      }
+                  },
+                  "must_not": {
+                    "exists": {
+                        "field": "is_child_of"
+                    }
+                  },
+                  "filter": facetFilters
                 }
             },
             sort: sortArr,
