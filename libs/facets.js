@@ -224,7 +224,8 @@ function createList(facet, data, baseUrl, showAll, expand) {
  * @return {String} - View breadcrumb list html string
  */
 function createBreadcrumbTrail(data, dates, baseUrl) {
-    var html = '<a id="new-search-link" href="' + baseUrl + '">Start Over</a>';
+    // var html = '<a id="new-search-link" href="' + baseUrl + '">Start Over</a>';
+    var html = '';
 
     for (var i = 0; i < data.length; i++) {
         html += '<span><a alt="remove facet" title="remove facet" onclick="removeFacet(\'' + data[i].type + '\', \'' + data[i].facet + '\', \'' + baseUrl + '\')"><strong style="color: red">X</strong></a>&nbsp&nbsp' + data[i].type + '&nbsp&nbsp<strong style="color: green"> > </strong>&nbsp&nbsp' + data[i].name + '</span>';   // good

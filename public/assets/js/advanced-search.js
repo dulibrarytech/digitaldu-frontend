@@ -1,6 +1,6 @@
 $(window).bind("pageshow", function(event) {
 	// Back button
-	if (event.persisted || (typeof window.performance != "undefined" && window.performance.navigation.type === 2)) {
+	if (event.persisted || (typeof window.performance != "undefined" && (window.performance.navigation.type === 2 || window.performance.navigation.type === 0))) {
 		restoreFormData();
 	}
 });
@@ -81,15 +81,17 @@ var restoreFormData = function() {
 	// Update rows
 	var row;
 	for(var index in formState) {
-		// Do not update the first row
+		// Do not add the first row, it is rendered with each page load
 		if(index > 0) {
-			row = parseInt(index) + 1;
 			addFormRow();
-			$("#advanced-search-bool-select-" + row).val(formState[index].bool_select)
-			$("#advanced-search-field-select-" + row).val(formState[index].field_select);
-			$("#advanced-search-type-select-" + row).val(formState[index].type_select);
-			$("#advanced-search-box-" + row).val(formState[index].search_box);
 		}
+		row = parseInt(index) + 1;
+
+		// Update the form element values
+		$("#advanced-search-bool-select-" + row).val(formState[index].bool_select)
+		$("#advanced-search-field-select-" + row).val(formState[index].field_select);
+		$("#advanced-search-type-select-" + row).val(formState[index].type_select);
+		$("#advanced-search-box-" + row).val(formState[index].search_box);
 	}
 	localStorage.setItem("ADVANCED_SEARCH_FORM_STATE", null);
 }

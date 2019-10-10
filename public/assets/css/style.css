@@ -420,7 +420,7 @@ div.intro-text {
   width: 100%;
 }
 
-a#new-search-link {
+div.facet-breadcrumbs a {
     text-decoration: underline;
     margin-right: 20px;
     color: inherit;
