@@ -73,6 +73,7 @@ exports.search = function(req, res) {
 			query: Helper.getResultsLabel(query, facets, bool),
 			view: req.query.view || config.defaultSearchResultsView || "list",
 			sortType: req.query.sort || "relevance",
+			isAdvancedSearch: advancedSearch,
 			options: {}
 		};
 
