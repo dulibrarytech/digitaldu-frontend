@@ -1,10 +1,10 @@
 $(window).bind("pageshow", function(event) {
-	// Back button
-	if (event.persisted || (typeof window.performance != "undefined" && (window.performance.navigation.type === 2 || window.performance.navigation.type === 0))) {
-		restoreFormData();
-	}
+	// Restore form from stored data if back or forward navigation, or link navigation
+	if (event.persisted || (window.performance.navigation.type != 1 || window.performance.navigation.type != "1")) {restoreFormData()}
+	else {clearForm()}
 });
 
+// Update the form select box values per selected search field type
 var changeAdvSearchTypeSel = function(element, autocompleteData) {
 	let id = element.id,
 		index = id.substring(29),
@@ -39,6 +39,20 @@ var changeAdvSearchTypeSel = function(element, autocompleteData) {
 	      }
 	    });
 	}
+}
+
+var clearForm = function() {
+	var rows = $("#advanced-search .form-inline");
+	for(index in rows) {
+		if(isNaN(index) == false && index != "0" && index != 0) {
+			$(rows[index]).remove();
+		}
+	}
+
+	$("#advanced-search-field-select-1").val("all");
+	$("#advanced-search-type-select-1").val("contains");
+	$("#advanced-search-box-1").val("");
+	localStorage.setItem("ADVANCED_SEARCH_FORM_STATE", null);
 }
 
 var addFormRow = function() {
@@ -76,24 +90,28 @@ var storeFormData = function() {
 
 var restoreFormData = function() {
 	// Restore, then clear local storage
-	var formState = JSON.parse(localStorage.getItem("ADVANCED_SEARCH_FORM_STATE")) || {}
+	var formState = JSON.parse(localStorage.getItem("ADVANCED_SEARCH_FORM_STATE")) || null
+	if(formState) {
+		// Update rows
+		var row;
+		for(var index in formState) {
+			// Do not add the first row, it is rendered with each page load
+			if(index > 0) {
+				// Restore the form state form from local storage data: Add a new form row if the number of rows currently in the form is less than the number of rows in local storage 
+				if(parseInt($("#advanced-search .form-inline").length) < formState.length) {
+					addFormRow(index);
+				}
+			}
+			row = parseInt(index) + 1;
 
-	// Update rows
-	var row;
-	for(var index in formState) {
-		// Do not add the first row, it is rendered with each page load
-		if(index > 0) {
-			addFormRow();
+			// Update the form element values
+			$("#advanced-search-bool-select-" + row).val(formState[index].bool_select)
+			$("#advanced-search-field-select-" + row).val(formState[index].field_select);
+			$("#advanced-search-type-select-" + row).val(formState[index].type_select);
+			$("#advanced-search-box-" + row).val(formState[index].search_box);
 		}
-		row = parseInt(index) + 1;
-
-		// Update the form element values
-		$("#advanced-search-bool-select-" + row).val(formState[index].bool_select)
-		$("#advanced-search-field-select-" + row).val(formState[index].field_select);
-		$("#advanced-search-type-select-" + row).val(formState[index].type_select);
-		$("#advanced-search-box-" + row).val(formState[index].search_box);
+		localStorage.setItem("ADVANCED_SEARCH_FORM_STATE", null);
 	}
-	localStorage.setItem("ADVANCED_SEARCH_FORM_STATE", null);
 }
 
 var updateFormFieldValues = function(autocompleteData) {
