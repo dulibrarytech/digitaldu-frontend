@@ -171,9 +171,6 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
           }
         }
       }
-      else {
-        console.log("Error: invalid search field configuration", {});
-      } 
       currentQuery = queryFields;
 
       /*

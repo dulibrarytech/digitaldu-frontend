@@ -81,11 +81,16 @@ exports.removeEmptyFacetKeys = function(facets) {
  *
  * @return {String} The results label
  */
-exports.getResultsLabel = function(query, facets, bool) {
-  let queryLabel = " ";
-
+exports.getResultsLabel = function(query, facets, bool, field) {
+  let queryLabel = " ", // One space character is required here (" ")
+      appendLabel = "";
   if(query.length > 0) {
     for(let index in query) {
+      // Handle special case of a collection field advanced search
+      if(field[index].toLowerCase() == "collection") {
+        //appendLabel = " IN " + query[index];
+        continue;
+      }
       if(query[index].length == 0) {
         query[index] = "*";
       }
@@ -95,8 +100,7 @@ exports.getResultsLabel = function(query, facets, bool) {
       queryLabel += (query[index] + ((index == query.length-1) ? " " : "; "));
     }
   }
-
-  return queryLabel; 
+  return queryLabel + appendLabel; 
 }
 
 /**

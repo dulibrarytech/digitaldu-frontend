@@ -33,9 +33,11 @@
 
       <% if(query.length >= 0) { %>
         <div class="search-results-menu">
-          <div class="search-terms-label">
-            <h4>Results for: <span><%- query %></span></h4>
-          </div>
+          <% if(query.length > 1) { %>
+            <div class="search-terms-label">
+              <h4>Results for: <span><%- query %></span></h4>
+            </div>
+          <% } %>
           <div class="search-results-menu-element">
             <select id="results-per-page" class="form-control" title="Select Number of Results per Page">
                 <% for (var i = 0; i < options.perPageCountOptions.length; i++) { %>

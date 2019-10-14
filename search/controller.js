@@ -70,7 +70,7 @@ exports.search = function(req, res) {
 			pageData: null,
 			page: req.query.page || 1,
 			root_url: config.rootUrl,
-			query: Helper.getResultsLabel(query, facets, bool),
+			query: Helper.getResultsLabel(query, facets, bool, field),
 			view: req.query.view || config.defaultSearchResultsView || "list",
 			sortType: req.query.sort || "relevance",
 			isAdvancedSearch: advancedSearch,
@@ -110,11 +110,9 @@ exports.search = function(req, res) {
 			let facetList = Facets.getFacetList(response.facets, showAll);
 			Format.formatFacetDisplay(facetList, function(error, facetList) {
 				Format.formatFacetBreadcrumbs(facets, function(error, facets) {
-
 					// Add facets returned from the search to the view data
 					data.facets = Facets.create(facetList, config.rootUrl, showAll, expandFacets);
-					data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(facets, daterange, config.rootUrl); 
-											
+					data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(facets, daterange, config.rootUrl);			
 					return res.render('results', data);
 				});
 			});
