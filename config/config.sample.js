@@ -430,7 +430,7 @@ module.exports = {
             "matchField": "display_record.dates.label",
             "matchTerm": "creation"
         },
-        "Collections": {
+        "Collection": {
             "path": "is_member_of_collection"
         }
     },
@@ -452,13 +452,13 @@ module.exports = {
      * If the value is less than the above 'facetLimit' value, a 'show all' link will be displayed to display the full set of facets
      */
     facetLimitsByType: {
-        "Collections": 15 
+        "Collection": 15 
     },
 
      /*
      * Facets to display on the front page
      */
-    frontPageFacets: ["Type", "Collections"],
+    frontPageFacets: ["Type", "Collection"],
 
     /*
      * Thumbnail images for the frontpage facet panels
