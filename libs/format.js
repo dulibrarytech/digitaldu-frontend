@@ -1,6 +1,7 @@
 /*
  * Format 
  * Custom format functions
+ * Customize the facet labels shown in the view or the facet data strings used in a search request
  */
 
 const Discovery = require('../discovery/service.js'),
@@ -17,9 +18,10 @@ var exampleFormatter = function(object) {
  * Add custom format functions here
  */
 exports.formatFacetDisplay = function(object, callback) {
+  formatFacets(object || []); // format all facets
   formatTypeFacets(object["Type"] || []);
   formatDateFacets(object["Date"] || []);
-  formatCollectionFacets(object["Collections"] || [], function(error) {
+  formatCollectionFacets(object["Collection"] || [], function(error) {
     if(error) {
       callback(error, null);
     }
@@ -35,9 +37,19 @@ exports.formatFacetBreadcrumbs = function(object, callback) {
   }
   else {
       formatDateFacets(object["Date"] || []);
-      formatCollectionBreadcrumbs(object["Collections"] || [], function(error) {
+      formatCollectionBreadcrumbs(object["Collection"] || [], function(error) {
          callback(null, object);
       });
+  }
+}
+
+var formatFacets = function(facets) {
+  for(var key in facets) {
+    for(var facet of facets[key]) {
+      // Replace the quotation characters in the facet data string, which break the dynamically generated link to search the facet
+      facet.facet = facet.facet.replace("'", "");
+      facet.facet = facet.facet.replace('"', '');
+    }
   }
 }
 
@@ -50,7 +62,6 @@ var formatTypeFacets = function(typeFacets) {
         }
       }
     }
-
     return typeFacets;
 }
 
@@ -104,7 +115,6 @@ var formatCollectionFacets = function(collectionFacets, callback) {
 }
 
 var formatCollectionBreadcrumbs = function(breadcrumbFacets, callback) {
-
   if(!breadcrumbFacets || breadcrumbFacets.length < 1) {
     callback(null);
   }
@@ -115,11 +125,10 @@ var formatCollectionBreadcrumbs = function(breadcrumbFacets, callback) {
     }
 
     Discovery.getTitleString(pids, [], function(error, data) {
-
       for(var index in breadcrumbFacets) {
         breadcrumbFacets[index].name = data[index].name;
         breadcrumbFacets[index].facet = data[index].pid;
-        breadcrumbFacets[index].type = "Collections";
+        breadcrumbFacets[index].type = "Collection";
       }
 
       callback(null);

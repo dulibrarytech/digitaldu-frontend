@@ -124,6 +124,10 @@ var updateFormFieldValues = function(autocompleteData) {
 				// Get the pid that corresponds with the selected collection title, replace the input value with the pid
 				for(var i in autocompleteData.collectionData) {
 					if(autocompleteData.collectionData[i].name == $("#advanced-search-box-"+rowIndex).val()) {
+
+						// TODO: Assign the original title string to a hidden input, before replacing the value with the collection pid
+						// $(#collection-input).val( autocompleteData.collectionData[i].name )
+						// Then add 'IN [collection title string]' to the results for label
 						$("#advanced-search-box-"+rowIndex).val(autocompleteData.collectionData[i].pid);
 					}
 				}
