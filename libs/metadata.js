@@ -14,6 +14,63 @@ var config = require('../config/' + process.env.CONFIGURATION_FILE),
 	Discovery = require('../discovery/service.js'),
 	Helper = require('./helper');
 
+/*
+ * 
+ */
+var extractValues = function(pathArray, object, matchField, matchValue, condition, bucket) {
+	var nextKey,
+		nextObject,
+		nextArray;
+
+	// We have drilled into the specified field.  Locate the value
+	if(pathArray.length == 1) {
+		if(matchField) {
+			if(object[pathArray] && 
+				condition == "true" && 
+				object[matchField] == matchValue) {
+
+				if(bucket.includes(object[pathArray]) === false && object[pathArray].length > 0) {
+					bucket.push(object[pathArray]);
+				}
+			}
+			else if(object[pathArray] && 
+					condition == "false" && 
+					object[matchField] != matchValue) {
+
+				if(bucket.includes(object[pathArray]) === false && object[pathArray].length > 0) {
+					bucket.push(object[pathArray]);
+				}
+			}
+		}
+		else if(object[pathArray]) {
+
+			if(bucket.includes(object[pathArray]) === false && object[pathArray].length > 0) {
+				bucket.push(object[pathArray]);
+			}
+		}
+	}
+
+	// Keep digging
+	else {
+		nextArray = pathArray.slice();
+		nextKey = nextArray.shift();
+		nextObject = object[nextKey];
+
+		if(!nextObject) {
+			return 0;
+		}
+		else if(nextObject.length) {
+			for(var index in nextObject) {
+				extractValues(nextArray, nextObject[index], matchField, matchValue, condition, bucket);
+			}
+		}
+		else {
+			extractValues(nextArray, nextObject, matchField, matchValue, condition, bucket);
+		}
+	}
+}
+exports.extractValues = extractValues;
+
 /**
  * 
  *
@@ -30,7 +87,7 @@ exports.createSummaryDisplayObject = function(result) {
 	for(var key in summaryDisplay) {
 		let values = [];
 		pathArray = summaryDisplay[key].path.split(".");
-		Helper.extractValues(pathArray, displayRecord, summaryDisplay[key].matchField || null, summaryDisplay[key].matchValue || null, summaryDisplay[key].condition || "true", values);
+		extractValues(pathArray, displayRecord, summaryDisplay[key].matchField || null, summaryDisplay[key].matchValue || null, summaryDisplay[key].condition || "true", values);
 		if(values.length > 0) {
 			displayObj[key] = values;
 		}
@@ -70,7 +127,7 @@ exports.createMetadataDisplayObject = function(result, collections=[]) {
 	for(var key in metadataDisplay) {
 		let values = [];
 		pathArray = metadataDisplay[key].path.split(".") || [];
-		Helper.extractValues(pathArray, displayRecord, metadataDisplay[key].matchField || null, metadataDisplay[key].matchValue || null, metadataDisplay[key].condition || "true", values);
+		extractValues(pathArray, displayRecord, metadataDisplay[key].matchField || null, metadataDisplay[key].matchValue || null, metadataDisplay[key].condition || "true", values);
 		if(values.length > 0) {
 			displayObj[key] = values;
 		}
@@ -108,7 +165,7 @@ exports.addResultMetadataDisplays = function(resultArray) {
 		for(var key in resultsDisplay) {
 			let values = [];
 			pathArray = resultsDisplay[key].path.split(".");
-			Helper.extractValues(pathArray, displayRecord, resultsDisplay[key].matchField || null, resultsDisplay[key].matchValue || null, resultsDisplay[key].condition || "true", values);
+			extractValues(pathArray, displayRecord, resultsDisplay[key].matchField || null, resultsDisplay[key].matchValue || null, resultsDisplay[key].condition || "true", values);
 			if(values.length > 0) {
 				metadata[key] = values;
 			}
