@@ -31,17 +31,17 @@
             <th scope="col">Data Type</th>  
             <th scope="col">Value</th>  
           </tr>
-          <% for (var key in mods) { %>
+          <% for (var key in metadata) { %>
             <tr>
               <td scope="row"><%= key %></td>
-            <% if(typeof mods[key] == "object") { %>
+            <% if(typeof metadata[key] == "object") { %>
               <td>
-              <% for (var subkey in mods[key]) { %>
-                <p><%- mods[key][subkey] %></p>
+              <% for (var subkey in metadata[key]) { %>
+                <p><%- metadata[key][subkey] %></p>
             <% } %>
             </td></tr>
             <% } else { %>
-              <td><p><%- mods[key] %></p></td></tr>
+              <td><p><%- metadata[key] %></p></td></tr>
             <% } %>
           <% } %>
         </table>

@@ -192,7 +192,7 @@ exports.renderObjectView = function(req, res) {
 		viewer: null,
 		object: null,
 		summary: null,
-		mods: {},
+		metadata: {},
 		error: null,
 		root_url: config.rootUrl
 	};
@@ -234,10 +234,9 @@ exports.renderObjectView = function(req, res) {
 
 			// Get array of parent collections for the parent collection breadcrumb list
 			Service.getCollectionHeirarchy(object.is_member_of_collection, function(collectionTitles) {
-
 				// Get metadata displays and render the view
 				data.summary = Metadata.createSummaryDisplayObject(object);
-				data.mods = Object.assign(data.mods, Metadata.createMetadataDisplayObject(object, collectionTitles));
+				data.metadata = Object.assign(data.metadata, Metadata.createMetadataDisplayObject(object, collectionTitles));
 				res.render('object', data);
 			});
 		}
