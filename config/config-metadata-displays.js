@@ -63,7 +63,7 @@ module.exports = {
     },
 
     /*
-     * MODS fields to display in the Details section
+     * Metadata fields to display in the Details section
      */
     metadataDisplay: {
         "default": {
