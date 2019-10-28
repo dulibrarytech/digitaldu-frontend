@@ -8,10 +8,8 @@
 'use strict';
 
 const es = require('../config/index'),
-      fs = require('fs'),
       util = require('util'),
       config = require('../config/' + process.env.CONFIGURATION_FILE),
-      request  = require("request"),
       Repository = require('../libs/repository'),
       Helper = require("./helper");
 
@@ -346,12 +344,19 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       }
     }
 
+    // Collections API update
+    // GET request to API /search here
+    // Response is ES object
+    // Build 'responseData' object below
+    // API will contain flag to 'includeAggData' and this will be true here
+
     // Query the index
     es.search(data, function (error, response, status) {
       if (error || typeof response == 'undefined') {
         callback(error, {});
       }
       else {
+
         // Remove selected facet from the facet panel list.  The list should not show a facet option if the facet has already been selected
         Helper.removeSelectedFacets(facets, response);
         

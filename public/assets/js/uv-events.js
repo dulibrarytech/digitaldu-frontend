@@ -9,9 +9,10 @@ $( document ).ready(function() {
 	$( "#uv" ).on("uvloaded", function(event, embedKalturaViewer, objectID, universalViewerMediaElement, viewerContent) {
 		if(embedKalturaViewer) {
 	  		$( "#uv" ).css("visibility", "hidden");
-	  		//$( "#uv" ).css("height", "1090px");
-	  		$( ".uv" ).css("height", uvCollapseHeight);
-	  		$( ".mainPanel" ).css("height", mainPanelCollapseHeight);
+	  		//$( ".uv" ).css("height", uvCollapseHeight);
+	  		//$( ".mainPanel" ).css("height", mainPanelCollapseHeight);
+	  		$(".mwPlayerContainer").css("display", "none");
+	  		$(".transcriptInterface").css("width", "98%");
 
 			setTimeout(function(){  
 		  		$( "#uv" ).css("visibility", "visible");
@@ -34,25 +35,26 @@ $( document ).ready(function() {
 	  	}
 
 	  	// Append the 'show transcript' button, attach the toggle visibility event
-	  	$("#object-view-controls").append("<button id='show-uv-kaltura-transcript-player' type='button'>View Transcript</button>");
-	  	$("#show-uv-kaltura-transcript-player").click(function(event) {
+	  	//$("#object-view-controls").append("<button id='show-uv-kaltura-transcript-player' type='button'>View Transcript</button>");
+	  	//$("#show-uv-kaltura-transcript-player").click(function(event) {
+	  	// $("#view-transcript").click(function(event) {
 
-	  		// Show the transcript viewer
-	  		if($(".kaltura-viewer").hasClass("transcript-visible") == false) {
-	  			$( ".uv" ).css("height", uvExpandHeight);
-				$( ".mainPanel" ).css("height", mainPanelExpandHeight);
-				$("#show-uv-kaltura-transcript-player").html("Hide Transcript");
-				$(".kaltura-viewer").addClass("transcript-visible");
-	  		}
+	  	// 	// Show the transcript viewer
+	  	// 	if($("#viewer-section").hasClass("transcript-visible") == false) {
+	  	// 		$( ".uv" ).css("height", uvExpandHeight);
+				// $( ".mainPanel" ).css("height", mainPanelExpandHeight);
+				// $("#view-transcript").html("Hide Transcript");
+				// $("#viewer-section").addClass("transcript-visible");
+	  	// 	}
 
-	  		// Hide the transcript viewer
-	  		else {
-	  			$( ".uv" ).css("height", uvCollapseHeight);
-				$( ".mainPanel" ).css("height", mainPanelCollapseHeight);
-				$("#show-uv-kaltura-transcript-player").html("View Transcript");
-				$(".kaltura-viewer").removeClass("transcript-visible");
-	  		}
-	  	});
+	  	// 	// Hide the transcript viewer
+	  	// 	else {
+	  	// 		$( ".uv" ).css("height", uvCollapseHeight);
+				// $( ".mainPanel" ).css("height", mainPanelCollapseHeight);
+				// $("#view-transcript").html("View Transcript");
+				// $("#viewer-section").removeClass("transcript-visible");
+	  	// 	}
+	  	// });
 	});
 });
 

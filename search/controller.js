@@ -57,9 +57,18 @@ exports.search = function(req, res) {
 			to: req.query.to || new Date().getFullYear()
 		} : null;
 
+		// Collections API Update:
+		// Crosswalk params from ddu, or update search form params
+		// Make GET request to API /search
+
 	let sortBy = Helper.getSortDataArray(sort);
 	let queryData = Helper.getSearchQueryDataObject(query, field, type, bool);
 	Service.searchIndex(queryData, facets, collection, page, pageSize, daterange, sortBy, advancedSearch, function(error, response) {
+
+		// Collections API update:
+		// Have only ES results obj from API response here
+		// Update data obj below to not access req. data directly
+		// Move any search module data processing (on es data object) to here, from the search module
 
 		// Assign view data
 		var data = {

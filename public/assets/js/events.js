@@ -23,6 +23,29 @@ $( document ).ready(function() {
 	$("#add-query-button").click(function(event) {
 		$("#add-query-button").blur();
 	});
+
+	$("#view-transcript").click(function(event) {
+		var uvExpandHeight = "1020px",
+			uvCollapseHeight = "718px",
+			mainPanelExpandHeight = "980px",
+			mainPanelCollapseHeight = "718px";
+
+  		// Show the transcript viewer
+  		if($("#viewer-section").hasClass("transcript-visible") == false) {
+  			$( ".uv" ).css("height", uvExpandHeight);
+			$( ".mainPanel" ).css("height", mainPanelExpandHeight);
+			$("#view-transcript").html("Hide Transcript");
+			$("#viewer-section").addClass("transcript-visible");
+  		}
+
+  		// Hide the transcript viewer
+  		else {
+  			$( ".uv" ).css("height", uvCollapseHeight);
+			$( ".mainPanel" ).css("height", mainPanelCollapseHeight);
+			$("#view-transcript").html("View Transcript");
+			$("#viewer-section").removeClass("transcript-visible");
+  		}
+  	});
 });
 
 

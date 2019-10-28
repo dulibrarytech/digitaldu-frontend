@@ -294,7 +294,7 @@ function getIIIFObjectViewer(object, part=null, embedKalturaViewer=false) {
 	let kalturaViewer = "", 
 		eventTriggers = "";
 
-	// Option to embed the Kaltura player into this Universalviewer	instance
+	// Option to embed the Kaltura player into the Universalviewer instance
 	if(embedKalturaViewer) {
 		// If a part value is present, assume the object is compound, and view this part
 		let objectData = object;

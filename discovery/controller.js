@@ -194,6 +194,7 @@ exports.renderObjectView = function(req, res) {
 		summary: null,
 		metadata: {},
 		error: null,
+		transcript: "",
 		root_url: config.rootUrl
 	};
 
@@ -210,12 +211,18 @@ exports.renderObjectView = function(req, res) {
 			var object = response,
 				part = req.params.index && isNaN(parseInt(req.params.index)) === false ? req.params.index : 0;
 
+				//console.log("TEST object data", object)
+			if(object.transcript && object.transcript.length > 0) {
+				data.transcript = object.transcript;
+			}
+				//data.transcript = "Transcript text"
+
 			// Render a parent object with child objects
 			if(AppHelper.isParentObject(object)) {
 				data.viewer = CompoundViewer.getCompoundObjectViewer(object, part);
 			}
 
-			// Render singular object
+			// Render single object
 			else {
 				// Can't lookup part of a non-parent object
 				if(part > 0) {

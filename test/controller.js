@@ -3,6 +3,7 @@
 const async = require('async'),
 
 config = require('../config/' + process.env.CONFIGURATION_FILE),
+es = require('../config/index'),
 util = require('util'),
 DiscHelper = require('../discovery/helper.js'),
 DiscService = require('../discovery/service.js'),
@@ -16,6 +17,25 @@ Facets = require('../libs/facets'),
 Paginator = require('../libs/paginator'),
 Metadata = require('../libs/metadata'),
 IIIF = require('../libs/IIIF');
+
+exports.test_es_request = function(req, res) {
+	var data = {  
+      index: config.elasticsearchPublicIndex,
+      type: config.searchIndexType,
+      body: {
+        from : (pageNum - 1) * pageSize, 
+        size : pageSize,
+        query: {
+
+        },
+        sort: sortArr,
+        aggregations: []
+      }
+    };
+	es.search(data, function (error, response, status) {
+
+	});
+}
 
 exports.test_UVViewer = function(req, res) {
 
@@ -150,7 +170,7 @@ exports.test_retrieveNestedObjectValue = function(req, res) {
 	object["display_record"] = displayRecord;
 
 	let pathArray = "display_record.subjects.terms.term".split("."), bucket = [];
-	let returnVal = Helper.extractValues(pathArray, object, "type", "topical", bucket);
+	let returnVal = Metadata.extractValues(pathArray, object, "type", "topical", bucket);
 
 	res.send(bucket || "ok");
 }
