@@ -194,7 +194,7 @@ exports.renderObjectView = function(req, res) {
 		summary: null,
 		metadata: {},
 		error: null,
-		transcript: "",
+		transcript: null,
 		root_url: config.rootUrl
 	};
 
@@ -215,7 +215,6 @@ exports.renderObjectView = function(req, res) {
 			if(object.transcript && object.transcript.length > 0) {
 				data.transcript = object.transcript;
 			}
-				//data.transcript = "Transcript text"
 
 			// Render a parent object with child objects
 			if(AppHelper.isParentObject(object)) {
@@ -224,7 +223,6 @@ exports.renderObjectView = function(req, res) {
 
 			// Render single object
 			else {
-				// Can't lookup part of a non-parent object
 				if(part > 0) {
 					data.error = "Object not found";
 					res.render('object', data);
@@ -382,3 +380,4 @@ exports.advancedSearch = function(req, res) {
 		return res.render('advanced-search', data);
 	});
 }
+

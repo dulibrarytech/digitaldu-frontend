@@ -1211,6 +1211,16 @@ div.metadata-content {
   margin-bottom: 15px;
 }
 
+#transcript-view {
+    padding: 20px;
+    background: white;
+    width: 100%;
+    margin-top: 20px;
+    overflow-y: scroll;
+    max-height: 300px;
+    line-height: 1.4em;
+}
+
 footer {
     background: #8b2332;
     /* height: 230px; [C22] */
