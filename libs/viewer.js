@@ -299,7 +299,6 @@ function getIIIFObjectViewer(object, part=null, embedKalturaViewer=false) {
 		// If a part value is present, assume the object is compound, and view this part
 		let objectData = object;
 		if(part && isNaN(part) == false) {
-
 			let parts = AppHelper.getCompoundObjectPart(object, -1) || [];
 			for(var index in parts) {
 				if(parts[index].order == part) {

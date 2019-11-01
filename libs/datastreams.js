@@ -113,6 +113,7 @@ exports.getDatastream = function(object, objectID, datastreamID, part, callback)
           Repository.streamData(object, "tn", function(error, stream) {
             if(error) {
               callback(error, null);
+              streamDefaultThumbnail(object, callback);
             }
             else {
               // All is good, return the stream
@@ -130,6 +131,7 @@ exports.getDatastream = function(object, objectID, datastreamID, part, callback)
           streamRemoteData(uri, function(error, status, response) {
             if(error) {
               console.log(error);
+              streamDefaultThumbnail(object, callback);
             }
             else {
               // All is good, return the stream
@@ -247,9 +249,9 @@ var streamDefaultThumbnail = function(object, callback) {
   let path = config.tnPath + config.defaultThumbnailImage;
 
   // Check for an object specific default thumbnail image.  If found, use it
-  for(var index in config.thumbnailPlaceholderImages) {
-    if(config.thumbnailPlaceholderImages[index].includes(object.mime_type)) {
-      path = config.tnPath + index;
+  for(var index in config.objectTypes) {
+    if(config.objectTypes[index].includes(object.mime_type)) {
+      path = config.tnPath + config.thumbnailPlaceholderImages[index];
     }
   }
 

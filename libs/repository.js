@@ -98,7 +98,7 @@ exports.streamData = function(object, dsid, callback) {
 		else {
 			url += "/" + object.object;
 		}
-		
+
 		// Fetch the stream 
 		rs(url, {}, function(err, res) {
 			if(err) {

@@ -381,3 +381,54 @@ exports.advancedSearch = function(req, res) {
 	});
 }
 
+/**
+ * Returns the viewer content for an object
+ * 
+ * @param {Object} req - Express.js request object
+ * @param {String} req.params.pid - PID of the object to be rendered
+ * @param {Object} res - Express.js response object
+ *
+ * @return {undefined}
+ */
+exports.getObjectViewer = function(req, res) {
+	var index = config.elasticsearchPublicIndex,
+		viewer = "No viewer available for this object";
+
+	// If a valid api key is passed in with the request, get data from the the private index
+	if(req.headers["x-api-key"] && req.headers["x-api-key"] == config.apiKey) {
+		index = config.elasticsearchPrivateIndex;
+	}
+
+	Service.fetchObjectByPid(index, req.params.pid, function(error, response) {
+		if(error) {
+			console.error = error;
+		}
+		else if(response == null) {
+			console.error = "Object not found: " + req.params.pid;
+		}
+		else {
+			var object = response,
+				part = req.params.index && isNaN(parseInt(req.params.index)) === false ? req.params.index : 0;
+
+			// Render a parent object with child objects
+			if(AppHelper.isParentObject(object)) {
+				viewer = CompoundViewer.getCompoundObjectViewer(object, part);
+			}
+
+			// Render single object
+			else {
+				if(part > 0) {
+					console.error = "Object not found";
+				}
+				else {
+	
+					// Get viewer
+					viewer = Viewer.getObjectViewer(object);
+				}
+			}
+		}
+
+		res.send(viewer);
+	});
+};
+

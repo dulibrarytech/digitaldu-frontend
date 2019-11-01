@@ -254,39 +254,29 @@ exports.getObjectsInCollection = getObjectsInCollection;
  * @param {Object|null} Elastic result data for the Object (index document source data) Null if error
  */
 var fetchObjectByPid = function(index, pid, callback) {
-  var objectData = {
-    pid: null
-  };
-
-  // Get an exact match on the id and the namespace.  Extract both segments of the id, and require a match on both
-  var temp, fields, matchFields = [], segments = pid.split(":");
-  for(var i in segments) {
-    temp = {}, fields = {};
-    temp['pid'] = segments[i];
-    fields['match'] = temp;
-    matchFields.push(fields);
-  }
-
-  // Search for the pid segments as an "and" search.  This should only return one result.
   es.search({
       index: index,
       type: config.searchIndexType,
       body: {
         query: {
           "bool": {
-            "must": matchFields
+            "filter": [
+              {"match_phrase": {"pid": pid}}
+            ]
           }
         }
       }
   }, function (error, response) {
+      // Elastic service error
       if(error) {
         callback(error, null);
       }
+      // Object found
       else if(response.hits.total > 0) {
-        objectData = response.hits.hits[0]._source;
-        callback(null, objectData);
+        callback(null, response.hits.hits[0]._source);
       }
       else {
+        // Object not found
         callback(null, null);
       }
   });
