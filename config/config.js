@@ -382,7 +382,7 @@ module.exports = {
             "path": "creator"
         },
         "Creation Date": {
-            "path": "display_record.dates.expression"
+            "path": "display_record.dates.begin"
             // "matchField": "display_record.dates.label",
             // "matchTerm": "creation"
         },
