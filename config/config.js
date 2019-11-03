@@ -169,7 +169,7 @@ module.exports = {
         "pdf": "foaf:Document"
     },
     IIIFThumbnailWidth: "200",
-    IIIFThumbnailHeight: "250",
+    IIIFThumbnailHeight: "",
 
 
     /*
