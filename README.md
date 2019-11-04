@@ -102,7 +102,7 @@ All other content is released under [CC-BY-4.0](https://creativecommons.org/lice
 
 #### Cantaloupe Image Server
 
-Download and install the Cantaloupe image server (https://cantaloupe-project.github.io/), update the .env file with cantaloupe port and url.  Alternatively, another IIIF image server can be used.
+Download and install the Cantaloupe image server (https://cantaloupe-project.github.io/), update the frontend .env file with the Cantaloupe port and url.  Alternatively, another IIIF image server can be used.
 
 ##### "Cantaloupe.properties" updates
 
