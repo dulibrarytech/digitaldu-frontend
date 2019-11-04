@@ -98,6 +98,21 @@ All other content is released under [CC-BY-4.0](https://creativecommons.org/lice
 "thumbnail" {string} Path to the part object's thumbnail image resource.  This can be an absolute path or relative path, depending on the repository interface in use.  This path is accessed by the repository interface. For the out-of-the-box Duraspace repository interface, this is the relative path to the dip-store object 
 "object" {string} Path to the part object's data resource.  This can be an absolute path or relative path, depending on the repository interface in use.  This path is accessed by the repository interface. For the out-of-the-box Duraspace repository interface, this is the relative path to the dip-store object 
 
+### External Services Setup
+
+#### Cantaloupe Image Server
+
+Download and install the Cantaloupe image server (https://cantaloupe-project.github.io/), update the .env file with cantaloupe port and url.  Alternatively, another IIIF image server can be used.
+
+##### "Cantaloupe.properties" updates
+
+HttpSource.BasicLookupStrategy.url_prefix = [frontend app domain]/datastream/
+
+HttpSource.BasicLookupStrategy.url_suffix = /object
+
+##### Additional configuration
+
+To serve jp2 files, Cantaloupe must be configured to use a jp2 codec such as Kakadu or OpenJPEG.  See Cantaloupe documentation for installation and configuration instructions
 
 ## Project Documentation
 
