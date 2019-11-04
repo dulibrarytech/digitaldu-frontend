@@ -109,8 +109,7 @@ exports.streamData = function(object, dsid, callback) {
 					callback(null, res);
 				} 
 				else {
-					console.error("Can not stream data from repository for object " + (object.pid || "") + ", request status " + res.statusCode);
-					console.error("Url: " + url);
+					console.log("Can not stream data from repository for object " + (object.pid || "") + ", request status " + res.statusCode);
 					callback(null, null);
 				}
 			}

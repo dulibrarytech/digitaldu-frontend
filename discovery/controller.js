@@ -280,7 +280,7 @@ exports.getDatastream = function(req, res) {
 	// Get the datastream and pipe it
 	Service.getDatastream(index, pid, ds, part, function(error, stream) {
 		if(error || !stream) {
-			console.log(error || "Can not retrieve datastream");
+			console.error(error || "Can not retrieve datastream");
 			res.sendStatus(404);
 		}
 		else {

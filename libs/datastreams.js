@@ -112,13 +112,11 @@ exports.getDatastream = function(object, objectID, datastreamID, part, callback)
         if(settings.source == "repository") {
           Repository.streamData(object, "tn", function(error, stream) {
             if(error) {
-              callback(error, null);
+              console.error(error);
               streamDefaultThumbnail(object, callback);
             }
             else {
-              // All is good, return the stream
               if(stream) {
-                // TODO: cache implementation
                 callback(null, stream);
               }
               else {
@@ -130,16 +128,15 @@ exports.getDatastream = function(object, objectID, datastreamID, part, callback)
         else {
           streamRemoteData(uri, function(error, status, response) {
             if(error) {
-              console.log(error);
+              console.error(error);
               streamDefaultThumbnail(object, callback);
             }
             else {
-              // All is good, return the stream
               if(response && status == 200) {
-                // TODO: Cache the file in local filesystem when retrieved from iiif server?
                 callback(null, response);
               }
               else {
+                console.log("Datastream error: attempting to stream data from " + uri + " returns a status of " + status);
                 streamDefaultThumbnail(object, callback);
               }
             }
@@ -150,7 +147,6 @@ exports.getDatastream = function(object, objectID, datastreamID, part, callback)
 
     // Thumbnail image file has been found in the local cache
     else {
-      // Stream thumbnail image from local folder TODO: cache implementation
       getFileStream(path, function(error, thumbnail) {
           callback(null, thumbnail);
       });
@@ -159,7 +155,6 @@ exports.getDatastream = function(object, objectID, datastreamID, part, callback)
 
   // Request a non thumbnail datastream
   else {
-    // Check for a local object file TODO: cache implementation
     let file = null, path;
     for(var extension in config.fileExtensions) {
       if(config.fileExtensions[extension].includes(object.mime_type)) {
