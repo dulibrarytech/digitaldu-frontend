@@ -21,5 +21,8 @@ module.exports = function (app) {
 
 	    app.route('/test/isCompound')
 	        .get(Test.test_isCompound);
+
+	    app.route('/test/fetchObjectByPid')
+	        .get(Test.test_fetchObjectByPid);
 	}
 };

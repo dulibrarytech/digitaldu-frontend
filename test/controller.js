@@ -186,3 +186,11 @@ exports.test_isCompound = function(req, res) {
 		res.send(Helper.isParentObject(object) == true ? "T" : "F");
 	});
 }
+
+exports.test_fetchObjectByPid = function(req, res) {
+	var pid = "61ed6a68-618b-48eb-b9bd-3e7484e0590a";
+	DiscService.fetchObjectByPid("repo_public", pid, function(error, object) {
+		console.log("TEST object", object);
+		res.send(!object ? "NULL" : object);
+	});
+}

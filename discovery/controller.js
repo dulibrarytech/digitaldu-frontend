@@ -428,7 +428,12 @@ exports.getObjectViewer = function(req, res) {
 			}
 		}
 
-		res.send(viewer);
+		// Render page
+		res.render('page', {
+			error: null,
+			root_url: config.rootUrl,
+			content: viewer
+		});
 	});
 };
 

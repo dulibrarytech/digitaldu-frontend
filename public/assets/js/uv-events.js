@@ -1,7 +1,6 @@
 $( document ).ready(function() {
 	// UV Kaltura viewer: embed the Kaltura viewer, controls, and events
 	$( "#uv" ).on("uvloaded", function(event, embedKalturaViewer, objectID, universalViewerMediaElement, viewerContent) {
-
 		// Embed a Kaltura viewer in the universalviewer UI
 		if(embedKalturaViewer) {
 	  		$( "#uv" ).css("visibility", "hidden");

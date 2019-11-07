@@ -27,6 +27,12 @@ module.exports = function (app) {
     app.route('/object/:pid/:index')
         .get(Discovery.renderObjectView);
 
+    app.route('/viewer/default/:pid')
+        .get(Discovery.getObjectViewer);
+
+    app.route('/viewer/default/:pid/:part')
+        .get(Discovery.getObjectViewer);
+
     app.route('/viewer/kaltura/:pid/:part')
         .get(Discovery.getKalturaViewer);
 

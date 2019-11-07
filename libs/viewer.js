@@ -311,8 +311,10 @@ function getIIIFObjectViewer(object, part=null, embedKalturaViewer=false) {
 		kalturaViewer = getKalturaViewer(objectData);
 
 		// Add the event trigger to embed the Kaltura player 
-		eventTriggers += '$( "#uv").trigger( "uvloaded", [ ' + embedKalturaViewer + ', "' + object.pid + '", "' + config.universalViewerMediaElement + '", "' + kalturaViewer + '" ] );';
+		// eventTriggers += '$( "#uv").trigger( "uvloaded", [ ' + embedKalturaViewer + ', "' + object.pid + '", "' + config.universalViewerMediaElement + '", "' + kalturaViewer + '" ] );';
 	}
+
+	eventTriggers += '$( "#uv").trigger( "uvloaded", [ ' + embedKalturaViewer + ', "' + object.pid + '", "' + config.universalViewerMediaElement + '", "' + kalturaViewer + '" ] );';
 
 	let viewer = '<div id="uv" class="uv"></div>';
 		viewer += '<script>';
