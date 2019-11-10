@@ -322,7 +322,7 @@ function getIIIFObjectViewer(object, part=null, embedKalturaViewer=false) {
 		viewer += 'createUV("#uv", {';
 		viewer += 'iiifResourceUri: "' + config.IIIFUrl + '/' + object.pid + '/manifest",';
 		viewer += 'configUri: "' + config.rootUrl + '/libs/universalviewer/uv-config.json",';
-		viewer += 'root: "../..' + config.appPath + '/libs/universalviewer/uv",';
+		viewer += 'root: "./../../libs/universalviewer/uv",';
 		viewer += '}, new UV.URLDataProvider());';
 		viewer += eventTriggers;
 		viewer += '}, false);';
