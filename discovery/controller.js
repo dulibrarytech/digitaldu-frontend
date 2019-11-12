@@ -108,7 +108,7 @@ exports.renderCollection = function(req, res) {
 			
 		var	pid = req.params.pid || "",
 			page = req.query.page || 1,
-			path = config.baseUrl + req._parsedOriginalUrl.path,
+			path = config.rootUrl + req._parsedOriginalUrl.path,
 			reqFacets = req.query.f || null,
 			showAll = req.query.showAll || [];
 
