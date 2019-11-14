@@ -73,6 +73,7 @@ exports.renderRootCollection = function(req, res) {
 				data.typeCount = Helper.getTypeFacetTotalsObject(facets);
 				data.facetThumbnails = config.facetThumbnails;
 				data.pagination = Paginator.create(response.list, page, config.maxCollectionsPerPage, response.count, path);
+				data.pagination["anchor"] = "#collections";
 			}
 			
 			res.render('collections', data);
