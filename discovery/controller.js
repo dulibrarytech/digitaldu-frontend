@@ -39,11 +39,11 @@ exports.renderRootCollection = function(req, res) {
 		error: null,
 		root_url: config.rootUrl
 	},
-	page = req.query.page || 1;
+	page = req.query.page || 1,
+	path = config.rootUrl + req._parsedOriginalUrl.path;
 
 	// Get all root collections
 	Service.getTopLevelCollections(page, function(error, response) {
-
 		// Get the view data
 		if(error) {
 			console.log(error);
@@ -72,6 +72,7 @@ exports.renderRootCollection = function(req, res) {
 				data.facets = Facets.create(facetList, config.rootUrl);
 				data.typeCount = Helper.getTypeFacetTotalsObject(facets);
 				data.facetThumbnails = config.facetThumbnails;
+				data.pagination = Paginator.create(response.list, page, config.maxCollectionsPerPage, response.count, path);
 			}
 			
 			res.render('collections', data);
@@ -211,7 +212,6 @@ exports.renderObjectView = function(req, res) {
 			var object = response,
 				part = req.params.index && isNaN(parseInt(req.params.index)) === false ? req.params.index : 0;
 
-				//console.log("TEST object data", object)
 			if(object.transcript && object.transcript.length > 0) {
 				data.transcript = object.transcript;
 			}

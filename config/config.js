@@ -22,6 +22,7 @@ module.exports = {
     /*
      * Domain and paths
      */
+    port: process.env.APP_PORT,
     host: process.env.APP_HOST,
     appPath: process.env.CLIENT_PATH,
     baseUrl: process.env.CLIENT_HOST,
@@ -239,7 +240,7 @@ module.exports = {
      *
      *  streamOption: [index|iiif|kaltura|external]
      *  uri: if 'external' this is the path to the resource,
-     *  source: [repository|remote] if 'index' stream: 'repository' will use repository api to source uri, 'remote' will fetch full uri
+     *  source: [repository|remote] if 'index' stream: 'repository' will use repository api to source uri, 'remote' will request data from uri
      */
     thumbnails: {
         "collection": {
