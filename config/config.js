@@ -195,7 +195,7 @@ module.exports = {
     beginDateField: "display_record.dates.begin",
     endDateField: "display_record.dates.end",
     showDateRangeLimiter: true,
-    nestedDateField: false,  // true if date data type is "nested"
+    nestedDateField: true,  // true if date data type is "nested"
     dateFieldMatchField: "display_record.dates.label",
     dateFieldMatchValue: "creation",
 
@@ -251,29 +251,29 @@ module.exports = {
         "object": {
             "fileTypes": {
                 "smallImage": {
-                    "streamOption": "iiif",
+                    "streamOption": "index",
                     "uri": "", 
-                    "source": ""
+                    "source": "repository"
                 },
                 "largeImage": {
-                    "streamOption": "iiif",
+                    "streamOption": "index",
                     "uri": "", 
-                    "source": ""
+                    "source": "repository"
                 },
                 "audio": {
                     "streamOption": "kaltura",
                     "uri": "", 
-                    "source": ""
+                    "source": "remote"
                 },
                 "video": {
                     "streamOption": "kaltura",
                     "uri": "", 
-                    "source": ""
+                    "source": "remote"
                 },
                 "pdf": {
                     "streamOption": "iiif",
                     "uri": "", 
-                    "source": ""
+                    "source": "remote"
                 },
                 "compound": {
                     "streamOption": "index",
@@ -330,8 +330,8 @@ module.exports = {
         {"label": "Type", "id": "type", "field": "type", "boost": "2"},
         {"label": "Description", "id": "description", "field": "abstract", "boost": "3"},
         {"label": "Language", "id": "language", "field": "display_record.t_language.text", "boost": "5"},
-        {"label": "Creation Date", "id": "create_date", "field": "display_record.dates.expression", "isNestedType": "false", "matchField": "display_record.dates.label", "matchTerm": "creation"},
-        {"label": "Call Number", "id": "call_number", "field": "display_record.identifiers.identifier", "isNestedType": "false", "matchField": "display_record.identifiers.type", "matchTerm": "local"}
+        {"label": "Creation Date", "id": "create_date", "field": "display_record.dates.expression", "isNestedType": "true", "matchField": "display_record.dates.label", "matchTerm": "creation"},
+        {"label": "Call Number", "id": "call_number", "field": "display_record.identifiers.identifier", "isNestedType": "true", "matchField": "display_record.identifiers.type", "matchTerm": "local"}
     ],
 
     /*
@@ -383,14 +383,14 @@ module.exports = {
             "path": "creator"
         },
         "Creation Date": {
-            "path": "display_record.dates.begin"
-            // "matchField": "display_record.dates.label",
-            // "matchTerm": "creation"
+            "path": "display_record.dates.begin",
+            "matchField": "display_record.dates.label",
+            "matchTerm": "creation"
         },
         "Call Number": {
-            "path": "display_record.identifiers.identifier"
-            // "matchField": "display_record.identifiers.type",
-            // "matchTerm": "local"
+            "path": "display_record.identifiers.identifier",
+            "matchField": "display_record.identifiers.type",
+            "matchTerm": "local"
         }
     },
 

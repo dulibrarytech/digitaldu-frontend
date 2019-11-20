@@ -98,6 +98,14 @@ All other content is released under [CC-BY-4.0](https://creativecommons.org/lice
 "thumbnail" {string} Path to the part object's thumbnail image resource.  This can be an absolute path or relative path, depending on the repository interface in use.  This path is accessed by the repository interface. For the out-of-the-box Duraspace repository interface, this is the relative path to the dip-store object 
 "object" {string} Path to the part object's data resource.  This can be an absolute path or relative path, depending on the repository interface in use.  This path is accessed by the repository interface. For the out-of-the-box Duraspace repository interface, this is the relative path to the dip-store object 
 
+##### Update configuration for any "nested" type index fields
+
+1. Update the search field object in "searchAllFields": set "isNestedType" property to "true"
+
+2. If a date field is nested, update the "nestedDateField" config property to true
+
+3. Update the sort config data in the "searchSortFields" object if the search fields contain "matchField" and "matchPhrase" data
+
 ### External Services Setup
 
 #### Cantaloupe Image Server
