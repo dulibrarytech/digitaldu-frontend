@@ -15,7 +15,7 @@ $( document ).ready(function() {
 	});
 
 	$('#sort-by-select').change(function(event) {
-		var searchUrl = decodeURIComponent(window.location.href).replace(/&sort=[a-zA-Z0-9,]+/g, "");
+		var searchUrl = decodeURIComponent(window.location.href).replace(/&sort=[a-zA-Z0-9, ]+/g, "");
 		searchUrl += "&sort=" + $('#sort-by-select').val();
 		window.location.replace(encodeURI(searchUrl));
 	});
