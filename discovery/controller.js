@@ -203,10 +203,12 @@ exports.renderObjectView = function(req, res) {
 	Service.fetchObjectByPid(config.elasticsearchPublicIndex, req.params.pid, function(error, response) {
 		if(error) {
 			data.error = error;
+			console.error(error);
 			res.render('object', data);
 		}
 		else if(response == null) {
 			data.error = "Object not found: " + req.params.pid;
+			console.log("Object not found, can not display viewer: ", pid);
 			res.render('object', data);
 		}
 		else {
@@ -233,6 +235,7 @@ exports.renderObjectView = function(req, res) {
 					// Get viewer
 					data.viewer = Viewer.getObjectViewer(object);
 					if(data.viewer == "") {
+						console.log("Object not found, can not display viewer: ", pid);
 						data.error = "Viewer is unavailable for this object.";
 					}
 				}
@@ -304,7 +307,7 @@ exports.getIIIFManifest = function(req, res) {
 	let pid = req.params.pid || "";
 	Service.getManifestObject(pid, function(error, manifest) {
 		if(error) {
-			console.log(error);
+			console.error(error);
 			res.sendStatus(500);
 		}
 		else if(manifest){
@@ -393,19 +396,22 @@ exports.advancedSearch = function(req, res) {
  */
 exports.getObjectViewer = function(req, res) {
 	var index = config.elasticsearchPublicIndex,
-		viewer = "No viewer available for this object";
+		viewer = "No viewer available for this object",
+		pid = req.params.pid;
 
 	// If a valid api key is passed in with the request, get data from the the private index
 	if(req.headers["x-api-key"] && req.headers["x-api-key"] == config.apiKey) {
 		index = config.elasticsearchPrivateIndex;
 	}
 
-	Service.fetchObjectByPid(index, req.params.pid, function(error, response) {
+	Service.fetchObjectByPid(index, pid, function(error, response) {
 		if(error) {
-			console.error = error;
+			console.error(error);
+			viewer = "Viewer error";
 		}
 		else if(response == null) {
-			console.error = "Object not found: " + req.params.pid;
+			console.log("Object not found, can not display viewer: " + pid);
+			viewer = "Object not found";
 		}
 		else {
 			var object = response,
@@ -419,11 +425,9 @@ exports.getObjectViewer = function(req, res) {
 			// Render single object
 			else {
 				if(part > 0) {
-					console.error = "Object not found";
+					console.log("Object not found, can not display viewer: ", pid);
 				}
 				else {
-	
-					// Get viewer
 					viewer = Viewer.getObjectViewer(object);
 				}
 			}

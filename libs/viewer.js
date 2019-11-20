@@ -76,36 +76,6 @@ exports.getObjectViewer = function(object, mimeType="") {
  * @param 
  * @return 
  */
-exports.getCompoundObjectViewer = function(object) {
- 	var viewer = "";
-
- 	// If not an a/v object, do not embed the Kaltura player
- 	let embedKaltura = false;
- 	if(config.objectTypes.audio.includes(object.mime_type) || config.objectTypes.video.includes(object.mime_type)) {
- 		embedKaltura = config.universalViewerKalturaPlayer;
- 	}
-
- 	// Get viewer for object mime type:
- 	switch(config.compoundObjectViewer) {
- 		case "universalviewer":
- 			viewer += getIIIFObjectViewer(object, "1", embedKaltura);
- 			break;
-
- 		default:
- 			console.log("Viewer error: No compound viewer found.  Please check configuration");
- 			viewer = "";
- 			break;
- 	}
-
- 	return viewer;
-}
-
-/**
- * 
- *
- * @param 
- * @return 
- */
 function getAudioPlayer(object, type) {
 	var player = '<div id="audio-player" class="viewer-section">', tn, stream;
 	var extension = "mp3";
