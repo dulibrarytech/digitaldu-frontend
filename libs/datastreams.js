@@ -7,12 +7,12 @@
 'use strict';
 
 const config = require('../config/' + process.env.CONFIGURATION_FILE),
-	rs = require('request-stream'),
-	fs = require('fs'),
-	Repository = require('../libs/repository'),
+  rs = require('request-stream'),
+  fs = require('fs'),
+  Repository = require('../libs/repository'),
   Helper = require('../libs/helper'),
   Kaltura = require('../libs/kaltura'),
-	IIIF = require('../libs/IIIF'),
+  IIIF = require('../libs/IIIF'),
   AppHelper = require("../libs/helper");
 
 /**
@@ -29,7 +29,7 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
  *
  * @return {undefined}
  */
-exports.getDatastream = function(object, objectID, datastreamID, part, callback) {
+exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, callback) {
   // If there is a part value, retrieve the part data.  Redefine the object data with the part data
   if(part && isNaN(part) === false) {
     var sequence;
@@ -56,11 +56,12 @@ exports.getDatastream = function(object, objectID, datastreamID, part, callback)
 
   // Request a thumbnail datastream
   if(datastreamID == "tn") {
-    // Check for a local thumbnail image
-    let path = config.tnPath + objectID.replace(":", "_") + config.thumbnailFileExtension;
+    // Check for a cached image
+    var tnPath = config.thumbnailImageCacheLocation + objectID + config.thumbnailFileExtension;
 
-    // Thumbnail image has not been found in local cache TODO: cache implementation
-    if(fs.existsSync(path) == false) {
+    // Thumbnail image has not been found in local cache
+    if(fs.existsSync(tnPath) == false) {
+
       // Find the 'file type' for the thumbnail configuration
       let fileType = "default";
       if(Helper.isParentObject(object)) {
@@ -75,7 +76,7 @@ exports.getDatastream = function(object, objectID, datastreamID, part, callback)
       }
 
       // Get the thumbnail configuration settings for this file type
-    	var settings = config.thumbnails[object.object_type] || null;
+      var settings = config.thumbnails[object.object_type] || null;
       if(settings && settings.fileTypes) {
         settings = settings.fileTypes[fileType] || null;
       }
@@ -90,19 +91,16 @@ exports.getDatastream = function(object, objectID, datastreamID, part, callback)
         switch(settings.streamOption || "") {
           case "iiif":
             uri = IIIF.getThumbnailUri(objectID);
+            uri += (apiKey ? "?key=" + apiKey : "");
             break;
-
           case "kaltura":
             uri = Kaltura.getThumbnailUrl(object);
             break;
-
           case "external":
             break;
-
           case "index":
             uri = object.thumbnail || uri;
             break;
-
           default:
             callback("Error retrieving datastream for " + objectID + ", object type " + object.object_type + "is invalid", null);
             break;
@@ -117,6 +115,18 @@ exports.getDatastream = function(object, objectID, datastreamID, part, callback)
             }
             else {
               if(stream) {
+                if(config.thumbnailImageCacheEnabled == true) {
+                  let tUrl = Repository.getDatastreamUrl("tn", null, object);
+
+                  AppHelper.createLocalFile(tnPath, tUrl, function(error) {
+                    if(error) {
+                      console.error("Could not create thumbnail image for", objectID, error);
+                    }
+                    else {
+                      console.log("Thumbnail image created for", objectID);
+                    }
+                  });
+                }
                 callback(null, stream);
               }
               else {
@@ -126,14 +136,15 @@ exports.getDatastream = function(object, objectID, datastreamID, part, callback)
           });
         }
         else {
-          streamRemoteData(uri, function(error, status, response) {
+          streamRemoteData(uri, function(error, status, stream) {
             if(error) {
               console.error(error);
               streamDefaultThumbnail(object, callback);
             }
             else {
-              if(response && status == 200) {
-                callback(null, response);
+              if(stream && status == 200) {
+                // CACHE
+                callback(null, stream);
               }
               else {
                 console.log("Datastream error: attempting to stream data from " + uri + " returns a status of " + status);
@@ -147,7 +158,7 @@ exports.getDatastream = function(object, objectID, datastreamID, part, callback)
 
     // Thumbnail image file has been found in the local cache
     else {
-      getFileStream(path, function(error, thumbnail) {
+      getFileStream(tnPath, function(error, thumbnail) {
           callback(null, thumbnail);
       });
     }
@@ -184,6 +195,7 @@ exports.getDatastream = function(object, objectID, datastreamID, part, callback)
           callback("Repository stream data error: " + (error || "Resource not found for " + objectID), null);
         }
         else {
+            // CACHE
             callback(null, stream);
           }
       });
@@ -204,14 +216,14 @@ exports.getDatastream = function(object, objectID, datastreamID, part, callback)
  * @return {undefined}
  */
 var streamRemoteData = function(uri, callback) {
-	rs(uri, {}, function(err, res) {
-		if(err) {
-			callback("Could not open datastream. " + err, null, null);
-		}
-		else {
-			callback(null, res.statusCode, res);
-		}
-	});
+  rs(uri, {}, function(err, res) {
+    if(err) {
+      callback("Could not open datastream. " + err, null, null);
+    }
+    else {
+      callback(null, res.statusCode, res);
+    }
+  });
 }
 
 /**
@@ -226,7 +238,7 @@ var streamRemoteData = function(uri, callback) {
  * @return {undefined}
  */
 var getFileStream = function(path, callback) {
-  	callback(null, fs.createReadStream(path));
+    callback(null, fs.createReadStream(path));
 }
 
 /**
@@ -241,12 +253,12 @@ var getFileStream = function(path, callback) {
  * @return {undefined}
  */
 var streamDefaultThumbnail = function(object, callback) {
-  let path = config.tnPath + config.defaultThumbnailImage;
+  let path = config.thumbnailDefaultImagePath + config.defaultThumbnailImage;
 
   // Check for an object specific default thumbnail image.  If found, use it
   for(var index in config.objectTypes) {
     if(config.objectTypes[index].includes(object.mime_type)) {
-      path = config.tnPath + config.thumbnailPlaceholderImages[index];
+      path = config.thumbnailDefaultImagePath + config.thumbnailPlaceholderImages[index];
     }
   }
 

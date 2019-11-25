@@ -355,16 +355,13 @@ exports.getFacets = getFacets;
  * @param {String|null} Error message or null
  * @param {Object|null} Data stream Null if error
  */
-exports.getDatastream = function(indexName, objectID, datastreamID, part, callback) {
-  // Get the object data
+exports.getDatastream = function(indexName, objectID, datastreamID, part, authKey, callback) {
   fetchObjectByPid(indexName, objectID, function(error, object) {
     if(object) {
-      Datastreams.getDatastream(object, objectID, datastreamID, part, function(error, stream) {
+      Datastreams.getDatastream(object, objectID, datastreamID, part, authKey, function(error, stream) {
         callback(error, stream);
       });
     }
-
-    // Object data could not be retrieved
     else {
       callback("Object not found, can not stream data", null);
     }

@@ -50,10 +50,13 @@ exports.getCompoundObjectPart = function(object, partIndex) {
 }
 
 /*
- * 
+ * Write file to backend cache
  */
 exports.createLocalFile = function(path, data, callback) {
-  	fs.writeFile(path, data, function(err) {
+		console.log("TEST using buffer")
+	var buffer = new Buffer(data, 'base64');
+  	fs.writeFile(path, buffer, function(err) {
+  			console.log("TEST writefile error is ", err)
 	    callback(err);
 	}); 
 }

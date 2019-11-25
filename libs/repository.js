@@ -64,12 +64,20 @@ var getRepositoryUrl = function() {
  * Duraspace does not provide datastream api
  * Use DDU app /datastreams route, which will stream data directly from Duraspace
  *
- * @param {String} datastream - The DDU datastream ID
+ * @param {String} dsid - The DDU datastream ID
  * @param {String} pid - PID of the object from which to stream data
  * @return {String} - Url to DDU datastream for the object
  */
-exports.getDatastreamUrl = function(datastream, pid) {
+exports.getDatastreamUrl = function(dsid, pid) {
 	return config.rootUrl + "/datastream/" + pid + "/" + datastream;
+}
+
+// Get datastream url for Archivespace
+exports.getDatastreamUrl = function(dsid, pid=null, object) {
+	var url = getRepositoryUrl();
+	if(dsid == "tn") {url += "/" + object.thumbnail;}
+	else {url += "/" + object.object;}
+	return url;
 }
 
 /**
@@ -91,13 +99,8 @@ exports.streamData = function(object, dsid, callback) {
 		if(!object) { throw "Object is null" }
 		var url = getRepositoryUrl();
 
-		// Duraspace does not provide datastream api.  Any non-TN datastream request should stream the data for the object specified in the 'object' field in the index 
-		if(dsid == "tn") {
-			url += "/" + object.thumbnail;
-		}
-		else {
-			url += "/" + object.object;
-		}
+		if(dsid == "tn") {url += "/" + object.thumbnail;}
+		else {url += "/" + object.object;}
 
 		// Fetch the stream 
 		rs(url, {}, function(err, res) {

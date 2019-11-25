@@ -198,16 +198,17 @@ exports.renderObjectView = function(req, res) {
 		error: null,
 		transcript: null,
 		root_url: config.rootUrl
-	};
+	},
+	pid = req.params.pid || "";
 
-	Service.fetchObjectByPid(config.elasticsearchPublicIndex, req.params.pid, function(error, response) {
+	Service.fetchObjectByPid(config.elasticsearchPublicIndex, pid, function(error, response) {
 		if(error) {
 			data.error = error;
 			console.error(error);
 			res.render('object', data);
 		}
 		else if(response == null) {
-			data.error = "Object not found: " + req.params.pid;
+			data.error = "Object not found: " + pid;
 			console.log("Object not found, can not display viewer: ", pid);
 			res.render('object', data);
 		}
@@ -267,7 +268,8 @@ exports.getDatastream = function(req, res) {
 	var ds = req.params.datastream.toLowerCase() || "",
 		pid = req.params.pid || "",
 		part = req.params.part || null,
-		index = config.elasticsearchPublicIndex;
+		index = config.elasticsearchPublicIndex,
+		authKey = null;
 
 	// Detect part index appended to a compound object pid.  This is to allow IIIF url resolver to convey part index data by modifying the pid value
 	let pidElements;
@@ -277,12 +279,14 @@ exports.getDatastream = function(req, res) {
 	}
 		
 	// If a valid api key is passed in with the request, get data from the the private index
-	if(req.headers["x-api-key"] && req.headers["x-api-key"] == config.apiKey) {
+	if((req.query.key && req.query.key == config.apiKey) || 
+	 	(req.header['x-api-key'] && req.header['x-api-key'] == config.apiKey)) {
 		index = config.elasticsearchPrivateIndex;
+		authKey = req.query.key;
 	}
 
 	// Get the datastream and pipe it
-	Service.getDatastream(index, pid, ds, part, function(error, stream) {
+	Service.getDatastream(index, pid, ds, part, authKey, function(error, stream) {
 		if(error || !stream) {
 			console.error(error || "Can not retrieve datastream");
 			res.sendStatus(404);
