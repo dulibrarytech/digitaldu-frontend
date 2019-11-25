@@ -108,15 +108,36 @@ All other content is released under [CC-BY-4.0](https://creativecommons.org/lice
 
 ### External Services Setup
 
-#### Cantaloupe Image Server
+#### Cantaloupe Image Server (v4)
 
 Download and install the Cantaloupe image server (https://cantaloupe-project.github.io/), update the frontend .env file with the Cantaloupe port and url.  Alternatively, another IIIF image server can be used.
 
 ##### "Cantaloupe.properties" updates
 
-HttpSource.BasicLookupStrategy.url_prefix = [frontend app domain]/datastream/
+HttpSource.lookup_strategy = ScriptLookupStrategy
 
-HttpSource.BasicLookupStrategy.url_suffix = /object
+##### "delegates.rb" updates 
+
+Implement the following hook to detect an api key in the incoming request, and append it to the DigitalCollections /datastream route request.  This will create the path to the resource in DigitalCollections for Cantaloupe, appending an api key if present in the initial iiif request to Cantaloupe:
+
+def httpsource_resource_info(options = {})
+    # Detect an api key parameter in the request url, retrieve and add it to the DigitalCollections /datastream route url
+    request_uri = context['request_uri']
+    key = ''
+    if request_uri.include? "key="
+      parts = request_uri.split("key=")
+      key = '?key='
+      key.concat(parts[1])
+    end
+
+    # DigitalCollections datastream route prefix
+    str = 'http://localhost:9006/datastream/'
+    # Object identifier
+    str.concat(context['identifier'])
+    # DigitalCollections datastream route suffix
+    str.concat('/object')
+    str.concat(key)
+  end
 
 ##### Additional configuration
 
