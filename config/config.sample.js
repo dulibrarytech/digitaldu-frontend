@@ -221,9 +221,11 @@ module.exports = {
      * Image to display if no thumbnail image exists in the repository
      * Before a thumbnail is rendered, this location is checked for a source file before requesting it from the repository
      */
-    tnPath: "files/thumbnails/",
+    thumbnailDefaultImagePath: "files/default/thumbnail/",
     thumbnailFileExtension: ".png",
     defaultThumbnailImage: "tn-placeholder.jpg",
+    thumbnailImageCacheEnabled: false,
+    thumbnailImageCacheLocation: "cache/thumbnail/",
 
     /*
      * Object specific default thumbnail images
