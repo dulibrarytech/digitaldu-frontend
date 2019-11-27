@@ -2,5 +2,8 @@
 .env
 node_modules/
 *.sh
-files/thumbnails/*
-files/object/*
+files/default/thumbnail/*
+files/default/object/*
+cache/thumbnail/*
+cache/object/*
+config/config.js
