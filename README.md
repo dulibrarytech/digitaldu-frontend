@@ -114,6 +114,8 @@ Download and install the Cantaloupe image server (https://cantaloupe-project.git
 
 ##### "Cantaloupe.properties" updates
 
+delegate_script.enabled = true
+
 HttpSource.lookup_strategy = ScriptLookupStrategy
 
 ##### "delegates.rb" updates 
@@ -131,7 +133,8 @@ def httpsource_resource_info(options = {})
     end
 
     # DigitalCollections datastream route prefix
-    str = 'http://localhost:9006/datastream/'
+    str = '{digital collections host + path with trailing slash}'
+    str.concat('datastream/')
     # Object identifier
     str.concat(context['identifier'])
     # DigitalCollections datastream route suffix
