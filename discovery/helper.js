@@ -76,6 +76,22 @@ exports.getTypeFacetTotalsObject = function(facets) {
 }
 
  /**
+ * Get normalized facet label
+ *
+ * @param {String} field - Facet field
+ * @param {String} label - Label text to normalize
+ * @return {String} Normalized label text, or unchanged label text if it can not be normalized
+ */
+exports.normalizeLabel = function(field, label) {
+  for(var key in config.facetLabelNormalization[field]) {
+    if(config.facetLabelNormalization[field][key].includes(label)) {
+      label = key;
+    }
+  }
+  return label;
+}
+
+ /**
  * Not in use
  */
 exports.sortSearchResultObjects = function(objects) {

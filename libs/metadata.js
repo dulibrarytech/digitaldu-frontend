@@ -81,7 +81,7 @@ exports.createSummaryDisplayObject = function(result) {
 	var displayObj = {},
 		displayRecord = result[config.displayRecordField] || {},
 		summaryDisplay = metadataConfig.summaryDisplay["default"] || {},
-		pathArray;	// TODO: Determine which display to use based on object, or other specification
+		pathArray;
 
 	// Build the summary display
 	for(var key in summaryDisplay) {
@@ -123,6 +123,12 @@ exports.createMetadataDisplayObject = function(result, collections=[]) {
 	}
 
 	// Build the metadata display
+	if(result.type) {
+		displayObj["Item Type"] = result.type;
+	}
+	if(result.mime_type) {
+		displayObj["Mimetype"] = result.mime_type;
+	}
 	let pathArray;
 	for(var key in metadataDisplay) {
 		let values = [];
@@ -157,7 +163,11 @@ exports.addResultMetadataDisplays = function(resultArray) {
 		else {
 			resultsDisplay = metadataConfig.resultsDisplay["default"] || {}
 		}
+
 		metadata = {};
+		if(result.itemType) {
+			metadata["Type"] = result.itemType;
+		}
 		displayRecord = result[config.displayRecordField] || {};
 		parentCollection = result.collection || null;
 
@@ -165,6 +175,7 @@ exports.addResultMetadataDisplays = function(resultArray) {
 		for(var key in resultsDisplay) {
 			let values = [];
 			pathArray = resultsDisplay[key].path.split(".");
+
 			extractValues(pathArray, displayRecord, resultsDisplay[key].matchField || null, resultsDisplay[key].matchValue || null, resultsDisplay[key].condition || "true", values);
 			if(values.length > 0) {
 				metadata[key] = values;

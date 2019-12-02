@@ -39,6 +39,9 @@ module.exports = {
             "Creator": {
                 "path": "names.title"
             },
+            "Type": {
+                "path": "type"
+            },
             "Description": {
                 "path": "notes.content",
                 "matchField": "type",

@@ -378,9 +378,11 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
             resultObj = {
               title: result._source.title || "No Title",
               tn: tn,
-              collection: result._source.is_member_of_collection,
+              collection: result._source.is_member_of_collection || "",
               pid: result._source.pid,
-              objectType: result._source.object_type
+              objectType: result._source.object_type || null,
+              itemType: result._source.type || null,
+              mimeType: result._source.mime_type || null
             }
 
             // Add the display record
