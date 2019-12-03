@@ -484,9 +484,9 @@ var getParentTrace = function(pid, collections, callback) {
  * @param {String|null} Error message or null
  * @param {Object|null} Manifest object (JSON) Null if error
  */
-exports.getManifestObject = function(pid, callback) {
+exports.getManifestObject = function(pid, index, apikey, callback) {
   var object = {}, children = [];
-  fetchObjectByPid(config.elasticsearchPublicIndex, pid, function(error, response) {
+  fetchObjectByPid(index, pid, function(error, response) {
     if(error) {
       callback(error, JSON.stringify({}));
     }
@@ -548,7 +548,7 @@ exports.getManifestObject = function(pid, callback) {
         });
       }
 
-      IIIF.getManifest(container, children, function(error, manifest) {
+      IIIF.getManifest(container, children, apikey, function(error, manifest) {
         if(error) {
           callback(error, []);
         }

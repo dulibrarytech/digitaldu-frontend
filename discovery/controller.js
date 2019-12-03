@@ -270,7 +270,7 @@ exports.getDatastream = function(req, res) {
 		pid = req.params.pid || "",
 		part = req.params.part || null,
 		index = config.elasticsearchPublicIndex,
-		authKey = null;
+		key = null;
 
 	// Detect part index appended to a compound object pid.  This is to allow IIIF url resolver to convey part index data by modifying the pid value
 	let pidElements;
@@ -278,16 +278,15 @@ exports.getDatastream = function(req, res) {
 		part = pid.substring(pid.indexOf(config.compoundObjectPartID)+1, pid.length);	
 		pid = pid.split(config.compoundObjectPartID,1)[0];
 	}
-		
+
 	// If a valid api key is passed in with the request, get data from the the private index
-	if((req.query.key && req.query.key == config.apiKey) || 
-	 	(req.header['x-api-key'] && req.header['x-api-key'] == config.apiKey)) {
+	if(req.query.key && req.query.key == config.apiKey) {
 		index = config.elasticsearchPrivateIndex;
-		authKey = req.query.key;
+		key = req.query.key;
 	}
 
 	// Get the datastream and pipe it
-	Service.getDatastream(index, pid, ds, part, authKey, function(error, stream) {
+	Service.getDatastream(index, pid, ds, part, key, function(error, stream) {
 		if(error || !stream) {
 			console.error(error || "Can not retrieve datastream");
 			res.sendStatus(404);
@@ -309,8 +308,18 @@ exports.getDatastream = function(req, res) {
  * @return {undefined}
  */
 exports.getIIIFManifest = function(req, res) {
-	let pid = req.params.pid || "";
-	Service.getManifestObject(pid, function(error, manifest) {
+	let pid = req.params.pid || "",
+		index = config.elasticsearchPublicIndex,
+		key = null;
+
+	// If a valid api key is passed in with the request, get data from the the private index
+	if(req.query.key && req.query.key == config.apiKey) {
+		index = config.elasticsearchPrivateIndex;
+		key = req.query.key;
+	}
+
+		console.log("TEST getmo", index, key)
+	Service.getManifestObject(pid, index, key, function(error, manifest) {
 		if(error) {
 			console.error(error);
 			res.sendStatus(500);
@@ -400,23 +409,25 @@ exports.advancedSearch = function(req, res) {
  * @return {undefined}
  */
 exports.getObjectViewer = function(req, res) {
-	var index = config.elasticsearchPublicIndex,
-		viewer = "No viewer available for this object",
-		pid = req.params.pid;
+	var viewer = "<div class='embedded-viewer'>",
+		pid = req.params.pid,
+		index = config.elasticsearchPublicIndex,
+		key = null;
 
 	// If a valid api key is passed in with the request, get data from the the private index
-	if(req.headers["x-api-key"] && req.headers["x-api-key"] == config.apiKey) {
+	if(req.query.key && req.query.key == config.apiKey) {
 		index = config.elasticsearchPrivateIndex;
+		key = req.query.key;
 	}
 
 	Service.fetchObjectByPid(index, pid, function(error, response) {
 		if(error) {
 			console.error(error);
-			viewer = "Viewer error";
+			viewer += "Viewer error";
 		}
 		else if(response == null) {
 			console.log("Object not found, can not display viewer: " + pid);
-			viewer = "Object not found";
+			viewer += "Object not found";
 		}
 		else {
 			var object = response,
@@ -424,7 +435,7 @@ exports.getObjectViewer = function(req, res) {
 
 			// Render a parent object with child objects
 			if(AppHelper.isParentObject(object)) {
-				viewer = CompoundViewer.getCompoundObjectViewer(object, part);
+				viewer += CompoundViewer.getCompoundObjectViewer(object, part, key);
 			}
 
 			// Render single object
@@ -433,10 +444,11 @@ exports.getObjectViewer = function(req, res) {
 					console.log("Object not found, can not display viewer: ", pid);
 				}
 				else {
-					viewer = Viewer.getObjectViewer(object);
+					viewer += Viewer.getObjectViewer(object, null, key);
 				}
 			}
 		}
+		viewer += "</div>"
 
 		// Render page
 		res.render('page', {

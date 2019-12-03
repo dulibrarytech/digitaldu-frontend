@@ -20,15 +20,18 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
  * @param 
  * @return 
  */
-exports.getObjectViewer = function(object, mimeType="") {
+exports.getObjectViewer = function(object, mimeType="", apikey=null) {
  	var viewer = "";
+ 	apikey = apikey ? ("?key=" + apikey) : "";
+ 		console.log("TEST getv key", apikey)
+ 		console.log("TEST getv mimetype", mimeType)
 
  	if(object == null) {
  		console.log("Viewer says: null object");
  		return viewer;
  	}
 
-	if(mimeType == "" && typeof object.mime_type != 'undefined') {
+	if(!mimeType || mimeType == "") {
  		mimeType = object.mime_type;
  	}
 
@@ -38,27 +41,27 @@ exports.getObjectViewer = function(object, mimeType="") {
  			dataType = type;
  		}
  	}
-
+ 		console.log("TEST datatype is", dataType)
  	// Get viewer for object mime type:
  	switch(dataType) {
  		case "audio":
- 			viewer += getAudioPlayer(object, mimeType);
+ 			viewer += getAudioPlayer(object, mimeType, apikey);
  			break;
 
  		case "video":
- 			viewer += getVideoViewer(object);
+ 			viewer += getVideoViewer(object, apikey);
  			break;
 
  		case "smallImage":
- 			viewer += getLargeImageViewer(object);
+ 			viewer += getLargeImageViewer(object, apikey);
  			break;
 
  		case "largeImage":
- 			viewer += getLargeImageViewer(object);
+ 			viewer += getLargeImageViewer(object, apikey);
  			break;
 
  		case "pdf":
- 			viewer += getPDFViewer(object);
+ 			viewer += getPDFViewer(object, apikey);
  			break;
 
  		default:
@@ -76,12 +79,12 @@ exports.getObjectViewer = function(object, mimeType="") {
  * @param 
  * @return 
  */
-function getAudioPlayer(object, type) {
+function getAudioPlayer(object, type, apikey) {
 	var player = '<div id="audio-player" class="viewer-section">', tn, stream;
 	var extension = "mp3";
 
-	tn = config.rootUrl + "/datastream/" + object.pid + "/tn";
-	stream = config.rootUrl + "/datastream/" + object.pid + "/mp3";
+	tn = config.rootUrl + "/datastream/" + object.pid + "/tn" + apikey;
+	stream = config.rootUrl + "/datastream/" + object.pid + "/mp3" + apikey;
 
 	switch(config.audioPlayer) {
 		case "browser":
@@ -91,7 +94,7 @@ function getAudioPlayer(object, type) {
 			player += getJWPlayer(tn, stream, extension, config.jwplayerPathToLibrary);
 			break;
 		case "universalviewer":
-			player += getIIIFObjectViewer(object, null, config.universalViewerKalturaPlayer);
+			player += getIIIFObjectViewer(object, null, config.universalViewerKalturaPlayer, apikey);
 			break;
 		case "kaltura":
 			player += getKalturaViewer(object);
@@ -111,11 +114,11 @@ function getAudioPlayer(object, type) {
  * @param 
  * @return 
  */
-function getVideoViewer(object) {
+function getVideoViewer(object, apikey) {
 	var viewer = '<div id="video-viewer" class="viewer-section">', tn, stream, url;
 	var extension = "", datastreamID = "";
 
-	tn = config.rootUrl + "/datastream/" + object.pid + "/tn";
+	tn = config.rootUrl + "/datastream/" + object.pid + "/tn" + apikey;
 	if(object.mime_type == "video/mp4") {
 		extension = "mp4";
 		datastreamID = "mp4";
@@ -127,7 +130,7 @@ function getVideoViewer(object) {
 	else {
 		console.log("Error: Incorrect object mime type for object: " + object.pid);
 	}
-	stream = config.rootUrl + "/datastream/" + object.pid + "/" + datastreamID;
+	stream = config.rootUrl + "/datastream/" + object.pid + "/" + datastreamID + apikey;
 
 	switch(config.videoViewer) {
 		case "videojs":
@@ -137,7 +140,7 @@ function getVideoViewer(object) {
 			viewer += getJWPlayer(tn, stream, extension, config.jwplayerPathToLibrary);
 			break;
 		case "universalviewer":
-			viewer += getIIIFObjectViewer(object, null, config.universalViewerKalturaPlayer);
+			viewer += getIIIFObjectViewer(object, null, config.universalViewerKalturaPlayer, apikey);
 			break;
 		case "kaltura":
 			viewer += getKalturaViewer(object);
@@ -157,10 +160,10 @@ function getVideoViewer(object) {
  * @param 
  * @return 
  */
-function getSmallImageViewer(object) {
+function getSmallImageViewer(object, apikey) {
 	var viewer = '<div id="small-image-viewer" class="viewer-section">',
 		// image = Repository.getDatastreamUrl("jpg", object.pid);
-		image = config.rootUrl + "/datastream/" + object.pid + "/jpg";
+		image = config.rootUrl + "/datastream/" + object.pid + "/jpg" + apikey;
 
 	viewer += '<div id="viewer-content-wrapper" class="small-image"><img class="viewer-content" src="' + image + '"/></div>';
 	viewer += '</div>';
@@ -175,20 +178,20 @@ function getSmallImageViewer(object) {
  * @param 
  * @return 
  */
-function getLargeImageViewer(object) {
+function getLargeImageViewer(object, apikey) {
 	var viewer = "";
 
 	switch(config.largeImageViewer) {
 		case "browser":
-			viewer += getSmallImageViewer(object);
+			viewer += getSmallImageViewer(object, apikey);
 			break;
 
 		case "openseadragon":
-			viewer += getOpenSeadragonViewer(object);
+			viewer += getOpenSeadragonViewer(object, apikey);
 			break;
 
 		case "universalviewer":
-			viewer += getIIIFObjectViewer(object);
+			viewer += getIIIFObjectViewer(object, null, false, apikey);
 			break;
 
 		default:
@@ -205,16 +208,16 @@ function getLargeImageViewer(object) {
  * @param 
  * @return 
  */
-function getPDFViewer(object) {
+function getPDFViewer(object, apikey) {
 	var viewer = '<div id="pdf-viewer" class="viewer-section">';
-	var doc = "/datastream/" + object.pid + "/OBJ";
+	var doc = "/datastream/" + object.pid + "/object" + apikey;
 
 	switch(config.pdfViewer) {
 		case "browser":
 			viewer += '<iframe class="viewer-content" src="' + doc + '" height="500px" type="application/pdf" ></iframe>';
 			break;
 		case "universalviewer": 
-			viewer += getIIIFObjectViewer(object);
+			viewer += getIIIFObjectViewer(object, null, false, apikey);
 			break;
 		default:
 			viewer += 'Viewer is down temporarily.  Please check configuration</div>';
@@ -258,7 +261,7 @@ function getJWPlayer(thumbnailUrl, streamUrl, fileExtension, jwPlayerPath) {
  * @param 
  * @return 
  */
-function getIIIFObjectViewer(object, part=null, embedKalturaViewer=false) {
+function getIIIFObjectViewer(object, part=null, embedKalturaViewer=false, apikey="") {
 
 	// Embed the Kaltura player in the Universalviewer	
 	let kalturaViewer = "", 
@@ -290,7 +293,7 @@ function getIIIFObjectViewer(object, part=null, embedKalturaViewer=false) {
 		viewer += '<script>';
 		viewer += 'window.addEventListener("uvLoaded", function (e) {';
 		viewer += 'createUV("#uv", {';
-		viewer += 'iiifResourceUri: "' + config.IIIFUrl + '/' + object.pid + '/manifest",';
+		viewer += 'iiifResourceUri: "' + config.IIIFUrl + '/' + object.pid + '/manifest' + apikey + '",';
 		viewer += 'configUri: "' + config.rootUrl + '/libs/universalviewer/uv-config.json",';
 		viewer += 'root: "./../..' + config.appPath + '/libs/universalviewer/uv",';
 		viewer += '}, new UV.URLDataProvider());';
@@ -318,7 +321,7 @@ exports.getIIIFObjectViewer = getIIIFObjectViewer;
  * @param 
  * @return 
  */
- function getOpenSeadragonViewer(object) {
+ function getOpenSeadragonViewer(object, apikey="") {
 	var viewer = "";
 
  	viewer += "<span id='display-message' >Loading image, please wait...</span>";
@@ -331,7 +334,7 @@ exports.getIIIFObjectViewer = getIIIFObjectViewer;
 	viewer +=     'prefixUrl: "' + config.openseadragonImagePath + '",'
 	viewer +=     'immediateRender: true,'
 	viewer +=     'showNavigator: true,'
-	viewer +=     'tileSources: "' + config.IIIFServerUrl + '/iiif/2/' + object.pid + '"'
+	viewer +=     'tileSources: "' + config.IIIFServerUrl + '/iiif/2/' + object.pid + '/info.json' + apikey + '"'
 	viewer += '});'
 	viewer += 'viewer.addHandler("tile-loaded", function(event) {document.getElementById("display-message").style.display = "none"})'
 	viewer += '</script>';

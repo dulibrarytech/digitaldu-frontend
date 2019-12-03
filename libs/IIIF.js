@@ -21,9 +21,12 @@ exports.getThumbnailUri = function(objectID) {
  * @param 
  * @return 
  */
-exports.getManifest = function(container, objects, callback) {
+exports.getManifest = function(container, objects, apikey, callback) {
 	var manifest = {},
 		mediaSequences = [];
+
+	apikey = apikey ? ("?key=" + apikey) : "";
+		//console.log("TEST iiif manifest apikey is", apikey)
 
 	// Define the manifest
 	manifest["@context"] = "http://iiif.io/api/presentation/2/context.json";
@@ -73,31 +76,29 @@ exports.getManifest = function(container, objects, callback) {
 	for(var object of objects) {
 		if(object.type == config.IIIFObjectTypes["largeImage"]) {
 			images.push(object);
-			canvases.push(getImageCanvas(container, object));
+			canvases.push(getImageCanvas(container, object, apikey));
 		}
 		else if(object.type == config.IIIFObjectTypes["smallImage"]) {
 			images.push(object);
-			canvases.push(getImageCanvas(container, object));
+			canvases.push(getImageCanvas(container, object, apikey));
 		}
 		else if(object.type == config.IIIFObjectTypes["audio"] || 
 				object.type == config.IIIFObjectTypes["video"]) {
-
-			elements.push(getObjectElement(object));
+			elements.push(getObjectElement(object, apikey));
 			canvases.push(getThumbnailCanvas(container, object));
 
 		}
 		else if(object.type == config.IIIFObjectTypes["pdf"]) {
-			elements.push(getPDFElement(object));
+			elements.push(getPDFElement(object, apikey));
 			canvases.push(getPDFCanvas(container, object));
 		}
 		else {
-			console.log("Invalid IIIF object type");
 			continue;
 		}
 	}
 
 	// Get the image data for the item from the iiif server, if any images are present in this manifest.
-	getImageData(images, [], function(error, data) {
+	getImageData(images, [], apikey, function(error, data) {
 		if(error) {
 			callback(error, manifest);
 		}
@@ -126,7 +127,7 @@ exports.getManifest = function(container, objects, callback) {
 	});
 }
 
-var getImageData = function(objects, data=[], callback) {
+var getImageData = function(objects, data=[], apikey, callback) {
 	let index = data.length;
 	
 	if(index == objects.length) {
@@ -134,19 +135,19 @@ var getImageData = function(objects, data=[], callback) {
 	}
 	else {
 		let object = objects[index],
-			url = config.IIIFServerUrl + "/iiif/2/" + object.resourceID; 
+			url = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + apikey; 
 
 		request(url, function(error, response, body) {
 			if(error) {
 				callback(error, []);
 			}
-			else if(body[0] != '{') {	// TODO: find a better way to verify the object
+			else if(body[0] != '{') {
 				data.push({});
-				getImageData(objects, data, callback);
+				getImageData(objects, data, apikey, callback);
 			}
 			else {
 				data.push(JSON.parse(body));
-				getImageData(objects, data, callback);
+				getImageData(objects, data, apikey, callback);
 			}
 		});
 	}
@@ -158,16 +159,16 @@ var getImageElement = function(object) {
 	// create a resource element, attach the service object, push to service.resources []
 }
 
-var getObjectElement = function(object) {
+var getObjectElement = function(object, apikey) {
 
 	// Create the rendering data
 	let rendering = {};
-	rendering['@id'] = object.resourceUrl + "/" + object.downloadFileName,
+	rendering['@id'] = object.resourceUrl + "/" + object.downloadFileName;
 	rendering['format'] = object.format;
 	rendering['label'] = "Test Label for Download"
 
 	let element = {};
-	element["@id"] = object.resourceUrl;
+	element["@id"] = object.resourceUrl + apikey;
 	element["@type"] = object.type;
 	element["format"] = object.format; 
 	element["label"] = object.label;
@@ -183,9 +184,9 @@ var getObjectElement = function(object) {
 	return element;
 }
 
-var getPDFElement = function(object) {
+var getPDFElement = function(object, apikey) {
 	let element = {};
-	element["@id"] = object.resourceUrl;
+	element["@id"] = object.resourceUrl + apikey;
 	element["@type"] = object.type;
 	element["format"] = object.format; 
 	element["label"] = object.label;
@@ -265,17 +266,17 @@ var getThumbnailCanvas = function(container, object) {
 	return canvas;
 }
 
-var getThumbnailObject = function(container, object) {
+var getThumbnailObject = function(container, object, apikey) {
 	let thumbnail = {
 		service: {}
 	},
 	service = {};
 
-	thumbnail["@id"] = object.thumbnailUrl;
+	thumbnail["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID;
 	thumbnail["@type"] = config.IIIFObjectTypes["smallImage"];
 
 	service["@context"] = "http://iiif.io/api/image/2/context.json";
-	service["@id"] = object.thumbnailUrl;
+	service["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + apikey;
 	service["protocol"] = "http://iiif.io/api/image";
 	service["height"] = config.IIIFThumbnailHeight;
 	service["width"] = config.IIIFThumbnailWidth;
@@ -288,7 +289,7 @@ var getThumbnailObject = function(container, object) {
 /*
  * Retrieving image tile data from IIIF image server
  */
-var getImageCanvas = function(container, object) {
+var getImageCanvas = function(container, object, apikey) {
 	let canvas = {},
 	image = {},
 	resource = {},
@@ -314,7 +315,7 @@ var getImageCanvas = function(container, object) {
 	image["@type"] =  "oa:Annotation";
 	image["motivation"] = "";
 
-	resource["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + "/full/full/0/default.jpg";
+	resource["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + "/full/full/0/default.jpg" + apikey;
 	resource["@type"] = object.type; 
 	resource["format"] = object.format; 
 
@@ -329,7 +330,7 @@ var getImageCanvas = function(container, object) {
 	image["resource"] = resource;
 	image["on"] = canvas["@id"];
 
-	image["thumbnail"] = getThumbnailObject(container, object);
+	image["thumbnail"] = getThumbnailObject(container, object, apikey);
 
 	canvas.images.push(image);
 	return canvas;
