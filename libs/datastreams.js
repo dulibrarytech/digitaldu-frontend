@@ -90,8 +90,7 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
         uri = settings.uri || "Thumbnail has not been set for " + objectID;
         switch(settings.streamOption || "") {
           case "iiif":
-            uri = IIIF.getThumbnailUri(objectID);
-            uri += (apiKey ? "?key=" + apiKey : "");
+            uri = IIIF.getThumbnailUri(objectID, apiKey);
             break;
           case "kaltura":
             uri = Kaltura.getThumbnailUrl(object);

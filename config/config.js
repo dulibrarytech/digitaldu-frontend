@@ -156,6 +156,7 @@ module.exports = {
      * IIIF API 
      */
     IIIFUrl: process.env.IIIF_URL,
+    IIIFAPiKeyPrefix: "__",
 
     /*
      * IIIF Object Types

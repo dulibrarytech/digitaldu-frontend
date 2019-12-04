@@ -11,8 +11,9 @@ const 	config = require('../config/' + process.env.CONFIGURATION_FILE),
 	 	request  = require("request"),
 		IIIF = require('../libs/IIIF');
 
-exports.getThumbnailUri = function(objectID) {
-	return config.IIIFServerUrl + "/iiif/2/" + objectID + "/full/" + config.IIIFThumbnailWidth + "," + config.IIIFThumbnailHeight + "/0/default.jpg";
+exports.getThumbnailUri = function(objectID, apikey) {
+	apikey = apikey ? (config.IIIFAPiKeyPrefix + apikey) : "";
+	return config.IIIFServerUrl + "/iiif/2/" + objectID + apikey + "/full/" + config.IIIFThumbnailWidth + "," + config.IIIFThumbnailHeight + "/0/default.jpg";
 }
 
 /**
@@ -24,9 +25,6 @@ exports.getThumbnailUri = function(objectID) {
 exports.getManifest = function(container, objects, apikey, callback) {
 	var manifest = {},
 		mediaSequences = [];
-
-	apikey = apikey ? ("?key=" + apikey) : "";
-		//console.log("TEST iiif manifest apikey is", apikey)
 
 	// Define the manifest
 	manifest["@context"] = "http://iiif.io/api/presentation/2/context.json";
@@ -129,6 +127,7 @@ exports.getManifest = function(container, objects, apikey, callback) {
 
 var getImageData = function(objects, data=[], apikey, callback) {
 	let index = data.length;
+		apikey = apikey ? (config.IIIFAPiKeyPrefix + apikey) : "";
 	
 	if(index == objects.length) {
 		callback(null, data);
@@ -160,6 +159,7 @@ var getImageElement = function(object) {
 }
 
 var getObjectElement = function(object, apikey) {
+	apikey = apikey ? ("?key=" + apikey) : "";
 
 	// Create the rendering data
 	let rendering = {};
@@ -186,6 +186,8 @@ var getObjectElement = function(object, apikey) {
 
 var getPDFElement = function(object, apikey) {
 	let element = {};
+		apikey = apikey ? ("?key=" + apikey) : "";
+
 	element["@id"] = object.resourceUrl + apikey;
 	element["@type"] = object.type;
 	element["format"] = object.format; 
@@ -271,6 +273,7 @@ var getThumbnailObject = function(container, object, apikey) {
 		service: {}
 	},
 	service = {};
+	apikey = apikey ? (config.IIIFAPiKeyPrefix + apikey) : "";
 
 	thumbnail["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID;
 	thumbnail["@type"] = config.IIIFObjectTypes["smallImage"];
@@ -294,6 +297,7 @@ var getImageCanvas = function(container, object, apikey) {
 	image = {},
 	resource = {},
 	service = {};
+	apikey = apikey ? (config.IIIFAPiKeyPrefix + apikey) : "";
 
 	canvas["@id"] = config.IIIFUrl + "/" + container.resourceID + "/canvas/c" + object.sequence;
 	canvas["@type"] = "sc:Canvas";
@@ -315,12 +319,14 @@ var getImageCanvas = function(container, object, apikey) {
 	image["@type"] =  "oa:Annotation";
 	image["motivation"] = "";
 
-	resource["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + "/full/full/0/default.jpg" + apikey;
+	//resource["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + "/full/full/0/default.jpg" + apikey;
+	resource["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + apikey + "/full/full/0/default.jpg";
 	resource["@type"] = object.type; 
 	resource["format"] = object.format; 
 
 	service["@context"] = "";
-	service["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID;	
+	//service["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID;	
+	service["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + apikey;	
 	service["profile"] = [];
 
 	resource["service"] = service;

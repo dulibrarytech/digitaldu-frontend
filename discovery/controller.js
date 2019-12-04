@@ -318,7 +318,6 @@ exports.getIIIFManifest = function(req, res) {
 		key = req.query.key;
 	}
 
-		console.log("TEST getmo", index, key)
 	Service.getManifestObject(pid, index, key, function(error, manifest) {
 		if(error) {
 			console.error(error);

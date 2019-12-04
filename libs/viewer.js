@@ -23,8 +23,6 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
 exports.getObjectViewer = function(object, mimeType="", apikey=null) {
  	var viewer = "";
  	apikey = apikey ? ("?key=" + apikey) : "";
- 		console.log("TEST getv key", apikey)
- 		console.log("TEST getv mimetype", mimeType)
 
  	if(object == null) {
  		console.log("Viewer says: null object");
@@ -41,7 +39,7 @@ exports.getObjectViewer = function(object, mimeType="", apikey=null) {
  			dataType = type;
  		}
  	}
- 		console.log("TEST datatype is", dataType)
+
  	// Get viewer for object mime type:
  	switch(dataType) {
  		case "audio":
@@ -334,7 +332,7 @@ exports.getIIIFObjectViewer = getIIIFObjectViewer;
 	viewer +=     'prefixUrl: "' + config.openseadragonImagePath + '",'
 	viewer +=     'immediateRender: true,'
 	viewer +=     'showNavigator: true,'
-	viewer +=     'tileSources: "' + config.IIIFServerUrl + '/iiif/2/' + object.pid + '/info.json' + apikey + '"'
+	viewer +=     'tileSources: "' + config.IIIFServerUrl + '/iiif/2/' + object.pid + apikey + '/info.json"'
 	viewer += '});'
 	viewer += 'viewer.addHandler("tile-loaded", function(event) {document.getElementById("display-message").style.display = "none"})'
 	viewer += '</script>';
