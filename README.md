@@ -126,15 +126,15 @@ def httpsource_resource_info(options = {})
     # Detect an api key parameter in the request url, retrieve and add it to the DigitalCollections /datastream route url
     request_uri = context['request_uri']
     key = ''
-    if request_uri.include? "key="
-      parts = request_uri.split("key=")
+
+    if context['identifier'].include? '__'
+      parts = context['identifier'].split('__')
       key = '?key='
       key.concat(parts[1])
     end
 
     # DigitalCollections datastream route prefix
-    str = '{digital collections host + path with trailing slash}'
-    str.concat('datastream/')
+    str = 'http://localhost:9006/datastream/'
     # Object identifier
     str.concat(context['identifier'])
     # DigitalCollections datastream route suffix
