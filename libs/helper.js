@@ -1,6 +1,4 @@
-var config = require('../config/' + process.env.CONFIGURATION_FILE),
-	rs = require('request-stream'),
-    fs = require('fs');
+var config = require('../config/' + process.env.CONFIGURATION_FILE);
 
 /*
  * 
@@ -47,16 +45,4 @@ exports.getCompoundObjectPart = function(object, partIndex) {
 	}
 
 	return objectPart;
-}
-
-/*
- * Write file to backend cache
- */
-exports.createLocalFile = function(path, data, callback) {
-		console.log("TEST using buffer")
-	var buffer = new Buffer(data, 'base64');
-  	fs.writeFile(path, buffer, function(err) {
-  			console.log("TEST writefile error is ", err)
-	    callback(err);
-	}); 
 }

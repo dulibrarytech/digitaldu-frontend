@@ -12,6 +12,7 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
   Repository = require('../libs/repository'),
   Helper = require('../libs/helper'),
   Kaltura = require('../libs/kaltura'),
+  Cache = require('../libs/cache'),
   IIIF = require('../libs/IIIF'),
   AppHelper = require("../libs/helper");
 
@@ -58,10 +59,8 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
   if(datastreamID == "tn") {
     // Check for a cached image
     var tnPath = config.thumbnailImageCacheLocation + objectID + config.thumbnailFileExtension;
-
     // Thumbnail image has not been found in local cache
     if(fs.existsSync(tnPath) == false) {
-
       // Find the 'file type' for the thumbnail configuration
       let fileType = "default";
       if(Helper.isParentObject(object)) {
@@ -115,15 +114,9 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
             else {
               if(stream) {
                 if(config.thumbnailImageCacheEnabled == true) {
-                  let tUrl = Repository.getDatastreamUrl("tn", null, object);
-
-                  AppHelper.createLocalFile(tnPath, tUrl, function(error) {
-                    if(error) {
-                      console.error("Could not create thumbnail image for", objectID, error);
-                    }
-                    else {
-                      console.log("Thumbnail image created for", objectID);
-                    }
+                  Cache.cacheRemoteData(uri, tnPath, function(error) {
+                    if(error) {console.error("Could not create thumbnail image for", objectID, error);}
+                    else {console.log("Thumbnail image created for", objectID);}
                   });
                 }
                 callback(null, stream);
@@ -142,7 +135,12 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
             }
             else {
               if(stream && status == 200) {
-                // CACHE
+                if(config.thumbnailImageCacheEnabled == true) {
+                  Cache.cacheRemoteData(uri, tnPath, function(error) {
+                    if(error) {console.error("Could not create thumbnail image for", objectID, error);}
+                    else {console.log("Thumbnail image created for", objectID);}
+                  });
+                }
                 callback(null, stream);
               }
               else {
@@ -194,7 +192,6 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
           callback("Repository stream data error: " + (error || "Resource not found for " + objectID), null);
         }
         else {
-            // CACHE
             callback(null, stream);
           }
       });
