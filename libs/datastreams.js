@@ -32,6 +32,7 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
  * @return {undefined}
  */
 exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, callback) {
+  var mimeType = object.mime_type || object.type || null;
   // If there is a part value, retrieve the part data.  Redefine the object data with the part data
   if(part && isNaN(part) === false) {
     var sequence;
@@ -55,8 +56,8 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
   // Request a thumbnail datastream
   if(datastreamID == "tn") {
     // Check for a cached image
-    var tnPath = config.thumbnailImageCacheLocation + objectID + config.thumbnailFileExtension;
-    if(fs.existsSync(tnPath) == false) {
+    //var tnPath = config.thumbnailImageCacheLocation + objectID + config.thumbnailFileExtension;
+    if(Cache.exists('thumbnail', objectID) == false) {
       let fileType = "default";
       if(Helper.isParentObject(object)) {
         fileType = "compound";
@@ -109,7 +110,7 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
             else {
               if(stream) {
                 if(config.thumbnailImageCacheEnabled == true) {
-                  Cache.cacheRemoteData(uri, tnPath, function(error) {
+                  Cache.cacheDatastream('thumbnail', objectID, stream, null, function(error) {
                     if(error) {console.error("Could not create thumbnail image for", objectID, error)}
                     else {console.log("Thumbnail image created for", objectID)}
                   });
@@ -129,13 +130,13 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
               streamDefaultThumbnail(object, callback);
             }
             else if(stream == null) {
-              console.log("Datastream error: Can not fetch datastream");
+              console.log("Datastream error: Can not fetch datastream", objectID);
               streamDefaultThumbnail(object, callback);
             }
             else {
               if(status == 200) {
                 if(config.thumbnailImageCacheEnabled == true) {
-                  Cache.cacheRemoteData(stream, tnPath, function(error) {
+                  Cache.cacheDatastream('thumbnail', objectID, stream, null, function(error) {
                     if(error) {console.error("Could not create thumbnail image for", objectID, error)}
                     else {console.log("Thumbnail image created for", objectID)}
                   });
@@ -154,45 +155,28 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
 
     // Cached thumbnail image found
     else {
-      getFileStream(tnPath, function(error, thumbnail) {
-          callback(null, thumbnail);
-      });
+      Cache.getFileStream('thumbnail', objectID, null, function(error, stream) {
+        if(error) {
+          callback(error, null);
+        }
+        else {
+          callback(null, stream);
+        }
+      })
     }
   }
 
   // Request a non-thumbnail datastream
   else {
-    let file = null, path;
-    for(var extension in config.fileExtensions) {
-      if(config.fileExtensions[extension].includes(object.mime_type)) {
-        path = config.objectCachePath + "/" + objectID.match(/[0-9]+/)[0] + sequence + "." + extension;
-        if(fs.existsSync(path)) {
-          file = path;
-        }
-      }
-    }
-
-    // Stream the local object file if it is found
-    if(file) {
-      getFileStream(file, function(error, content) {
-          if(error) {
-            callback(error, null);
-          }
-          else {
-            callback(null, content);
-          }
-      }); 
-    }
-
-    // If no local file is found, stream the object data from the repository
-    else {
+    var extension = AppHelper.getFileExtensionForMimeType(mimeType);
+    if(Cache.exists('object', objectID, extension) == false) {
       Repository.streamData(object, datastreamID, function(error, stream) {
         if(error || !stream) {
           callback("Repository stream data error: " + (error || "Resource not found for " + objectID), null);
         }
         else {
             if(config.objectDerivativeCacheEnabled == true) {
-              Cache.cacheRemoteData(uri, tnPath, function(error) {
+              Cache.cacheDatastream('object', objectID, stream, extension, function(error) {
                 if(error) {console.error("Could not create object file for", objectID, error)}
                 else {console.log("Object file created for", objectID)}
               });
@@ -200,6 +184,16 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
             callback(null, stream);
           }
       });
+    }
+    else {
+      Cache.getFileStream('object', objectID, extension, function(error, stream) {
+        if(error) {
+          callback(error, null);
+        }
+        else {
+          callback(null, stream);
+        }
+      })
     }
   }
 }

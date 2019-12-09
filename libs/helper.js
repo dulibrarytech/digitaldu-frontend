@@ -46,3 +46,13 @@ exports.getCompoundObjectPart = function(object, partIndex) {
 
 	return objectPart;
 }
+
+exports.getFileExtensionForMimeType = function(mimeType) {
+	var extension = "";
+	for(extension in config.fileExtensions) {
+      if(config.fileExtensions[extension].includes(mimeType)) {
+        break;
+      }
+    }
+    return extension;
+}

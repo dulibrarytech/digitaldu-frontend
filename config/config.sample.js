@@ -222,10 +222,13 @@ module.exports = {
      * Before a thumbnail is rendered, this location is checked for a source file before requesting it from the repository
      */
     thumbnailDefaultImagePath: "files/default/thumbnail/",
-    thumbnailFileExtension: ".png",
+    thumbnailFileExtension: ".jpg",
     defaultThumbnailImage: "tn-placeholder.jpg",
-    thumbnailImageCacheEnabled: false,
+    thumbnailImageCacheEnabled: true,
     thumbnailImageCacheLocation: "cache/thumbnail/",
+
+    objectDerivativeCacheEnabled: false,
+    objectDerivativeCacheLocation: "cache/object/",
 
     /*
      * Object specific default thumbnail images
@@ -501,14 +504,6 @@ module.exports = {
         "quicktime": ["video/quicktime"],
         "pdf": ["application/pdf"]
      },
-
-     /*
-      * Location of the object file cache
-      * Object files must be named {PID}.{file extension} ex: 12345.jpg
-      * Configure file extensions for object mime types below
-      * Before an object is rendered, this location is checked for a source file before requesting it from the repository
-      */
-     objectCachePath: "files/object",
 
      /*
       * File extensions for the local cache.  A request for a datastream will first check the local cache to see if a source file is present.
