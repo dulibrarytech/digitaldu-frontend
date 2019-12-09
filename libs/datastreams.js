@@ -8,6 +8,7 @@
 
 const config = require('../config/' + process.env.CONFIGURATION_FILE),
   rs = require('request-stream'),
+  request = require('request'),
   fs = require('fs'),
   Repository = require('../libs/repository'),
   Helper = require('../libs/helper'),
@@ -39,11 +40,7 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
     let objectPart = AppHelper.getCompoundObjectPart(object, part);
     if(objectPart) {
       objectPart["object_type"] = "object";
-
-      //  DEV Temporary, unless part object will contain the field 'type' for mime type value
-      objectPart["mime_type"] = objectPart.type;
-
-      // Use the object part to retrieve the datastream
+      objectPart["mime_type"] = objectPart.type ? objectPart.type : (objectPart.mime_type || null);
       object = objectPart;
       sequence = config.compoundObjectPartID + part;
       objectID = objectID + sequence;
@@ -59,9 +56,7 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
   if(datastreamID == "tn") {
     // Check for a cached image
     var tnPath = config.thumbnailImageCacheLocation + objectID + config.thumbnailFileExtension;
-    // Thumbnail image has not been found in local cache
     if(fs.existsSync(tnPath) == false) {
-      // Find the 'file type' for the thumbnail configuration
       let fileType = "default";
       if(Helper.isParentObject(object)) {
         fileType = "compound";
@@ -115,8 +110,8 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
               if(stream) {
                 if(config.thumbnailImageCacheEnabled == true) {
                   Cache.cacheRemoteData(uri, tnPath, function(error) {
-                    if(error) {console.error("Could not create thumbnail image for", objectID, error);}
-                    else {console.log("Thumbnail image created for", objectID);}
+                    if(error) {console.error("Could not create thumbnail image for", objectID, error)}
+                    else {console.log("Thumbnail image created for", objectID)}
                   });
                 }
                 callback(null, stream);
@@ -133,18 +128,22 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
               console.error(error);
               streamDefaultThumbnail(object, callback);
             }
+            else if(stream == null) {
+              console.log("Datastream error: Can not fetch datastream");
+              streamDefaultThumbnail(object, callback);
+            }
             else {
-              if(stream && status == 200) {
+              if(status == 200) {
                 if(config.thumbnailImageCacheEnabled == true) {
-                  Cache.cacheRemoteData(uri, tnPath, function(error) {
-                    if(error) {console.error("Could not create thumbnail image for", objectID, error);}
-                    else {console.log("Thumbnail image created for", objectID);}
+                  Cache.cacheRemoteData(stream, tnPath, function(error) {
+                    if(error) {console.error("Could not create thumbnail image for", objectID, error)}
+                    else {console.log("Thumbnail image created for", objectID)}
                   });
                 }
                 callback(null, stream);
               }
               else {
-                console.log("Datastream error: attempting to stream data from " + uri + " returns a status of " + status);
+                console.log("Datastream error: " + uri + " returns a status of " + status);
                 streamDefaultThumbnail(object, callback);
               }
             }
@@ -153,7 +152,7 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
       }
     }
 
-    // Thumbnail image file has been found in the local cache
+    // Cached thumbnail image found
     else {
       getFileStream(tnPath, function(error, thumbnail) {
           callback(null, thumbnail);
@@ -161,7 +160,7 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
     }
   }
 
-  // Request a non thumbnail datastream
+  // Request a non-thumbnail datastream
   else {
     let file = null, path;
     for(var extension in config.fileExtensions) {
@@ -192,6 +191,12 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
           callback("Repository stream data error: " + (error || "Resource not found for " + objectID), null);
         }
         else {
+            if(config.objectDerivativeCacheEnabled == true) {
+              Cache.cacheRemoteData(uri, tnPath, function(error) {
+                if(error) {console.error("Could not create object file for", objectID, error)}
+                else {console.log("Object file created for", objectID)}
+              });
+            }
             callback(null, stream);
           }
       });
@@ -217,7 +222,12 @@ var streamRemoteData = function(uri, callback) {
       callback("Could not open datastream. " + err, null, null);
     }
     else {
-      callback(null, res.statusCode, res);
+      if(res.socket.bytesRead < 500) {
+        callback(null, 204, null);
+      }
+      else {
+        callback(null, res.statusCode, res);
+      }
     }
   });
 }

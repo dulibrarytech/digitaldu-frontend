@@ -288,11 +288,14 @@ exports.getDatastream = function(req, res) {
 	// Get the datastream and pipe it
 	Service.getDatastream(index, pid, ds, part, key, function(error, stream) {
 		if(error || !stream) {
-			console.error(error || "Can not retrieve datastream");
+			console.log(error || "Can not retrieve datastream");
 			res.sendStatus(404);
 		}
 		else {
 			res.set('Accept-Ranges', 'bytes');
+			if(stream.headers && stream.headers["content-type"]) {
+				res.set('Content-Type', stream.headers["content-type"]);
+			}
 			stream.pipe(res);
 		}
 	});

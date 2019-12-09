@@ -18,7 +18,6 @@ function requester (method) {
     if (typeof cb === 'undefined') throw new Error('Must supply callback')
     if (opts.method) method = opts.method
     if (!/:\/\//.test(url)) url = 'http://' + url
-
     var parsed = parseUrl(url)
 
     var host = parsed.hostname
@@ -39,6 +38,7 @@ function requester (method) {
 
     var reqOpts = xtend(defaults, opts)
     var req = mod.request(reqOpts)
+    var downloaded = 0
 
     debug('request %j', reqOpts)
     req.on('error', done)

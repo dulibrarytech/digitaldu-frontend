@@ -6,18 +6,9 @@ const request = require('request'),
 /*
  * Write file to backend cache
  */
-exports.cacheRemoteData = function(uri, filepath, callback) {
-	request.head(uri, function(err, res, body) {
-	    if(err) {
-			callback(err);
-		}
-		else if(res.statusCode != 200) {
-			console.log('Stream response content-type:', res.headers['content-type']);
-	    	console.log('Stream response content-length:', res.headers['content-length']);
-			callback("Can not retrieve datastream " + uri + " Status code is " + res.statusCode);
-		}
-		else {
-	    	request(uri).pipe(fs.createWriteStream(filepath)).on('close', callback);
-	    }
+exports.cacheRemoteData = function(stream, filepath, callback) {
+	stream.pipe(fs.createWriteStream(filepath)).on('close', function() {
+		// Test file size
+		callback(null);
 	});
 }

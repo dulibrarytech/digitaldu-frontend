@@ -221,6 +221,9 @@ module.exports = {
     thumbnailImageCacheEnabled: true,
     thumbnailImageCacheLocation: "cache/thumbnail/",
 
+    objectDerivativeCacheEnabled: false,
+    objectDerivativeCacheLocation: "cache/object",
+
     /*
      * Object specific default thumbnail images
      * { "object type" : "image filename" }

@@ -13,7 +13,6 @@ var http = require('http'),
     config = require('./config.js');
 
 module.exports = function () {
-
     var app = express(),
         server = http.createServer(app);
 
@@ -32,11 +31,10 @@ module.exports = function () {
     app.set('views', './views');
     app.set('view engine', 'ejs');
 
-    // Add modules here
     require('../discovery/routes.js')(app);
     require('../search/routes.js')(app);
     require('../specialcollections/routes.js')(app);
-    require('../test/routes.js')(app);
+    // require('../test/routes.js')(app);
     
     // Express dependencies
     require('express-template-cache');
