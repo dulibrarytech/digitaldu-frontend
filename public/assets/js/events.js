@@ -24,20 +24,20 @@ $( document ).ready(function() {
 		$("#add-query-button").blur();
 	});
 
-	$("#transcript-view").css("display", "none");
+	$("#transcript-view-wrapper").css("display", "none");
 	$("#view-transcript").click(function(event) {
   		// Show the transcript viewer
   		if($("#viewer-section").hasClass("transcript-visible") == false) {
 			$("#view-transcript").html("Hide Transcript");
 			$("#viewer-section").addClass("transcript-visible");
-			$("#transcript-view").css("display", "block")
+			$("#transcript-view-wrapper").css("display", "block")
   		}
 
   		// Hide the transcript viewer
   		else {
 			$("#view-transcript").html("View Transcript");
 			$("#viewer-section").removeClass("transcript-visible");
-			$("#transcript-view").css("display", "none");
+			$("#transcript-view-wrapper").css("display", "none");
   		}
   	});
 });

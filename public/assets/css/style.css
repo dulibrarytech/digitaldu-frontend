@@ -1211,14 +1211,20 @@ div.metadata-content {
   margin-bottom: 15px;
 }
 
-#transcript-view {
+div#transcript-view-wrapper {
+    padding-bottom: 1.5em;
+    background: white;
+}
+
+div#transcript-view {
     padding: 20px;
     background: white;
     width: 100%;
     margin-top: 20px;
     overflow-y: scroll;
     max-height: 300px;
-    line-height: 1.4em;
+    text-align: left;
+    line-height: 1.5em;
 }
 
 footer {
