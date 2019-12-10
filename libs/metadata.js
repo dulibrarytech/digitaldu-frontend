@@ -116,7 +116,9 @@ exports.createMetadataDisplayObject = function(result, collections=[]) {
 	// Include the titles of any parent collections
 	let titles = [];
 	for(var collection of collections) {
-		titles.push('<a href="' + config.rootUrl + '/collection/' + collection.pid + '">' + collection.name + '</a>');
+		if(collection.name != config.topLevelCollectionName) {
+			titles.push('<a href="' + config.rootUrl + '/collection/' + collection.pid + '">' + collection.name + '</a>');
+		}
 	}
 	if(titles.length > 0) {
 		displayObj["In Collections"] = titles;
