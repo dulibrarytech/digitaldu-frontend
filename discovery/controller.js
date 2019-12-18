@@ -414,7 +414,8 @@ exports.getObjectViewer = function(req, res) {
 	var viewer = "<div class='embedded-viewer'>",
 		pid = req.params.pid,
 		index = config.elasticsearchPublicIndex,
-		key = null;
+		key = null,
+		script = "";
 
 	// If a valid api key is passed in with the request, get data from the the private index
 	if(req.query.key && req.query.key == config.apiKey) {
@@ -422,41 +423,41 @@ exports.getObjectViewer = function(req, res) {
 		key = req.query.key;
 	}
 
-	Service.fetchObjectByPid(index, pid, function(error, response) {
+	Service.fetchObjectByPid(index, pid, function(error, object) {
 		if(error) {
 			console.error(error);
 			viewer += "Viewer error";
 		}
-		else if(response == null) {
+		else if(object == null) {
 			console.log("Object not found, can not display viewer: " + pid);
 			viewer += "Object not found";
 		}
 		else {
-			var object = response,
-				part = req.params.index && isNaN(parseInt(req.params.index)) === false ? req.params.index : 0;
-
+			var part = req.params.index && isNaN(parseInt(req.params.index)) === false ? req.params.index : 0;
 			// Render a parent object with child objects
-			if(AppHelper.isParentObject(object)) {
-				viewer += CompoundViewer.getCompoundObjectViewer(object, part, key);
-			}
-
+			if(AppHelper.isParentObject(object)) {viewer += CompoundViewer.getCompoundObjectViewer(object, part, key)}
 			// Render single object
 			else {
-				if(part > 0) {
-					console.log("Object not found, can not display viewer: ", pid);
-				}
-				else {
-					viewer += Viewer.getObjectViewer(object, null, key);
-				}
+				if(part > 0) {console.log("Object not found, can not display viewer: ", pid)}
+				else {viewer += Viewer.getObjectViewer(object, null, key)}
 			}
 		}
-		viewer += "</div>"
+
+		// Add transcript viewer if a transcript is present in the record
+		if(object.transcript && object.transcript.length > 0) {
+			viewer += "<div id='transcript-view-wrapper' style='display: block;'><div id='transcript-view'>";
+			viewer += object.transcript;
+			viewer += "</div></div>";
+			script = "$('#uv').css('height', '72%')";
+		}
+		viewer += "</div>";
 
 		// Render page
 		res.render('page', {
 			error: null,
 			root_url: config.rootUrl,
-			content: viewer
+			content: viewer,
+			script: script
 		});
 	});
 };

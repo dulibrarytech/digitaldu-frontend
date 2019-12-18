@@ -284,7 +284,6 @@ function getIIIFObjectViewer(object, part=null, embedKalturaViewer=false, apikey
 		// Add the event trigger to embed the Kaltura player 
 		// eventTriggers += '$( "#uv").trigger( "uvloaded", [ ' + embedKalturaViewer + ', "' + object.pid + '", "' + config.universalViewerMediaElement + '", "' + kalturaViewer + '" ] );';
 	}
-
 	eventTriggers += '$( "#uv").trigger( "uvloaded", [ ' + embedKalturaViewer + ', "' + object.pid + '", "' + config.universalViewerMediaElement + '", "' + kalturaViewer + '" ] );';
 
 	let viewer = '<div id="uv" class="uv"></div>';

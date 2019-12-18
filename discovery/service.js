@@ -497,7 +497,7 @@ exports.getManifestObject = function(pid, index, apikey, callback) {
       
       var container = {
         resourceID: object.pid,
-        downloadFileName: object.pid.replace(":", "_"), // Temporarily use pid for filename, replacing ':'' with '_'
+        downloadFileName: object.pid, // Temporarily use pid for filename, replacing ':'' with '_'
         title: object.title,
         metadata: {
           "Title": object.title,
