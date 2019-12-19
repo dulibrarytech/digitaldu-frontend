@@ -4,7 +4,10 @@
 
 .uv {
   overflow: hidden;
-  /*min-height: 800px;*/
+}
+
+#object-view .uv {
+  min-height: 800px;
 }
 
 .uv .rightPanel .top .title {
