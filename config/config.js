@@ -442,7 +442,7 @@ module.exports = {
     /*
      * Fuzz factor: number of fuzzy characters in the search terms
      */
-    searchTermFuzziness: "2",
+    searchTermFuzziness: "1",
 
     /*
      * Facets to display on the search results view

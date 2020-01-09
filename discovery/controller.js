@@ -244,7 +244,7 @@ exports.renderObjectView = function(req, res) {
 
 			// Get array of parent collections for the parent collection breadcrumb list
 			Service.getCollectionHeirarchy(object.is_member_of_collection, function(collectionTitles) {
-				// Get metadata displays and render the view
+				// Define view data and render the view
 				data.summary = Metadata.createSummaryDisplayObject(object);
 				object.type = Helper.normalizeLabel("Type", object.type || "")
 				data.metadata = Object.assign(data.metadata, Metadata.createMetadataDisplayObject(object, collectionTitles));

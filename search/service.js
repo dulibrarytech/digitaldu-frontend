@@ -91,7 +91,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       currentQuery = {};
 
       // Get the query data from the current data object, or use default data
-      terms = queryData[index].terms || "";
+      terms = queryData[index].terms.toLowerCase() || "";
       field = queryData[index].field || "all";
       type = queryData[index].type || "contains";
       bool = queryData[index].bool || "or";
