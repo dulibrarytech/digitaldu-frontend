@@ -307,7 +307,7 @@ exports.getDatastream = function(req, res) {
 			console.log(error || "Can not retrieve datastream");
 			res.sendStatus(404);
 		}
-		else {z
+		else {
 			res.set('Accept-Ranges', 'bytes');
 			if(stream.headers && stream.headers["content-type"]) {
 				res.set('Content-Type', stream.headers["content-type"]);
