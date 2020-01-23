@@ -106,6 +106,9 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       queryFields = [];
       currentQuery = {};
 
+      // Handle special query cases for searching specific search fields
+      queryData[index].terms = Helper.updateQueryTermsForField(queryData[index].terms, queryData[index].field, queryData[index].type, queryData[index].bool);
+
       // Get the query data from the current data object, or use default data
       terms = queryData[index].terms.toLowerCase() || "";
       field = queryData[index].field || "all";
@@ -114,7 +117,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
 
       // If field value is "all", get all the available search fields
       fields = Helper.getSearchFields(field);
-      
+
       // Get the Elastic query type to use for this query
       queryType = Helper.getQueryType(queryData[index]);
 
@@ -306,8 +309,9 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       }
     }
 
-    // DEBUG - Output the full structure of the query object
-    //console.log("TEST query object:", util.inspect(queryObj, {showHidden: false, depth: null}));
+    if(config.nodeEnv == "development") {
+      console.log("DEV query object:", util.inspect(queryObj, {showHidden: false, depth: null}));
+    }
 
     // Get elasticsearch aggregations object 
     var facetAggregations = Helper.getFacetAggregationObject(config.facets);

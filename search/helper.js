@@ -322,6 +322,26 @@ exports.getQueryType = function(queryData) {
   else  {
     queryType = "match";
   }
-
   return queryType;
+}
+
+/**
+ * Append or remove characters from a querystring based on search data
+ *
+ * @property {String} terms - Query string
+ * @property {String} field - Search field
+ * @property {String} type - {"all"|"contains"|"is"} 
+ * @property {String} bool - Query boolean term
+ *
+ * @return {String} - Updated query term
+ */
+exports.updateQueryTermsForField = function(terms="", field, type, bool) {
+  // Allow tokenized or partial searches of call number field (which contains multiple periods) without the use of a wildcard character in the search terms
+  if(field == "call_number") {
+    // Do not update if the terms already contain a *
+    if(terms.indexOf("*" < 0)) {
+      terms = "*".concat(terms) + "*";
+    }
+  }
+  return terms;
 }
