@@ -42,7 +42,7 @@ All other content is released under [CC-BY-4.0](https://creativecommons.org/lice
     
     3. Create a file ".env" in the project root folder. It should contain the following properties:
     ```
-        NODE_ENV=development
+        NODE_ENV={development|devlog|production} 
         NODE_TLS_REJECT_UNAUTHORIZED=1
         APP_HOST={nodejs app domain}
         APP_PORT={nodejs app port}

@@ -309,7 +309,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       }
     }
 
-    if(config.nodeEnv == "development") {
+    if(config.nodeEnv == "devlog") {
       console.log("DEV query object:", util.inspect(queryObj, {showHidden: false, depth: null}));
     }
 
