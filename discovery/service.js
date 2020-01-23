@@ -481,7 +481,7 @@ var getParentTrace = function(pid, collections, callback) {
           getParentTrace(response.is_member_of_collection[0], collections, callback);
         }
         else if(response.is_member_of_collection == config.topLevelCollectionPID) {
-          collections.push({pid: config.topLevelCollectionPID, name: config.topLevelCollectionName, url: config.rootUrl});
+          collections.push({pid: config.topLevelCollectionPID, name: config.topLevelCollectionName, url: config.rootUrl + "#collections"});
           callback(collections.reverse());
         }
         else {
