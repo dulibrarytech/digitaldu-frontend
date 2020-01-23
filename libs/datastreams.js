@@ -94,7 +94,8 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
       // Get the thumbnail uri based on the configuration settings
       let filePath = null, streamPath = null, uri;
       if(settings == null) {
-        callback("Error retrieving datastream for " + objectID + ", can not find configuration settings for object type " + object.object_type, null);
+        console.error("Error retrieving datastream for " + objectID + ", can not find configuration settings for object type " + object.object_type, null);
+        streamDefaultThumbnail(object, callback);
       }
       else {
         uri = settings.uri || "Thumbnail has not been set for " + objectID;
