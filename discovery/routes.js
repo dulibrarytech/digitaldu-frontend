@@ -66,6 +66,9 @@ module.exports = function (app) {
 
     app.route('/advanced-search')
         .get(Discovery.advancedSearch);
+
+    app.route('/file/download/:pid')
+        .get(Discovery.downloadObjectFile);
 };
 
 

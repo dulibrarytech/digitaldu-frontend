@@ -1180,11 +1180,6 @@ div.object-options button {
   color: #353331;
 }
 
-div.object-options button#file-download:hover {
-  cursor: default;
-  background-color: white;
-}
-
 div.object-options button:hover {
   cursor: pointer;
   background-color: #e5e3e1;

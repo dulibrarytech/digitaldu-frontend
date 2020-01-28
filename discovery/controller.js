@@ -264,11 +264,13 @@ exports.renderObjectView = function(req, res) {
 				data.summary = Metadata.createSummaryDisplayObject(object);
 				object.type = Helper.normalizeLabel("Type", object.type || "")
 				data.metadata = Object.assign(data.metadata, Metadata.createMetadataDisplayObject(object, collectionTitles));
+				data.id = pid;
+				data.fileExtension = AppHelper.getFileExtensionForMimeType(object.mime_type || "")
 				res.render('object', data);
 			});
 		}
 	});
-};
+}
 
 /**
  * Pipes an object datastream to the client
@@ -476,5 +478,38 @@ exports.getObjectViewer = function(req, res) {
 			script: script
 		});
 	});
-};
+}
+
+exports.downloadObjectFile = function(req, res) {
+	var pid = req.params.pid || "";
+
+	// Remove file extension if present
+	for(var key in config.fileExtensions) {
+		if(pid.indexOf(key) > 0) {
+			let ext = "." + key;
+			pid = pid.replace(ext, "");
+		}
+	}
+
+	// Parse out the part index value if present
+	let part = null;
+	if(pid.indexOf(config.compoundObjectPartID) > 0) {
+		part = pid.substring(pid.indexOf(config.compoundObjectPartID)+1, pid.length);	
+		pid = pid.split(config.compoundObjectPartID,1)[0];
+	}
+
+	Service.getDatastream(config.elasticsearchPublicIndex, pid, "object", part, "", function(error, stream) {
+		if(error || !stream) {
+			console.log(error || "Can not retrieve datastream");
+			res.sendStatus(404);
+		}
+		else {
+			res.set('Accept-Ranges', 'bytes');
+			if(stream.headers && stream.headers["content-type"]) {
+				res.set('Content-Type', stream.headers["content-type"]);
+			}
+			stream.pipe(res);
+		}
+	});
+}
 

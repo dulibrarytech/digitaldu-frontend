@@ -25,7 +25,7 @@
     <div class="container">
         <span id="object-view-controls">
           <button class="collapsible" alt="View Details">View Details</button>
-          <button id="file-download" alt="Download Item" disabled>Download Item</button>
+          <button id="file-download" data-object-id="<%= id %>" data-file-extension="<%= fileExtension %>" class="download-button" alt="Download Item">Download Item</button>
           <% if(transcript) { %>
             <button id="view-transcript" alt="View Transcript" type="button">View Transcript</button>
           <% } %>
