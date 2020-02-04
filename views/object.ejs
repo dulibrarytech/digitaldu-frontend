@@ -17,6 +17,14 @@
       </div>
     </div>
   </div>
+
+  <div id="download-links">
+    <ul>
+      <% for (var link in downloadLinks) { %>
+        <li><a href="<%= downloadLinks[link] %>" download><%= downloadLinks[link] %></a></li>
+      <% } %>
+    </ul>
+  </div>
 </div>
 
 <div id="metadata-section">
@@ -25,13 +33,15 @@
     <div class="container">
         <span id="object-view-controls">
           <button class="collapsible" alt="View Details">View Details</button>
-          <button id="file-download" data-object-id="<%= id %>" data-file-extension="<%= fileExtension %>" class="download-button" alt="Download Item">Download Item</button>
+          <button id="file-download" class="download-button disabledbutton" alt="Download Item">Download File</button>
           <% if(transcript) { %>
             <button id="view-transcript" alt="View Transcript" type="button">View Transcript</button>
           <% } %>
         </span>
     </div>
   </div>
+
+  <!-- Append the download options list -->
 
   <div class="container">
     <div class="table-responsive mods-display metadata-content ">
@@ -64,6 +74,8 @@
       <p><%= summary[key] %></p>
     <% } %>
   </div>
+
+  <!-- <a href="https://cdnapisec.kaltura.com/p/2357732/sp/0/playManifest/entryId/0_yc2k9s2f/format/url/protocol/https/flavorParamId/301971/video.mp4" download="true">Test DL File</a> -->
 
 </div>
 

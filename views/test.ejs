@@ -1,24 +1,18 @@
-<% include partials/headerUV %>
 
-    <title>UV Hello World</title>
-    <style>
-        #uv {
-            width: 800px;
-            height: 600px;
-        }
-    </style>
 
-    
-    <div id="uv" class="uv" style="margin-top: 100px"></div>
+<title>UV Hello World</title>
+<style>
+    #uv {
+        width: 800px;
+        height: 600px;
+    }
+</style>
 
-    <script>
-        window.addEventListener('uvLoaded', function (e) {
-            createUV('#uv', {
-                iiifResourceUri: '<% manifest %>',
-                configUri: '<%- base_url %>/libs/universalviewer/uv-config.json',
-                root: '../../libs/universalviewer/uv'
-            }, new UV.URLDataProvider());
-        }, false);
-    </script>
+<h2>Test Page</h2>
 
-<% include partials/footerUV %> 
+<a href="http://localhost:9006/test/fileDownloader" download="true.mov">Test DL File</a><br><br>
+
+<a href="https://cdnapisec.kaltura.com/p/2357732/sp/0/playManifest/entryId/0_u131t2ex/format/url/protocol/https/flavorParamId/0_40uy2cu1/video.mp4" download="true.mp4">Test DL File Kaltura</a><br><br>
+
+<a href="http://localhost:9006/datastream/409b95db-c828-4ca3-92ad-85b6967a887c/object" download="true.jpg">Test DL File DDUDS</a><br><br>
+

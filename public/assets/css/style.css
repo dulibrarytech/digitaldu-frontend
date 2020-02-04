@@ -53,6 +53,14 @@ h2, h4 {
   -webkit-margin-after: 0px;
 }
 
+button > a {
+  color: inherit;
+}
+
+button > a:hover {
+  text-decoration: none;
+}
+
 a:hover,
 button:hover {
     cursor: pointer;
@@ -1187,6 +1195,16 @@ div.object-options button:hover {
 
 div.object-options button:focus {
   outline: none;
+}
+
+div#download-links {
+  display: none;
+  margin-top: 30px;
+}
+
+.disabledbutton {
+    pointer-events: none;
+    opacity: 0.4;
 }
 
 div.mods-display {

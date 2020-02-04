@@ -40,6 +40,10 @@ $( document ).ready(function() {
 			$("#transcript-view-wrapper").css("display", "none");
   		}
   	});
+
+  	$("#file-download").click(function(event) {
+  		$("#download-links").css("display", "block");
+	});
 });
 
 
