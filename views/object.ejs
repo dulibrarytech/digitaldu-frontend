@@ -79,4 +79,10 @@
 
 </div>
 
+<% if(devError) { %>
+  <script>
+    console.log("<%= devError %>");
+  </script>
+<% } %>
+
 <% include partials/footer %>

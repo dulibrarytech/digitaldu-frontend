@@ -212,6 +212,7 @@ exports.renderObjectView = function(req, res) {
 		summary: null,
 		metadata: {},
 		error: null,
+		devError: null,
 		transcript: null,
 		downloadLinks: [],
 		root_url: config.rootUrl
@@ -221,12 +222,15 @@ exports.renderObjectView = function(req, res) {
 	Service.fetchObjectByPid(config.elasticsearchPublicIndex, pid, function(error, response) {
 		if(error) {
 			data.error = config.viewerErrorMessage;
+			data.devError = error;
 			console.error(error);
 			res.render('object', data);
 		}
 		else if(response == null) {
-			data.error = config.viewerErrorMessage;
-			console.log("Object not found, can not display viewer: " + pid);
+			let msg = "Object not found ";
+			data.error = msg;
+			data.devError = msg + pid;
+			console.log(msg + pid);
 			res.render('object', data);
 		}
 		else {
@@ -242,14 +246,16 @@ exports.renderObjectView = function(req, res) {
 				data.viewer = CompoundViewer.getCompoundObjectViewer(object, part);
 				if(data.viewer.length <= 0) {
 					data.error = config.viewerErrorMessage;
+					data.devError = "Compound object viewer error";
 				}
 			}
 
 			// Render single object
 			else {
 				if(part > 0) {
-					data.error = config.viewerErrorMessage;
-					console.log("Object not found: " + pid)
+					let msg = "Object not found: " + pid;
+					data.error = msg;
+					console.log(msg)
 				}
 				else {
 	
@@ -257,7 +263,7 @@ exports.renderObjectView = function(req, res) {
 					data.viewer = Viewer.getObjectViewer(object);
 					if(data.viewer == "") {
 						data.error = config.viewerErrorMessage;
-						console.log("Object not found: " + pid);
+						data.devError = "Object viewer error";
 					}
 				}
 			}
@@ -269,7 +275,6 @@ exports.renderObjectView = function(req, res) {
 				object.type = Helper.normalizeLabel("Type", object.type || "")
 				data.metadata = Object.assign(data.metadata, Metadata.createMetadataDisplayObject(object, collectionTitles));
 				data.id = pid;
-				// data.fileExtension = AppHelper.getFileExtensionForMimeType(object.mime_type || "")
 				data.downloadLinks = AppHelper.getFileDownloadLinks(object);
 				res.render('object', data);
 			});
@@ -438,7 +443,8 @@ exports.getObjectViewer = function(req, res) {
 		pid = req.params.pid,
 		index = config.elasticsearchPublicIndex,
 		key = null,
-		script = "";
+		script = "",
+		errors = "";
 
 	// If a valid api key is passed in with the request, get data from the the private index
 	if(req.query.key && req.query.key == config.apiKey) {
@@ -449,11 +455,11 @@ exports.getObjectViewer = function(req, res) {
 	Service.fetchObjectByPid(index, pid, function(error, object) {
 		if(error) {
 			console.error(error);
-			viewer += "Viewer error";
+			errors += "Viewer error";
 		}
 		else if(object == null) {
-			console.log("Object not found, can not display viewer: " + pid);
-			viewer += "Object not found";
+			console.log("Object not found: " + pid);
+			errors += "Object not found";
 		}
 		else {
 			var part = req.params.index && isNaN(parseInt(req.params.index)) === false ? req.params.index : 0;
@@ -461,23 +467,33 @@ exports.getObjectViewer = function(req, res) {
 			if(AppHelper.isParentObject(object)) {viewer += CompoundViewer.getCompoundObjectViewer(object, part, key)}
 			// Render single object
 			else {
-				if(part > 0) {console.log("Object not found, can not display viewer: ", pid)}
-				else {viewer += Viewer.getObjectViewer(object, null, key)}
+				if(part > 0) {
+					let msg = "Object not found: ", pid;
+					console.error(msg)
+					errors = msg;
+				}
+				else {
+					let objViewer = Viewer.getObjectViewer(object, null, key);
+					if(objViewer.length <= 0) {
+						errors = "Can not get object viewer"
+					}
+					else { viewer += objViewer }
+				}
 			}
-		}
 
-		// Add transcript viewer if a transcript is present in the record
-		if(object.transcript && object.transcript.length > 0) {
-			viewer += "<div id='transcript-view-wrapper' style='display: block;'><div id='transcript-view'>";
-			viewer += object.transcript;
-			viewer += "</div></div>";
-			script = "$('#uv').css('height', '72%')";
+			// Add transcript viewer if a transcript is present in the record
+			if(object.transcript && object.transcript.length > 0) {
+				viewer += "<div id='transcript-view-wrapper' style='display: block;'><div id='transcript-view'>";
+				viewer += object.transcript;
+				viewer += "</div></div>";
+				script = "$('#uv').css('height', '72%')";
+			}
+			viewer += "</div>";
 		}
-		viewer += "</div>";
 
 		// Render page
 		res.render('page', {
-			error: null,
+			error: errors,
 			root_url: config.rootUrl,
 			content: viewer,
 			script: script

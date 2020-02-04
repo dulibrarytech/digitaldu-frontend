@@ -40,7 +40,7 @@ exports.getObjectViewer = function(object, mimeType="", apikey=null) {
  	apikey = apikey ? ("?key=" + apikey) : "";
 
  	if(object == null) {
- 		console.log("Viewer says: null object");
+ 		console.log("Null object, viewer can not render");
  		return viewer;
  	}
 
