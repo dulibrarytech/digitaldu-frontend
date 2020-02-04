@@ -265,7 +265,8 @@ exports.renderObjectView = function(req, res) {
 				object.type = Helper.normalizeLabel("Type", object.type || "")
 				data.metadata = Object.assign(data.metadata, Metadata.createMetadataDisplayObject(object, collectionTitles));
 				data.id = pid;
-				data.fileExtension = AppHelper.getFileExtensionForMimeType(object.mime_type || "")
+				// data.fileExtension = AppHelper.getFileExtensionForMimeType(object.mime_type || "")
+				data.downloadLinks = AppHelper.getFileDownloadLinks(object);
 				res.render('object', data);
 			});
 		}
@@ -498,6 +499,7 @@ exports.downloadObjectFile = function(req, res) {
 		pid = pid.split(config.compoundObjectPartID,1)[0];
 	}
 
+		console.log("TEST controller downloadObjectFile: pid, part:", pid, part);
 	Service.getDatastream(config.elasticsearchPublicIndex, pid, "object", part, "", function(error, stream) {
 		if(error || !stream) {
 			console.log(error || "Can not retrieve datastream");
