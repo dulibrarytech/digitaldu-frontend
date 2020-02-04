@@ -1,7 +1,7 @@
 <% include partials/header %>
 <% include partials/title-banner %>
 
-<div id="viewer-section">
+<div id="viewer-section" class="<% if(error) { %>object-view-error<% } %>">
   <% if(error) { %>
     <h5><%- error %></h5>
   <% } %>

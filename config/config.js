@@ -143,6 +143,11 @@ module.exports = {
     largeImageViewer: "universalviewer",
 
     /* 
+     * Message to display in the object viewer if the object can not be rendered. Can be html
+     */
+    viewerErrorMessage: "Sorry, this object could not be rendered. <br><br>Please contact <a href='mailto:archives@du.edu'>archives@du.edu</a> if you have any questions about accessing this object.",
+
+    /* 
      * Viewer to display compound objects
      * At this point, multiple compound viewers can not be configured.  
      * [ universalviewer ]

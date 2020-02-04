@@ -785,6 +785,14 @@ div.viewer-wrapper div {
     padding: 0;
 }
 
+div#viewer-section.object-view-error {
+  padding: 50px 0;
+}
+
+div#viewer-section.object-view-error a {
+  color: blue;
+}
+
 div#pdf-viewer > iframe {
     width: 90%;
     height: 800px;

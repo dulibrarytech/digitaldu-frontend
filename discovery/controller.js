@@ -213,19 +213,20 @@ exports.renderObjectView = function(req, res) {
 		metadata: {},
 		error: null,
 		transcript: null,
+		downloadLinks: [],
 		root_url: config.rootUrl
 	},
 	pid = req.params.pid || "";
 
 	Service.fetchObjectByPid(config.elasticsearchPublicIndex, pid, function(error, response) {
 		if(error) {
-			data.error = error;
+			data.error = config.viewerErrorMessage;
 			console.error(error);
 			res.render('object', data);
 		}
 		else if(response == null) {
-			data.error = "Object not found: " + pid;
-			console.log("Object not found, can not display viewer: ", pid);
+			data.error = config.viewerErrorMessage;
+			console.log("Object not found, can not display viewer: " + pid);
 			res.render('object', data);
 		}
 		else {
@@ -239,21 +240,24 @@ exports.renderObjectView = function(req, res) {
 			// Render a parent object with child objects
 			if(AppHelper.isParentObject(object)) {
 				data.viewer = CompoundViewer.getCompoundObjectViewer(object, part);
+				if(data.viewer.length <= 0) {
+					data.error = config.viewerErrorMessage;
+				}
 			}
 
 			// Render single object
 			else {
 				if(part > 0) {
-					data.error = "Object not found";
-					res.render('object', data);
+					data.error = config.viewerErrorMessage;
+					console.log("Object not found: " + pid)
 				}
 				else {
 	
 					// Get viewer
 					data.viewer = Viewer.getObjectViewer(object);
 					if(data.viewer == "") {
-						console.log("Object not found, can not display viewer: ", pid);
-						data.error = "Viewer is unavailable for this object.";
+						data.error = config.viewerErrorMessage;
+						console.log("Object not found: " + pid);
 					}
 				}
 			}
