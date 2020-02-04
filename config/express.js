@@ -50,7 +50,11 @@ module.exports = function () {
     require('../discovery/routes.js')(app);
     require('../search/routes.js')(app);
     require('../specialcollections/routes.js')(app);
-    // require('../test/routes.js')(app);
+
+    if(process.env.ENABLE_TEST && process.env.ENABLE_TEST == "true" && process.env.NODE_ENV === 'development') {
+            console.log("TEST here")
+        require('../test/routes.js')(app);
+    }
     
     // Express dependencies
     require('express-template-cache');

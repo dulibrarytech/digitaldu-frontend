@@ -46,6 +46,7 @@ All other content is released under [CC-BY-4.0](https://creativecommons.org/lice
         NODE_TLS_REJECT_UNAUTHORIZED=1
         APP_HOST={nodejs app domain}
         APP_PORT={nodejs app port}
+        ENABLE_TEST={if true and NODE_ENV is set to 'development': will include express router in /test folder}
         API_KEY={frontend api key}
         CLIENT_HOST={client domain - same as APP_HOST + APP_PORT unless dns is registered for client domain}
         # Use leading slash
