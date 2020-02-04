@@ -182,25 +182,46 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
     }
   }
 
-  // Request a non-thumbnail datastream
+  // Request a non-thumbnail datastream. Streaming from Kaltura is not yet implemented
   else {
     var extension = AppHelper.getFileExtensionForMimeType(mimeType);
+
+    // File does not exist in local cache. Stream it from remote source
     if(Cache.exists('object', objectID, extension) == false) {
-      Repository.streamData(object, datastreamID, function(error, stream) {
-        if(error || !stream) {
-          callback("Repository stream data error: " + (error || "Resource not found for " + objectID), null);
-        }
-        else {
-            if(config.objectDerivativeCacheEnabled == true) {
-              Cache.cacheDatastream('object', objectID, stream, extension, function(error) {
-                if(error) {console.error("Could not create object file for", objectID, error)}
-                else {console.log("Object file created for", objectID)}
-              });
-            }
-            callback(null, stream);
+
+      // Stream data from Kaltura server
+      if(object.mime_type && 
+        (config.objectTypes["audio"].includes(object.mime_type)) || (object.mime_type && config.objectTypes["video"].includes(object.mime_type)) &&
+        (object.entry_id && object.entry_id.length > 0)) {
+
+          let kalturaStreamUri = Kaltura.getStreamingMediaUrl(object.entry_id, extension);
+            console.log("TEST streaming from kaltura: uri is", kalturaStreamUri)
+
+          streamRemoteData(kalturaStreamUri, function(error, status, stream) {
+              callback(null, stream);
+          });
+      }
+
+      // Stream data from the repository
+      else {
+        Repository.streamData(object, datastreamID, function(error, stream) {
+          if(error || !stream) {
+            callback("Repository stream data error: " + (error || "Resource not found for " + objectID), null);
           }
-      });
+          else {
+              if(config.objectDerivativeCacheEnabled == true) {
+                Cache.cacheDatastream('object', objectID, stream, extension, function(error) {
+                  if(error) {console.error("Could not create object file for", objectID, error)}
+                  else {console.log("Object file created for", objectID)}
+                });
+              }
+              callback(null, stream);
+            }
+        });
+      }
     }
+
+    // Stream from local cache
     else {
       Cache.getFileStream('object', objectID, extension, function(error, stream) {
         if(error) {
@@ -215,7 +236,7 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
 }
 
 /**
- * Request data from uri
+ * Request data stream from uri
  *
  * @param {String} uri - Uri of data source
  *
@@ -227,19 +248,49 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
  * @return {undefined}
  */
 var streamRemoteData = function(uri, callback) {
+    console.log("TEST srd rs", uri)
   rs(uri, {}, function(err, res) {
     if(err) {
+        console.log("TEST dsfetch req err", err)
       callback("Could not open datastream. " + err, null, null);
     }
     else {
       if(res.socket.bytesRead < 500) {
+          console.log("TEST < 500")
         callback(null, 204, null);
       }
       else {
+          console.log("TEST dsstream req ok, returning body")
         callback(null, res.statusCode, res);
       }
     }
   });
+}
+
+/**
+ * Request data from uri
+ *
+ * @param {String} uri - Uri of data source
+ *
+ * @callback callback
+ * @param {String|null} - Error message or null
+ * @param {http status code|null} - Response status code, Null if error
+ * @param {response|null} Response data, Null if error
+ *
+ * @return {undefined}
+ */
+var fetchRemoteData = function(uri, callback) {
+      console.log("TEST frd request", uri)
+    request(uri, function(error, response, body) {
+      if(error) {
+          console.log("TEST dsfetch req err", error)
+        callback(error, null);
+      }
+      else {
+          console.log("TEST dsfetch req ok, returning body")
+        callback(null, body);
+      }
+    });
 }
 
 /**

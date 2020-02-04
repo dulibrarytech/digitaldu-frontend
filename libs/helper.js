@@ -14,7 +14,8 @@
 	limitations under the License.
 */
 
-var config = require('../config/' + process.env.CONFIGURATION_FILE);
+const config = require('../config/' + process.env.CONFIGURATION_FILE);
+const Kaltura = require('../libs/kaltura');
 
 /*
  * 
@@ -63,12 +64,52 @@ exports.getCompoundObjectPart = function(object, partIndex) {
 	return objectPart;
 }
 
-exports.getFileExtensionForMimeType = function(mimeType) {
-	var extension = "";
-	for(extension in config.fileExtensions) {
-      if(config.fileExtensions[extension].includes(mimeType)) {
+/**
+ * Return the file extension that a mimetype is associated with
+ *
+ * @param {String} mimeType - Object mime type (ex "audio/mp3")
+ * @return {String} file extension
+ */
+var getFileExtensionForMimeType = function(mimeType) {
+	var extension = "file";
+	for(key in config.fileExtensions) {
+      if(config.fileExtensions[key].includes(mimeType)) {
+      	extension = key;
         break;
       }
     }
     return extension;
+}
+exports.getFileExtensionForMimeType = getFileExtensionForMimeType;
+
+ /**
+ * Finds the DDU object type that corresponds with an object's mime type
+ *
+ * @param {String} mimeType - Object mime type (ex "audio/mp3")
+ * @return {String} DDU object type
+ */
+var getObjectType = function(mimeType) {
+  let type = "";
+  for(var key in config.objectTypes) {
+    if(config.objectTypes[key].includes(mimeType)) {
+      type = key;
+    }
+  }
+  return type;
+}
+exports.getObjectType = getObjectType;
+
+ /**
+ * TODO: Determine available file download formats (via config or object properties. Only access config file here)
+ *
+ * @param {Object} object - DDU Elastic index doc
+ * @return {Array.<String>} Array of download link uris
+ */
+exports.getFileDownloadLinks = function(object) {
+	// Get extension/extensions avail
+		console.log("TEST object", object)
+	// Test
+	let uri = config.rootUrl + "/download/" + object.pid + "/" + "mp4";
+		console.log("TEST uri", uri)
+	return [uri];
 }

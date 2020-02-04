@@ -44,7 +44,6 @@ exports.getCompoundObjectViewer = function(object, part, apikey=null) {
  	}
 
  	apikey = apikey ? ("?key=" + apikey) : "";
-
  	if(validateCompoundObject(object)) {
  		// Get viewer for object mime type:
 	 	switch(config.compoundObjectViewer) {

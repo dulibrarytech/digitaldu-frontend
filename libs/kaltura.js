@@ -24,7 +24,7 @@
 'use strict';
 
 const config = require('../config/' + process.env.CONFIGURATION_FILE),
-	domain = "https://cdnapisec.kaltura.com";
+	  domain = "https://cdnapisec.kaltura.com";
 
 /**
  * 
@@ -49,6 +49,7 @@ exports.getViewerContent = function(object) {
  	}
  	html += "<iframe id='kaltura_player_1559861164' src='" + domain + "/p/" + partner_id + "/sp/" + partner_id + '00' + "/embedIframeJs/uiconf_id/" + uiconf_id + "/partner_id/" + partner_id + "?iframeembed=true&playerId=" + unique_object_id + "&entry_id=" + entry_id + "&flashvars[leadWithHTML5]=true' width='" + width + "' height='" + height + "' allowfullscreen webkitallowfullscreen mozAllowFullScreen allow='autoplay *; fullscreen *; encrypted-media *' frameborder='0'></iframe>";
  	html += "</div>";
+
  	return html;
 }
 
@@ -66,3 +67,13 @@ exports.getThumbnailUrl = function(object) {
 
 	return domain + "/p/" + partner_id + "/thumbnail/entry_id/" + entry_id + "/width/" + width + "/height/" + height;
 }
+
+exports.getStreamingMediaUrl = function(entryid, extension) {
+ 	return "https://cdnapisec.kaltura.com/p/2357732/sp/0/playManifest/entryId/" + entryid + "/format/url/protocol/https/flavorParamId/0_40uy2cu1/video" + "." + extension;
+
+ 	// Audio test
+ 	//return "https://cdnapisec.kaltura.com/p/2357732/sp/0/playManifest/entryId/0_4up3d6fk/format/url/protocol/https/flavorParamId/0_40uy2cu1/video.mp4"
+
+ 	// Video test
+ 	//return "https://cdnapisec.kaltura.com/p/2357732/sp/0/playManifest/entryId/0_yc2k9s2f/format/url/protocol/https/flavorParamId/0_40uy2cu1/video.mp4"
+ }

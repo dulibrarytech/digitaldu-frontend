@@ -229,20 +229,4 @@ exports.getDsType = function(mimeType) {
   return datastream;
 }
 
- /**
- * Finds the DDU object type that corresponds with an object's mime type
- *
- * @param {String} mimeType - Object mime type (ex "audio/mp3")
- * @return {String} DDU object type
- */
-exports.getObjectType = function(mimeType) {
-  let type = "";
-  for(var key in config.objectTypes) {
-    if(config.objectTypes[key].includes(mimeType)) {
-      type = key;
-    }
-  }
-  return type;
-}
-
 
