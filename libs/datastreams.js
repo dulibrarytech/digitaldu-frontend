@@ -195,10 +195,9 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
         (object.entry_id && object.entry_id.length > 0)) {
 
           let kalturaStreamUri = Kaltura.getStreamingMediaUrl(object.entry_id, extension);
-            console.log("TEST streaming from kaltura: uri is", kalturaStreamUri)
-
           streamRemoteData(kalturaStreamUri, function(error, status, stream) {
-              callback(null, stream);
+            if(error) { callback(error, null) }
+            else { callback(null, stream) }
           });
       }
 
@@ -211,8 +210,8 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
           else {
               if(config.objectDerivativeCacheEnabled == true) {
                 Cache.cacheDatastream('object', objectID, stream, extension, function(error) {
-                  if(error) {console.error("Could not create object file for", objectID, error)}
-                  else {console.log("Object file created for", objectID)}
+                  if(error) { console.error("Could not create object file for", objectID, error) }
+                  else { console.log("Object file created for", objectID) }
                 });
               }
               callback(null, stream);
@@ -248,19 +247,15 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
  * @return {undefined}
  */
 var streamRemoteData = function(uri, callback) {
-    console.log("TEST srd rs", uri)
   rs(uri, {}, function(err, res) {
     if(err) {
-        console.log("TEST dsfetch req err", err)
       callback("Could not open datastream. " + err, null, null);
     }
     else {
       if(res.socket.bytesRead < 500) {
-          console.log("TEST < 500")
         callback(null, 204, null);
       }
       else {
-          console.log("TEST dsstream req ok, returning body")
         callback(null, res.statusCode, res);
       }
     }
@@ -280,14 +275,11 @@ var streamRemoteData = function(uri, callback) {
  * @return {undefined}
  */
 var fetchRemoteData = function(uri, callback) {
-      console.log("TEST frd request", uri)
     request(uri, function(error, response, body) {
       if(error) {
-          console.log("TEST dsfetch req err", error)
         callback(error, null);
       }
       else {
-          console.log("TEST dsfetch req ok, returning body")
         callback(null, body);
       }
     });

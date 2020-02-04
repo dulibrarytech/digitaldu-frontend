@@ -499,19 +499,6 @@ exports.downloadObjectFile = function(req, res) {
 		pid = pid.split(config.compoundObjectPartID,1)[0];
 	}
 
-		console.log("TEST controller downloadObjectFile: pid, part:", pid, part);
-	Service.getDatastream(config.elasticsearchPublicIndex, pid, "object", part, "", function(error, stream) {
-		if(error || !stream) {
-			console.log(error || "Can not retrieve datastream");
-			res.sendStatus(404);
-		}
-		else {
-			res.set('Accept-Ranges', 'bytes');
-			if(stream.headers && stream.headers["content-type"]) {
-				res.set('Content-Type', stream.headers["content-type"]);
-			}
-			stream.pipe(res);
-		}
-	});
+	// TODO request uri
 }
 

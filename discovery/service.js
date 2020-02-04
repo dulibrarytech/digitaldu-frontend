@@ -373,12 +373,9 @@ exports.getFacets = getFacets;
  * @param {Object|null} Data stream Null if error
  */
 exports.getDatastream = function(indexName, objectID, datastreamID, part, authKey, callback) {
-    console.log("TEST service getds");
   fetchObjectByPid(indexName, objectID, function(error, object) {
     if(object) {
-        console.log("TEST service getds: object:", object);
       Datastreams.getDatastream(object, objectID, datastreamID, part, authKey, function(error, stream) {
-          console.log("TEST service getds: have stream", !stream ? "null" : "notnull")
         callback(error, stream);
       });
     }
@@ -621,50 +618,3 @@ var getCollectionList = function(callback) {
       }
   });
 }
-
-// exports.downloadFile = function(pid, callback) {
-//     console.log("TEST dl file service pid in: ",pid)
-//   // Get index if priv allowed
-//   let index = config.elasticsearchPublicIndex;
-//   fetchObjectByPid(index, pid, function(error, response) {
-//     if(error) {
-//       callback(error, null);
-//     }
-//     else {
-//         console.log("TEST ret. object:", response)
-
-//       let url = Kaltura.getStreamingMediaUrl(response.entry_id || "", extension);
-//       var extension = AppHelper.getFileExtensionForMimeType(response.mime_type);
-//         console.log("TEST url is", url)
-//         console.log("TEST ext is", extension)
-
-//       const request = require('request');
-//       request(url, function(error, response, body) {
-//         if(error) {
-//             console.log("TEST req err", error)
-//           callback(error, null);
-//         }
-//         else {
-//             console.log("TEST req ok, returning body")
-//           callback(null, body);
-//         }
-//       });
-
-//       // let rs = require('request-stream')
-//       // rs(url, {}, function(err, res) {
-//       //   if(err) {
-//       //     callback("Could not open datastream. " + err + " Check connection to repository", null);
-//       //   }
-//       //   else {
-//       //     if(res.statusCode == 200) {
-//       //       callback(null, res);
-//       //     } 
-//       //     else {
-//       //       callback(null, null);
-//       //     }
-//       //   }
-//       // });
-//     }
-//   });
-//
-// }
