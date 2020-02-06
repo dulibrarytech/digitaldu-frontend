@@ -78,7 +78,7 @@ exports.getObjectViewer = function(object, mimeType="", apikey=null) {
  			break;
 
  		default:
- 			console.log("Viewer error: invalid content model:", mimeType, "for pid:", object.pid);
+ 			console.log("Viewer error: invalid mimetype:", mimeType, "for pid:", object.pid);
  			viewer = "";
  			break;
  	}

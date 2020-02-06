@@ -57,7 +57,7 @@ exports.getCompoundObjectViewer = function(object, part, apikey=null) {
 	 	}
  	}
  	else {
- 		console.log("Viewer error: Invalid compound object parts");
+ 		console.log("Viewer error: Invalid compound object parts. Pid: ", + object.pid);
  	}
 
  	return viewer;
