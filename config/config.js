@@ -241,7 +241,6 @@ module.exports = {
     defaultThumbnailImage: "tn-placeholder.jpg",
     thumbnailImageCacheEnabled: true,
     thumbnailImageCacheLocation: "cache/thumbnail/",
-
     objectDerivativeCacheEnabled: false,
     objectDerivativeCacheLocation: "cache/object/",
 
@@ -349,16 +348,17 @@ module.exports = {
      *          {"label": "Subject", "id": "subject", "field": "subjects.terms", "matchField": "subjects.terms.type", "matchTerm": "topic", "isNestedType": "true"} 
      */ 
     searchAllFields: [
-        {"label": "Title", "id": "title", "field": "title", "boost": "1"},
+        {"label": "Title", "id": "title", "field": "title", "boost": "5"},
         {"label": "Collection", "id": "collection", "field": "is_member_of_collection"},
         {"label": "Creator", "id": "creator", "field": "creator", "boost": "3"},
         {"label": "Subject", "id": "subject", "field": "f_subjects", "boost": "2"},
         {"label": "Topic", "id": "topic", "field": "display_record.subjects.terms.term", "matchField": "display_record.subjects.terms.type", "matchTerm": "topical"},
-        {"label": "Type", "id": "type", "field": "type", "boost": "2"},
-        {"label": "Description", "id": "description", "field": "abstract", "boost": "3"},
-        {"label": "Language", "id": "language", "field": "display_record.t_language.text", "boost": "5"},
+        {"label": "Type", "id": "type", "field": "type", "boost": "3"},
+        {"label": "Description", "id": "description", "field": "abstract", "boost": "4"},
+        {"label": "Language", "id": "language", "field": "display_record.t_language.text", "boost": "1"},
         {"label": "Creation Date", "id": "create_date", "field": "display_record.dates.expression", "isNestedType": "true", "matchField": "display_record.dates.label", "matchTerm": "creation"},
-        {"label": "Call Number", "id": "call_number", "field": "display_record.identifiers.identifier", "isNestedType": "true", "matchField": "display_record.identifiers.type", "matchTerm": "local"}
+        {"label": "Call Number", "id": "call_number", "field": "display_record.identifiers.identifier", "isNestedType": "true", "matchField": "display_record.identifiers.type", "matchTerm": "local"},
+        {"label": "Transcript", "id": "transcript", "field": "transcript"}
     ],
 
     /*
@@ -387,7 +387,8 @@ module.exports = {
         {"Language": "language"},
         {"Call Number": "call_number"},
         {"Topic": "topic"},
-        {"Collection": "collection"}
+        {"Collection": "collection"},
+        {"Transcript Text": "transcript"}
     ],
 
     /*
