@@ -16,6 +16,7 @@
 
 const config = require('../config/' + process.env.CONFIGURATION_FILE);
 const Kaltura = require('../libs/kaltura');
+const sanitizeHtml = require('sanitize-html');
 
 /*
  * 
@@ -40,6 +41,23 @@ exports.isObjectEmpty = function(object) {
             return false;
     }
     return true;
+}
+
+exports.removeHtmlEntities = function(string) {
+	return string.replace(/&amp;/g, "").replace(/&lt;/g, "").replace(/&gt;/g, "").replace(/&quot;/g, "");
+}
+
+exports.sanitizeHttpParamsObject = function(object) {
+	for(var key in object) {
+		if(typeof object[key]) {
+			for(index in object[key]) {
+				object[key][index] = sanitizeHtml(object[key][index]);
+			}
+		}
+		else {
+			object[key] = sanitizeHtml(object[key]);
+		}
+	}
 }
 
 exports.getCompoundObjectPart = function(object, partIndex) {
