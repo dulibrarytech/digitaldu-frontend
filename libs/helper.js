@@ -49,9 +49,16 @@ exports.removeHtmlEntities = function(string) {
 
 exports.sanitizeHttpParamsObject = function(object) {
 	for(var key in object) {
-		if(typeof object[key]) {
+		if(typeof object[key] == 'object') {
 			for(index in object[key]) {
-				object[key][index] = sanitizeHtml(object[key][index]);
+				if(key == "f") {
+					for(facet in object[key][index]) {
+						object[key][index][facet] = sanitizeHtml(object[key][index][facet]);
+					}
+				}
+				else {
+					object[key][index] = sanitizeHtml(object[key][index]);
+				}
 			}
 		}
 		else {
