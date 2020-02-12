@@ -73,18 +73,9 @@ exports.search = function(req, res) {
 			to: req.query.to || new Date().getFullYear()
 		} : null;
 
-		// Collections API Update:
-		// Crosswalk params from ddu, or update search form params
-		// Make GET request to API /search
-
 	let sortBy = Helper.getSortDataArray(sort);
 	let queryData = Helper.getSearchQueryDataObject(query, field, type, bool);
 	Service.searchIndex(queryData, facets, collection, page, pageSize, daterange, sortBy, advancedSearch, function(error, response) {
-
-		// Collections API update:
-		// Have only ES results obj from API response here
-		// Update data obj below to not access req. data directly
-		// Move any search module data processing (on es data object) to here, from the search module
 
 		// Assign view data
 		var data = {
@@ -99,6 +90,7 @@ exports.search = function(req, res) {
 			view: req.query.view || config.defaultSearchResultsView || "list",
 			sortType: req.query.sort || "relevance",
 			isAdvancedSearch: advancedSearch,
+			pagination: null,
 			options: {}
 		};
 
@@ -137,7 +129,7 @@ exports.search = function(req, res) {
 				Format.formatFacetBreadcrumbs(facets, function(error, facets) {
 					// Add facets returned from the search to the view data
 					data.facets = Facets.create(facetList, config.rootUrl, showAll, expandFacets);
-					data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(facets, daterange, config.rootUrl);			
+					data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(facets, daterange, config.rootUrl);		
 					return res.render('results', data);
 				});
 			});

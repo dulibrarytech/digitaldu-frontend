@@ -1008,10 +1008,14 @@ form#daterange-form {
   width: 100%;
 }
 
-form#daterange-form input {
+form#daterange-form input:not(.daterange-slider) {
   margin: 0 4% 0 2%;
   width: 25%;
   font-size: 13px;
+}
+
+input.daterange-slider {
+  width: 80%;
 }
 
 form#daterange-form label {

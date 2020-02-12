@@ -54,33 +54,30 @@
 	</div>
 </div>
 
-<!-- Custom advanced search form behavior -->
 <script src="<%- root_url %>/assets/js/advanced-search.js"></script>
 <script>
-	// Handle form element events
 	var onChangeAdvSearchTypeSel = function(element) {
-		// Init autocomplete data for query input
 		let autocompleteData = <%- autocompleteData %>;
 		changeAdvSearchTypeSel(element, autocompleteData);
 	}
 
-	// Add form events
 	$( document ).ready(function() {
-
-		// Add a form row for another query
 		$("#add-query-button").click(function(event) {
 			addFormRow();
 		});
 		
-		// Submit handler
 		$("#advanced-search-submit").click(function(event) {
-			// Preserve form data
 			storeFormData();
-
 			var autocompleteData = <%- autocompleteData %>;
 			updateFormFieldValues(autocompleteData);
 
-			// Submit updated form data to /search
+			let element;
+			for(var index in $(".advanced-search-box")) {
+				if(isNaN(index) == false) {
+					element = $(".advanced-search-box")[index];
+					$(element).val(DOMPurify.sanitize($(element).val()));
+				}
+			}
 			$("#advanced-search").submit();
 		});
 	});

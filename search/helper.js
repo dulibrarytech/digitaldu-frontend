@@ -345,3 +345,7 @@ exports.updateQueryTermsForField = function(terms="", field, type, bool) {
   }
   return terms;
 }
+
+exports.sanitizeRequestQueryParams = function(requestQueryObj) {
+
+}
