@@ -8,7 +8,6 @@
 
 const config = require('../config/' + process.env.CONFIGURATION_FILE),
   rs = require('request-stream'),
-  request = require('request'),
   fs = require('fs'),
   Repository = require('../libs/repository'),
   Helper = require('../libs/helper'),
@@ -47,6 +46,7 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
  * @return {undefined}
  */
 exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, callback) {
+    console.log("TEST in getDatastream(): dsid, part:", datastreamID, part)
   var mimeType = object.mime_type || object.type || null;
   // If there is a part value, retrieve the part data.  Redefine the object data with the part data
   if(part && isNaN(part) === false) {
@@ -71,7 +71,6 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
   // Request a thumbnail datastream
   if(datastreamID == "tn") {
     // Check for a cached image
-    //var tnPath = config.thumbnailImageCacheLocation + objectID + config.thumbnailFileExtension;
     if(Cache.exists('thumbnail', objectID) == false) {
       let fileType = "default";
       if(Helper.isParentObject(object)) {
@@ -195,9 +194,13 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
         (object.entry_id && object.entry_id.length > 0)) {
 
           let kalturaStreamUri = Kaltura.getStreamingMediaUrl(object.entry_id, extension);
+            console.log("TEST streaming from kaltura: uri is", kalturaStreamUri)
           streamRemoteData(kalturaStreamUri, function(error, status, stream) {
-            if(error) { callback(error, null) }
-            else { callback(null, stream) }
+            if(error) { console.log("TEST A err", error); callback(error, null) }
+            else { 
+              let str = stream ? "not null" : "null"
+              callback(null, stream) 
+            }
           });
       }
 
@@ -205,7 +208,7 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
       else {
         Repository.streamData(object, datastreamID, function(error, stream) {
           if(error || !stream) {
-            callback("Repository stream data error: " + (error || "Resource not found for " + objectID), null);
+            callback("Repository stream data error: " + (error || "Path to resource not found. Pid:" + objectID), null);
           }
           else {
               if(config.objectDerivativeCacheEnabled == true) {
@@ -247,15 +250,18 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
  * @return {undefined}
  */
 var streamRemoteData = function(uri, callback) {
-  rs(uri, {}, function(err, res) {
+  rs(uri, {followRedirects: true}, function(err, res) {
     if(err) {
+        console.log("TEST dsfetch req err", err)
       callback("Could not open datastream. " + err, null, null);
     }
     else {
       if(res.socket.bytesRead < 500) {
+          console.log("TEST < 500", res.body)
         callback(null, 204, null);
       }
       else {
+          console.log("TEST dsstream req ok, returning body")
         callback(null, res.statusCode, res);
       }
     }
@@ -275,14 +281,20 @@ var streamRemoteData = function(uri, callback) {
  * @return {undefined}
  */
 var fetchRemoteData = function(uri, callback) {
-    request(uri, function(error, response, body) {
-      if(error) {
-        callback(error, null);
-      }
-      else {
-        callback(null, body);
-      }
-    });
+      console.log("TEST frd request", uri)
+
+    // TODO request is depriciated, replace with another lib?
+    // request(uri, function(error, response, body) {
+    //   if(error) {
+    //       console.log("TEST dsfetch req err", error)
+    //     callback(error, null);
+    //   }
+    //   else {
+    //       console.log("TEST dsfetch req ok, returning body", response.headers)
+    //     callback(null, response);
+    //   }
+    // });
+
 }
 
 /**
