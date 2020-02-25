@@ -40,7 +40,7 @@ $( document ).ready(function() {
   		$("#download-links").css("display", "block");
 	});
 
-	$(".searchform button").click(function(event) {
+	$("#home-search button").click(function(event) {
 		event.preventDefault();
 		$("#searchbox").val(DOMPurify.sanitize($("#searchbox").val()));
 		$("#home-search").submit();
