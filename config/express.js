@@ -25,6 +25,7 @@
 
 var http = require('http'),
     express = require('express'),
+    helmet = require('helmet'),
     bodyParser = require('body-parser'),
     config = require('./config.js');
 
@@ -43,6 +44,17 @@ module.exports = function () {
     }));
     app.use(bodyParser.json());
 
+    app.use(helmet());
+    app.use(helmet.noCache());
+    app.use(helmet.contentSecurityPolicy({
+      directives: {
+        defaultSrc: ["'self'", config.IIIFServerUrl, config.repositoryDomain, 'cdnapisec.kaltura.com', 'data:', 'blob:', 'www.du.edu', 'fonts.gstatic.com', 'use.fontawesome.com'],
+        styleSrc: ["'self'", "'unsafe-inline'", 'maxcdn.bootstrapcdn.com', 'use.fontawesome.com', 'vjs.zencdn.net', 'code.jquery.com', 'fonts.googleapis.com'],
+        scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'vjs.zencdn.net', 'use.fontawesome.com', 'code.jquery.com'],
+        fontSrc: ["'self'", 'data:', 'fonts.gstatic.com', 'use.fontawesome.com']
+      }
+    }))
+
     app.use(express.static('./public'));
     app.set('views', './views');
     app.set('view engine', 'ejs');
@@ -52,13 +64,12 @@ module.exports = function () {
     require('../specialcollections/routes.js')(app);
 
     if(process.env.ENABLE_TEST && process.env.ENABLE_TEST == "true" && process.env.NODE_ENV === 'development') {
+        console.log("Test route enabled");
         require('../test/routes.js')(app);
     }
     
-    // Express dependencies
     require('express-template-cache');
 
-    // Root route to landing page
     app.route('/')
         .get(function(req, res) {
             res.redirect(config.rootUrl);
