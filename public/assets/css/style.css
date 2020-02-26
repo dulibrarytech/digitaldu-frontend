@@ -292,7 +292,7 @@ div#main-wrapper {
 }
 
 div#frontpage-content {
-  margin-top: 100px;
+  margin-top: 65px;
 }
 
 main > .wrapper {
@@ -471,7 +471,6 @@ div.banner-search form {
   border-left-style: none;
   padding: 9px;
   width: 100%;
-  min-width: 160px;
   color: #e5e3e1;
   font-size: 18px;
   font-family: 'Montserrat', 'Poppins', 'Raleway', sans-serif;
@@ -491,10 +490,6 @@ div.banner-search form {
   right: 0;
   color: white;
   text-decoration: underline;
-}
-
-div.searchform #search-options {
-  width: 20%;
 }
 
 div.searchform .search-box {
@@ -574,6 +569,14 @@ div.sidebar-search .search-element {
   line-height: 24px;
   color: #797878;
   text-align: left;
+}
+
+#home-search .form-group {
+  width: 20%;
+}
+
+#home-search .search-box {
+  width: 60%;
 }
 
 div#sidebar {

@@ -255,7 +255,7 @@
 
 @media (min-width: 576px) and (max-width: 767px) {
   .logo h1 {
-    font-size: 2.6em;
+    font-size: 3em;
   }
 
   div.intro-text {
@@ -297,7 +297,7 @@
   }
 
   .logo h1 {
-    font-size: 2.85em;
+    font-size: 3.2em;
   }
 
   div.intro-text {
@@ -321,7 +321,7 @@
   }
 
   .searchform {
-    width: 60%;
+    width: 72%;
   }
 
   .search-element {
@@ -361,6 +361,10 @@
 @media (min-width: 992px) and (max-width: 1223px) {
   .logo h1 {
       font-size: 3.4em;
+  }
+
+  .searchform {
+    width: 55%;
   }
 
   div#sidebar {
