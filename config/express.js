@@ -54,6 +54,7 @@ module.exports = function () {
         fontSrc: ["'self'", 'data:', 'fonts.gstatic.com', 'use.fontawesome.com']
       }
     }))
+    app.disable('x-powered-by');
 
     app.use(express.static('./public'));
     app.set('views', './views');
