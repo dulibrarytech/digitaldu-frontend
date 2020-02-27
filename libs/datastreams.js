@@ -8,6 +8,7 @@
 
 const config = require('../config/' + process.env.CONFIGURATION_FILE),
   rs = require('request-stream'),
+  fetch = require('node-fetch'),
   fs = require('fs'),
   Repository = require('../libs/repository'),
   Helper = require('../libs/helper'),
@@ -46,7 +47,6 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
  * @return {undefined}
  */
 exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, callback) {
-    console.log("TEST in getDatastream(): dsid, part:", datastreamID, part)
   var mimeType = object.mime_type || object.type || null;
   // If there is a part value, retrieve the part data.  Redefine the object data with the part data
   if(part && isNaN(part) === false) {
@@ -124,7 +124,7 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
             }
             else {
               if(stream) {
-                if(config.thumbnailImageCacheEnabled == true) {
+                if(config.thumbnailImageCacheEnabled == true && settings.cache == true) {
                   Cache.cacheDatastream('thumbnail', objectID, stream, null, function(error) {
                     if(error) {console.error("Could not create thumbnail image for", objectID, error)}
                     else {console.log("Thumbnail image created for", objectID)}
@@ -150,7 +150,7 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
             }
             else {
               if(status == 200) {
-                if(config.thumbnailImageCacheEnabled == true) {
+                if(config.thumbnailImageCacheEnabled == true && settings.streamOption != "index") {
                   Cache.cacheDatastream('thumbnail', objectID, stream, null, function(error) {
                     if(error) {console.error("Could not create thumbnail image for", objectID, error)}
                     else {console.log("Thumbnail image created for", objectID)}
@@ -194,9 +194,8 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
         (object.entry_id && object.entry_id.length > 0)) {
 
           let kalturaStreamUri = Kaltura.getStreamingMediaUrl(object.entry_id, extension);
-            console.log("TEST streaming from kaltura: uri is", kalturaStreamUri)
-          streamRemoteData(kalturaStreamUri, function(error, status, stream) {
-            if(error) { console.log("TEST A err", error); callback(error, null) }
+          fetchRemoteData(kalturaStreamUri, function(error, status, stream) {
+            if(error) { callback(error, null) }
             else { 
               let str = stream ? "not null" : "null"
               callback(null, stream) 
@@ -252,16 +251,13 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
 var streamRemoteData = function(uri, callback) {
   rs(uri, {followRedirects: true}, function(err, res) {
     if(err) {
-        console.log("TEST dsfetch req err", err)
       callback("Could not open datastream. " + err, null, null);
     }
     else {
       if(res.socket.bytesRead < 500) {
-          console.log("TEST < 500", res.body)
         callback(null, 204, null);
       }
       else {
-          console.log("TEST dsstream req ok, returning body")
         callback(null, res.statusCode, res);
       }
     }
@@ -295,6 +291,17 @@ var fetchRemoteData = function(uri, callback) {
     //   }
     // });
 
+    // test
+    fetch('https://github.com/')
+    .then(res => res.text())
+    .then(body => console.log(body));
+
+    //  tream
+    fetch('https://assets-cdn.github.com/images/modules/logos_page/Octocat.png')
+    .then(res => {
+        const dest = fs.createWriteStream('./octocat.png');
+        res.body.pipe(dest);
+    });
 }
 
 /**

@@ -267,39 +267,46 @@ module.exports = {
         "collection": {
             "streamOption": "index",
             "uri": "", 
-            "source": "repository"
+            "source": "repository",
+            "cache": false
         },
         "object": {
             "fileTypes": {
                 "smallImage": {
                     "streamOption": "iiif",
                     "uri": "", 
-                    "source": "repository"
+                    "source": "repository",
+                    "cache": true
                 },
                 "largeImage": {
                     "streamOption": "iiif",
                     "uri": "", 
-                    "source": "repository"
+                    "source": "repository",
+                    "cache": true
                 },
                 "audio": {
                     "streamOption": "kaltura",
                     "uri": "", 
-                    "source": "remote"
+                    "source": "remote",
+                    "cache": true
                 },
                 "video": {
                     "streamOption": "kaltura",
                     "uri": "", 
-                    "source": "remote"
+                    "source": "remote",
+                    "cache": true
                 },
                 "pdf": {
                     "streamOption": "iiif",
                     "uri": "", 
-                    "source": "remote"
+                    "source": "remote",
+                    "cache": true
                 },
                 "compound": {
                     "streamOption": "index",
                     "uri": "",
-                    "source": "repository"
+                    "source": "repository",
+                    "cache": true
                 }
             }
         }
