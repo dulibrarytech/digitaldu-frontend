@@ -93,3 +93,7 @@
 .embedded-viewer #transcript-view {
   height: 24%;
 }
+
+.uv button.download {
+  display: none !important;
+}

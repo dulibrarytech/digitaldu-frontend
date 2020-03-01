@@ -32,7 +32,7 @@
   <div class="object-options">
     <div class="container">
         <span id="object-view-controls">
-          <button class="collapsible" alt="View Details">View Details</button>
+          <!-- <button class="collapsible" alt="View Details">View Details</button> -->
           <button id="file-download" class="download-button disabledbutton" alt="Download Item">Download File</button>
           <% if(transcript) { %>
             <button id="view-transcript" alt="View Transcript" type="button">View Transcript</button>
@@ -41,10 +41,9 @@
     </div>
   </div>
 
-  <!-- Append the download options list -->
-
   <div class="container">
-    <div class="table-responsive mods-display metadata-content ">
+    <!-- <div class="table-responsive mods-display metadata-content" style="display: none"> --> <!-- If hidden by default, shown with 'view details' button -->
+    <div class="table-responsive mods-display metadata-content">
         <table class="table data-table" summary="<% for (var key in summary) { %><%= summary[key] %> <% } %>">
           <tr style="display: none;">
             <th scope="col">Data Type</th>  
@@ -67,15 +66,6 @@
       </div>
     </div>
   </div>
-
-  <div class="object-data container">
-    <% for (var key in summary) { %>
-      <h3><%= key %></h3>
-      <p><%= summary[key] %></p>
-    <% } %>
-  </div>
-
-  <!-- <a href="https://cdnapisec.kaltura.com/p/2357732/sp/0/playManifest/entryId/0_yc2k9s2f/format/url/protocol/https/flavorParamId/301971/video.mp4" download="true">Test DL File</a> -->
 
 </div>
 
