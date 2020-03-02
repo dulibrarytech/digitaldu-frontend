@@ -51,7 +51,7 @@
           </tr>
           <% for (var key in metadata) { %>
             <tr>
-              <td scope="row"><%= key %></td>
+              <td class="table-label" scope="row"><%= key %></td>
             <% if(typeof metadata[key] == "object") { %>
               <td>
               <% for (var subkey in metadata[key]) { %>

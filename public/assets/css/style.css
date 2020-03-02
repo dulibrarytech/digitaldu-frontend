@@ -7,7 +7,7 @@ html,
 body {
   background: #e5e3e1;
   font-family: 'Montserrat', 'Poppins', 'Raleway', sans-serif;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1;
   min-height: 100%;
   margin: 0 !important;
@@ -23,7 +23,7 @@ body {
   -ms-overflow-scrolling: touch;
   -o-overflow-scrolling: touch;
   overflow-scrolling: touch;
-  color: #181818;
+  color: black;
 }
 
 hr {
@@ -184,6 +184,10 @@ main {
   margin: 0;
 }
 
+.table-label {
+
+}
+
 .title {
   font-weight: 400;
   font-style: normal;
@@ -234,7 +238,7 @@ main {
   padding: 0 18px;
   background-color: white;
   overflow: hidden;
-  color: #181818;
+  /*color: #181818;*/
 }
 
 .panel-collapsed {
@@ -1088,7 +1092,7 @@ div.search-result-data dd {
 
 dt.result-title,
 dt.result-title a {
-  color: #181818;
+  color: black;
   font-size: 1em;
   line-height: 25px;
   text-decoration: underline;
@@ -1134,13 +1138,13 @@ table.data-table td p {
 
 table.data-table a,
 table.data-table a:visited {
-  color: #181818;
+  /*color: #181818;*/
 }
 
 div.object-data h3 {
   font-size: 1.5em;
   margin: 25px 0;
-  color: #181818;
+  /*color: #181818;*/
 }
 
 div.object-data p {
@@ -1267,8 +1271,4 @@ footer .footer-column {
 
 .footer-link-list ul li {
   padding: 7px 0;
-}
-
-.footer-link-list label {
-  text-decoration: underline;
 }

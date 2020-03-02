@@ -267,7 +267,7 @@ module.exports = {
         "collection": {
             "streamOption": "index",
             "uri": "", 
-            "source": "repository",
+            "source": "remote",
             "cache": false
         },
         "object": {
