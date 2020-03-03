@@ -294,6 +294,7 @@ exports.renderObjectView = function(req, res) {
  * @return {undefined}
  */
 exports.getDatastream = function(req, res) {
+		console.log("TEST getDatastream() controller")
 	var ds = req.params.datastream.toLowerCase() || "",
 		pid = req.params.pid || "",
 		part = req.params.part || null,
@@ -502,23 +503,45 @@ exports.getObjectViewer = function(req, res) {
 }
 
 exports.downloadObjectFile = function(req, res) {
-	var pid = req.params.pid || "";
+	var pid = req.params.pid || "",
+		part = req.params.part || null,
+		index = config.elasticsearchPublicIndex,
+		extension = req.params.extension || "file",
+		key = null;
 
-	// Remove file extension if present
-	for(var key in config.fileExtensions) {
-		if(pid.indexOf(key) > 0) {
-			let ext = "." + key;
-			pid = pid.replace(ext, "");
-		}
-	}
-
-	// Parse out the part index value if present
-	let part = null;
-	if(pid.indexOf(config.compoundObjectPartID) > 0) {
+	let pidElements;
+	if(part == null && pid.indexOf(config.compoundObjectPartID) > 0) {
 		part = pid.substring(pid.indexOf(config.compoundObjectPartID)+1, pid.length);	
 		pid = pid.split(config.compoundObjectPartID,1)[0];
 	}
 
-	// TODO request uri
+	// If a valid api key is passed in with the request, get data from the the private index
+	if(req.query.key && req.query.key == config.apiKey) {
+		index = config.elasticsearchPrivateIndex;
+		key = req.query.key;
+	}
+
+	// Get the datastream and pipe it
+	Service.getDatastream(index, pid, ds, part, key, function(error, stream) {
+		if(error || !stream) {
+			console.log(error || "Can not retrieve datastream");
+			res.sendStatus(404);
+		}
+		else {
+			// TODO create filename based on pid and extension
+			var filename = "test.tiff";
+			//var filename = pid + "." + extension; // Check if extension is valid
+
+			res.set('Accept-Ranges', 'bytes');
+			if(stream.headers && stream.headers["content-type"]) {
+				res.set('Content-Type', stream.headers["content-type"]);
+
+
+				res.set('Content-Disposition', 'attachment; filename="' + filename + '"');
+			}
+				console.log("TEST sending with headers:", res.headers)
+			stream.pipe(res);
+		}
+	});
 }
 

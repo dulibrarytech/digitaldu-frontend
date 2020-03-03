@@ -97,24 +97,6 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
         streamDefaultThumbnail(object, callback);
       }
       else {
-        uri = settings.uri || "Thumbnail has not been set for " + objectID;
-        switch(settings.streamOption || "") {
-          case "iiif":
-            uri = IIIF.getThumbnailUri(objectID, apiKey);
-            break;
-          case "kaltura":
-            uri = Kaltura.getThumbnailUrl(object);
-            break;
-          case "external":
-            break;
-          case "index":
-            uri = object.thumbnail || uri;
-            break;
-          default:
-            callback("Error retrieving datastream for " + objectID + ", object type " + object.object_type + "is invalid", null);
-            break;
-        }
-
         // Stream the uri from the repository or external source
         if(settings.source == "repository") {
           Repository.streamData(object, "tn", function(error, stream) {
@@ -139,6 +121,24 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
           });
         }
         else {
+          uri = settings.uri || "Thumbnail has not been set for " + objectID;
+          switch(settings.streamOption || "") {
+            case "iiif":
+              uri = IIIF.getThumbnailUri(objectID, apiKey);
+              break;
+            case "kaltura":
+              uri = Kaltura.getThumbnailUrl(object);
+              break;
+            case "external":
+              break;
+            case "index":
+              uri = object.thumbnail || uri;
+              break;
+            default:
+              callback("Error retrieving datastream for " + objectID + ", object type " + object.object_type + "is invalid", null);
+              break;
+          }
+          
           streamRemoteData(uri, function(error, status, stream) {
             if(error) {
               console.error(error);

@@ -135,7 +135,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
           if(queryType == "match") {
             keywordObj = {
               "query": terms,
-              "operator": "or"
+              "operator": "and"
             };
 
             // Add fuzz factor if this is not an advanced search, and there are no numeric terms.  Numeric terms must match index data exactly

@@ -55,6 +55,9 @@ module.exports = function (app) {
     app.route('/datastream/:pid/:datastream')
         .get(Discovery.getDatastream)
 
+    app.route('/datastream/:pid/:datastream/:extension')
+        .get(Discovery.getDatastream)
+
     app.route('/datastream/:pid/:datastream/:part')
         .get(Discovery.getDatastream)
 

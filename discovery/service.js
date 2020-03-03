@@ -373,9 +373,12 @@ exports.getFacets = getFacets;
  * @param {Object|null} Data stream Null if error
  */
 exports.getDatastream = function(indexName, objectID, datastreamID, part, authKey, callback) {
+    console.log("TEST service getds");
   fetchObjectByPid(indexName, objectID, function(error, object) {
     if(object) {
+        //console.log("TEST service getds: object:", object);
       Datastreams.getDatastream(object, objectID, datastreamID, part, authKey, function(error, stream) {
+          console.log("TEST service getds: have stream", !stream ? "null" : "notnull")
         callback(error, stream);
       });
     }
