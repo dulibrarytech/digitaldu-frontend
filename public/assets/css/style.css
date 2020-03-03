@@ -180,7 +180,6 @@ main {
   font-family: "Montserrat";
   color: white;
   font-weight: bolder;
-  font-size: 4vw;
   margin: 0;
 }
 
@@ -411,7 +410,6 @@ div#hero-banner {
 
 div#hero-banner .logo {
   position: relative;
-  top: 116px;
 }
 
 div.intro-text {
@@ -434,11 +432,16 @@ input.search-element {
   padding: 0 15px;
 }
 
+.logo-search-form {
+  position: relative;
+  width: 35%;
+  background: green;
+}
+
 .searchform {
   width: 50%;
   margin: 0 auto;
   position: relative;
-  top: 100px;
   max-width: 800px;
 }
 
@@ -694,7 +697,7 @@ div.facets .static-facets {
 }
 
 .facet-count {
-  color: #757371;
+  color: #181818;
   float: right;
 }
 
