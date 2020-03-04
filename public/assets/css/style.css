@@ -164,7 +164,7 @@ main {
 .content {
   margin-left: auto;
   margin-right: auto;
-  width: 88%;
+  max-width: 88%;
 }
 
 .no-side-margin {
@@ -173,7 +173,7 @@ main {
 }
 
 .logo {
-  text-align: center;
+  text-align: left;
 }
 
 .logo h1 {
@@ -181,6 +181,7 @@ main {
   color: white;
   font-weight: bolder;
   margin: 0;
+  font-size: 3.1em;
 }
 
 .table-label {
@@ -406,10 +407,15 @@ div#hero-banner {
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: scroll;
+  padding: 0;
 }
 
 div#hero-banner .logo {
   position: relative;
+}
+
+div#hero-banner .logo span {
+  letter-spacing: 5px;
 }
 
 div.intro-text {
@@ -434,15 +440,13 @@ input.search-element {
 
 .logo-search-form {
   position: relative;
-  width: 35%;
-  background: green;
+  top: 145px;
 }
 
 .searchform {
-  width: 50%;
-  margin: 0 auto;
   position: relative;
   max-width: 800px;
+  width: 658px;
 }
 
 div.searchform form,
@@ -578,12 +582,40 @@ div.sidebar-search .search-element {
   text-align: left;
 }
 
-#home-search .form-group {
+.home-search .form-group {
   width: 20%;
 }
 
-#home-search .search-box {
+.home-search .search-box {
   width: 60%;
+}
+
+.home-search .searchform select {
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+.home-search .searchform button {
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+.welcome-text-box {
+  width: 30%;
+  background: #8b2332;
+  opacity: 0.8;
+  padding: 30px;
+  position: absolute;
+  right: 191px;
+  line-height: 27px;
+  height: 322px;
+}
+
+.welcome-text {
+  width: 30%;
+  color: white;
+  position: relative;
+  left: 1137px;
+  line-height: 27px;
 }
 
 div#sidebar {
@@ -1222,6 +1254,38 @@ div#transcript-view {
   max-height: 300px;
   text-align: left;
   line-height: 1.5em;
+}
+
+.info-content {
+  padding: 50px 0;
+}
+
+.info-content h2 {
+  font-weight: bold;
+}
+
+.info-content h3 {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+}
+
+.info-content h2, h4 {
+  margin-bottom: 30px;
+}
+
+.info-content ul li, 
+.info-content dl,
+.info-content dt {
+  margin-bottom: 6px;
+}
+
+.info-content a {
+  text-decoration: underline;
+  margin-top: 3px;
+}
+
+.info-content h6 {
+  font-weight: bold;
 }
 
 footer {
