@@ -101,6 +101,10 @@
       font-size: 14px;
   }
 
+  .content {
+    max-width: 100%;
+  }
+
   div.banner-search {
       right: 0;
       margin-top: 20px;
@@ -143,15 +147,12 @@
     border-top-width: 1px;
     border-top-color: #e5e3e1;
   }
-/*
-  #uv {
-    height: 670px;
-  }
 
-  .uv .mainPanel .container > div {
-    height: 377px !important;
-    margin-top: 44.5px !important;
-  }*/
+
+
+
+
+
 }
 
 @media screen and (max-width: 991px) {
@@ -377,9 +378,13 @@
 }
 /* tablets/desktops and up ----------- */
 @media (min-width: 992px) and (max-width: 1223px) {
-/*  .logo h1 {
-      font-size: 3.4em;
-  }*/
+  .content {
+    max-width: 95%;
+  }
+
+  .logo h1 {
+    font-size: 2.9em;
+  }
 
   .searchform {
 /*    width: 55%;*/
@@ -413,24 +418,9 @@
   div.facets .panel {
       padding: 10px 6px;
   }
-
-/*  .welcome-text-box {
-      height: 402px;
-  }
-
-  .welcome-text-box,
-  .welcome-text {
-      top: 40px;
-      width: 72%;
-  }*/
 }
 /* Desktops and laptops ----------- */
 @media only screen and (min-width : 1224px) {
-/* Styles */
-/*  .logo h1 {
-      font-size: 3.1em;
-  }*/
-
   div.facets .panel {
       padding: 10px 6px;
   }

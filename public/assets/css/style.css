@@ -404,7 +404,6 @@ div#title-banner {
 /* End search banner */
 
 div#hero-banner {
-  height: 480px;
   background-color: grey;
   background-image: url(../img/aac-loft3-2_high.jpg);
   background-size: cover;
@@ -412,6 +411,11 @@ div#hero-banner {
   background-repeat: no-repeat;
   background-attachment: scroll;
   padding: 0;
+}
+
+div#hero-banner,
+div#hero-banner .col-md-6 {
+  height: 480px;
 }
 
 div#hero-banner .col-md-6 {
@@ -511,6 +515,7 @@ div.banner-search form {
   right: 0;
   color: white;
   text-decoration: underline;
+  font-size: 0.85em;
 }
 
 div.searchform .search-box {
@@ -592,6 +597,10 @@ div.sidebar-search .search-element {
   text-align: left;
 }
 
+.home-search {
+  margin-top: 20px;
+}
+
 .home-search .form-group {
   width: 20%;
 }
@@ -614,7 +623,8 @@ div.sidebar-search .search-element {
   background: rgb(139,35,50,0.8);
   padding: 30px;
   position: absolute;
-  top: 65px;
+  /*top: 65px;*/
+  bottom: 0px;
   right: 0px;
   line-height: 27px;
 }
@@ -623,6 +633,10 @@ div.sidebar-search .search-element {
   color: white;
   line-height: 24px;
   font-size: 0.88em;
+}
+
+.welcome-text-box .welcome-item-count {
+  margin-top: 20px;
 }
 
 div#sidebar {
