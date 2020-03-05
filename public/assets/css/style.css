@@ -47,10 +47,14 @@ h3 {
   -webkit-margin-after: 0px;
 }
 
-h2, h4 {
+/*h2, h4 {
   font-size: 1.1em;
   font-weight: bold;
   -webkit-margin-after: 0px;
+}*/
+
+h4 {
+    font-size: 1.8em;
 }
 
 button > a {
@@ -410,12 +414,20 @@ div#hero-banner {
   padding: 0;
 }
 
+div#hero-banner .col-md-6 {
+  padding-left: 0;
+}
+
 div#hero-banner .logo {
   position: relative;
 }
 
 div#hero-banner .logo span {
   letter-spacing: 5px;
+}
+
+div#hero-banner .content {
+  padding: 0 20px;
 }
 
 div.intro-text {
@@ -445,8 +457,6 @@ input.search-element {
 
 .searchform {
   position: relative;
-  max-width: 800px;
-  width: 658px;
 }
 
 div.searchform form,
@@ -600,22 +610,19 @@ div.sidebar-search .search-element {
 }
 
 .welcome-text-box {
-  width: 30%;
-  background: #8b2332;
-  opacity: 0.8;
+  width: 33vw;
+  background: rgb(139,35,50,0.8);
   padding: 30px;
   position: absolute;
-  right: 191px;
+  top: 65px;
+  right: 0px;
   line-height: 27px;
-  height: 322px;
 }
 
 .welcome-text {
-  width: 30%;
   color: white;
-  position: relative;
-  left: 1137px;
-  line-height: 27px;
+  line-height: 24px;
+  font-size: 0.88em;
 }
 
 div#sidebar {

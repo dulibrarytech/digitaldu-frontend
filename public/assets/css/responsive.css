@@ -38,7 +38,7 @@
 
   .searchform {
     top: 65px;
-    width: 80%;
+/*    width: 80%;*/
   }
 
   .form-group {
@@ -225,7 +225,7 @@
   
   .searchform {
     top: 60px;
-    width: 90%;
+/*    width: 90%;*/
   }
 
   .searchform input {
@@ -275,7 +275,7 @@
   }
 
   .searchform {
-      width: 80%;
+/*      width: 80%;*/
   }
 
   .search-element {
@@ -296,9 +296,9 @@
     font-size: 1.3em;
   }
 
-/*  .logo h1 {
-    font-size: 3.2em;
-  }*/
+  .content {
+    max-width: 97%;
+  }
 
   div.intro-text {
       margin-top: 100px;
@@ -321,7 +321,7 @@
   }
 
   .searchform {
-    width: 72%;
+/*    width: 72%;*/
   }
 
   .search-element {
@@ -356,6 +356,24 @@
   div.home-facets {
     margin: 2.5em 0;
   }
+
+  .logo h1 {
+    font-size: 2.2em;
+  }
+
+  .searchform span a {
+    font-size: 14px;
+  }
+
+  .welcome-text {
+    color: white;
+    line-height: 20px;
+    font-size: 0.83em;
+  }
+
+  .welcome-text-box {
+    width: 95%;
+  }
 }
 /* tablets/desktops and up ----------- */
 @media (min-width: 992px) and (max-width: 1223px) {
@@ -364,7 +382,7 @@
   }*/
 
   .searchform {
-    width: 55%;
+/*    width: 55%;*/
   }
 
   div#sidebar {
@@ -395,6 +413,16 @@
   div.facets .panel {
       padding: 10px 6px;
   }
+
+/*  .welcome-text-box {
+      height: 402px;
+  }
+
+  .welcome-text-box,
+  .welcome-text {
+      top: 40px;
+      width: 72%;
+  }*/
 }
 /* Desktops and laptops ----------- */
 @media only screen and (min-width : 1224px) {
@@ -440,6 +468,16 @@
   div.facets ul {
       font-size: 13px;
   }
+
+/*  .welcome-text-box {
+    height: 340px;
+  }
+
+  .welcome-text-box,
+  .welcome-text {
+    top: 67px;
+    width: 67%;
+  }*/
 }
 
 /* Large screens ----------- */
