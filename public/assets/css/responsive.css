@@ -165,10 +165,6 @@
   div.paginator {
     margin: 35px 0 0 0;
   }
-
-  .content {
-    width: 95%;
-  }
 }
 
 /* Super Small devices */
@@ -290,6 +286,19 @@
   .item-title a {
     font-size: 14px;
   }
+
+  .logo-search-form {
+    position: relative;
+    top: 44px;
+  }
+
+  .welcome-text-box {
+    width: 100%;
+  }
+
+  div#hero-banner .col-md-6 {
+    height: 240px;
+  }
 }
 /* Small devices (tablets, 768px and up) */
 @media (min-width: 768px) and (max-width: 991px) {
@@ -298,7 +307,11 @@
   }
 
   .content {
-    max-width: 97%;
+    max-width: 95%;
+  }
+
+  div#hero-banner .content {
+    padding: 0;
   }
 
   div.intro-text {
@@ -359,7 +372,7 @@
   }
 
   .logo h1 {
-    font-size: 2.2em;
+    font-size: 2.4em;
   }
 
   .searchform span a {
@@ -373,14 +386,11 @@
   }
 
   .welcome-text-box {
-    width: 95%;
+    width: 70%;
   }
 }
 /* tablets/desktops and up ----------- */
 @media (min-width: 992px) and (max-width: 1223px) {
-  .content {
-    max-width: 95%;
-  }
 
   .logo h1 {
     font-size: 2.9em;
