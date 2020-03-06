@@ -4,12 +4,29 @@
     font-size: 2.4em;
   }*/
 
-  div#hero-banner {
-    background-size: initial;
+/*  div#hero-banner {
+    background-size: cover;
+  }*/
+
+  div#hero-banner, div#hero-banner .col-md-6 {
+    height: 680px;
   }
 
   div#hero-banner .logo {
-      top: 80px;
+      top: 0px;
+  }
+
+  div#hero-banner .content {
+    padding: 0 10px;
+  }
+
+  .welcome-text-box {
+    padding: 13px;
+    top: 58px;
+  }
+
+  .searchform {
+    top: 0;
   }
 
 /*  div.logo h1 {
@@ -34,11 +51,6 @@
 
   .section {
       /*margin-top: 40px;*/
-  }
-
-  .searchform {
-    top: 65px;
-/*    width: 80%;*/
   }
 
   .form-group {
@@ -148,11 +160,24 @@
     border-top-color: #e5e3e1;
   }
 
+  div.intro-text {
+      margin-top: 86px;
+  }
 
+  .welcome-text-box {
+    width: 100%;
+    bottom: auto;
+  }
 
+  div#hero-banner .col-md-6 {
+    height: 240px;
+    padding:0;
+  }
 
-
-
+  .logo-search-form {
+    position: relative;
+    top: 26px;
+  }
 }
 
 @media screen and (max-width: 991px) {
@@ -196,18 +221,26 @@
   div#metadata-section .container {
     width: 95%;
   }
+
+  .searchform span a {
+    font-size: 1em;
+  }
+
+  .welcome-text {
+    font-size: 1em;
+  }
+
+  .welcome-text-box {
+    top: 61px;
+  }
+
+  div#hero-banner {
+    height: 740px;
+  }
 }
 
 /* Small devices (phones, up to 575px) */
 @media (min-width: 480px) and (max-width: 575px) {
-/*  .logo h1 {
-    font-size: 2.5em;
-  }
-*/
-/*  div.logo h1 {
-    min-height: 153px;
-  }*/
-
   div.intro-text {
       margin-top: 90px;
   }
@@ -248,17 +281,25 @@
   div.openseadragon-canvas canvas {
     bottom: 50px;
   }
+
+  .searchform span a {
+    font-size: 1em;
+  }
+
+  .welcome-text {
+    font-size: 1em;
+  }
+
+  .welcome-text-box {
+    top: 95px;
+  }
+
+  div#hero-banner {
+    height: 675px;
+  }
 }
 
 @media (min-width: 576px) and (max-width: 767px) {
-/*  .logo h1 {
-    font-size: 3em;
-  }*/
-
-  div.intro-text {
-      margin-top: 86px;
-  }
-
   .welcomeBox .title1 {
       font-size: 31px;
     }
@@ -287,17 +328,12 @@
     font-size: 14px;
   }
 
-  .logo-search-form {
-    position: relative;
-    top: 44px;
+  div#hero-banner {
+    height: 550px;
   }
 
   .welcome-text-box {
-    width: 100%;
-  }
-
-  div#hero-banner .col-md-6 {
-    height: 240px;
+    top: 30px;
   }
 }
 /* Small devices (tablets, 768px and up) */
@@ -393,7 +429,7 @@
 @media (min-width: 992px) and (max-width: 1223px) {
 
   .logo h1 {
-    font-size: 2.9em;
+    font-size: 2.76em;
   }
 
   .searchform {
