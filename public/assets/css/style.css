@@ -286,6 +286,12 @@ main {
   margin-left: 7px;
 }
 
+div.error-page {
+  min-height: 500px;
+  margin: 10vw 50px 0 50px;
+  text-align: center;
+}
+
 div#main-wrapper {
   max-width: 2000px;
   margin: 0 auto;

@@ -224,14 +224,14 @@ exports.renderObjectView = function(req, res) {
 			data.error = config.viewerErrorMessage;
 			data.devError = error;
 			console.error(error);
-			res.render('object', data);
+			res.render('error', data);
 		}
 		else if(response == null) {
-			let msg = "Object not found ";
+			let msg = "Object not found";
 			data.error = msg;
 			data.devError = msg + pid;
 			console.log(msg + pid);
-			res.render('object', data);
+			res.render('page-not-found', data);
 		}
 		else {
 			var object = response,

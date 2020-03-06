@@ -1,0 +1,18 @@
+<% include partials/header %>
+<% include partials/title-banner %>
+
+<div class="error-page">
+	<h3>The page you were looking for does not exist.</h3>
+	<br><br>
+	<h5><%= error %></h5>
+	<br><br>
+	<h5>You may have mistyped the address, or the page or record that was here has been withdrawn or moved.</h5>
+</div>
+
+<% if (devError) { %>
+	<script>
+		console.log('<%= devError %>')
+	</script>
+<% } %>
+
+<% include partials/footer %>

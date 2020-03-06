@@ -1,0 +1,16 @@
+<% include partials/header %>
+<% include partials/title-banner %>
+
+<div class="error-page">
+	<h3>We're sorry, an error has occurred.</h3>
+	<br><br>
+	<h5><%= error %></h5>
+</div>
+
+<% if (devError) { %>
+	<script>
+		console.log('<%= devError %>')
+	</script>
+<% } %>
+
+<% include partials/footer %>
