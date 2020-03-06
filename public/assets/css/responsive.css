@@ -334,6 +334,15 @@
 
   .welcome-text-box {
     top: 30px;
+    padding: 19px;
+  }
+
+  .welcome-text {
+    font-size: 1em;
+  }
+
+  .searchform span a {
+    font-size: 0.9em;
   }
 }
 /* Small devices (tablets, 768px and up) */
