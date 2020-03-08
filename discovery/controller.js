@@ -247,6 +247,7 @@ exports.renderObjectView = function(req, res) {
 				if(data.viewer.length <= 0) {
 					data.error = config.viewerErrorMessage;
 					data.devError = "Compound object viewer error";
+					res.render('error', data);
 				}
 			}
 
@@ -256,6 +257,7 @@ exports.renderObjectView = function(req, res) {
 					let msg = "Object not found: " + pid;
 					data.error = msg;
 					console.log(msg)
+					res.render('page-not-found', data);
 				}
 				else {
 	
@@ -264,6 +266,7 @@ exports.renderObjectView = function(req, res) {
 					if(data.viewer == "") {
 						data.error = config.viewerErrorMessage;
 						data.devError = "Object viewer error";
+						res.render('error', data);
 					}
 				}
 			}
