@@ -52,6 +52,7 @@ exports.renderRootCollection = function(req, res) {
 		facets: {},
 		paginator: {},
 		typeCount: {},
+		itemCount: "0",
 		error: null,
 		root_url: config.rootUrl
 	},
@@ -87,6 +88,7 @@ exports.renderRootCollection = function(req, res) {
 
 				data.facets = Facets.create(facetList, config.rootUrl);
 				data.typeCount = Helper.getTypeFacetTotalsObject(facets);
+				data.itemCount = Helper.getTotalItemCount(facets).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 				data.facetThumbnails = config.facetThumbnails;
 				data.pagination = Paginator.create(response.list, page, config.maxCollectionsPerPage, response.count, path);
 				data.pagination["anchor"] = "#collections";

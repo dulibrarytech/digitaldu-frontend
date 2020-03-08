@@ -91,6 +91,21 @@ exports.getTypeFacetTotalsObject = function(facets) {
   return totals;
 }
 
+/**
+ * Get facet counts by nametotal count of facet type objects
+ *
+ * @param {Array} facets - Elastic aggregations object
+ * @return {Number} Number of items
+ */
+exports.getTotalItemCount = function(facets) {
+  var total = 0;
+  for(var facet of facets.Type.buckets) {
+    total += facet.doc_count;
+  }
+
+  return total;
+}
+
  /**
  * Get normalized facet label
  *
