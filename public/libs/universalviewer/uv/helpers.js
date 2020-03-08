@@ -31,6 +31,12 @@ function createUV(selector, data, dataProvider) {
     });
 
     uv.on('create', function(obj) {
+        setTimeout(function(){  
+            $(".spinner").append("<div class='loading-msg'>Loading, please wait...</div>");
+        }, 2000);
+        setTimeout(function(){  
+            $(".spinner").append("<div class='timeout-msg'><h6>We're sorry, this is taking longer than expected. To report any problems with accessing this resource, please contact <a href=''>contact.du.edu</a></h6></div>")
+        }, 6000);
         resize();
     }, false);
 
