@@ -235,7 +235,7 @@
   }
 
   div#hero-banner {
-    height: 740px;
+    height: 785px;
   }
 }
 
@@ -295,7 +295,7 @@
   }
 
   div#hero-banner {
-    height: 675px;
+    height: 705px;
   }
 }
 
@@ -329,7 +329,7 @@
   }
 
   div#hero-banner {
-    height: 550px;
+    height: 565px;
   }
 
   .welcome-text-box {
@@ -472,6 +472,10 @@
 
   div.facets .panel {
       padding: 10px 6px;
+  }
+
+  .welcome-text {
+    line-height: 23px;
   }
 }
 /* Desktops and laptops ----------- */
