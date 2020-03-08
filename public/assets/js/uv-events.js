@@ -5,7 +5,7 @@ $( document ).ready(function() {
 		  		$(".spinner").append("<div class='loading-msg'>Loading, please wait...</div>");
 		  	}, 1000);
 			setTimeout(function(){  
-		  		$(".spinner").append("<div class='timeout-msg'><h6>We're sorry, this is taking longer to load than expected. To report any issues with loading this resource, please contact [contact.u.edu]</h6></div>")
+		  		$(".spinner").append("<div class='timeout-msg'><h6>We're sorry, this is taking longer to load than expected. To report any issues with loading this resource, please contact <a href=''>contact.du.edu</a></h6></div>")
 		  	}, 6000);
 		
 		// Embed a Kaltura viewer in the universalviewer UI
