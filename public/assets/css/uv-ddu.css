@@ -97,3 +97,25 @@
 .uv button.download {
   display: none !important;
 }
+
+.uv .centerPanel .content .spinner {
+  position: absolute !important;
+  top: 192px;
+  left: 648px;
+  background: white !important;
+  border-radius: 3px;
+  width: 470px !important;
+  height: 331px !important;
+  color: black !important;
+  border-radius: 0 !important;
+  background-repeat: no-repeat !important;
+  background-position: 50% 50% !important;
+  background-image: url(../img/spinner2.gif) !important;
+  font-size: 20px;
+  font-family: 'Montserrat', 'Poppins', 'Raleway', sans-serif;
+  padding: 20px;
+}
+
+.uv .centerPanel .content .spinner .timeout-msg {
+  margin-top:200px;
+}

@@ -1,6 +1,13 @@
 $( document ).ready(function() {
 	// UV Kaltura viewer: embed the Kaltura viewer, controls, and events
-	$( "#uv" ).on("uvloaded", function(event, embedKalturaViewer, objectID, universalViewerMediaElement, viewerContent) {
+	$( "#uv" ).on("uvloaded", function(event, embedKalturaViewer, objectID, universalViewerMediaElement, viewerContent, options={}) {
+			setTimeout(function(){  
+		  		$(".spinner").append("<div class='loading-msg'>Loading, please wait...</div>");
+		  	}, 1000);
+			setTimeout(function(){  
+		  		$(".spinner").append("<div class='timeout-msg'><h6>We're sorry, this is taking longer to load than expected. To report any issues with loading this resource, please contact [contact.u.edu]</h6></div>")
+		  	}, 6000);
+		
 		// Embed a Kaltura viewer in the universalviewer UI
 		if(embedKalturaViewer) {
 	  		$( "#uv" ).css("visibility", "hidden");
@@ -18,7 +25,7 @@ $( document ).ready(function() {
 						baseUrl = uri.substring(0, uri.indexOf("/object"));
 
 		  			let kalturaViewerUri = baseUrl + "/viewer/kaltura/" + objectID + "/" + part;
-		  			$.get(kalturaViewerUri, function(viewerContent, status){
+		  			$.get(kalturaViewerUri, function(viewerContent, status) {
 					    if(status == "success") {
 					    	$("[id^=mep_]").html(viewerContent);
 					    }
@@ -32,11 +39,6 @@ $( document ).ready(function() {
 				mainPanelExpandHeight = "980px",
 				mainPanelCollapseHeight = "718px";
 
-			/*
-		 	 * Append a 'view transcript' button (and event actions) if it is not already present.  
-		 	 * This is a special instance of the transcript button that expands the universal viewer height to show the embedded Kaltura viewer's transcript section
-		 	 * and works independently of the main UI button.  
-		 	 */
 			if($("#view-transcript").length < 1) {
 				$("#object-view-controls").append("<button id='view-transcript' type='button'>View Transcript</button>");
 			}
