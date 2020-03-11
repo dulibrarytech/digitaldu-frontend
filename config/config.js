@@ -589,10 +589,12 @@ module.exports = {
      },
 
      /*
-      * File extensions for the local cache.  A request for a datastream will first check the local cache to see if a source file is present.
+      * File extensions for the local cache
+      * File will be cached with the file extension that matches the mime type of the object
       */
      fileExtensions: {
         "jp2": ["image/tiff"],
+        "jpg": ["image/jpg", "image/jpeg"],
         "mp3": ["audio/mp3", "audio/x-wav"],
         "mp4": ["video/mp4"],
         "pdf": ["application/pdf"]

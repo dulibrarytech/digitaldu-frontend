@@ -317,15 +317,20 @@ exports.getDatastream = function(req, res) {
 	}
 
 	// Get the datastream and pipe it
-	Service.getDatastream(index, pid, ds, part, key, function(error, stream) {
+	Service.getDatastream(index, pid, ds, part, key, function(error, stream, contentType=null) {
 		if(error || !stream) {
-			console.log(error || "Can not retrieve datastream");
+			if(config.nodeEnv == "devlog") {
+				console.log(error || "Can not retrieve datastream");
+			}
 			res.sendStatus(404);
 		}
 		else {
 			res.set('Accept-Ranges', 'bytes');
 			if(stream.headers && stream.headers["content-type"]) {
 				res.set('Content-Type', stream.headers["content-type"]);
+			}
+			else if(contentType) {
+				res.set('Content-Type', contentType);
 			}
 			stream.pipe(res);
 		}
@@ -354,7 +359,7 @@ exports.getIIIFManifest = function(req, res) {
 
 	Service.getManifestObject(pid, index, key, function(error, manifest) {
 		if(error) {
-			console.error(error);
+			console.log(error);
 			res.sendStatus(500);
 		}
 		else if(manifest){
