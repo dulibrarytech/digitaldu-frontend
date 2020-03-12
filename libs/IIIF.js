@@ -104,7 +104,7 @@ exports.getManifest = function(container, objects, apikey, callback) {
 		}
 		else if(object.type == config.IIIFObjectTypes["pdf"]) {
 			elements.push(getPDFElement(object, apikey));
-			canvases.push(getPDFCanvas(container, object));
+			canvases.push(getPDFCanvas(container, object, apikey));
 		}
 		else {
 			continue;
@@ -219,14 +219,14 @@ var getPDFElement = function(object, apikey) {
 	return element;
 }
 
-var getPDFCanvas = function(container, object) {
+var getPDFCanvas = function(container, object, apikey) {
 	let canvas = {},
 		content = {},
 		items = {};
 
 	canvas["@id"] = config.IIIFUrl + "/" + container.resourceID + "/canvas/c" + object.sequence;
 	canvas["@type"] = "Canvas";
-	canvas["thumbnail"] = object.thumbnailUrl;
+	canvas["thumbnail"] = getThumbnailObject(container, object, apikey)
 	canvas["rendering"] = {
 		"@id": object.resourceUrl + "/" + container.downloadFileName + ".pdf",
 		"format": "application/pdf",
@@ -289,13 +289,16 @@ var getThumbnailObject = function(container, object, apikey) {
 		service: {}
 	},
 	service = {};
+	let apiKeyTmp = apikey ? ("?key=" + apikey) : "";
 	apikey = apikey ? (config.IIIFAPiKeyPrefix + apikey) : "";
 
 	thumbnail["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID;
+	thumbnail["@id"] = config.rootUrl + "/datastream/" + object.resourceID + "/tn" + apikey;
 	thumbnail["@type"] = config.IIIFObjectTypes["smallImage"];
 
 	service["@context"] = "http://iiif.io/api/image/2/context.json";
-	service["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + apikey;
+	//service["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + apikey;
+	service["@id"] = config.rootUrl + "/datastream/" + object.resourceID + "/tn" + apikey;
 	service["protocol"] = "http://iiif.io/api/image";
 	service["height"] = config.IIIFThumbnailHeight;
 	service["width"] = config.IIIFThumbnailWidth;
@@ -325,6 +328,7 @@ var getImageCanvas = function(container, object, apikey) {
 	// 	"format": object.format,
 	// 	"label": "Download Image"
 	// }
+	canvas["thumbnail"] = getThumbnailObject(container, object, apikey);
 
 	canvas["height"] = "";
 	canvas["width"] = "";
@@ -335,15 +339,15 @@ var getImageCanvas = function(container, object, apikey) {
 	image["@type"] =  "oa:Annotation";
 	image["motivation"] = "";
 
-	//resource["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + "/full/full/0/default.jpg" + apikey;
-	resource["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + apikey + "/full/full/0/default.jpg";
+	resource["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + "/full/full/0/default.jpg" + apikey;
+	//resource["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + apikey + "/full/full/0/default.jpg";
 	resource["@type"] = object.type; 
 	resource["format"] = object.format; 
 
 	service["@context"] = "";
-	//service["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID;	
+	service["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID;	
 	service["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + apikey;	
-	service["profile"] = [];
+	//service["profile"] = [];
 
 	resource["service"] = service;
 	resource["height"] = "";
@@ -352,7 +356,7 @@ var getImageCanvas = function(container, object, apikey) {
 	image["resource"] = resource;
 	image["on"] = canvas["@id"];
 
-	image["thumbnail"] = getThumbnailObject(container, object, apikey);
+	// image["thumbnail"] = getThumbnailObject(container, object, apikey);
 
 	canvas.images.push(image);
 	return canvas;
