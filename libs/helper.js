@@ -132,9 +132,9 @@ exports.getObjectType = getObjectType;
  */
 exports.getFileDownloadLinks = function(object) {
 	// Get extension/extensions avail
-		console.log("TEST object", object)
+		//console.log("TEST object", object)
 	// Test
 	let uri = config.rootUrl + "/download/" + object.pid + "/" + "mp4";
-		console.log("TEST uri", uri)
+		//console.log("TEST uri", uri)
 	return [uri];
 }

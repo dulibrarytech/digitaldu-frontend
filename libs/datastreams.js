@@ -141,7 +141,9 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
         else {
           streamRemoteData(uri, function(error, status, stream) {
             if(error) {
-              console.error(error);
+              if(config.nodeEnv == "devlog") {
+                console.log(error);
+              }
               streamDefaultThumbnail(object, callback);
             }
             else if(stream == null) {

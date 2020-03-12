@@ -98,6 +98,7 @@
   display: none !important;
 }
 
+.spinner,
 .uv .centerPanel .content .spinner {
   position: absolute !important;
   top: 192px;
@@ -116,7 +117,7 @@
 }
 
 .uv .centerPanel .content .spinner .timeout-msg {
-  margin-top:200px;
+  margin-top:72px;
   color: black;
   background: #e5e3e1;
   padding: 25px;
@@ -126,4 +127,11 @@
 .uv .centerPanel .content .spinner .timeout-msg a {
   color: blue;
   text-decoration: underline;
+}
+
+.uv-preload-text {
+  color: white;
+  position: relative;
+  top: 320px;
+  font-size: 1.3em;
 }
