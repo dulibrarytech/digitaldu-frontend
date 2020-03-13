@@ -245,6 +245,13 @@ module.exports = {
     objectDerivativeCacheLocation: "/var/cache/digcoll",
 
     /*
+     * Object types to cache
+     * Add to array
+     * ["audio" | "video" | "smallImage" | "largeImage" | "pdf"]
+     */
+    cacheTypes: ["pdf"],
+
+    /*
      * Object specific default thumbnail images
      * { "object type" : "image filename" }
      */

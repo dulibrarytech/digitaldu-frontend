@@ -32,7 +32,6 @@ exports.cacheDatastream = function(objectType, objectID, stream, extension, call
 	}
 
 	if(typeof stream == 'object' && stream.statusCode) {
-			console.log("TEST obj cache: uri:", filepath)
 		stream.pipe(fs.createWriteStream(filepath)).on('close', function() {
 			callback(null);
 		});
@@ -68,7 +67,6 @@ exports.getFileStream = function(objectType, objectID, extension="", callback) {
 		filepath = config.objectDerivativeCacheLocation + "/" + objectID + "." + extension;
 	}
 
-		console.log("TEST obj cache reading: uri:", filepath)
 	let readStream = fs.createReadStream(filepath);
 	readStream.on('open', function () {
 	    callback(null, readStream);

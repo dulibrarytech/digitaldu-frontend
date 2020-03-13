@@ -212,14 +212,22 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
             callback("Repository stream data error: " + (error || "Path to resource not found. Pid:" + objectID), null);
           }
           else {
-              if(config.objectDerivativeCacheEnabled == true) {
-                Cache.cacheDatastream('object', objectID, stream, extension, function(error) {
-                  if(error) { console.error("Could not create object file for", objectID, error) }
-                  else { console.log("Object file created for", objectID) }
-                });
+            let isCached = false;
+            for(var type in config.objectTypes) {
+              if(config.objectTypes[type].includes(object.mime_type)) {
+                if(config.cacheTypes.includes(type)) {
+                  isCached = true;
+                }
               }
-              callback(null, stream);
             }
+            if(config.objectDerivativeCacheEnabled == true && isCached) {
+              Cache.cacheDatastream('object', objectID, stream, extension, function(error) {
+                if(error) { console.error("Could not create object file for", objectID, error) }
+                else { console.log("Object file created for", objectID) }
+              });
+            }
+            callback(null, stream);
+          }
         });
       }
     }
