@@ -25,13 +25,14 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
 exports.cacheDatastream = function(objectType, objectID, stream, extension, callback) {
 	let filepath;
 	if(objectType == 'thumbnail') {
-		filepath = config.thumbnailImageCacheLocation + objectID + config.thumbnailFileExtension;
+		filepath = config.thumbnailImageCacheLocation + "/" + objectID + config.thumbnailFileExtension;
 	}
 	else if(objectType == 'object') {
-		filepath = config.objectDerivativeCacheLocation + objectID + "." + extension;
+		filepath = config.objectDerivativeCacheLocation + "/" + objectID + "." + extension;
 	}
 
 	if(typeof stream == 'object' && stream.statusCode) {
+			console.log("TEST obj cache: uri:", filepath)
 		stream.pipe(fs.createWriteStream(filepath)).on('close', function() {
 			callback(null);
 		});
@@ -47,10 +48,10 @@ exports.cacheDatastream = function(objectType, objectID, stream, extension, call
 exports.exists = function(objectType, objectID, extension="") {
 	let filepath;	
 	if(objectType == 'thumbnail') {
-		filepath = config.thumbnailImageCacheLocation + objectID + config.thumbnailFileExtension;
+		filepath = config.thumbnailImageCacheLocation + "/" + objectID + config.thumbnailFileExtension;
 	}
 	else if(objectType == 'object') {
-		filepath = config.objectDerivativeCacheLocation + objectID + "." + extension;
+		filepath = config.objectDerivativeCacheLocation + "/" + objectID + "." + extension;
 	}
 	return fs.existsSync(filepath) || false;
 }
@@ -61,12 +62,13 @@ exports.exists = function(objectType, objectID, extension="") {
 exports.getFileStream = function(objectType, objectID, extension="", callback) {
 	let filepath;	
 	if(objectType == 'thumbnail') {
-		filepath = config.thumbnailImageCacheLocation + objectID + config.thumbnailFileExtension;
+		filepath = config.thumbnailImageCacheLocation + "/" + objectID + config.thumbnailFileExtension;
 	}
 	else if(objectType == 'object') {
-		filepath = config.objectDerivativeCacheLocation + objectID + "." + extension;
+		filepath = config.objectDerivativeCacheLocation + "/" + objectID + "." + extension;
 	}
 
+		console.log("TEST obj cache reading: uri:", filepath)
 	let readStream = fs.createReadStream(filepath);
 	readStream.on('open', function () {
 	    callback(null, readStream);
