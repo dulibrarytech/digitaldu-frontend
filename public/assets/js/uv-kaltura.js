@@ -6,6 +6,7 @@ $( document ).ready(function() {
 	  		$( "#uv" ).css("visibility", "hidden");
 	  		$(".mwPlayerContainer").css("display", "none");
 	  		$(".transcriptInterface").css("width", "98%");
+	  		$(".outer-spinner").remove();
 
 			setTimeout(function(){  
 		  		$( "#uv" ).css("visibility", "visible");

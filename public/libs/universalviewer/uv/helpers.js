@@ -5,7 +5,6 @@ function createUV(selector, data, dataProvider) {
     $container.empty();
     //var $parent = $('<div><div>');
     var $parent = $('<div><div class="outer-spinner"><div class="loading-msg">Loading, please wait...</div></div></div>');
-    //var $parent = $('<div><div class="uv-preload-text"><div class="loading-msg">Loading, please wait...</div></div>');
     $container.append($parent);
     var $uv = $('<div></div>');
     $parent.append($uv);
@@ -35,7 +34,6 @@ function createUV(selector, data, dataProvider) {
         setTimeout(function(){  
             $(".loading-msg").css("display", "none");
             $(".outer-spinner").append("<div class='timeout-msg'><h6>We're sorry, this is taking longer than expected. To report any problems with accessing this resource, please contact <a href='mailto:archives.du.edu'>archives.du.edu</a></h6></div>")
-            $(".loading-msg").css("display", "none");
             $(".outer-spinner").css("background-color", "black");
             $(".outer-spinner").css("background-image", "none !important");
         }, 45000);

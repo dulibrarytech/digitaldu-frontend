@@ -133,6 +133,10 @@
   padding: 20px;
 }*/
 
+.loading-msg {
+  height: 28px;
+}
+
 .outer-spinner .timeout-msg,
 .uv .centerPanel .content .spinner .timeout-msg {
   margin-top:100px;
@@ -156,5 +160,15 @@
 }
 
 .openseadragon-canvas {
+  z-index: 2;
+}
+
+.uv .pdfContainer {
+  position: relative;
+  z-index: 2;
+}
+
+.uv .kaltura-viewer {
+  position: relative;
   z-index: 2;
 }
