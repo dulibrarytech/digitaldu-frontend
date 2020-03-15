@@ -98,8 +98,25 @@
   display: none !important;
 }
 
-.spinner,
-.uv .centerPanel .content .spinner {
+.outer-spinner {
+  position: absolute !important;
+  top: 240px;
+  left: 500px;
+  z-index: 1;
+  border-radius: 3px;
+  width: 470px !important;
+  height: 331px !important;
+  color: white !important;
+  border-radius: 0 !important;
+  background-repeat: no-repeat !important;
+  background-position: 50% 50% !important;
+  background-image: url(../img/spinner3_med.gif) !important;
+  font-size: 20px;
+  font-family: 'Montserrat', 'Poppins', 'Raleway', sans-serif;
+  padding: 20px;
+}
+
+/*.uv .centerPanel .content .spinner {
   position: absolute !important;
   top: 192px;
   left: 648px;
@@ -114,16 +131,18 @@
   font-size: 20px;
   font-family: 'Montserrat', 'Poppins', 'Raleway', sans-serif;
   padding: 20px;
-}
+}*/
 
+.outer-spinner .timeout-msg,
 .uv .centerPanel .content .spinner .timeout-msg {
-  margin-top:72px;
+  margin-top:100px;
   color: black;
   background: #e5e3e1;
   padding: 25px;
   line-height: 1.5em;
 }
 
+.outer-spinner .timeout-msg a,
 .uv .centerPanel .content .spinner .timeout-msg a {
   color: blue;
   text-decoration: underline;
@@ -134,4 +153,8 @@
   position: relative;
   top: 320px;
   font-size: 1.3em;
+}
+
+.openseadragon-canvas {
+  z-index: 2;
 }

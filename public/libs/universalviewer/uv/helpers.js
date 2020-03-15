@@ -3,8 +3,8 @@ function createUV(selector, data, dataProvider) {
     var isFullScreen = false;
     var $container = $(selector);
     $container.empty();
-    var $parent = $('<div><div>');
-    //var $parent = $('<div><div class="uv-preload-text"><div class="loading-msg">Loading, please wait...</div><div class="spinner"></div></div>');
+    //var $parent = $('<div><div>');
+    var $parent = $('<div><div class="outer-spinner"><div class="loading-msg">Loading, please wait...</div></div></div>');
     //var $parent = $('<div><div class="uv-preload-text"><div class="loading-msg">Loading, please wait...</div></div>');
     $container.append($parent);
     var $uv = $('<div></div>');
@@ -33,18 +33,17 @@ function createUV(selector, data, dataProvider) {
 
     uv.on('create', function(obj) {
         setTimeout(function(){  
-            $(".spinner").append("<div class='loading-msg'>Loading, please wait...</div>");
-        }, 500);
-        setTimeout(function(){  
             $(".loading-msg").css("display", "none");
-            $(".spinner").append("<div class='timeout-msg'><h6>We're sorry, this is taking longer than expected. To report any problems with accessing this resource, please contact <a href='mailto:archives.du.edu'>archives.du.edu</a></h6></div>")
+            $(".outer-spinner").append("<div class='timeout-msg'><h6>We're sorry, this is taking longer than expected. To report any problems with accessing this resource, please contact <a href='mailto:archives.du.edu'>archives.du.edu</a></h6></div>")
             $(".loading-msg").css("display", "none");
-            $(".spinner").css("background-color", "black");
+            $(".outer-spinner").css("background-color", "black");
+            $(".outer-spinner").css("background-image", "none !important");
         }, 45000);
         resize();
     }, false);
 
     uv.on('created', function(obj) {
+        $(".spinner").remove();
        resize();
     }, false);
 
