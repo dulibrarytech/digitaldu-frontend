@@ -397,7 +397,12 @@ exports.getDatastream = function(indexName, objectID, datastreamID, part, authKe
  * @param {Array|null} Array of parent object titles Null if error
  */
 exports.getCollectionHeirarchy = function(pid, callback) {
-  getParentTrace(pid, [], callback);
+  if(pid && pid.length > 0) {
+    getParentTrace(pid, [], callback);
+  }
+  else {
+    callback([])
+  }
 }
 
 /**
@@ -408,7 +413,7 @@ exports.getCollectionHeirarchy = function(pid, callback) {
  *
  * @callback callback
  * @param {String|null} Error message or null
- * @param {Array|null} Array of parent collection titles.  The order of titles in this array will match order of input pids array Null if error
+ * @param {Array|null} Array of parent collection titles ({pid: pid, name: title, url: url}).  The order of titles in this array will match order of input pids array Null if error
  */
 var getTitleString = function(pids, titles, callback) {
   var pidArray = [], pid;
