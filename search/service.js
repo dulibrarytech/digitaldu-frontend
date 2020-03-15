@@ -364,12 +364,6 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       }
     }
 
-    // Collections API update
-    // GET request to API /search here
-    // Response is ES object
-    // Build 'responseData' object below
-    // API will contain flag to 'includeAggData' and this will be true here
-
     // Query the index
     es.search(data, function (error, response, status) {
       if (error || typeof response == 'undefined') {

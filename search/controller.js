@@ -73,30 +73,37 @@ exports.search = function(req, res) {
 			to: req.query.to || new Date().getFullYear()
 		} : null;
 
+	// View data
+	var data = {
+		error: null,
+		facets: {},
+		facet_breadcrumb_trail: null,
+		results: [],
+		pageData: null,
+		page: req.query.page || 1,
+		root_url: config.rootUrl,
+		query: Helper.getResultsLabel(query, facets, bool, field),
+		view: req.query.view || config.defaultSearchResultsView || "list",
+		sortType: req.query.sort || "relevance",
+		isAdvancedSearch: advancedSearch,
+		pagination: null,
+		options: {}
+	};
+
+	let from = (page - 1) * pageSize;
+	if(from + pageSize > 10000) {
+		let msg = "Search result pages are limited to 1000. Please select a page from 1 to 1000";
+		console.log(msg);
+		data.error = msg;
+		return res.render('results', data);
+	}
+
 	let sortBy = Helper.getSortDataArray(sort);
 	let queryData = Helper.getSearchQueryDataObject(query, field, type, bool);
 	Service.searchIndex(queryData, facets, collection, page, pageSize, daterange, sortBy, advancedSearch, function(error, response) {
-
-		// Assign view data
-		var data = {
-			error: null,
-			facets: {},
-			facet_breadcrumb_trail: null,
-			results: [],
-			pageData: null,
-			page: req.query.page || 1,
-			root_url: config.rootUrl,
-			query: Helper.getResultsLabel(query, facets, bool, field),
-			view: req.query.view || config.defaultSearchResultsView || "list",
-			sortType: req.query.sort || "relevance",
-			isAdvancedSearch: advancedSearch,
-			pagination: null,
-			options: {}
-		};
-
 		if(error) {
 			console.error(error);
-			data.error = "An unexpected error has occurred.  Please contact systems support";
+			data.error = error;
 			return res.render('results', data);
 		}
 		else {
