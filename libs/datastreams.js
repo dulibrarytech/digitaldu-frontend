@@ -14,8 +14,7 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
   Helper = require('../libs/helper'),
   Kaltura = require('../libs/kaltura'),
   Cache = require('../libs/cache'),
-  IIIF = require('../libs/IIIF'),
-  AppHelper = require("../libs/helper");
+  IIIF = require('../libs/IIIF');
   /**
     Copyright 2019 University of Denver
 
@@ -53,7 +52,7 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
     var sequence;
 
     // Get the data from the part object, set as object for datastream request. If part is not found, part will be ignored and input object will be used to stream data
-    let objectPart = AppHelper.getCompoundObjectPart(object, part);
+    let objectPart = Helper.getCompoundObjectPart(object, part);
     if(objectPart) {
       objectPart["object_type"] = "object";
       objectPart["mime_type"] = objectPart.type ? objectPart.type : (objectPart.mime_type || null);
@@ -97,7 +96,7 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
         streamDefaultThumbnail(object, callback);
       }
       else {
-        uri = settings.uri || "Thumbnail has not been set for " + objectID;
+        uri = settings.uri || null;
         switch(settings.streamOption || "") {
           case "iiif":
             uri = IIIF.getThumbnailUri(objectID, apiKey);
@@ -108,7 +107,7 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
           case "external":
             break;
           case "index":
-            uri = object.thumbnail || uri;
+            uri = getIndexTnUri(object.thumbnail || uri);
             break;
           default:
             callback("Error retrieving datastream for " + objectID + ", object type " + object.object_type + "is invalid", null);
@@ -185,7 +184,7 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
 
   // Request a non-thumbnail datastream. Streaming from Kaltura is not yet implemented
   else {
-    var extension = AppHelper.getFileExtensionForMimeType(mimeType);
+    var extension = Helper.getFileExtensionForMimeType(mimeType);
 
     // File does not exist in local cache. Stream it from remote source
     if(Cache.exists('object', objectID, extension) == false) {
@@ -259,19 +258,24 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
  * @return {undefined}
  */
 var streamRemoteData = function(uri, callback) {
-  rs(uri, {followRedirects: true}, function(err, res) {
-    if(err) {
-      callback("Could not open datastream. " + err, null, null);
-    }
-    else {
-      if(res.socket.bytesRead < 500) {
-        callback(null, 204, null);
+  if(uri) {
+    rs(uri, {followRedirects: true}, function(err, res) {
+      if(err) {
+        callback("Could not open datastream. " + err, null, null);
       }
       else {
-        callback(null, res.statusCode, res);
+        if(res.socket.bytesRead < 500) {
+          callback(null, 204, null);
+        }
+        else {
+          callback(null, res.statusCode, res);
+        }
       }
-    }
-  });
+    });
+  }
+  else {
+     callback(null, 404, null);
+  }
 }
 
 /**
@@ -355,5 +359,14 @@ var streamDefaultThumbnail = function(object, callback) {
     if(error) {callback(error, null);}
     else{callback(null, thumbnail);}
   });
+}
+
+var getIndexTnUri = function(uri) {
+  // Thumbnail value is assumed to be an object pid
+  if(uri && uri.indexOf("http") < 0) {
+    uri = config.rootUrl + "/datastream/" + uri + "/tn";
+  }
+
+  return uri;
 }
 
