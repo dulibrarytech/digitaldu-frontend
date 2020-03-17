@@ -98,7 +98,7 @@
   display: none !important;
 }
 
-.outer-spinner {
+.spinner {
   position: absolute !important;
   top: 240px;
   left: 500px;
