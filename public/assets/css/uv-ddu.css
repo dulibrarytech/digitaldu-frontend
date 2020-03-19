@@ -159,7 +159,7 @@
   font-size: 1.3em;
 }
 
-.openseadragon-canvas {
+/*.openseadragon-canvas {
   z-index: 2;
 }
 
@@ -171,4 +171,4 @@
 .uv .kaltura-viewer {
   position: relative;
   z-index: 2;
-}
+}*/
