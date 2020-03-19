@@ -1093,7 +1093,7 @@ div.search-result-data dt:not(.result-title) {
 div.search-result-data dd {
   margin-left: 10px;
   padding-top: 10px;
-  line-height: 17px;
+  line-height: 1.28em;
 }
 
 dt.result-title,
