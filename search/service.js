@@ -109,19 +109,16 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       // Handle special query cases for searching specific search fields
       queryData[index].terms = Helper.updateQueryTermsForField(queryData[index].terms, queryData[index].field, queryData[index].type, queryData[index].bool);
 
+      // Get the Elastic query type to use for this query
+      queryType = Helper.getQueryType(queryData[index]);
+
       // Get the query data from the current data object, or use default data
-      terms = queryData[index].terms.toLowerCase() || "";
+      terms = queryData[index].terms.toLowerCase().replace(/"/g, '') || "";
       field = queryData[index].field || "all";
       type = queryData[index].type || "contains";
       bool = queryData[index].bool || "or";
 
-      // If field value is "all", get all the available search fields
       fields = Helper.getSearchFields(field);
-
-      // Get the Elastic query type to use for this query
-      queryType = Helper.getQueryType(queryData[index]);
-
-      // Create a term query for each field to be searched.  These will be combined into a single should query.  A hit on any field will return a result
       if(Array.isArray(fields)) {
         let fieldObj, keywordObj, queryObj, nestedQuery, nestedQueryObj;
         for(var field of fields) {
@@ -135,11 +132,13 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
           if(queryType == "match") {
             keywordObj = {
               "query": terms,
-              "operator": "or"
+              "operator": "and"
             };
 
             // Add fuzz factor if this is not an advanced search, and there are no numeric terms.  Numeric terms must match index data exactly
-            if(isAdvanced == false && /[0-9]+/.test(terms) === false) {
+            if(isAdvanced == false 
+              && /[0-9]+/.test(terms) === false
+              && terms.indexOf("*") < 0) {
               keywordObj["fuzziness"] = config.searchTermFuzziness;
             }
 
@@ -150,6 +149,9 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
 
             fieldObj[field.field] = keywordObj;
           }
+          // else if(queryType == "wildcard") {
+            
+          // }
           else {
             fieldObj[field.field] = terms;
           }

@@ -305,7 +305,7 @@ exports.getSortDataArray = function(sort) {
  */
 exports.getQueryType = function(queryData) {
   var queryType = "match";
-
+  queryData.terms = queryData.terms.trim();
   if(queryData.type == "isnot") {
     queryType = "must_not";
   }
@@ -313,7 +313,6 @@ exports.getQueryType = function(queryData) {
     queryType = "match_phrase";
   }
   else if(queryData.terms[0] == '"' && queryData.terms[ queryData.terms.length-1 ] == '"') {
-    queryData.terms = queryData.terms.replace(/"/g, '');
     queryType = "match_phrase";
   }
   else if(queryData.terms.indexOf('*') >= 0 || queryData.terms.indexOf('?') >= 0) {
