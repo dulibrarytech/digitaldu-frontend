@@ -241,7 +241,7 @@ module.exports = {
     defaultThumbnailImage: "tn-placeholder.jpg",
     thumbnailImageCacheEnabled: true,
     thumbnailImageCacheLocation: "cache/thumbnail",
-    objectDerivativeCacheEnabled: true,
+    objectDerivativeCacheEnabled: false,
     objectDerivativeCacheLocation: "/var/cache/digcoll",
 
     /*
