@@ -34,11 +34,10 @@ const 	config = require('../config/' + process.env.CONFIGURATION_FILE),
  * @param {Object} object - index document
  * @return {String} - viewer html string
  */
-exports.getCompoundObjectViewer = function(object, part, apikey=null) {
- 	var viewer = "";
-
- 	// If not an a/v object, do not embed the Kaltura player
- 	let embedKaltura = false;
+exports.getCompoundObjectViewer = function(object, page, apikey=null) {
+ 	var viewer = "",
+ 	    embedKaltura = false;
+ 	    
  	if(config.objectTypes.audio.includes(object.mime_type) || config.objectTypes.video.includes(object.mime_type)) {
  		embedKaltura = config.universalViewerKalturaPlayer;
  	}
@@ -48,7 +47,7 @@ exports.getCompoundObjectViewer = function(object, part, apikey=null) {
  		// Get viewer for object mime type:
 	 	switch(config.compoundObjectViewer) {
 	 		case "universalviewer":
-	 			viewer += Viewer.getIIIFObjectViewer(object, "1", embedKaltura, apikey);
+	 			viewer += Viewer.getIIIFObjectViewer(object, page, embedKaltura, apikey);
 	 			break;
 	 		default:
 	 			console.log("Viewer error: No compound viewer found.  Please check configuration");

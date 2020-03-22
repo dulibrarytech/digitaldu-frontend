@@ -45,6 +45,7 @@ function createUV(selector, data, dataProvider) {
 
     uv.on('created', function(obj) {
         //$(".spinner").remove();
+       $("uv").append('<div id="sidebar-nav-buttons"></div>');
        resize();
     }, false);
 

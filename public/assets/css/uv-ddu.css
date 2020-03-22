@@ -159,16 +159,24 @@
   font-size: 1.3em;
 }
 
-/*.openseadragon-canvas {
-  z-index: 2;
+#uv #sidebar-nav-buttons {
+  position: absolute;
+  bottom: 12px;
+  left: 35px;
+  width: 200px;
+  font-size: 1.2em;
 }
 
-.uv .pdfContainer {
-  position: relative;
-  z-index: 2;
+#uv #sidebar-nav-buttons a {
+  text-decoration: underline;
 }
 
-.uv .kaltura-viewer {
-  position: relative;
-  z-index: 2;
-}*/
+#uv #sidebar-nav-buttons a:not(first-child) {
+  margin-left: 10px;
+}
+
+@media screen and (max-width: 800px) {
+  #uv #sidebar-nav-buttons {
+    display: none;
+  }
+}

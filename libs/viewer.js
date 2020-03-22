@@ -274,38 +274,41 @@ function getJWPlayer(thumbnailUrl, streamUrl, fileExtension, jwPlayerPath) {
  * @param 
  * @return 
  */
-function getIIIFObjectViewer(object, part=null, embedKalturaViewer=false, apikey="") {
-
-	// Embed the Kaltura player in the Universalviewer	
-	let kalturaViewer = "", 
+function getIIIFObjectViewer(object, page=null, embedKalturaViewer=false, apikey="") {
+	var params = {},
 		eventTriggers = "";
+
+	// Add page links for compound object viewer
+	if(object.is_compound) {
+		let parts = AppHelper.getCompoundObjectPart(object, -1) || [];
+		if(page && parts.length > 0) {
+			let pageVal = parseInt(page),
+			    offset = (config.IIIFManifestPageSize || 10) * pageVal,
+				prev = (pageVal > 1) ? pageVal-1 : null, 
+				next = (parts.length > offset) ? pageVal+1 : null;
+				params["prevLink"] = prev ? config.rootUrl + "/object/" + object.pid + "/" + prev.toString() : null;
+				params["nextLink"] = next ? config.rootUrl + "/object/" + object.pid + "/" + next.toString() : null;
+		}
+	}
+
+	params["embedKalturaViewer"] = embedKalturaViewer;
+	params["objectID"] = object.pid;
+	params["universalViewerMediaElement"] = config.universalViewerMediaElement || "";
+	params["pageSize"] = config.IIIFManifestPageSize || 10;
 
 	// Option to embed the Kaltura player into the Universalviewer instance
 	if(embedKalturaViewer) {
-		// If a part value is present, assume the object is compound, and view this part
 		let objectData = object;
-		if(part && isNaN(part) == false) {
-			let parts = AppHelper.getCompoundObjectPart(object, -1) || [];
-			for(var index in parts) {
-				if(parts[index].order == part) {
-					objectData = parts[index];
-				}
-			}
-		}
-
-		// Get the player content
-		kalturaViewer = getKalturaViewer(objectData);
-
-		// Add the event trigger to embed the Kaltura player 
-		// eventTriggers += '$( "#uv").trigger( "uvloaded", [ ' + embedKalturaViewer + ', "' + object.pid + '", "' + config.universalViewerMediaElement + '", "' + kalturaViewer + '" ] );';
+		params["viewerContent"] = getKalturaViewer(objectData);
 	}
-	eventTriggers += '$( "#uv").trigger( "uvloaded", [ ' + embedKalturaViewer + ', "' + object.pid + '", "' + config.universalViewerMediaElement + '", "' + kalturaViewer + '" ] );';
 
+	eventTriggers += '$( "#uv").trigger( "uvloaded", ' + JSON.stringify(params) + ' );';
+	page = page ? ("/" + page) : "";
 	let viewer = '<div id="uv" class="uv"></div>';
 		viewer += '<script>';
 		viewer += 'window.addEventListener("uvLoaded", function (e) {';
 		viewer += 'createUV("#uv", {';
-		viewer += 'iiifResourceUri: "' + config.IIIFUrl + '/' + object.pid + '/manifest' + apikey + '",';
+		viewer += 'iiifResourceUri: "' + config.IIIFUrl + '/' + object.pid + '/manifest' + page + apikey + '",';
 		viewer += 'configUri: "' + config.rootUrl + '/libs/universalviewer/uv-config.json",';
 		viewer += 'root: "./../..' + config.appPath + '/libs/universalviewer/uv",';
 		viewer += '}, new UV.URLDataProvider());';
