@@ -40,13 +40,13 @@ module.exports = function (app) {
     app.route('/object/:pid')
     	.get(Discovery.renderObjectView)
 
-    app.route('/object/:pid/:index')
+    app.route('/object/:pid/:page')
         .get(Discovery.renderObjectView)
 
     app.route('/viewer/:pid')
         .get(Discovery.getObjectViewer)
 
-    app.route('/viewer/:pid/:part')
+    app.route('/viewer/:pid/:page')
         .get(Discovery.getObjectViewer)
 
     app.route('/viewer/kaltura/:pid/:part')
@@ -59,6 +59,9 @@ module.exports = function (app) {
         .get(Discovery.getDatastream)
 
     app.route('/iiif/:pid/manifest')
+        .get(Discovery.getIIIFManifest)
+
+    app.route('/iiif/:pid/manifest/:page')
         .get(Discovery.getIIIFManifest)
 
     app.route('/iiif/:pid/manifest.json')

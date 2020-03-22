@@ -42,6 +42,9 @@ exports.getManifest = function(container, objects, apikey, callback) {
 	var manifest = {},
 		mediaSequences = [];
 
+		// console.log("TEST container", container)
+		// console.log("TEST objects", objects)
+
 	// Define the manifest
 	manifest["@context"] = "http://iiif.io/api/presentation/2/context.json";
 	manifest["@id"] = config.IIIFUrl + "/" + container.resourceID + "/manifest";

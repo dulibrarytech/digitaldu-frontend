@@ -507,20 +507,19 @@ var getParentTrace = function(pid, collections, callback) {
  * @param {String|null} Error message or null
  * @param {Object|null} Manifest object (JSON) Null if error
  */
-exports.getManifestObject = function(pid, index, apikey, callback) {
+exports.getManifestObject = function(pid, index, page, apikey, callback) {
   var object = {}, children = [];
   fetchObjectByPid(index, pid, function(error, response) {
     if(error) {
       callback(error, JSON.stringify({}));
     }
     else if(response) {
-
-      // Create object for IIIF
       var object = response;
-      
+      var parts = [], resourceUrl;
+
       var container = {
         resourceID: object.pid,
-        downloadFileName: object.pid, // Temporarily use pid for filename, replacing ':'' with '_'
+        downloadFileName: object.pid,
         title: object.title,
         metadata: {
           "Title": object.title,
@@ -529,13 +528,23 @@ exports.getManifestObject = function(pid, index, apikey, callback) {
         }
       };
 
-      // Create children array for IIIF
-      var parts = [], resourceUrl;
-
       // Compound objects
       if(AppHelper.isParentObject(object)) {
         // Add the child objects of the main parent object
         let parts = AppHelper.getCompoundObjectPart(object, -1) || [];
+
+        if(page && page > 0) {
+          let size = config.IIIFManifestPageSize || 10,
+              offset = (page-1) * size;
+
+          if(parts.length > offset+size) {
+            parts = parts.splice(offset, offset+size);
+          }
+          else {
+            parts = parts.splice(offset, parts.length);
+          }
+        }
+
         for(var key in parts) {
           resourceUrl = config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType(parts[key].type) + "/" + parts[key].order;
 
@@ -552,6 +561,15 @@ exports.getManifestObject = function(pid, index, apikey, callback) {
             thumbnailUrl: config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType("thumbnail") + "/" + parts[key].order
           });
         }
+
+        IIIF.getManifest(container, children, apikey, function(error, manifest) {
+          if(error) {
+            callback(error, []);
+          }
+          else {
+            callback(null, manifest);
+          }
+        });
       }
 
       // Single objects
@@ -569,16 +587,16 @@ exports.getManifestObject = function(pid, index, apikey, callback) {
           resourceUrl: resourceUrl,
           thumbnailUrl: config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType("thumbnail")
         });
-      }
 
-      IIIF.getManifest(container, children, apikey, function(error, manifest) {
-        if(error) {
-          callback(error, []);
-        }
-        else {
-          callback(null, manifest);
-        }
-      });
+        IIIF.getManifest(container, children, apikey, function(error, manifest) {
+          if(error) {
+            callback(error, []);
+          }
+          else {
+            callback(null, manifest);
+          }
+        });
+      }
     }
     else {
       callback(null, null);

@@ -235,33 +235,31 @@ exports.renderObjectView = function(req, res) {
 		}
 		else {
 			var object = response,
-				part = req.params.index && isNaN(parseInt(req.params.index)) === false ? req.params.index : 0;
+				page = req.params.page && isNaN(parseInt(req.params.page)) === false ? req.params.page : "1";
 
 			if(object.transcript && object.transcript.length > 0) {
 				data.transcript = object.transcript;
 			}
 
-			// Render a parent object with child objects
+			// Render a compound object with child objects
 			if(AppHelper.isParentObject(object)) {
-				data.viewer = CompoundViewer.getCompoundObjectViewer(object, part);
+				data.viewer = CompoundViewer.getCompoundObjectViewer(object, page);
+					console.log("TEST ctrl have c viewer", data.viewer)
 				if(data.viewer.length <= 0) {
 					data.error = config.viewerErrorMessage;
 					data.devError = "Compound object viewer error";
 					res.render('error', data);
 				}
 			}
-
-			// Render single object
 			else {
-				if(part > 0) {
+				if(page) {
 					let msg = "Object not found: " + pid;
 					data.error = msg;
 					console.log(msg)
 					res.render('page-not-found', data);
 				}
 				else {
-	
-					// Get viewer
+					// Render single object
 					data.viewer = Viewer.getObjectViewer(object);
 					if(data.viewer == "") {
 						data.error = config.viewerErrorMessage;
@@ -348,6 +346,7 @@ exports.getDatastream = function(req, res) {
  */
 exports.getIIIFManifest = function(req, res) {
 	let pid = req.params.pid || "",
+		page = req.params.page || null,
 		index = config.elasticsearchPublicIndex,
 		key = null;
 
@@ -357,7 +356,7 @@ exports.getIIIFManifest = function(req, res) {
 		key = req.query.key;
 	}
 
-	Service.getManifestObject(pid, index, key, function(error, manifest) {
+	Service.getManifestObject(pid, index, page, key, function(error, manifest) {
 		if(error) {
 			console.log(error);
 			res.sendStatus(500);
@@ -470,12 +469,12 @@ exports.getObjectViewer = function(req, res) {
 			errors += "Object not found";
 		}
 		else {
-			var part = req.params.index && isNaN(parseInt(req.params.index)) === false ? req.params.index : 0;
+			var page = req.params.page && isNaN(parseInt(req.params.page)) === false ? req.params.page : "1";
 			// Render a parent object with child objects
-			if(AppHelper.isParentObject(object)) {viewer += CompoundViewer.getCompoundObjectViewer(object, part, key)}
+			if(AppHelper.isParentObject(object)) {viewer += CompoundViewer.getCompoundObjectViewer(object, page, key)}
 			// Render single object
 			else {
-				if(part > 0) {
+				if(page) {
 					let msg = "Object not found: ", pid;
 					console.error(msg)
 					errors = msg;
