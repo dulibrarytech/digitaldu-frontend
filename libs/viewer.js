@@ -315,6 +315,8 @@ function getIIIFObjectViewer(object, page=null, embedKalturaViewer=false, apikey
 		viewer += eventTriggers;
 		viewer += '}, false);';
 		viewer += '</script>';
+
+		console.log("TEST viewer is", viewer);
 	return viewer;
 }
 exports.getIIIFObjectViewer = getIIIFObjectViewer;

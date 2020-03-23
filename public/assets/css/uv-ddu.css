@@ -159,19 +159,21 @@
   font-size: 1.3em;
 }
 
-#uv #sidebar-nav-buttons {
+#sidebar-nav-buttons {
   position: absolute;
   bottom: 12px;
   left: 35px;
   width: 200px;
-  font-size: 1.2em;
 }
 
-#uv #sidebar-nav-buttons a {
+#sidebar-nav-buttons a,
+#sidebar-nav-buttons a:hover {
   text-decoration: underline;
+  font-size: 1em;
+  color: #26b5cc !important;
 }
 
-#uv #sidebar-nav-buttons a:not(first-child) {
+#sidebar-nav-buttons a:not(first-child) {
   margin-left: 10px;
 }
 

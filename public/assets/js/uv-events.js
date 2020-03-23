@@ -1,6 +1,6 @@
 $( document ).ready(function() {
 	$( "#uv" ).on("uvloaded", function(event, params) {
-		$("#uv").append('<div id="sidebar-nav-buttons"></div>');
+		$("#object-view").append('<div id="sidebar-nav-buttons"></div>');
 		if(params.prevLink) {$("#sidebar-nav-buttons").append('<a href="' + params.prevLink + '#uv" title="View previous items"><< Previous ' + params.pageSize + '</a>')}
 		if(params.nextLink) {$("#sidebar-nav-buttons").append('<a href="' + params.nextLink + '#uv" title="View next items">Next ' + params.pageSize + ' >></a>')}
 

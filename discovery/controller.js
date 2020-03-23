@@ -235,7 +235,7 @@ exports.renderObjectView = function(req, res) {
 		}
 		else {
 			var object = response,
-				page = req.params.page && isNaN(parseInt(req.params.page)) === false ? req.params.page : "1";
+				page = req.params.page && isNaN(parseInt(req.params.page)) === false ? req.params.page : null;
 
 			if(object.transcript && object.transcript.length > 0) {
 				data.transcript = object.transcript;
@@ -244,7 +244,6 @@ exports.renderObjectView = function(req, res) {
 			// Render a compound object with child objects
 			if(AppHelper.isParentObject(object)) {
 				data.viewer = CompoundViewer.getCompoundObjectViewer(object, page);
-					console.log("TEST ctrl have c viewer", data.viewer)
 				if(data.viewer.length <= 0) {
 					data.error = config.viewerErrorMessage;
 					data.devError = "Compound object viewer error";
