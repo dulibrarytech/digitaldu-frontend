@@ -276,6 +276,7 @@ function getJWPlayer(thumbnailUrl, streamUrl, fileExtension, jwPlayerPath) {
  */
 function getIIIFObjectViewer(object, page=null, embedKalturaViewer=false, apikey="") {
 	var params = {},
+		relativePath = "./../..",
 		eventTriggers = "";
 
 	// Add page links for compound object viewer
@@ -288,6 +289,7 @@ function getIIIFObjectViewer(object, page=null, embedKalturaViewer=false, apikey
 				next = (parts.length > offset) ? pageVal+1 : null;
 				params["prevLink"] = prev ? config.rootUrl + "/object/" + object.pid + "/" + prev.toString() : null;
 				params["nextLink"] = next ? config.rootUrl + "/object/" + object.pid + "/" + next.toString() : null;
+				relativePath = "./../../..";
 		}
 	}
 
@@ -310,13 +312,11 @@ function getIIIFObjectViewer(object, page=null, embedKalturaViewer=false, apikey
 		viewer += 'createUV("#uv", {';
 		viewer += 'iiifResourceUri: "' + config.IIIFUrl + '/' + object.pid + '/manifest' + page + apikey + '",';
 		viewer += 'configUri: "' + config.rootUrl + '/libs/universalviewer/uv-config.json",';
-		viewer += 'root: "./../..' + config.appPath + '/libs/universalviewer/uv",';
+		viewer += 'root: "' + relativePath + config.appPath + '/libs/universalviewer/uv",';
 		viewer += '}, new UV.URLDataProvider());';
 		viewer += eventTriggers;
 		viewer += '}, false);';
 		viewer += '</script>';
-
-		console.log("TEST viewer is", viewer);
 	return viewer;
 }
 exports.getIIIFObjectViewer = getIIIFObjectViewer;

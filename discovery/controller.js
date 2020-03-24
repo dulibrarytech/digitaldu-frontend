@@ -241,7 +241,7 @@ exports.renderObjectView = function(req, res) {
 				data.transcript = object.transcript;
 			}
 
-			// Render a compound object with child objects
+			// Render compound
 			if(AppHelper.isParentObject(object)) {
 				data.viewer = CompoundViewer.getCompoundObjectViewer(object, page);
 				if(data.viewer.length <= 0) {
@@ -249,7 +249,20 @@ exports.renderObjectView = function(req, res) {
 					data.devError = "Compound object viewer error";
 					res.render('error', data);
 				}
+				else {
+					// Get array of parent collections for the parent collection breadcrumb list
+					Service.getCollectionHeirarchy(object.is_member_of_collection, function(collectionTitles) {
+						data.summary = Metadata.createSummaryDisplayObject(object);
+						object.type = Helper.normalizeLabel("Type", object.type || "")
+						data.metadata = Object.assign(data.metadata, Metadata.createMetadataDisplayObject(object, collectionTitles));
+						data.id = pid;
+						data.downloadLinks = AppHelper.getFileDownloadLinks(object);
+						res.render('object', data);
+					});
+				}
 			}
+
+			// Render single object
 			else {
 				if(page) {
 					let msg = "Object not found: " + pid;
@@ -265,19 +278,19 @@ exports.renderObjectView = function(req, res) {
 						data.devError = "Object viewer error";
 						res.render('error', data);
 					}
+					else {
+						// Get array of parent collections for the parent collection breadcrumb list
+						Service.getCollectionHeirarchy(object.is_member_of_collection, function(collectionTitles) {
+							data.summary = Metadata.createSummaryDisplayObject(object);
+							object.type = Helper.normalizeLabel("Type", object.type || "")
+							data.metadata = Object.assign(data.metadata, Metadata.createMetadataDisplayObject(object, collectionTitles));
+							data.id = pid;
+							data.downloadLinks = AppHelper.getFileDownloadLinks(object);
+							res.render('object', data);
+						});
+					}
 				}
 			}
-
-			// Get array of parent collections for the parent collection breadcrumb list
-			Service.getCollectionHeirarchy(object.is_member_of_collection, function(collectionTitles) {
-				// Define view data and render the view
-				data.summary = Metadata.createSummaryDisplayObject(object);
-				object.type = Helper.normalizeLabel("Type", object.type || "")
-				data.metadata = Object.assign(data.metadata, Metadata.createMetadataDisplayObject(object, collectionTitles));
-				data.id = pid;
-				data.downloadLinks = AppHelper.getFileDownloadLinks(object);
-				res.render('object', data);
-			});
 		}
 	});
 }
