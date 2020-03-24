@@ -241,55 +241,28 @@ exports.renderObjectView = function(req, res) {
 				data.transcript = object.transcript;
 			}
 
-			// Render compound
 			if(AppHelper.isParentObject(object)) {
 				data.viewer = CompoundViewer.getCompoundObjectViewer(object, page);
-				if(data.viewer.length <= 0) {
-					data.error = config.viewerErrorMessage;
-					data.devError = "Compound object viewer error";
-					res.render('error', data);
-				}
-				else {
-					// Get array of parent collections for the parent collection breadcrumb list
-					Service.getCollectionHeirarchy(object.is_member_of_collection, function(collectionTitles) {
-						data.summary = Metadata.createSummaryDisplayObject(object);
-						object.type = Helper.normalizeLabel("Type", object.type || "")
-						data.metadata = Object.assign(data.metadata, Metadata.createMetadataDisplayObject(object, collectionTitles));
-						data.id = pid;
-						data.downloadLinks = AppHelper.getFileDownloadLinks(object);
-						res.render('object', data);
-					});
-				}
+			}
+			else {
+				data.viewer = Viewer.getObjectViewer(object);
 			}
 
-			// Render single object
+			if(data.viewer.length <= 0) {
+				data.error = config.viewerErrorMessage;
+				data.devError = "Object viewer error";
+				res.render('error', data);
+			}
 			else {
-				if(page) {
-					let msg = "Object not found: " + pid;
-					data.error = msg;
-					console.log(msg)
-					res.render('page-not-found', data);
-				}
-				else {
-					// Render single object
-					data.viewer = Viewer.getObjectViewer(object);
-					if(data.viewer == "") {
-						data.error = config.viewerErrorMessage;
-						data.devError = "Object viewer error";
-						res.render('error', data);
-					}
-					else {
-						// Get array of parent collections for the parent collection breadcrumb list
-						Service.getCollectionHeirarchy(object.is_member_of_collection, function(collectionTitles) {
-							data.summary = Metadata.createSummaryDisplayObject(object);
-							object.type = Helper.normalizeLabel("Type", object.type || "")
-							data.metadata = Object.assign(data.metadata, Metadata.createMetadataDisplayObject(object, collectionTitles));
-							data.id = pid;
-							data.downloadLinks = AppHelper.getFileDownloadLinks(object);
-							res.render('object', data);
-						});
-					}
-				}
+				// Get array of parent collections for the parent collection breadcrumb list
+				Service.getCollectionHeirarchy(object.is_member_of_collection, function(collectionTitles) {
+					data.summary = Metadata.createSummaryDisplayObject(object);
+					object.type = Helper.normalizeLabel("Type", object.type || "")
+					data.metadata = Object.assign(data.metadata, Metadata.createMetadataDisplayObject(object, collectionTitles));
+					data.id = pid;
+					data.downloadLinks = AppHelper.getFileDownloadLinks(object);
+					res.render('object', data);
+				});
 			}
 		}
 	});
