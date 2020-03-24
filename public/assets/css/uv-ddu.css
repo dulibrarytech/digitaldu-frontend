@@ -161,15 +161,15 @@
 
 #sidebar-nav-buttons {
   position: absolute;
-  bottom: 12px;
-  left: 35px;
+  top: 100px;
+  left: 19px;
   width: 200px;
 }
 
 #sidebar-nav-buttons a,
 #sidebar-nav-buttons a:hover {
-  text-decoration: underline;
-  font-size: 1em;
+  text-decoration: none;
+  font-size: 0.88em;
   color: #26b5cc !important;
 }
 
@@ -178,7 +178,7 @@
 }
 
 @media screen and (max-width: 800px) {
-  #uv #sidebar-nav-buttons {
-    display: none;
+  #sidebar-nav-buttons {
+    display: none !important;
   }
 }

@@ -1,8 +1,10 @@
 $( document ).ready(function() {
 	$( "#uv" ).on("uvloaded", function(event, params) {
-		$("#object-view").append('<div id="sidebar-nav-buttons"></div>');
-		if(params.prevLink) {$("#sidebar-nav-buttons").append('<a href="' + params.prevLink + '#uv" title="View previous items"><< Previous ' + params.pageSize + '</a>')}
-		if(params.nextLink) {$("#sidebar-nav-buttons").append('<a href="' + params.nextLink + '#uv" title="View next items">Next ' + params.pageSize + ' >></a>')}
+		$("#object-view").append('<div id="sidebar-nav-buttons" style="display: none"></div>');
+		$("#sidebar-nav-buttons").append('<a id="prev" href="' + params.prevLink + '#uv" title="View previous items" style="visibility: hidden"><< Previous ' + params.pageSize + '</a>')
+		$("#sidebar-nav-buttons").append('<a id="next" href="' + params.nextLink + '#uv" title="View next items" style="visibility: hidden">Next ' + params.pageSize + ' >></a>')
+		if(params.prevLink) {$("#sidebar-nav-buttons #prev").css("visibility", "visible")}
+		if(params.nextLink) {$("#sidebar-nav-buttons #next").css("visibility", "visible")}
 
 		// Embed a Kaltura viewer in the universalviewer UI
 		if(params.embedKalturaViewer) {
