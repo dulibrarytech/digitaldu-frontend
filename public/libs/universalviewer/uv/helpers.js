@@ -44,10 +44,7 @@ function createUV(selector, data, dataProvider) {
     }, false);
 
     uv.on('created', function(obj) {
-        //$(".spinner").remove();
-       //$("uv").append('<div id="sidebar-nav-buttons"></div>');
        $("#sidebar-nav-buttons").css("display", "block");
-       console.log("TEST created", $("#sidebar-nav-buttons").css("display"))
        resize();
     }, false);
 
@@ -64,6 +61,9 @@ function createUV(selector, data, dataProvider) {
     }, false);
 
     uv.on('canvasIndexChanged', function(canvasIndex) {
+        $(".loading-msg").remove();
+        $(".timeout-msg").remove();
+        $(".spinner").css("background-color", "initial")
         dataProvider.set('cv', canvasIndex);
     }, false);
 
@@ -80,7 +80,9 @@ function createUV(selector, data, dataProvider) {
     }, false);
 
     uv.on('openseadragonExtension.currentViewUri', function(data) {
-        //console.log('openseadragonExtension.currentViewUri', obj);
+        $(".loading-msg").remove();
+        $(".timeout-msg").remove();
+        $(".spinner").css("background-color", "initial")
     }, false);
 
     uv.on('reload', function(data) {
