@@ -117,10 +117,7 @@
 }
 
 .pre-spinner {
-  position: absolute !important;
-  left: 471px;
   border-radius: 3px;
-  width: 470px !important;
   height: 331px !important;
   color: red !important;
   border-radius: 0 !important;
@@ -137,6 +134,10 @@
 
 .loading-msg {
   height: 28px;
+}
+
+.uv-preload-msg h3 {
+  color: white;
 }
 
 .outer-spinner .timeout-msg,

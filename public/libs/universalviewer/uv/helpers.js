@@ -3,9 +3,9 @@ function createUV(selector, data, dataProvider) {
     var isFullScreen = false;
     var $container = $(selector);
     $container.empty();
-    var $parent = $('<div><div class="uv-preload-msg"><h3>Loading viewer. Please wait...</h3><div class="pre-spinner"></div></div><div>');
+    var $parent = $('<div><div class="uv-preload-msg"><h3>Loading, please wait...</h3><div class="pre-spinner"></div></div><div>');
     $container.append($parent);
-    var $uv = $('<div style="color: #e5e3e1"></div>');
+    var $uv = $('<div style="color: black"></div>');
     $parent.append($uv);
     function resize() {
         if (uv) {
