@@ -116,22 +116,24 @@
   padding: 20px;
 }
 
-/*.uv .centerPanel .content .spinner {
+.pre-spinner {
   position: absolute !important;
-  top: 192px;
-  left: 648px;
+  left: 471px;
   border-radius: 3px;
   width: 470px !important;
   height: 331px !important;
-  color: white !important;
+  color: red !important;
   border-radius: 0 !important;
   background-repeat: no-repeat !important;
   background-position: 50% 50% !important;
   background-image: url(../img/spinner3_med.gif) !important;
-  font-size: 20px;
-  font-family: 'Montserrat', 'Poppins', 'Raleway', sans-serif;
   padding: 20px;
-}*/
+}
+
+.uv-preload-msg {
+  position: relative;
+  top: 22vh;
+}
 
 .loading-msg {
   height: 28px;

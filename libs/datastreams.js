@@ -195,7 +195,7 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
         (object.entry_id && object.entry_id.length > 0)) {
 
           let kalturaStreamUri = Kaltura.getStreamingMediaUrl(object.entry_id, extension);
-          fetchRemoteData(kalturaStreamUri, function(error, status, stream) {
+          streamRemoteData(kalturaStreamUri, function(error, status, stream) {
             if(error) { callback(error, null) }
             else { 
               let str = stream ? "not null" : "null"

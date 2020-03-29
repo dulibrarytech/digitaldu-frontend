@@ -3,10 +3,9 @@ function createUV(selector, data, dataProvider) {
     var isFullScreen = false;
     var $container = $(selector);
     $container.empty();
-    var $parent = $('<div><div>');
-    //var $parent = $('<div><div class="outer-spinner"><div class="loading-msg">Loading, please wait...</div></div></div>');
+    var $parent = $('<div><div class="uv-preload-msg"><h3>Loading viewer. Please wait...</h3><div class="pre-spinner"></div></div><div>');
     $container.append($parent);
-    var $uv = $('<div></div>');
+    var $uv = $('<div style="color: #e5e3e1"></div>');
     $parent.append($uv);
     function resize() {
         if (uv) {
@@ -45,6 +44,7 @@ function createUV(selector, data, dataProvider) {
     }, false);
 
     uv.on('created', function(obj) {
+       $(".uv-preload-msg").remove();
        $("#sidebar-nav-buttons").css("display", "block");
        resize();
     }, false);
