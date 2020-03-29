@@ -1161,6 +1161,7 @@ div.object-data p {
 div.object-options {
   background-color: #585858;
   padding: 20px 0 20px 0;
+  min-height: 80px;
 }
 
 div.object-options span {

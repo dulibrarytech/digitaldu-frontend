@@ -1,5 +1,6 @@
 $( document ).ready(function() {
 	$( "#uv" ).on("uvloaded", function(event, params) {
+		// Add compound object viewer page nave links
 		$("#object-view").append('<div id="sidebar-nav-buttons" style="display: none"></div>');
 		$("#sidebar-nav-buttons").append('<a id="prev" href="' + params.prevLink + '#uv" title="View previous items" style="visibility: hidden"><< Previous ' + params.pageSize + '</a>')
 		$("#sidebar-nav-buttons").append('<a id="next" href="' + params.nextLink + '#uv" title="View next items" style="visibility: hidden">Next ' + params.pageSize + ' >></a>')
@@ -14,23 +15,26 @@ $( document ).ready(function() {
 	  		$(".outer-spinner").remove();
 
 			setTimeout(function(){  
+				// Replace UV viewer content with the Kaltura viewer content
 		  		$( "#uv" ).css("visibility", "visible");
+		  		$( "#uv" ).css("background-color", "#000000");
 		  		$("[id^=mep_]").html("");
 		  		$("[id^=mep_]").append(params.viewerContent);
 
+		  		// Add thumbnail click event to load requested Kaltura viewer
 		  		$(".thumb").on("click", function(event) {
 					let part = parseInt($(this)[0].id.replace("thumb", "")) + 1,
 						uri = $(this)[0].baseURI,
 						baseUrl = uri.substring(0, uri.indexOf("/object"));
 
+					// GET the Kaltura viewer content
 		  			let kalturaViewerUri = baseUrl + "/viewer/kaltura/" + viewerContent.objectID + "/" + part;
 		  			$.get(kalturaViewerUri, function(viewerContent, status) {
-					    if(status == "success") {
-					    	$("[id^=mep_]").html(params.viewerContent);
-					    }
+					    if(status == "success") {$("[id^=mep_]").html(params.viewerContent)}
+					    else {console.log("Error: Can not retrieve Kaltura content. Status is ", status)}
 					});
 		  		});
-		  	}, 500);
+		  	}, 1000);
 
 			// Add view transcript button, define Kaltura transcript viewer hide/show functionality
 		  	var uvExpandHeight = "1020px",
