@@ -532,16 +532,14 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
       if(AppHelper.isParentObject(object)) {
         // Add the child objects of the main parent object
         let parts = AppHelper.getCompoundObjectPart(object, -1) || [];
-
         if(page && page > 0) {
           let size = config.IIIFManifestPageSize || 10,
               offset = (page-1) * size;
-
           if(parts.length > offset+size) {
-            parts = parts.splice(offset, offset+size);
+            parts = parts.slice(offset, offset+size);
           }
           else {
-            parts = parts.splice(offset, parts.length);
+            parts = parts.slice(offset, parts.length);
           }
         }
 
