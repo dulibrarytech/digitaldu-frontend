@@ -280,7 +280,7 @@ module.exports = {
             "cache": false
         },
         "object": {
-            "fileTypes": {
+            "type": {
                 "smallImage": {
                     "streamOption": "iiif",
                     "uri": "", 

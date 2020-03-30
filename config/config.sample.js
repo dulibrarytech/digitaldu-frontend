@@ -275,7 +275,7 @@ module.exports = {
             "source": "repository"
         },
         "object": {
-            "fileTypes": {
+            "type": {
                 "smallImage": {
                     "streamOption": "iiif",
                     "uri": "", 

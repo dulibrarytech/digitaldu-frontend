@@ -37,10 +37,14 @@ $( document ).ready(function() {
 		  	}, 1000);
 
 			// Add view transcript button, define Kaltura transcript viewer hide/show functionality
-		  	var uvExpandHeight = "1020px",
-				uvCollapseHeight = "718px",
-				mainPanelExpandHeight = "980px",
-				mainPanelCollapseHeight = "718px";
+		  // 	var uvExpandHeight = "1020px",
+				// uvCollapseHeight = "718px",
+				// mainPanelExpandHeight = "980px",
+				// mainPanelCollapseHeight = "718px";
+				var uvExpandHeight = $(".uv").height() + 220,
+				uvCollapseHeight = $(".uv").height() - 82,
+				mainPanelExpandHeight = $(".uv").height() + 180,
+				mainPanelCollapseHeight = $(".uv").height() - 82;
 
 			if($("#view-transcript").length < 1) {
 				$("#object-view-controls").append("<button id='view-transcript' type='button'>View Transcript</button>");

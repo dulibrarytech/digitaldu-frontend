@@ -69,28 +69,28 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
 
   // Request a thumbnail datastream
   if(datastreamID == "tn") {
-    // Check for a cached image
-    if(Cache.exists('thumbnail', objectID) == false) {
-      let fileType = "default";
-      if(Helper.isParentObject(object)) {
-        fileType = "compound";
-      }
-      else {
-        for(let type in config.objectTypes) {
-          if(config.objectTypes[type].includes(object.mime_type)) {
-            fileType = type;
-          }
+    let fileType = "default";
+    if(Helper.isParentObject(object)) {
+      fileType = "compound";
+    }
+    else {
+      for(let type in config.objectTypes) {
+        if(config.objectTypes[type].includes(object.mime_type)) {
+          fileType = type;
         }
       }
+    }
 
-      // Get the thumbnail configuration settings for this file type
-      var settings = config.thumbnails[object.object_type] || null;
-      if(settings && settings.fileTypes) {
-        settings = settings.fileTypes[fileType] || null;
-      }
+    // Get the thumbnail configuration settings for this object type
+    var settings = config.thumbnails[object.object_type] || null;
+    if(settings && settings.type) {
+      settings = settings.type[fileType] || null;
+    }
 
+    // Check for a cached image
+    if(settings.cache == false || Cache.exists('thumbnail', objectID) == false) {
       // Get the thumbnail uri based on the configuration settings
-      let filePath = null, streamPath = null, uri;
+      let uri;
       if(settings == null) {
         console.error("Error retrieving datastream for " + objectID + ", can not find configuration settings for object type " + object.object_type, null);
         streamDefaultThumbnail(object, callback);

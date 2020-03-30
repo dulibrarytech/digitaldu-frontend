@@ -138,6 +138,7 @@
 
 .uv-preload-msg h3 {
   color: white;
+  visibility: hidden;
 }
 
 .outer-spinner .timeout-msg,
