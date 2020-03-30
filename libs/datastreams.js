@@ -46,10 +46,12 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
  * @return {undefined}
  */
 exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, callback) {
-  var mimeType = object.mime_type || object.type || null;
+  var mimeType = object.mime_type || object.type || null,
+      fileType = "default";
   // If there is a part value, retrieve the part data.  Redefine the object data with the part data
-  if(part && isNaN(part) === false) {
+  if(Helper.isParentObject(object) && part) {
     var sequence;
+        fileType = "compound";
 
     // Get the data from the part object, set as object for datastream request. If part is not found, part will be ignored and input object will be used to stream data
     let objectPart = Helper.getCompoundObjectPart(object, part);
@@ -61,41 +63,29 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
       objectID = objectID + sequence;
     }
   }
-
-  // If there are no parts in this object, do not append the sequence to the stream url
   else {
     sequence = "";
   }
 
   // Request a thumbnail datastream
   if(datastreamID == "tn") {
-    let fileType = "default";
-    if(Helper.isParentObject(object)) {
-      fileType = "compound";
-    }
-    else {
-      for(let type in config.objectTypes) {
-        if(config.objectTypes[type].includes(object.mime_type)) {
-          fileType = type;
-        }
+    for(let type in config.objectTypes) {
+      if(config.objectTypes[type].includes(object.mime_type)) {
+        fileType = type;
       }
     }
 
-    // Get the thumbnail configuration settings for this object type
+    // Get the thumbnail configuration settings for this object
     var settings = config.thumbnails[object.object_type] || null;
-    if(settings && settings.type) {
-      settings = settings.type[fileType] || null;
-    }
-
-    // Check for a cached image
-    if(settings.cache == false || Cache.exists('thumbnail', objectID) == false) {
-      // Get the thumbnail uri based on the configuration settings
-      let uri;
-      if(settings == null) {
-        console.error("Error retrieving datastream for " + objectID + ", can not find configuration settings for object type " + object.object_type, null);
-        streamDefaultThumbnail(object, callback);
+    if(settings) {
+      // Get settings by object type
+      if(settings.type) {
+        settings = settings.type[fileType] || null;
       }
-      else {
+      // Check for a cached image
+      if(settings.cache == false || Cache.exists('thumbnail', objectID) == false) {
+        // Get the thumbnail uri based on the configuration settings
+        let uri;
         uri = settings.uri || null;
         switch(settings.streamOption || "") {
           case "iiif":
@@ -167,11 +157,40 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
           });
         }
       }
-    }
 
-    // Cached thumbnail image found
+      // Cached thumbnail image found
+      else {
+        Cache.getFileStream('thumbnail', objectID, null, function(error, stream) {
+          if(error) {
+            callback(error, null);
+          }
+          else {
+            callback(null, stream);
+          }
+        })
+      }
+    }
     else {
-      Cache.getFileStream('thumbnail', objectID, null, function(error, stream) {
+      console.error("Error retrieving datastream for " + objectID + ", can not find configuration settings for object type " + object.object_type, null);
+      streamDefaultThumbnail(object, callback);
+    }
+  }
+
+  // Request a non-thumbnail datastream. Streaming from Kaltura has not been implemented
+  else {
+    var isCached = false;
+    for(var type in config.objectTypes) {
+      if(config.objectTypes[type].includes(object.mime_type)) {
+        if(config.cacheTypes.includes(type)) {
+          isCached = true;
+        }
+      }
+    }
+    var extension = Helper.getFileExtensionForMimeType(mimeType);
+
+    // Stream file from cache
+    if(isCached && Cache.exists('object', objectID, extension) == true) {
+      Cache.getFileStream('object', objectID, extension, function(error, stream) {
         if(error) {
           callback(error, null);
         }
@@ -180,15 +199,9 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
         }
       })
     }
-  }
 
-  // Request a non-thumbnail datastream. Streaming from Kaltura is not yet implemented
-  else {
-    var extension = Helper.getFileExtensionForMimeType(mimeType);
-
-    // File does not exist in local cache. Stream it from remote source
-    if(Cache.exists('object', objectID, extension) == false) {
-
+    // Fetch file
+    else {
       // Stream data from Kaltura server
       if(object.mime_type && 
         (config.objectTypes["audio"].includes(object.mime_type)) || (object.mime_type && config.objectTypes["video"].includes(object.mime_type)) &&
@@ -211,14 +224,6 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
             callback("Repository stream data error: " + (error || "Path to resource not found. Pid:" + objectID), null);
           }
           else {
-            let isCached = false;
-            for(var type in config.objectTypes) {
-              if(config.objectTypes[type].includes(object.mime_type)) {
-                if(config.cacheTypes.includes(type)) {
-                  isCached = true;
-                }
-              }
-            }
             if(config.objectDerivativeCacheEnabled == true && isCached) {
               Cache.cacheDatastream('object', objectID, stream, extension, function(error) {
                 if(error) { console.error("Could not create object file for", objectID, error) }
@@ -229,18 +234,6 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
           }
         });
       }
-    }
-
-    // Stream from local cache
-    else {
-      Cache.getFileStream('object', objectID, extension, function(error, stream) {
-        if(error) {
-          callback(error, null);
-        }
-        else {
-          callback(null, stream);
-        }
-      })
     }
   }
 }
