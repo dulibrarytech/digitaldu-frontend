@@ -287,7 +287,6 @@ exports.getDatastream = function(req, res) {
 		key = null;
 
 	// Detect part index appended to a compound object pid.  This is to allow IIIF url resolver to convey part index data by modifying the pid value
-	let pidElements;
 	if(part == null && pid.indexOf(config.compoundObjectPartID) > 0) {
 		part = pid.substring(pid.indexOf(config.compoundObjectPartID)+1, pid.length);	
 		pid = pid.split(config.compoundObjectPartID,1)[0];
@@ -308,7 +307,7 @@ exports.getDatastream = function(req, res) {
 			res.sendStatus(404);
 		}
 		else {
-			res.set('Accept-Ranges', 'bytes');
+			//res.set('Accept-Ranges', 'bytes');
 			if(stream.headers && stream.headers["content-type"]) {
 				res.set('Content-Type', stream.headers["content-type"]);
 			}
@@ -331,9 +330,19 @@ exports.getDatastream = function(req, res) {
  */
 exports.getIIIFManifest = function(req, res) {
 	let pid = req.params.pid || "",
+		part = null,
 		page = req.params.page || null,
 		index = config.elasticsearchPublicIndex,
 		key = null;
+
+			console.log("TEST pid,page in", pid, page)
+
+	if(pid.indexOf(config.compoundObjectPartID) > 0) {
+		part = pid.substring(pid.indexOf(config.compoundObjectPartID)+1, pid.length);	
+		pid = pid.split(config.compoundObjectPartID,1)[0];
+	}
+		console.log("TEST part in pid", part)
+		console.log("TEST main pid", pid)
 
 	// If a valid api key is passed in with the request, get data from the the private index
 	if(req.query.key && req.query.key == config.apiKey) {
@@ -341,7 +350,7 @@ exports.getIIIFManifest = function(req, res) {
 		key = req.query.key;
 	}
 
-	Service.getManifestObject(pid, index, page, key, function(error, manifest) {
+	Service.getManifestObject(pid, part, index, page, key, function(error, manifest) {
 		if(error) {
 			console.log(error);
 			res.sendStatus(500);

@@ -507,17 +507,15 @@ var getParentTrace = function(pid, collections, callback) {
  * @param {String|null} Error message or null
  * @param {Object|null} Manifest object (JSON) Null if error
  */
-exports.getManifestObject = function(pid, index, page, apikey, callback) {
+exports.getManifestObject = function(pid, part, index, page, apikey, callback) {
   var object = {}, children = [];
   fetchObjectByPid(index, pid, function(error, response) {
     if(error) {
       callback(error, JSON.stringify({}));
     }
     else if(response) {
-      var object = response;
-      var parts = [], resourceUrl;
-
-      var container = {
+      var object = response,
+      container = {
         resourceID: object.pid,
         downloadFileName: object.pid,
         title: object.title,
@@ -530,49 +528,96 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
 
       // Compound objects
       if(AppHelper.isParentObject(object)) {
-        // Add the child objects of the main parent object
-        let parts = AppHelper.getCompoundObjectPart(object, -1) || [];
-        if(page && page > 0) {
-          let size = config.IIIFManifestPageSize || 10,
-              offset = (page-1) * size;
-          if(parts.length > offset+size) {
-            parts = parts.slice(offset, offset+size);
-          }
-          else {
-            parts = parts.slice(offset, parts.length);
-          }
-        }
+          console.log("TEST is compound, pid, part is", pid, part)
 
-        for(var key in parts) {
-          resourceUrl = config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType(parts[key].type) + "/" + parts[key].order;
+        // Get a manifest for a compound object part item
+        if(part) {
+          let parts = AppHelper.getCompoundObjectPart(object, -1) || [],
+              partID = object.pid + config.compoundObjectPartID + part;
+          console.log("TEST page", page)
+          console.log("TEST part", part)
+          console.log("TEST parts", parts)
 
-          // Add the data
+          let childItem = parts[parseInt(part)-1],
+              resourceUrl = config.rootUrl + "/datastream/" + partID + "/" + Helper.getDsType(childItem.type);
+
+          container = {
+            resourceID: partID,
+            downloadFileName: partID,
+            title: object.title,
+            metadata: {
+              "Title": object.title,
+              "Creator": object.creator,
+              "Description": object.abstract,
+              "Sequence": part
+            }
+          };
+
           children.push({
-            label: parts[key].title,
-            sequence: parts[key].order || key,
-            description: parts[key].caption,
-            format: parts[key].type,
-            type: Helper.getIIIFObjectType(parts[key].type) || "",
-            resourceID: object.pid + config.compoundObjectPartID + parts[key].order || "",
-            downloadFileName: parts[key].title,
+            label: childItem.title,
+            sequence: "1",
+            description: childItem.abstract || "",
+            format: childItem.type,
+            type: Helper.getIIIFObjectType(childItem.type) || "",
+            resourceID: partID,
             resourceUrl: resourceUrl,
-            thumbnailUrl: config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType("thumbnail") + "/" + parts[key].order
+            thumbnailUrl: config.rootUrl + "/datastream/" + partID + "/" + Helper.getDsType("thumbnail")
+          });
+
+          IIIF.getManifest(container, children, apikey, function(error, manifest) {
+            if(error) {
+              callback(error, []);
+            }
+            else {
+              callback(null, manifest);
+            }
           });
         }
 
-        IIIF.getManifest(container, children, apikey, function(error, manifest) {
-          if(error) {
-            callback(error, []);
+        // Get a manifest for a compound object
+        else {
+          // Add the child objects of the main parent object
+          let parts = AppHelper.getCompoundObjectPart(object, -1) || [],
+              partIDs = [];
+
+          if(page && page > 0) {
+            let size = config.IIIFManifestPageSize || 10,
+                offset = (page-1) * size;
+            if(parts.length > offset+size) {
+              parts = parts.slice(offset, offset+size);
+            }
+            else {
+              parts = parts.slice(offset, parts.length);
+            }
           }
-          else {
-            callback(null, manifest);
+
+          let partID = "";
+          for(var index in parts) {
+            partID = pid + config.compoundObjectPartID + parts[index].order;
+            partIDs.push({
+                id: partID,
+                title: parts[index].title || "Untitled"
+            });
           }
-        });
+
+          console.log("TEST page", page)
+            console.log("TEST parts", partIDs)
+
+          IIIF.getCompoundItemManifest(container, partIDs, apikey, function(error, manifest) {
+            if(error) {
+              callback(error, []);
+            }
+            else {
+              callback(null, manifest);
+            }
+          });
+        }
       }
 
       // Single objects
       else {
-        resourceUrl = config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType(object.mime_type);
+        let resourceUrl = config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType(object.mime_type);
+          console.log("TEST here", resourceUrl)
 
         // Add the data
         children.push({
@@ -597,6 +642,7 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
       }
     }
     else {
+        console.log("TEST no fobjpid")
       callback(null, null);
     }
   });

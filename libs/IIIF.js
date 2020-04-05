@@ -224,7 +224,8 @@ var getPDFCanvas = function(container, object, apikey) {
 		content = {},
 		items = {};
 
-	canvas["@id"] = config.IIIFUrl + "/" + container.resourceID + "/canvas/c" + object.sequence;
+	let seq = parseInt(object.sequence)-1;
+	canvas["@id"] = config.IIIFUrl + "/" + container.resourceID + "/canvas/c" + seq;
 	canvas["@type"] = "Canvas";
 	canvas["thumbnail"] = getThumbnailObject(container, object, apikey)
 	canvas["rendering"] = {
@@ -234,11 +235,11 @@ var getPDFCanvas = function(container, object, apikey) {
 	};
 	canvas["content"] = [];
 
-	content["@id"] = config.IIIFUrl + "/" + container.resourceID + "/annotationpage/ap" + object.sequence;
+	content["@id"] = config.IIIFUrl + "/" + container.resourceID + "/annotationpage/ap" + seq;
 	content["@type"] = "AnnotationPage";
 	content["items"] = [];
 
-	items["@id"] = config.IIIFUrl + "/" + container.resourceID + "/annotation/a" + object.sequence;
+	items["@id"] = config.IIIFUrl + "/" + container.resourceID + "/annotation/a" + seq;
 	items["@type"] = "Annotation";
 	items["motivation"] = "painting";
 	items["body"] = {
@@ -247,7 +248,7 @@ var getPDFCanvas = function(container, object, apikey) {
 		format: object.format,
 		label: object.label
 	};
-	items["target"] = config.IIIFUrl + "/" + container.resourceID + "/canvas/c" + object.sequence;
+	items["target"] = config.IIIFUrl + "/" + container.resourceID + "/canvas/c" + seq;
 
 	content.items.push(items);
 	canvas.content.push(content);
@@ -272,7 +273,8 @@ var getThumbnailCanvas = function(container, object) {
 	image["motivation"] = "sc:painting";
 	image["resource"] = resource;
 
-	canvas["@id"] = config.IIIFUrl + "/" + container.resourceID + "/canvas/c" + object.sequence;
+	let seq = parseInt(object.sequence)-1;
+	canvas["@id"] = config.IIIFUrl + "/" + container.resourceID + "/canvas/c" + seq;
 	canvas["@type"] = "sc:Canvas";
 	canvas["label"] = "Placeholder Image";
 	canvas["thumbnail"] = object.thumbnailUrl;
@@ -318,7 +320,8 @@ var getImageCanvas = function(container, object, apikey) {
 	service = {};
 	apikey = apikey ? (config.IIIFAPiKeyPrefix + apikey) : "";
 
-	canvas["@id"] = config.IIIFUrl + "/" + container.resourceID + "/canvas/c" + object.sequence;
+	let seq = parseInt(object.sequence)-1; 
+	canvas["@id"] = config.IIIFUrl + "/" + container.resourceID + "/canvas/c" + seq;
 	canvas["@type"] = "sc:Canvas";
 	canvas["label"] = object.label;
 
@@ -335,7 +338,7 @@ var getImageCanvas = function(container, object, apikey) {
 	canvas['images'] = [];
 
 	image["@context"] = "http://iiif.io/api/presentation/2/context.json";
-	image["@id"] = config.IIIFUrl + "/" + container.resourceID + "/image/i" + object.sequence;
+	image["@id"] = config.IIIFUrl + "/" + container.resourceID + "/image/i" + seq;
 	image["@type"] =  "oa:Annotation";
 	image["motivation"] = "";
 
@@ -360,4 +363,46 @@ var getImageCanvas = function(container, object, apikey) {
 
 	canvas.images.push(image);
 	return canvas;
+}
+
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
+exports.getCompoundItemManifest = function(container, children, apikey, callback) {
+	var collection = {};
+
+		console.log("gcim children", children)
+	// Define the manifest
+	collection["@context"] = "http://iiif.io/api/presentation/2/context.json";
+	collection["@id"] = config.IIIFUrl + "/collection/" + container.resourceID;
+	collection["@type"] = "sc:Collection";
+	collection["label"] = container.title;
+
+	collection['metadata'] = [];
+	for(var key in container.metadata) {
+		collection.metadata.push({
+			"label": key,
+			"value": container.metadata[key]
+		});
+	}
+
+	collection['license'] = "https://creativecommons.org/licenses/by/3.0/"; 
+	collection['logo'] = "https://www.du.edu/_resources/images/nav/logo2.gif";
+	collection['thumbnail'] = {};
+	collection['manifests'] = [];
+
+	for(var child of children) {
+		collection.manifests.push({
+			"@id":  config.IIIFUrl + "/" + child.id + "/manifest",
+			"@type": "sc:Manifest",
+			"label": child.title,
+			"metadata": []
+		});
+	}
+		console.log("TEST manifests", collection.manifests)
+		collection.manifests = collection.manifests.slice(0,1);
+	callback(null, collection);
 }
