@@ -1,5 +1,6 @@
 $( document ).ready(function() {
 	$( "#uv" ).on("uvloaded", function(event, params) {
+			
 		// Add compound object viewer page nave links
 		$("#object-view").append('<div id="sidebar-nav-buttons" style="display: none"></div>');
 		$("#sidebar-nav-buttons").append('<a id="prev" href="' + params.prevLink + '#uv" title="View previous items" style="visibility: hidden"><< Previous ' + params.pageSize + '</a>')
@@ -20,6 +21,7 @@ $( document ).ready(function() {
 		  		$( "#uv" ).css("background-color", "#000000");
 		  		$("[id^=mep_]").html("");
 		  		$("[id^=mep_]").append(params.viewerContent);
+		  		$(".mainPanel").css("height", "719px");
 
 		  		// Add thumbnail click event to load requested Kaltura viewer
 		  		$(".thumb").on("click", function(event) {
@@ -37,14 +39,10 @@ $( document ).ready(function() {
 		  	}, 1000);
 
 			// Add view transcript button, define Kaltura transcript viewer hide/show functionality
-		  // 	var uvExpandHeight = "1020px",
-				// uvCollapseHeight = "718px",
-				// mainPanelExpandHeight = "980px",
-				// mainPanelCollapseHeight = "718px";
-				var uvExpandHeight = $(".uv").height() + 220,
-				uvCollapseHeight = $(".uv").height() - 82,
-				mainPanelExpandHeight = $(".uv").height() + 180,
-				mainPanelCollapseHeight = $(".uv").height() - 82;
+			var uvExpandHeight = $(".uv").height() + 220, // 1020px
+				uvCollapseHeight = $(".uv").height() - 81, 	// 719px
+				mainPanelExpandHeight = $(".uv").height() + 180,  // 980px
+				mainPanelCollapseHeight = $(".uv").height() - 81;  // 719px
 
 			if($("#view-transcript").length < 1) {
 				$("#object-view-controls").append("<button id='view-transcript' type='button'>View Transcript</button>");
