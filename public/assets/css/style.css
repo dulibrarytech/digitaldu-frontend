@@ -1196,6 +1196,10 @@ div#download-links {
   opacity: 0.4;
 }
 
+div.object-citations {
+  height: 200px;
+}
+
 div.mods-display {
   margin-bottom: 75px;
   background: #fff;

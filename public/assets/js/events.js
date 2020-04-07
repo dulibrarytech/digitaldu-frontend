@@ -36,6 +36,15 @@ $( document ).ready(function() {
   		}
   	});
 
+  	$("#view-citations").click(function(event) {
+  		if($(".object-citations").hasClass("panel-collapsed")) {
+  			$(".object-citations").removeClass("panel-collapsed");
+  		}
+  		else {
+  			$(".object-citations").addClass("panel-collapsed");
+  		}
+	});
+
   	$("#file-download").click(function(event) {
   		$("#download-links").css("display", "block");
 	});

@@ -33,6 +33,7 @@
     <div class="container">
         <span id="object-view-controls">
           <!-- <button class="collapsible" alt="View Details">View Details</button> -->
+          <button id="view-citations" alt="View Citations" type="button">Cite This Item</button>
           <!-- <button id="file-download" class="download-button disabledbutton" alt="Download Item">Download File</button> -->
           <% if(transcript) { %>
             <button id="view-transcript" alt="View Transcript" type="button">View Transcript</button>
@@ -41,9 +42,13 @@
     </div>
   </div>
 
-  <div class="container">
+  <div class="container object-citations panel-collapsed">
+    Citation panel
+  </div>
+
+  <div class="container mods-display metadata-content">
     <!-- <div class="table-responsive mods-display metadata-content" style="display: none"> --> <!-- If hidden by default, shown with 'view details' button -->
-    <div class="table-responsive mods-display metadata-content">
+    <div class="table-responsive">
         <table class="table data-table" summary="<% for (var key in summary) { %><%= summary[key] %> <% } %>">
           <tr style="display: none;">
             <th scope="col">Data Type</th>  
