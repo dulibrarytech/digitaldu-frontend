@@ -18,23 +18,26 @@
     </div>
   </div>
 
-  <div id="download-links">
+  <div class="download-links panel-collapsed">
     <ul>
-      <% for (var link in downloadLinks) { %>
-        <li><a href="<%= downloadLinks[link] %>" download><%= downloadLinks[link] %></a></li>
+      <% for (var link in downloads) { %>
+        <li><a href="<%= downloads[link].uri %>" download><%= downloads[link].filename %></a></li>
       <% } %>
     </ul>
   </div>
 </div>
 
 <div id="metadata-section">
-
   <div class="object-options">
     <div class="container">
         <span id="object-view-controls">
           <!-- <button class="collapsible" alt="View Details">View Details</button> -->
-          <button id="view-citations" alt="View Citations" type="button">Cite This Item</button>
-          <!-- <button id="file-download" class="download-button disabledbutton" alt="Download Item">Download File</button> -->
+          <% if(citations) { %>
+            <button id="view-citations" alt="View Citations" type="button">Cite This Item</button>
+          <% } %>
+<!--           <% if(downloads) { %>
+            <button id="file-download" class="download-button" alt="Download Item">Download File</button>
+          <% } %> -->
           <% if(transcript) { %>
             <button id="view-transcript" alt="View Transcript" type="button">View Transcript</button>
           <% } %>

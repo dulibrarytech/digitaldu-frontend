@@ -130,11 +130,23 @@ exports.getObjectType = getObjectType;
  * @param {Object} object - DDU Elastic index doc
  * @return {Array.<String>} Array of download link uris
  */
-exports.getFileDownloadLinks = function(object) {
-	// Get extension/extensions avail
-		//console.log("TEST object", object)
-	// Test
-	let uri = config.rootUrl + "/download/" + object.pid + "/" + "mp4";
-		//console.log("TEST uri", uri)
-	return [uri];
+exports.getFileDownloadLinks = function(object, part=null) {
+	let objType = getObjectType(object.mime_type || ""),
+		links = null;
+
+	if(objType != "audio" && objType != "video") {
+		links = [];
+		// DEV Can select file type
+		//let uri = config.rootUrl + "/download/" + object.pid + "/" + "mp4";
+		// DEV Uses master object file type
+		part = part ? part : "0";
+		let extension = getFileExtensionForMimeType(object.mime_type),
+			link = {
+				uri: config.rootUrl + "/datastream/" + object.pid + "/object/" + part + "/" + object.pid + "." + extension,
+				filename: object.pid + "." + extension
+			};
+		links.push(link);
+	}
+
+	return links;
 }

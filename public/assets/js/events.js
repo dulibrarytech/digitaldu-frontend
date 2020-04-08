@@ -46,7 +46,12 @@ $( document ).ready(function() {
 	});
 
   	$("#file-download").click(function(event) {
-  		$("#download-links").css("display", "block");
+  		if($(".download-links").hasClass("panel-collapsed")) {
+  			$(".download-links").removeClass("panel-collapsed");
+  		}
+  		else {
+  			$(".download-links").addClass("panel-collapsed");
+  		}
 	});
 
 	$("#home-search button").click(function(event) {

@@ -213,8 +213,9 @@ exports.renderObjectView = function(req, res) {
 		metadata: {},
 		error: null,
 		devError: null,
+		citations: null,
+		downloads: null,
 		transcript: null,
-		downloadLinks: [],
 		root_url: config.rootUrl
 	},
 	pid = req.params.pid || "";
@@ -260,7 +261,8 @@ exports.renderObjectView = function(req, res) {
 					object.type = Helper.normalizeLabel("Type", object.type || "")
 					data.metadata = Object.assign(data.metadata, Metadata.createMetadataDisplayObject(object, collectionTitles));
 					data.id = pid;
-					data.downloadLinks = AppHelper.getFileDownloadLinks(object);
+					data.downloads = AppHelper.getFileDownloadLinks(object);
+					data.citations = []; // TODO get citations
 					res.render('object', data);
 				});
 			}
@@ -288,6 +290,7 @@ exports.getDatastream = function(req, res) {
 
 	// Detect part index appended to a compound object pid.  This is to allow IIIF url resolver to convey part index data by modifying the pid value
 	let pidElements;
+	part = part == "0" ? null : part;
 	if(part == null && pid.indexOf(config.compoundObjectPartID) > 0) {
 		part = pid.substring(pid.indexOf(config.compoundObjectPartID)+1, pid.length);	
 		pid = pid.split(config.compoundObjectPartID,1)[0];
@@ -512,6 +515,9 @@ exports.downloadObjectFile = function(req, res) {
 		pid = pid.split(config.compoundObjectPartID,1)[0];
 	}
 
+		console.log("TEST controller downloadObjectFile pid/part", pid, part)
+
 	// TODO request uri
+	res.sendStatus(200)
 }
 

@@ -58,6 +58,9 @@ module.exports = function (app) {
     app.route('/datastream/:pid/:datastream/:part')
         .get(Discovery.getDatastream)
 
+    app.route('/datastream/:pid/:datastream/:part/:filename')
+        .get(Discovery.getDatastream)
+
     app.route('/iiif/:pid/manifest')
         .get(Discovery.getIIIFManifest)
 

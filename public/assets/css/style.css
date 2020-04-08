@@ -1186,9 +1186,12 @@ div.object-options button:focus {
   outline: none;
 }
 
-div#download-links {
-  display: none;
+div.download-links {
   margin-top: 30px;
+}
+
+div.download-links a {
+  font-size: 0.9em;
 }
 
 .disabledbutton {

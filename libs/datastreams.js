@@ -8,6 +8,7 @@
 
 const config = require('../config/' + process.env.CONFIGURATION_FILE),
   rs = require('request-stream'),
+  request = require("request"),
   fetch = require('node-fetch'),
   fs = require('fs'),
   Repository = require('../libs/repository'),
@@ -206,15 +207,17 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
       if(object.mime_type && 
         (config.objectTypes["audio"].includes(object.mime_type)) || (object.mime_type && config.objectTypes["video"].includes(object.mime_type)) &&
         (object.entry_id && object.entry_id.length > 0)) {
-
-          let kalturaStreamUri = Kaltura.getStreamingMediaUrl(object.entry_id, extension);
-          streamRemoteData(kalturaStreamUri, function(error, status, stream) {
-            if(error) { callback(error, null) }
-            else { 
-              let str = stream ? "not null" : "null"
-              callback(null, stream) 
-            }
-          });
+          // TEMP
+          callback(null, null);
+          // DEV: Kaltura fetch Kaltura stream
+          // let kalturaStreamUri = Kaltura.getStreamingMediaUrl(object.entry_id, extension);
+          // fetchRemoteData(kalturaStreamUri, function(error, status, stream) {
+          //   if(error) { callback(error, null) }
+          //   else { 
+          //     let str = stream ? "not null" : "null"
+          //     callback(null, stream) 
+          //   }
+          // });
       }
 
       // Stream data from the repository
@@ -287,28 +290,30 @@ var fetchRemoteData = function(uri, callback) {
       console.log("TEST frd request", uri)
 
     // TODO request is depriciated, replace with another lib?
-    // request(uri, function(error, response, body) {
-    //   if(error) {
-    //       console.log("TEST dsfetch req err", error)
-    //     callback(error, null);
-    //   }
-    //   else {
-    //       console.log("TEST dsfetch req ok, returning body", response.headers)
-    //     callback(null, response);
-    //   }
-    // });
+    request(uri, function(error, response, body) {
+      if(error) {
+          console.log("TEST dsfetch req err", error)
+        callback(error, null);
+      }
+      else {
+          console.log("TEST dsfetch req ok, returning body", response.headers)
+        callback(null, response);
+      }
+    });
 
     // test
-    fetch('https://github.com/')
-    .then(res => res.text())
-    .then(body => console.log(body));
+    // fetch(uri)
+    // .then(body => {
+    //   console.log(body);
+    //   callback(body);
+    // });
 
-    //  tream
-    fetch('https://assets-cdn.github.com/images/modules/logos_page/Octocat.png')
-    .then(res => {
-        const dest = fs.createWriteStream('./octocat.png');
-        res.body.pipe(dest);
-    });
+    // //  tream
+    // fetch('https://assets-cdn.github.com/images/modules/logos_page/Octocat.png')
+    // .then(res => {
+    //     const dest = fs.createWriteStream('./octocat.png');
+    //     res.body.pipe(dest);
+    // });
 }
 
 /**
