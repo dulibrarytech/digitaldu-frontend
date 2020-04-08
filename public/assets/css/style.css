@@ -1197,7 +1197,19 @@ div#download-links {
 }
 
 div.object-citations {
-  height: 200px;
+
+}
+
+.citation-text h5 {
+  font-size: 1rem;
+}
+
+.citation-text p {
+  font-size: 0.9em;
+}
+
+.citation:not(:first-child) {
+  margin-top: 40px;
 }
 
 div.mods-display {
