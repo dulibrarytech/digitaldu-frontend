@@ -761,6 +761,10 @@ div#viewer-section {
   text-align: center;
 }
 
+div.embedded-viewer {
+  text-align: center;
+}
+
 div.viewer-wrapper {
   margin: 0 auto;
   width: 75%;

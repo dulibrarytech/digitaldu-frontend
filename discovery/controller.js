@@ -447,7 +447,6 @@ exports.getObjectViewer = function(req, res) {
 		index = config.elasticsearchPrivateIndex;
 		key = req.query.key;
 	}
-
 	Service.fetchObjectByPid(index, pid, function(error, object) {
 		if(error) {
 			console.error(error);
@@ -463,8 +462,8 @@ exports.getObjectViewer = function(req, res) {
 			if(AppHelper.isParentObject(object)) {viewer += CompoundViewer.getCompoundObjectViewer(object, page, key)}
 			// Render single object
 			else {
-				if(page) {
-					let msg = "Object not found: ", pid;
+				if(page != "1") {
+					let msg = "Object not found: " + pid;
 					console.error(msg)
 					errors = msg;
 				}
