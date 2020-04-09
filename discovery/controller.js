@@ -515,8 +515,6 @@ exports.downloadObjectFile = function(req, res) {
 		pid = pid.split(config.compoundObjectPartID,1)[0];
 	}
 
-		console.log("TEST controller downloadObjectFile pid/part", pid, part)
-
 	// TODO request uri
 	res.sendStatus(200)
 }

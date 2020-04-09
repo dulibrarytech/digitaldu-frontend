@@ -21,7 +21,6 @@ $( document ).ready(function() {
 		  		$( "#uv" ).css("background-color", "#000000");
 		  		$("[id^=mep_]").html("");
 		  		$("[id^=mep_]").append(params.viewerContent);
-		  		$(".mainPanel").css("height", "719px");
 
 		  		// Add thumbnail click event to load requested Kaltura viewer
 		  		$(".thumb").on("click", function(event) {
@@ -29,7 +28,7 @@ $( document ).ready(function() {
 						uri = $(this)[0].baseURI,
 						baseUrl = uri.substring(0, uri.indexOf("/object"));
 
-					// GET the Kaltura viewer content
+					// Get the Kaltura viewer content
 		  			let kalturaViewerUri = baseUrl + "/viewer/kaltura/" + viewerContent.objectID + "/" + part;
 		  			$.get(kalturaViewerUri, function(viewerContent, status) {
 					    if(status == "success") {$("[id^=mep_]").html(params.viewerContent)}

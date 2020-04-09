@@ -545,13 +545,14 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
 
         for(var key in parts) {
           resourceUrl = config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType(parts[key].type) + "/" + parts[key].order;
+          //parts[key].type = parts[key].type == "image/tiff" ? "image/jpg" : parts[key].type;
 
           // Add the data
           children.push({
             label: parts[key].title,
             sequence: parts[key].order || key,
             description: parts[key].caption,
-            format: parts[key].type,
+            format: Helper.getIIIFFormat(parts[key].type),
             type: Helper.getIIIFObjectType(parts[key].type) || "",
             resourceID: object.pid + config.compoundObjectPartID + parts[key].order || "",
             downloadFileName: parts[key].title,
@@ -573,13 +574,14 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
       // Single objects
       else {
         resourceUrl = config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType(object.mime_type);
+        //object.mime_type = object.mime_type == "image/tiff" ? "image/jpg" : object.mime_type;
 
         // Add the data
         children.push({
           label: object.title,
           sequence: "1",
           description: object.abstract,
-          format: object.mime_type,
+          format: Helper.getIIIFFormat(object.mime_type),
           type: Helper.getIIIFObjectType(object.mime_type) || "",
           resourceID: object.pid,
           resourceUrl: resourceUrl,

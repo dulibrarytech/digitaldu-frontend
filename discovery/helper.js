@@ -210,6 +210,36 @@ exports.getIIIFObjectType = function(mimeType) {
 }
 
  /**
+ * Select a IIIF "format" value based on the DDU object type 
+ *
+ * @param {String} mimeType - Object mime type (ex "audio/mp3")
+ * @return {String} III "format" mimetype
+ */
+exports.getIIIFFormat = function(mimeType) {
+  let objType = getObjectType(mimeType),
+      format = "";
+  switch(objType) {
+    case "smallImage":
+    case "largeImage":
+      format = "image/jpg";
+      break;
+    case "audio":
+      format = "audio/mp3";
+      break;
+    case "video":
+      format = "video/mp4";
+      break;
+    case "pdf":
+      format = "application/pdf";
+      break;
+    default:
+      format = "";
+      break;
+  }
+  return format;
+}
+
+ /**
  * Finds the DDU datastream ID that corresponds with an object's mime type
  *
  * @param {String} mimeType - Object mime type (ex "audio/mp3")
@@ -227,6 +257,22 @@ exports.getDsType = function(mimeType) {
   }
 
   return datastream;
+}
+
+ /**
+ * Finds the DDU object type that corresponds with an object's mime type
+ *
+ * @param {String} mimeType - Object mime type (ex "audio/mp3")
+ * @return {String} DDU object type
+ */
+var getObjectType = function(mimeType) {
+  let type = "";
+  for(var key in config.objectTypes) {
+    if(config.objectTypes[key].includes(mimeType)) {
+      type = key;
+    }
+  }
+  return type;
 }
 
 

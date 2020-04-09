@@ -285,20 +285,18 @@ var getThumbnailCanvas = function(container, object) {
 }
 
 var getThumbnailObject = function(container, object, apikey) {
-	let thumbnail = {
-		service: {}
-	},
+	let thumbnail = {},
 	service = {};
 	let apiKeyTmp = apikey ? ("?key=" + apikey) : "";
 	apikey = apikey ? (config.IIIFAPiKeyPrefix + apikey) : "";
 
-	thumbnail["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID;
-	thumbnail["@id"] = config.rootUrl + "/datastream/" + object.resourceID + "/tn" + apikey;
+	thumbnail["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + "/full/" + config.IIIFThumbnailWidth + ",/0/default.jpg" + apikey;
 	thumbnail["@type"] = config.IIIFObjectTypes["smallImage"];
+	thumbnail["height"] = config.IIIFThumbnailHeight;
+	thumbnail["width"] = config.IIIFThumbnailWidth;
 
 	service["@context"] = "http://iiif.io/api/image/2/context.json";
-	//service["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + apikey;
-	service["@id"] = config.rootUrl + "/datastream/" + object.resourceID + "/tn" + apikey;
+	service["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + apikey;
 	service["protocol"] = "http://iiif.io/api/image";
 	service["height"] = config.IIIFThumbnailHeight;
 	service["width"] = config.IIIFThumbnailWidth;
@@ -339,13 +337,13 @@ var getImageCanvas = function(container, object, apikey) {
 	image["@type"] =  "oa:Annotation";
 	image["motivation"] = "";
 
-	resource["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + "/full/full/0/default.jpg" + apikey;
+	resource["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + "/full/!1024,1024/0/default.jpg" + apikey;
 	//resource["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + apikey + "/full/full/0/default.jpg";
 	resource["@type"] = object.type; 
 	resource["format"] = object.format; 
 
 	service["@context"] = "";
-	service["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID;	
+	//service["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID;	
 	service["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + apikey;	
 	//service["profile"] = [];
 
