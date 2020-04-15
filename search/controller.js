@@ -69,7 +69,7 @@ exports.search = function(req, res) {
 		expandFacets = req.query.expand || [],
 		advancedSearch = req.query.advancedSearch && req.query.advancedSearch == "true" ? true : false,
 		daterange = (req.query.from || req.query.to) && (parseInt(req.query.from) < parseInt(req.query.to)) ? {
-			from: req.query.from || 0,
+			from: req.query.from || config.defaultDaterangeFromDate,
 			to: req.query.to || new Date().getFullYear()
 		} : null;
 
@@ -79,6 +79,8 @@ exports.search = function(req, res) {
 		facets: {},
 		facet_breadcrumb_trail: null,
 		results: [],
+		fromDate: config.defaultDaterangeFromDate,
+		toDate: new Date().getFullYear(),
 		pageData: null,
 		page: req.query.page || 1,
 		root_url: config.rootUrl,
@@ -107,15 +109,12 @@ exports.search = function(req, res) {
 			return res.render('results', data);
 		}
 		else {
-
 			data.options["expandFacets"] = expandFacets;
 			data.options["perPageCountOptions"] = config.resultCountOptions;
 			data.options["resultsViewOptions"] = config.resultsViewOptions;
 			data.options["sortByOptions"] = config.sortByOptions;
 			data.options["pageSize"] = pageSize;
-
-			// Don't show the daterange limit option if there is a daterange parameter preent, or if there are no search results
-			data.options["showDateRange"] = (daterange || response.count == 0) ? false : config.showDateRangeLimiter;
+			data.options["showDateRange"] = config.showDateRangeLimiter;
 
 			// Add the metadata display field from the configuration, then add the results list to the view data
 			Metadata.addResultMetadataDisplays(response.results);
@@ -125,11 +124,14 @@ exports.search = function(req, res) {
 			let path = config.rootUrl + req.url.substring(req.url.indexOf('search')-1);
 			data.pagination = Paginator.create(data.results, data.page, pageSize, response.count, path);
 
-			// If facets have been used in the search query, convert the facet fields into a normalized data object for the breadcrumb display
 			if(facets) {
 				facets = Facets.getSearchFacetObject(facets);
 			}
 
+			if(daterange) {
+				data.fromDate = daterange.from;
+				data.toDate = daterange.to;
+			}
 			// Get a normalized list of the facet data returned from the search.  
 			let facetList = Facets.getFacetList(response.facets, showAll);
 			Format.formatFacetDisplay(facetList, function(error, facetList) {

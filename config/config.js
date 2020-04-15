@@ -218,10 +218,12 @@ module.exports = {
      */
     beginDateField: "display_record.dates.begin",
     endDateField: "display_record.dates.end",
-    showDateRangeLimiter: true,
     nestedDateField: true,  // true if date data type is "nested"
     dateFieldMatchField: "display_record.dates.label",
     dateFieldMatchValue: "creation",
+
+    showDateRangeLimiter: true,
+    defaultDaterangeFromDate: 1500,
 
     /*
      * Define object types here, associte with object mime types

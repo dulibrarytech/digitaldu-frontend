@@ -991,7 +991,7 @@ form#daterange-form {
 
 form#daterange-form input:not(.daterange-slider) {
   max-width: 30%;
-  font-size: 13px;
+  font-size: 1em;
 }
 
 form#daterange-form #slider {
@@ -1000,7 +1000,7 @@ form#daterange-form #slider {
 }
 
 form#daterange-form #slider span {
-  background-color: #8b2332;
+  background-color: #0e90d2;
   border-radius: 15px;
 }
 

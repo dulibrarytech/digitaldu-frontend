@@ -264,14 +264,14 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
 
     //If a date range is present, add the date range query to the must match array
     if(daterange) {
-      // Test for format yyyy-mm-dd. If not, assume year and add mm-dd
+      let fullDate = {};
       if(!/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/.test(daterange.from)) {
-        daterange.from = daterange.from + "-01-01";
+        fullDate["from"] = daterange.from + "-01-01";
       }
       if(!/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/.test(daterange.to)) {
-        daterange.to = daterange.to + "-12-31";
+        fullDate["to"] = daterange.to + "-12-31";
       }
-      filters.push(Helper.getDateRangeQuery(daterange));
+      filters.push(Helper.getDateRangeQuery(fullDate));
     }
 
     // Do not show collection objects

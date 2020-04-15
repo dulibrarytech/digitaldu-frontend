@@ -6,11 +6,11 @@
 		<form id="daterange-form" class="" action="javascript:submitDateRange()">
 			<div class="form-group">
 				<label for="date-from">From:</label>
-		        <input type="text" id="date-from" class="form-control sliderValue" name="from" title="Start Date" data-index="0" value="1500" />
+		        <input type="text" id="date-from" class="form-control sliderValue" name="from" title="Start Date" data-index="0" value="<%= fromDate %>" />
 		    </div>
 		    <div class="form-group">
 		    	<label for="date-to">To:</label>
-		        <input type="text" id="date-to" class="form-control sliderValue" name="to" title="End Date" data-index="1" value="2020" />
+		        <input type="text" id="date-to" class="form-control sliderValue" name="to" title="End Date" data-index="1" value="<%= toDate %>" />
 		    </div>
 		    <br />
 		    <div id="slider"></div>
@@ -33,21 +33,18 @@
 </script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script>
-  	var dt = new Date();
-  	var curYear = dt.getFullYear();
   	$(document).ready(function() {
 	    $("#slider").slider({
-	        min: 1500,
-	        max: 2020,
+	        min: <%= fromDate %>,
+	        max: <%= toDate %>,
 	        step: 1,
-	        values: [1500, 2020],
+	        values: [<%= fromDate %>, <%= toDate %>],
 	        slide: function(event, ui) {
 	            for (var i = 0; i < ui.values.length; ++i) {
 	                $("input.sliderValue[data-index=" + i + "]").val(ui.values[i]);
 	            }
 	        }
 	    });
-
 	    $("input.sliderValue").change(function() {
 	        var $this = $(this);
 	        $("#slider").slider("values", $this.data("index"), $this.val());
