@@ -156,7 +156,11 @@
 
 @media screen and (max-width: 991px) {
   form#daterange-form input {
-    width: 20%;
+   /* width: 100%;*/
+  }
+  form#daterange-form input:not(.daterange-slider) {
+    max-width: 97%;
+    font-size: 12px;
   }
 }
 

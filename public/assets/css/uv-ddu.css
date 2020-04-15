@@ -78,6 +78,10 @@
   white-space: normal;
 }
 
+#uv .headerPanel .options {
+  background: #585858;
+}
+
 .embedded-viewer {
   max-height: 100vh;
 }

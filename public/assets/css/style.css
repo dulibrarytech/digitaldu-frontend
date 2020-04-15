@@ -981,17 +981,27 @@ div.collection-breadcrumbs a:visited {
 /* Begin search results */
 div#daterange-window {
   overflow-y: initial;
+  padding: 20px 17px;
 }
 
 form#daterange-form {
-  display: inline-flex;
+  /*display: inline-flex;*/
   width: 100%;
 }
 
 form#daterange-form input:not(.daterange-slider) {
-  margin: 0 4% 0 2%;
-  width: 25%;
+  max-width: 30%;
   font-size: 13px;
+}
+
+form#daterange-form #slider {
+  width: 91%;
+  margin-left: 1vw;
+}
+
+form#daterange-form #slider span {
+  background-color: #8b2332;
+  border-radius: 15px;
 }
 
 input.daterange-slider {
@@ -999,12 +1009,12 @@ input.daterange-slider {
 }
 
 form#daterange-form label {
-  font-size: 13px;
+  font-size: 0.9em;
 }
 
 form#daterange-form button {
   font-size: 14px;
-  float: right;
+  margin-top: 10px;
 }
 
 .results-display {
@@ -1025,6 +1035,7 @@ div.search-results-menu > div {
 
 div.search-results-menu-element {
   margin-left: 20px;
+  margin-top: 10px;
 }
 
 div#search-results-wrapper h4 {
