@@ -277,29 +277,23 @@ var getObjectType = function(mimeType) {
 exports.getObjectType = getObjectType;
 
  /**
- * Returns the HTTP response "content-type" string that corresponds with an object's mime type, for a datastream request
+ * Returns the HTTP response "content-type" for an object, based on its object file extension
+ * All thumbnail datastreams are image/jpg at this point
  *
  * @param {String} datastream - Object datastream ID
  * @param {String} mimeType - Object mime type (ex "audio/mp3")
  * @return {String} HTTP content type
  */
-var getContentType = function(datastream, mimeType) {
-  let contentType = "";
-  
+var getContentType = function(datastream, object, mimeType) {
+  let contentType = "application/octet-stream";
   if(datastream.toLowerCase() == "tn") {
     contentType = "image/jpg";
   }
-  else {
-    switch(mimeType) {
-      case "image/tiff":
-      case "image/tif":
-        contentType = "image/jp2";
-        break;
-      default:
-        contentType = mimeType;
-    }
+  else if(object.object && object.object.length > 0) {
+    let extIndex = object.object.lastIndexOf("."),
+        ext = object.object.substring(extIndex+1);
+        contentType = config.contentTypes[ext] || "";
   }
-
   return contentType;
 }
 exports.getContentType = getContentType;
