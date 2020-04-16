@@ -178,7 +178,7 @@ module.exports = {
      */
     IIIFUrl: process.env.IIIF_URL,
     IIIFAPiKeyPrefix: "__",
-    IIIFManifestPageSize: 10,
+    IIIFManifestPageSize: 30,
 
     /*
      * IIIF Object Types
@@ -609,5 +609,18 @@ module.exports = {
         "mp3": ["audio/mp3", "audio/x-wav"],
         "mp4": ["video/mp4"],
         "pdf": ["application/pdf"]
+     },
+
+      /*
+      * Content type to associate with each file extension
+      */
+     contentTypes: {
+        "tif": "image/tiff",
+        "tiff": "image/tiff",
+        "jp2": "image/jp2",
+        "jpg": "image/jpg",
+        "mp3": "audio/mp3",
+        "mp4": "video/mp4",
+        "pdf": "application/pdf"
      }
 };
