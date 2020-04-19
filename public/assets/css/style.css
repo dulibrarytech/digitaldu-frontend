@@ -72,7 +72,7 @@ a:hover {
 }
 
 p {
-  line-height: 1.3em;
+  line-height: 1.5em;
 }
 
 ul {
@@ -1230,14 +1230,19 @@ div.object-citations {
   margin-top: 40px;
 }
 
+.citation p {
+  padding: 0 5px;
+}
+
 div.mods-display {
   margin-bottom: 75px;
+  margin-top: 25px;
   background: #fff;
   transition: opacity 600ms, visibility 600ms;
 }
 
 div.metadata-content {
-  padding: 0 18px;
+  padding: 0;
   overflow: hidden;
 }
 /* End object data section */

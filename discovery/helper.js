@@ -337,7 +337,7 @@ exports.getCitations = function(object)  {
       citation: citation 
     });
   }
-    console.log("TEST citations returned:", citations)
+
   return citations;
 }
 
