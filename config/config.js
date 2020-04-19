@@ -24,6 +24,7 @@
 'use strict';
 
 module.exports = {
+    appTitle: "Digital Collections @ DU",
 
     /*
      * Runtime environment

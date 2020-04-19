@@ -28,6 +28,16 @@ exports.testObject = function(object) {
 /*
  * 
  */
+exports.getDateMonthString = function(monthVal) {
+  const monthNames = ["January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+  ];
+  return monthNames[monthVal];
+}
+
+/*
+ * 
+ */
 exports.isParentObject = function(object) {
   return (object && (object.is_compound == true || object.object_type == "compound" || object.type == "compound"));
 }

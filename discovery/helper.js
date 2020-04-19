@@ -22,7 +22,8 @@
  */
 'use strict'
 
-var config = require('../config/' + process.env.CONFIGURATION_FILE);
+var config = require('../config/' + process.env.CONFIGURATION_FILE),
+    AppHelper = require('../libs/helper');
 
 /**
  * Create array of 'view data' objects, one for each result item in the input object array
@@ -297,5 +298,48 @@ var getContentType = function(datastream, object, mimeType) {
   return contentType;
 }
 exports.getContentType = getContentType;
+
+ /**
+ * Create an array of citation data objects for the view model
+ * TODO (enhancement) define citations in configuration object, update this function to parse index paths and build citation objects dynamically
+ */
+exports.getCitations = function(object)  {
+  let citations = null,
+      date = new Date(),
+      curDate;
+
+  curDate = AppHelper.getDateMonthString(date.getMonth()) + " " + (date.getDate()) + ", " + date.getFullYear();
+
+  if(object) {
+    citations = [];
+    let title = object.title || "No title",
+        creator = object.display_record.names[0].title || "Unknown",
+        date = object.display_record.dates[0].expression || "Unknown",
+        accessDate = curDate,
+        url = config.rootUrl + "/object/" + object.pid,
+        citation;
+
+    citation = creator + ", (" + date + ") " + title + ". Retrieved from " + config.appTitle + ", " + url;
+    citations.push({
+      format: "APA",
+      citation: citation 
+    });
+
+    citation = creator + ". (" + date + ") " + title + ". Retrieved from " + config.appTitle + "<" + url + ">.";
+    citations.push({
+      format: "MLA",
+      citation: citation 
+    });
+
+    citation = creator + ". " + title + ". " + date + ". Retrieved from " + config.appTitle + ", " + url + ". (Accessed " + accessDate + ".)";
+    citations.push({
+      format: "Chicago",
+      citation: citation 
+    });
+  }
+    console.log("TEST citations returned:", citations)
+  return citations;
+}
+
 
 

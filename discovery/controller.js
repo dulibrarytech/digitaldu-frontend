@@ -261,8 +261,9 @@ exports.renderObjectView = function(req, res) {
 					object.type = Helper.normalizeLabel("Type", object.type || "")
 					data.metadata = Object.assign(data.metadata, Metadata.createMetadataDisplayObject(object, collectionTitles));
 					data.id = pid;
-					data.downloads = AppHelper.getFileDownloadLinks(object);
-					data.citations = []; // TODO get citations
+					//data.downloads = AppHelper.getFileDownloadLinks(object); // PROD
+					data.downloads = null; // DEV
+					data.citations = Helper.getCitations(object);
 					res.render('object', data);
 				});
 			}
