@@ -310,28 +310,29 @@ exports.getCitations = function(object)  {
 
   curDate = AppHelper.getDateMonthString(date.getMonth()) + " " + (date.getDate()) + ", " + date.getFullYear();
 
-  if(object) {
+  if(object && object.display_record) {
     citations = [];
-    let title = object.title || "No title",
-        creator = object.display_record.names[0].title || "Unknown",
-        date = object.display_record.dates[0].expression || "Unknown",
+    let title = (object.title) || "Untitled",
+        creator = object.display_record.names[0] ? (object.display_record.names[0].title || title) : title,
+        date = object.display_record.dates[0] ? (object.display_record.dates[0].expression || "n.d.") : "n.d.",
         accessDate = curDate,
         url = config.rootUrl + "/object/" + object.pid,
         citation;
 
-    citation = creator + ", (" + date + ") " + title + ". Retrieved from " + config.appTitle + ", " + url;
+    title = title + ".";
+    citation = creator + ", (" + date + ") " + title + " Retrieved from " + config.appTitle + ", " + url;
     citations.push({
       format: "APA",
       citation: citation 
     });
 
-    citation = creator + ". (" + date + ") " + title + ". Retrieved from " + config.appTitle + "<" + url + ">.";
+    citation = creator + ". (" + date + ") " + title + " Retrieved from " + config.appTitle + " <" + url + ">.";
     citations.push({
       format: "MLA",
       citation: citation 
     });
 
-    citation = creator + ". " + title + ". " + date + ". Retrieved from " + config.appTitle + ", " + url + ". (Accessed " + accessDate + ".)";
+    citation = creator + ". " + title + " " + date + ". Retrieved from " + config.appTitle + ", " + url + ". (Accessed " + accessDate + ".)";
     citations.push({
       format: "Chicago",
       citation: citation 
