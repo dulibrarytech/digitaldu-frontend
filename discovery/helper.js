@@ -318,8 +318,8 @@ exports.getCitations = function(object)  {
   if(object && object.display_record) {
     citations = [];
     let title = (object.title) || "Untitled",
-        creator = object.display_record.names[0] ? (object.display_record.names[0].title || title) : title,
-        date = object.display_record.dates[0] ? (object.display_record.dates[0].expression || "n.d.") : "n.d.",
+        creator = object.creator || title,
+        date = (object.display_record.dates && object.display_record.dates[0]) ? (object.display_record.dates[0].expression || "n.d.") : "n.d.",
         accessDate = curDate,
         url = config.rootUrl + "/object/" + object.pid,
         citation;
