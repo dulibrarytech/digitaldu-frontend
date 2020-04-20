@@ -759,6 +759,7 @@ div#viewer-section {
   background: #e5e3e1;
   padding: 20px 0px;
   text-align: center;
+ /* max-height: 745px;*/
 }
 
 div.embedded-viewer {

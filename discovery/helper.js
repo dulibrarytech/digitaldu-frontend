@@ -337,6 +337,12 @@ exports.getCitations = function(object)  {
       format: "Chicago",
       citation: citation 
     });
+
+    // citation = creator + '. "' + title + '." ' + config.appTitle + ', ' + date + '. Accessed ' + curDate + '. ' + url + '.';
+    // citations.push({
+    //   format: "Turabian",
+    //   citation: citation 
+    // });
   }
 
   return citations;
