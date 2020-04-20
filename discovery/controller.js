@@ -289,7 +289,7 @@ exports.getDatastream = function(req, res) {
 		index = config.elasticsearchPublicIndex,
 		key = null;
 
-	// Detect part index appended to a compound object pid.  This is to allow IIIF url resolver to convey part index data by modifying the pid value
+	// Extract the part index value, and separate it from the pid
 	let pidElements;
 	part = part == "0" ? null : part;
 	if(part == null && pid.indexOf(config.compoundObjectPartID) > 0) {

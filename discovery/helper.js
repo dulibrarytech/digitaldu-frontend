@@ -285,12 +285,17 @@ exports.getObjectType = getObjectType;
  * @param {String} mimeType - Object mime type (ex "audio/mp3")
  * @return {String} HTTP content type
  */
-var getContentType = function(datastream, object, mimeType) {
+var getContentType = function(datastream, object, part, mimeType) {
   let contentType = "application/octet-stream";
+  if(part && object.display_record.parts) {
+    part = parseInt(part);
+    object = object.display_record.parts[part-1] || null;
+  }
+
   if(datastream.toLowerCase() == "tn") {
     contentType = "image/jpg";
   }
-  else if(object.object && object.object.length > 0) {
+  else if(object && object.object) {
     let extIndex = object.object.lastIndexOf("."),
         ext = object.object.substring(extIndex+1);
         contentType = config.contentTypes[ext] || "";

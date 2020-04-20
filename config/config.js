@@ -179,7 +179,7 @@ module.exports = {
      */
     IIIFUrl: process.env.IIIF_URL,
     IIIFAPiKeyPrefix: "__",
-    IIIFManifestPageSize: 30,
+    IIIFManifestPageSize: 20,
 
     /*
      * IIIF Object Types
