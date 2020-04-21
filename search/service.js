@@ -80,8 +80,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
           }
         },
         currentQuery;
-      
-    /* 
+    /*  
      * Build the search fields object 
      * Use a match query for each word token, a match_phrase query for word group tokens, and a wildcard search for tokens that contain a '*'.
      * Each query is placed in a separate bool object

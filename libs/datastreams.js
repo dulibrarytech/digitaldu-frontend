@@ -49,6 +49,7 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
 exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, callback) {
   var mimeType = object.mime_type || object.type || null,
       fileType = "default";
+      
   // If there is a part value, retrieve the part data.  Redefine the object data with the part data
   if(Helper.isParentObject(object) && part) {
     var sequence;
@@ -68,7 +69,6 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
     sequence = "";
   }
 
-  // Request a thumbnail datastream
   if(datastreamID == "tn") {
     for(let type in config.objectTypes) {
       if(config.objectTypes[type].includes(object.mime_type)) {
@@ -78,8 +78,8 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
 
     // Get the thumbnail configuration settings for this object
     var settings = config.thumbnails[object.object_type] || null;
+    if(!object.mime_type) {settings = null}
     if(settings) {
-      // Get settings by object type
       if(settings.type) {
         settings = settings.type[fileType] || null;
       }
