@@ -92,6 +92,8 @@ exports.search = function(req, res) {
 		options: {}
 	};
 
+	page = parseInt(page);
+	pageSize = parseInt(pageSize);
 	let from = (page - 1) * pageSize;
 	if(from + pageSize > 10000) {
 		let msg = "Search result pages are limited to 1000. Please select a page from 1 to 1000";
