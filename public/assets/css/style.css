@@ -766,6 +766,10 @@ div.embedded-viewer {
   text-align: center;
 }
 
+div.embedded-viewer #uv {
+  height: 100vh;
+}
+
 div.viewer-wrapper {
   margin: 0 auto;
   width: 75%;
@@ -1219,11 +1223,11 @@ div.object-citations {
 
 }
 
-.citation-text h5 {
+.citation-section h5 {
   font-size: 1rem;
 }
 
-.citation-text p {
+.citation-section p {
   font-size: 0.9em;
 }
 
