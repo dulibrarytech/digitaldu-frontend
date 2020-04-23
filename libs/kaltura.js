@@ -69,11 +69,12 @@ exports.getThumbnailUrl = function(object) {
 }
 
 exports.getStreamingMediaUrl = function(entryid, extension) {
- 	return "https://cdnapisec.kaltura.com/p/2357732/sp/0/playManifest/entryId/" + entryid + "/format/url/protocol/https/flavorParamId/0_40uy2cu1/video" + "." + extension;
+ 	//return "https://cfvod.kaltura.com/pd/p/2357732/sp/235773200/serveFlavor/entryId/" + entryid + "/v/2/ev/7/flavorId/0_7gx3rx5v/name/a.mp4"
+ 	return "https://cdnapisec.kaltura.com/p/2357732/sp/0/playManifest/entryId/" + entryid + "/format/url/protocol/https/flavorParamId/0_7gx3rx5v/video" + "." + extension;
 
  	// Audio test
- 	//return "https://cdnapisec.kaltura.com/p/2357732/sp/0/playManifest/entryId/0_4up3d6fk/format/url/protocol/https/flavorParamId/0_40uy2cu1/video.mp4"
+ 	// return "https://cfvod.kaltura.com/pd/p/2357732/sp/235773200/serveFlavor/entryId/0_lsvaki84/v/2/ev/7/flavorId/0_7gx3rx5v/name/a.mp4"
 
  	// Video test
- 	//return "https://cdnapisec.kaltura.com/p/2357732/sp/0/playManifest/entryId/0_yc2k9s2f/format/url/protocol/https/flavorParamId/0_40uy2cu1/video.mp4"
+ 	// return "https://cfvod.kaltura.com/pd/p/2357732/sp/235773200/serveFlavor/entryId/0_yc2k9s2f/v/2/ev/7/flavorId/0_7gx3rx5v/name/a.mp4"
  }

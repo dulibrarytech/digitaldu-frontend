@@ -376,7 +376,7 @@ exports.getDatastream = function(indexName, objectID, datastreamID, part, authKe
   fetchObjectByPid(indexName, objectID, function(error, object) {
     if(object) {
       let contentType = Helper.getContentType(datastreamID, object, part, (object.mime_type || null));
-      Datastreams.getDatastream(object, objectID, datastreamID, part, authKey, function(error, stream) {
+      Datastreams.getDatastream(object, objectID, datastreamID, part, authKey, function(error, stream) {   
         callback(error, stream, contentType);
       });
     }

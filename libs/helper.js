@@ -144,11 +144,8 @@ exports.getFileDownloadLinks = function(object, part=null) {
 	let objType = getObjectType(object.mime_type || ""),
 		links = null;
 
-	if(objType != "audio" && objType != "video") {
+	if(objType == "smallImage" || objType == "largeImage" || objType == "pdf" || objType == "audio" || objType == "video") {
 		links = [];
-		// DEV Can select file type
-		//let uri = config.rootUrl + "/download/" + object.pid + "/" + "mp4";
-		// DEV Uses master object file type
 		part = part ? part : "0";
 		let extension = getFileExtensionForMimeType(object.mime_type),
 			link = {
@@ -157,6 +154,5 @@ exports.getFileDownloadLinks = function(object, part=null) {
 			};
 		links.push(link);
 	}
-
 	return links;
 }

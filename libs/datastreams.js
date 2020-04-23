@@ -49,7 +49,7 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
 exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, callback) {
   var mimeType = object.mime_type || object.type || null,
       fileType = "default";
-      
+
   // If there is a part value, retrieve the part data.  Redefine the object data with the part data
   if(Helper.isParentObject(object) && part) {
     var sequence;
@@ -83,11 +83,9 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
       if(settings.type) {
         settings = settings.type[fileType] || null;
       }
-      // Check for a cached image
+
       if(settings.cache == false || Cache.exists('thumbnail', objectID) == false) {
-        // Get the thumbnail uri based on the configuration settings
-        let uri;
-        uri = settings.uri || null;
+        let uri = settings.uri || null;
         switch(settings.streamOption || "") {
           case "iiif":
             uri = IIIF.getThumbnailUri(objectID, apiKey);
@@ -162,12 +160,8 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
       // Cached thumbnail image found
       else {
         Cache.getFileStream('thumbnail', objectID, null, function(error, stream) {
-          if(error) {
-            callback(error, null);
-          }
-          else {
-            callback(null, stream);
-          }
+          if(error) {callback(error, null)}
+          else {callback(null, stream)}
         })
       }
     }
@@ -188,8 +182,6 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
       }
     }
     var extension = Helper.getFileExtensionForMimeType(mimeType);
-
-    // Stream file from cache
     if(isCached && Cache.exists('object', objectID, extension) == true) {
       Cache.getFileStream('object', objectID, extension, function(error, stream) {
         if(error) {
@@ -201,23 +193,20 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
       })
     }
 
-    // Fetch file
     else {
       // Stream data from Kaltura server
       if(object.mime_type && 
         (config.objectTypes["audio"].includes(object.mime_type)) || (object.mime_type && config.objectTypes["video"].includes(object.mime_type)) &&
         (object.entry_id && object.entry_id.length > 0)) {
-          // TEMP
-          callback(null, null);
-          // DEV: Kaltura fetch Kaltura stream
-          // let kalturaStreamUri = Kaltura.getStreamingMediaUrl(object.entry_id, extension);
-          // fetchRemoteData(kalturaStreamUri, function(error, status, stream) {
-          //   if(error) { callback(error, null) }
-          //   else { 
-          //     let str = stream ? "not null" : "null"
-          //     callback(null, stream) 
-          //   }
-          // });
+
+          let kalturaStreamUri = Kaltura.getStreamingMediaUrl(object.entry_id, extension);
+          streamKalturaData(kalturaStreamUri, function(error, status, stream) {
+            if(error) { callback(error, null) }
+            else { 
+              let str = stream ? "not null" : "null"
+              callback(null, stream) 
+            }
+          });
       }
 
       // Stream data from the repository
@@ -274,6 +263,37 @@ var streamRemoteData = function(uri, callback) {
   }
 }
 
+var streamKalturaData = function(uri, callback) {
+  if(uri) {
+    rs(uri, {followRedirects: true}, function(err, res) {
+      if(err) {
+        callback("Could not open datastream. " + err, null, null);
+      }
+      else {
+        if(res.socket.bytesRead < 500) {
+
+          // Get the redirect path, stream remote data
+          let kalturaDownloadUri = res.connection._httpMessage._header.replace("GET ", "");
+          kalturaDownloadUri = kalturaDownloadUri.substring(0, kalturaDownloadUri.indexOf("/a.")+6);
+          streamRemoteData(kalturaDownloadUri, function(error, status, stream) {
+            if(error) { callback(error, 500, null) }
+            else { 
+              let str = stream ? "not null" : "null"
+              callback(null, status, stream) 
+            }
+          });
+        }
+        else {
+          callback(null, res.statusCode, res);
+        }
+      }
+    });
+  }
+  else {
+     callback(null, 404, null);
+  }
+}
+
 /**
  * Request data from uri
  *
@@ -287,33 +307,10 @@ var streamRemoteData = function(uri, callback) {
  * @return {undefined}
  */
 var fetchRemoteData = function(uri, callback) {
-      console.log("TEST frd request", uri)
-
-    // TODO request is depriciated, replace with another lib?
     request(uri, function(error, response, body) {
-      if(error) {
-          console.log("TEST dsfetch req err", error)
-        callback(error, null);
-      }
-      else {
-          console.log("TEST dsfetch req ok, returning body", response.headers)
-        callback(null, response);
-      }
+      if(error) {callback(error, null)}
+      else {callback(null, response)}
     });
-
-    // test
-    // fetch(uri)
-    // .then(body => {
-    //   console.log(body);
-    //   callback(body);
-    // });
-
-    // //  tream
-    // fetch('https://assets-cdn.github.com/images/modules/logos_page/Octocat.png')
-    // .then(res => {
-    //     const dest = fs.createWriteStream('./octocat.png');
-    //     res.body.pipe(dest);
-    // });
 }
 
 /**
