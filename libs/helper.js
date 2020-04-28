@@ -140,7 +140,7 @@ exports.getObjectType = getObjectType;
  * @param {Object} object - DDU Elastic index doc
  * @return {Array.<String>} Array of download link uris
  */
-exports.getFileDownloadLinks = function(object, part=null) {
+exports.getFileDownloadLinks = function(object, dsid, part=null) {
 	let objType = getObjectType(object.mime_type || ""),
 		links = null;
 
@@ -149,7 +149,7 @@ exports.getFileDownloadLinks = function(object, part=null) {
 		part = part ? part : "0";
 		let extension = getFileExtensionForMimeType(object.mime_type),
 			link = {
-				uri: config.rootUrl + "/datastream/" + object.pid + "/object/" + part + "/" + object.pid + "." + extension,
+				uri: config.rootUrl + "/datastream/" + object.pid + "/" + dsid + "/" + part + "/" + object.pid + "." + extension,
 				filename: object.pid + "." + extension
 			};
 		links.push(link);

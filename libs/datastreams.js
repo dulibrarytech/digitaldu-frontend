@@ -270,8 +270,7 @@ var streamKalturaData = function(uri, callback) {
         callback("Could not open datastream. " + err, null, null);
       }
       else {
-        if(res.socket.bytesRead < 500) {
-
+        if(res.statusCode == 200) {
           // Get the redirect path, stream remote data
           let kalturaDownloadUri = res.connection._httpMessage._header.replace("GET ", "");
           kalturaDownloadUri = kalturaDownloadUri.substring(0, kalturaDownloadUri.indexOf("/a.")+6);

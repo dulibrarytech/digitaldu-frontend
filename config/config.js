@@ -592,7 +592,7 @@ module.exports = {
      datastreams: {
         "tn": "thumbnail",
         "jpg": ["image/jpeg", "image/jpg"],
-        "tiff": ["image/tiff"],
+        "tif": ["image/tiff"],
         "mp3": ["audio/mp3", "audio/mpeg", "audio/x-wav"],
         "mp4": ["video/mp4"],
         "mov": ["video/mov"],
@@ -605,7 +605,7 @@ module.exports = {
       * File will be cached with the file extension that matches the mime type of the object
       */
      fileExtensions: {
-        "jp2": ["image/tiff"],
+        "tif": ["image/tiff"],
         "jpg": ["image/jpg", "image/jpeg"],
         "mp3": ["audio/mp3", "audio/x-wav"],
         "mp4": ["video/mp4"],

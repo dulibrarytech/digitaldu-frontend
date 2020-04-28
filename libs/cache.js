@@ -75,16 +75,3 @@ exports.getFileStream = function(objectType, objectID, extension="", callback) {
 	    callback(err, null);
 	});
 }
-
-/*
- * TODO move this to AppHelper lib
- */
-var getFileExtensionForMimeType = function(mimeType) {
-	var extension = "";
-	for(extension in config.fileExtensions) {
-      if(config.fileExtensions[extension].includes(mimeType)) {
-        break;
-      }
-    }
-    return extension;
-}

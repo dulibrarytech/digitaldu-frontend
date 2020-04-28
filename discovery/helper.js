@@ -295,6 +295,9 @@ var getContentType = function(datastream, object, part, mimeType) {
   if(datastream.toLowerCase() == "tn") {
     contentType = "image/jpg";
   }
+  else if(datastream.toLowerCase() != "object") {
+    contentType = config.contentTypes[datastream] || "";
+  }
   else if(object && object.object) {
     let extIndex = object.object.lastIndexOf("."),
         ext = object.object.substring(extIndex+1);

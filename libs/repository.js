@@ -115,8 +115,13 @@ exports.streamData = function(object, dsid, callback) {
 		if(!object) { throw "Object is null" }
 		var url = getRepositoryUrl();
 
-		if(dsid == "tn") {url += "/" + object.thumbnail;}
-		else {url += "/" + object.object;}
+		if(dsid.toLowerCase() == "tn") {url += "/" + object.thumbnail}
+		else if(dsid.toLowerCase() !== "object") {
+			let objectPath = object.object.substring(0, object.object.length-4);
+			objectPath += ("." + dsid);
+			url += ("/" + objectPath);
+		}
+		else {url += ("/" + object.object)}
 
 		// Fetch the stream 
 		rs(url, {}, function(err, res) {
