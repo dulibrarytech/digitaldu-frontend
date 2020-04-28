@@ -78,7 +78,7 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
 
     // Get the thumbnail configuration settings for this object
     var settings = config.thumbnails[object.object_type] || null;
-    if(!object.mime_type) {settings = null}
+    if(!object.mime_type && object.object_type != "collection") {settings = null}
     if(settings) {
       if(settings.type) {
         settings = settings.type[fileType] || null;
