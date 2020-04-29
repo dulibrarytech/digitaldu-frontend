@@ -144,7 +144,9 @@ exports.getFileDownloadLinks = function(object, dsid, part=null) {
 	let objType = getObjectType(object.mime_type || ""),
 		links = null;
 
-	if(objType == "smallImage" || objType == "largeImage" || objType == "pdf" || objType == "audio" || objType == "video") {
+	// DEV Temporarily disable file downloads for compound objects, until part download links can be generated 
+	if((objType == "smallImage" || objType == "largeImage" || objType == "pdf" || objType == "audio" || objType == "video") && object.is_compound == 0) {
+	// if(objType == "smallImage" || objType == "largeImage" || objType == "pdf" || objType == "audio" || objType == "video") {
 		links = [];
 		part = part ? part : "0";
 		let extension = getFileExtensionForMimeType(object.mime_type),
