@@ -132,60 +132,79 @@ exports.getResultsLabel = function(query, facets, bool, field) {
  */
 exports.getDateRangeQuery = function(daterange) {
   var dateQuery = {
-      "bool": {
-        "should": [],
-        "must": []
-      }
-    },
-    beginRange = {}, endRange = {};
-
-    // Add the match field query if a match field has been set
-    if(config.dateFieldMatchField && config.dateFieldMatchField.length > 0) {
-      let matchField = {};
-      matchField[config.dateFieldMatchField] = config.dateFieldMatchValue;
-      dateQuery.bool.must.push({
-        "match_phrase": matchField
-      });
+    "bool": {
+      "should": [],
+      "must": []
     }
+  },
+  beginRange = {}, endRange = {};
 
-    // QI Check if begin date is included in the range
-    beginRange[config.beginDateField] = {
-      "gte": daterange.from,
-      "lte": daterange.to
-    };
-    dateQuery.bool.should.push({
-      "range": beginRange
+  // Add the match field query if a match field has been set
+  if(config.dateFieldMatchField && config.dateFieldMatchField.length > 0) {
+    let matchField = {};
+    matchField[config.dateFieldMatchField] = config.dateFieldMatchValue;
+    dateQuery.bool.must.push({
+      "match_phrase": matchField
     });
+  }
 
-    // QII Check if end date is included in the range
-    endRange[config.endDateField] = {
-      "gte": daterange.from,
-      "lte": daterange.to
-    };
-    dateQuery.bool.should.push({
-      "range": endRange
-    });
-
-    // QIII, QIV Check for object date span that envelops the selected daterange
-    var temp = [], beginRange = {}, endRange = {};
-    beginRange[config.beginDateField] = {
-      "lte": daterange.from
-    };
-    temp.push({
-      "range": beginRange
-    });
-    endRange[config.endDateField] = {
-      "gte": daterange.to
-    };
-    temp.push({
-      "range": endRange
-    });
-
-    dateQuery.bool.should.push({
-      "bool": {
-        "must": temp
-      }
+  // QI Check if begin date is included in the range
+  beginRange[config.beginDateField] = {
+    "gte": daterange.from,
+    "lte": daterange.to
+  };
+  dateQuery.bool.should.push({
+    "range": beginRange
   });
+
+  // QII Check if end date is included in the range
+  endRange[config.endDateField] = {
+    "gte": daterange.from,
+    "lte": daterange.to
+  };
+  dateQuery.bool.should.push({
+    "range": endRange
+  });
+
+  // QIII Check for object date span that envelops the selected daterange
+  // var temp = [], beginRange = {}, endRange = {};
+  // beginRange[config.beginDateField] = {
+  //   "lte": daterange.from
+  // };
+  // temp.push({
+  //   "range": beginRange
+  // });
+  // endRange[config.endDateField] = {
+  //   "gte": daterange.to
+  // };
+  // temp.push({
+  //   "range": endRange
+  // });
+  // dateQuery.bool.should.push({
+  //   "bool": {
+  //     "must": temp
+  //   }
+  // });
+
+  // QIV Check for object date span included in the selected daterange
+  // temp = [];
+  // beginRange[config.beginDateField] = {
+  //   "gte": daterange.from
+  // };
+  // temp.push({
+  //   "range": beginRange
+  // });
+  // endRange[config.endDateField] = {
+  //   "lte": daterange.to
+  // };
+  // temp.push({
+  //   "range": endRange
+  // });
+  // dateQuery.bool.should.push({
+  //   "bool": {
+  //     "must": temp
+  //   }
+  // });
 
   return config.nestedDateField ? {
     nested: {
