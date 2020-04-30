@@ -1,11 +1,11 @@
-<% include partials/header %>
-<% include partials/banner %>
+<%- include('partials/header') -%>
+<%- include('partials/banner') -%>
 
 <div id="frontpage-content" class="row no-side-margin section content">
 	<div id="sidebar" class="col-md-3 .col-sm-4">
 		<h3>Browse by</h3>
 		<hr>
-		<% include partials/frontpage-facets %>
+		<%- include('partials/frontpage-facets') -%>
 	</div>
 
 	<div id="page-content" class="col-md-9 .col-sm-8">
@@ -17,7 +17,7 @@
 			<% if(error) { %>
 	  			<h5><%- error %></h5>
 	  		<% } else { %>
-	  			<% include partials/paginator %>
+	  			<%- include('partials/paginator') -%>
 				<div class="row">
 					<% for (var i = 0; i < collections.length; i++) { %>
 						<div class="col-sm-3 collection-thumb">
@@ -38,7 +38,7 @@
 						</div>
 					<% } %>
 				</div>
-				<% include partials/paginator %>
+				<%- include('partials/paginator') -%>
 			<% } %>
 		</div>
 	</div>
@@ -48,5 +48,5 @@
 	localStorage.setItem("ADVANCED_SEARCH_FORM_STATE", null);
 </script>
 
-<% include partials/footer %>
+<%- include('partials/footer') -%>
 

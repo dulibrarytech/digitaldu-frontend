@@ -1,5 +1,5 @@
-<% include partials/header %>
-<% include partials/title-banner %>
+<%- include('partials/header') -%>
+<%- include('partials/title-banner') -%>
 
 <div class="facet-breadcrumbs">
   <a id="new-search-link" href="<%- root_url %>">Start Over</a>
@@ -20,8 +20,8 @@
         <h4>Limit Your Search</h4>
         <hr>
       <% } %>
-      <% include partials/facets %>
-      <% include partials/daterange-search %>
+      <%- include('partials/facets') -%>
+      <%- include('partials/daterange-search') -%>
     </div>
   </div>
 
@@ -77,7 +77,7 @@
       <% } %>
 
       <hr>
-      <% include partials/paginator %>
+      <%- include('partials/paginator') -%>
 
       <% if(typeof view != 'undefined' && view == "Grid") { %>
 
@@ -136,9 +136,9 @@
           <% } %>
         </div>
       <% } %>
-      <% include partials/paginator %>
+      <%- include('partials/paginator') -%>
     <% } %>
   </div>
 </div>
-<% include partials/footer %>
+<%- include('partials/footer') -%>
 

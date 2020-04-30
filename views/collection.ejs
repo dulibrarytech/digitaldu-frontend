@@ -1,5 +1,5 @@
-<% include partials/header %>
-<% include partials/title-banner %>
+<%- include('partials/header') -%>
+<%- include('partials/title-banner') -%>
 
 <div class="row collection-breadcrumbs">
 	<div class="col-md-12">
@@ -23,13 +23,13 @@
 			<div class="sidebar-section">
 				<h4>Search This Collection</h4>
 				<hr>
-				<% include partials/sidebar-search %>
+				<%- include('partials/sidebar-search') -%>
 			</div>
 			<div class="result-facets sidebar-section">
 				<% if(facets) { %>
 					<h4>Filter By</h4>
 					<hr>
-					<% include partials/facets %>
+					<%- include('partials/facets') -%>
 				<% } %>
 			</div>
 		<% } %>
@@ -42,7 +42,7 @@
   			<h5><%- error %></h5>
   		<% } else { %>
 
-  			<% include partials/paginator %>
+  			<%- include('partials/paginator') -%>
 
   			<div id="collections">
   				<div class="row">
@@ -75,7 +75,7 @@
 	</div>
 </div>
 
-<% include partials/footer %>
+<%- include('partials/footer') -%>
 
 
 
