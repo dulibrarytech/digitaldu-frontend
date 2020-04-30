@@ -23,11 +23,12 @@
 
 'use strict';
 
-var http = require('http'),
+const http = require('http'),
     express = require('express'),
     helmet = require('helmet'),
     bodyParser = require('body-parser'),
-    config = require('./config.js');
+    config = require('./config.js'),
+    noCache = require('nocache');
 
 module.exports = function () {
     var app = express(),
@@ -43,9 +44,8 @@ module.exports = function () {
         extended: true
     }));
     app.use(bodyParser.json());
-
     app.use(helmet());
-    app.use(helmet.noCache());
+    app.use(noCache());
     app.use(helmet.contentSecurityPolicy({
       directives: {
         defaultSrc: ["'self'", config.IIIFServerUrl, config.repositoryDomain, 'www.google-analytics.com', 'cdnapisec.kaltura.com', 'data:', 'blob:', 'www.du.edu', 'fonts.gstatic.com', 'use.fontawesome.com'],
