@@ -175,6 +175,11 @@ module.exports = {
     universalViewerKalturaPlayer: true,
 
     /*
+     * Show the object download options
+     */
+    enableFileDownload: true,
+
+    /*
      * IIIF API 
      */
     IIIFUrl: process.env.IIIF_URL,
@@ -513,9 +518,6 @@ module.exports = {
         },
         "Collection": {
             "path": "is_member_of_collection"
-        },
-        "Authority ID": {
-            "path": "display_record.subjects.authority_id"
         }
     },
 
