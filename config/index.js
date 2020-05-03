@@ -27,10 +27,11 @@
 const config = require('../config/' + process.env.CONFIGURATION_FILE);
 const elasticsearch = require('elasticsearch');
 
-const client = new elasticsearch.Client( {  
-  hosts: [
-    config.elasticsearchHost + ':' + config.elasticsearchPort
-  ]
+let esLogType = config.nodeEnv == 'devlog' ? 'trace' : 'warning';
+const client = new elasticsearch.Client({
+  host: config.elasticsearchHost + ':' + config.elasticsearchPort,
+  log: esLogType,
+  apiVersion: '_default'  // use the same version of your Elasticsearch instance
 });
 
 client.cluster.health({},function(err,resp,status) {  

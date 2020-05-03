@@ -1,5 +1,5 @@
-<% include partials/header %>
-<% include partials/title-banner %>
+<%- include('partials/header') -%>
+<%- include('partials/title-banner') -%>
 
 <div id="viewer-section" class="<% if(error) { %>object-view-error<% } %>">
   <% if(error) { %>
@@ -105,4 +105,4 @@
   </script>
 <% } %>
 
-<% include partials/footer %>
+<%- include('partials/footer') -%>

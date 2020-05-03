@@ -5,7 +5,7 @@
  * Discovery app node bootstrap file
  */
  
-require('dotenv').load();
+require('dotenv').config();
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'production';
 
