@@ -62,11 +62,6 @@ module.exports = {
                 "path": "notes.content",
                 "matchField": "type",
                 "matchValue": "abstract"
-            },
-            "Local Identifier": {
-                "path": "identifiers.identifier",
-                "matchField": "type",
-                "matchValue": "local"
             }
         },
         "collection": {
