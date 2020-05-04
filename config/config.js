@@ -229,7 +229,7 @@ module.exports = {
     dateFieldMatchValue: "creation",
 
     showDateRangeLimiter: true,
-    defaultDaterangeFromDate: 1500,
+    defaultDaterangeFromDate: "1800",
 
     /*
      * Define object types here, associte with object mime types
