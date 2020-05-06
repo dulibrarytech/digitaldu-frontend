@@ -1272,6 +1272,33 @@ div#transcript-view {
   line-height: 1.5em;
 }
 
+.info-content {
+  padding-top: 4.1em;
+}
+
+.info-content h2 {
+  margin-bottom: 0.7em;
+}
+
+.info-content ul li {
+  margin-bottom: 0.7em;
+  line-height: 1.4em;
+}
+
+.info-content dl dt {
+  margin-top: 2em;
+  margin-bottom: 0.9em;
+  font-weight: 500;
+}
+
+.info-content dl dd {
+  margin-bottom: .8rem;
+}
+
+.info-content p {
+  line-height: 1.4em;
+}
+
 footer {
   background: #8b2332;
   /* height: 230px; [C22] */
