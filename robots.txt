@@ -1,0 +1,13 @@
+User-agent: Googlebot
+Disallow: /search/
+
+User-agent: *
+Allow: /
+
+User-agent: *
+Disallow: /search/
+
+User-agent: *
+Disallow: /datastream/
+
+sitemap: https://specialcollections.du.edu/sitemap.xml
