@@ -77,7 +77,6 @@ exports.renderRootCollection = function(req, res) {
 			}
 			else {
 				var facetList = Facets.getFacetList(facets, []);
-
 				// Only show the specified front page display facets, remove others here
 				for(var key in facetList) {
 					if(config.frontPageFacets.includes(key) === false) {

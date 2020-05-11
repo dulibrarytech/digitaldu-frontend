@@ -73,7 +73,6 @@ exports.search = function(req, res) {
 			to: req.query.to || new Date().getFullYear()
 		} : null;
 
-	// View data
 	var data = {
 		error: null,
 		facets: {},
@@ -138,7 +137,6 @@ exports.search = function(req, res) {
 			let facetList = Facets.getFacetList(response.facets, showAll);
 			Format.formatFacetDisplay(facetList, function(error, facetList) {
 				Format.formatFacetBreadcrumbs(facets, function(error, facets) {
-					// Add facets returned from the search to the view data
 					data.facets = Facets.create(facetList, config.rootUrl, showAll, expandFacets);
 					data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(facets, daterange, config.rootUrl);		
 					return res.render('results', data);

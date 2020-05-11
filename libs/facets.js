@@ -203,7 +203,7 @@ function createList(facet, data, baseUrl, showAll, expand) {
         // Add the facet list item(s) if facets are present, and not empty
         for (var i = 0; i < data.length; i++) {
             if(data[i].key != "") {
-                html += '<li><span class="facet-name"><a onclick="selectFacet(\'' + facet + '\', \'' + data[i].facet + '\', \'' + baseUrl + '\')">' + data[i].name + '</a></span><span class="facet-count">(' + data[i].doc_count + ')</span></li>';                
+                html += '<li><span class="facet-name"><a onclick="selectFacet(\'' + facet + '\', \'' + data[i].facet.replace(/'/g, "\\'") + '\', \'' + baseUrl + '\')">' + data[i].name + '</a></span><span class="facet-count">(' + data[i].doc_count + ')</span></li>';                
             }
         }
 
@@ -244,7 +244,7 @@ function createBreadcrumbTrail(data, dates, baseUrl) {
     var html = '';
 
     for (var i = 0; i < data.length; i++) {
-        html += '<span><a alt="remove facet" title="remove facet" onclick="removeFacet(\'' + data[i].type + '\', \'' + data[i].facet + '\', \'' + baseUrl + '\')"><strong style="color: red">X</strong></a>&nbsp&nbsp' + data[i].type + '&nbsp&nbsp<strong style="color: green"> > </strong>&nbsp&nbsp' + data[i].name + '</span>';   // good
+        html += '<span><a alt="remove facet" title="remove facet" onclick="removeFacet(\'' + data[i].type + '\', \'' + data[i].facet.replace(/'/g, "\\'") + '\', \'' + baseUrl + '\')"><strong style="color: red">X</strong></a>&nbsp&nbsp' + data[i].type + '&nbsp&nbsp<strong style="color: green"> > </strong>&nbsp&nbsp' + data[i].name + '</span>';   // good
     }
 
     for (i = 0; i < dates.length; i++) {

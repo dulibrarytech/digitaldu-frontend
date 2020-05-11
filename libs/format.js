@@ -63,8 +63,8 @@ var formatFacets = function(facets) {
   for(var key in facets) {
     for(var facet of facets[key]) {
       // Replace the quotation characters in the facet data string, which break the dynamically generated link to search the facet
-      facet.facet = facet.facet.replace("'", "");
-      facet.facet = facet.facet.replace('"', '');
+      facet.facet = facet.facet.replace(/'/g, "\'");
+      facet.facet = facet.facet.replace(/"/g, '\"');
     }
   }
 }
