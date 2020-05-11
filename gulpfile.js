@@ -1,13 +1,17 @@
-var gulp = require('gulp'),
-    uglify = require('gulp-uglify-es').default,
-    plumber = require('gulp-plumber');
+const gulp = require('gulp'),
+      uglify = require('gulp-uglify-es').default;
 
-gulp.task('default', function () {
-    return 0;
-});
+var minify_js = function() {
+  return gulp.src('./public/assets/js/*.js')
+    .pipe(uglify())
+    .pipe(gulp.dest('./public/dist/assets/js/'));
+}
+exports.minify_js = minify_js;
 
-gulp.task('dependencies', function () {
-    return gulp.src('./public/assets/js/*.js')
-        .pipe(uglify())
-        .pipe(gulp.dest('./public/dist/assets/js/'));
-});
+var deploy_js = function() {
+  return gulp.src('./public/dist/assets/js/*.js')
+    .pipe(gulp.dest('./public/assets/js/'));
+}
+exports.deploy_js = deploy_js;
+
+gulp.task('deploy_all', gulp.series(minify_js, deploy_js))
