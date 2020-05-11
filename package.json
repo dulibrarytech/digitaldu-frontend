@@ -35,6 +35,7 @@
     "chai": "^4.2.0",
     "gulp": "^4.0.2",
     "gulp-babel": "^8.0.0",
+    "gulp-javascript-obfuscator": "^1.1.6",
     "gulp-plumber": ">=1.2.1",
     "gulp-uglify": "^3.0.2",
     "gulp-uglify-es": "^2.0.0",
