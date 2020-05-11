@@ -6,15 +6,8 @@ gulp.task('default', function () {
     return 0;
 });
 
-gulp.task('dependancies', function () {
+gulp.task('dependencies', function () {
     return gulp.src('./public/assets/js/*.js')
         .pipe(uglify())
         .pipe(gulp.dest('./public/dist/assets/js/'));
-});
-
-gulp.task("libs", function () {
-    return gulp.src("./libs/*.js")
-        .pipe(uglify(/* options */))
-        // .pipe(rename("bundle.min.js"))
-        .pipe(gulp.dest("./public/dist/libs/"));
 });
