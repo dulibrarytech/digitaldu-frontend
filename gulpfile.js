@@ -14,7 +14,7 @@ var obfuscate_js = function() {
     .pipe(javascriptObfuscator())
     .pipe(gulp.dest('./public/dist/assets/js/'));
 }
-exports.minify_js = minify_js;
+exports.obfuscate_js = obfuscate_js;
 
 var deploy_js = function() {
   return gulp.src('./public/dist/assets/js/*.js')
