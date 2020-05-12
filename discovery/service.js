@@ -209,7 +209,6 @@ var getObjectsInCollection = function(collectionID, pageNum=1, facets=null, call
 
         // Get child objects of this collection
         es.search(data, function (error, response, status) {
-
           var responseData = {};
           if (error){
             callback(error, null);
@@ -219,19 +218,15 @@ var getObjectsInCollection = function(collectionID, pageNum=1, facets=null, call
           }
           else {
             var results = [];
-
-            // Create the results array
             for(var index of response.hits.hits) {
               results.push(index._source);
             }
 
-            // Assign data to the response object
             collection.list = Helper.getObjectLinkDisplayList(results); // Get the view data list from the elastic results array
             collection.facets = response.aggregations;
             collection.count = response.hits.total;
 
             if(collectionID != config.topLevelCollectionPID) {
-              // Get this collection's title
               fetchObjectByPid(config.elasticsearchPublicIndex, collectionID, function(error, object) {
                 if(error) {
                   collection.title = "";
@@ -284,16 +279,13 @@ var fetchObjectByPid = function(index, pid, callback) {
         }
       }
   }, function (error, response) {
-      // Elastic service error
       if(error) {
         callback(error, null);
       }
-      // Object found
       else if(response.hits.total > 0) {
         callback(null, response.hits.hits[0]._source);
       }
       else {
-        // Object not found
         callback(null, null);
       }
   });
@@ -425,7 +417,6 @@ var getTitleString = function(pids, titles, callback) {
   }
   pid = pidArray[ titles.length ];
 
-  // Get the title data for the current pid
   fetchObjectByPid(config.elasticsearchPublicIndex, pid, function (error, response) {
     if(error) {
       callback(error, titles);
@@ -440,11 +431,9 @@ var getTitleString = function(pids, titles, callback) {
       });
 
       if(titles.length == pidArray.length) {
-        // Have found a title for each pid in the input array
         callback(null, titles);
       }
       else {
-        // Get the title for the next pid in the pid array
         getTitleString(pidArray, titles, callback);
       }
     }
@@ -474,7 +463,6 @@ var getParentTrace = function(pid, collections, callback) {
         callback("Object not found:", pid, null);
       }
       else {
-        // There is > 1 title associated with this object, use the first one
         if(typeof response.title == "object") {
           title = response.title[0];
         }
@@ -483,7 +471,6 @@ var getParentTrace = function(pid, collections, callback) {
         }
         collections.push({pid: response.pid, name: title, url: url});
 
-        // There is > 1 collection parents associated with this object.  Use the first one for trace
         if(typeof response.is_member_of_collection == 'object') {
           getParentTrace(response.is_member_of_collection[0], collections, callback);
         }
@@ -547,9 +534,7 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
 
         for(var key in parts) {
           resourceUrl = config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType(parts[key].type) + "/" + parts[key].order;
-          //parts[key].type = parts[key].type == "image/tiff" ? "image/jpg" : parts[key].type;
 
-          // Add the data
           children.push({
             label: parts[key].title,
             sequence: parts[key].order || key,
@@ -576,9 +561,7 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
       // Single objects
       else {
         resourceUrl = config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType(object.mime_type);
-        //object.mime_type = object.mime_type == "image/tiff" ? "image/jpg" : object.mime_type;
 
-        // Add the data
         children.push({
           label: object.title,
           sequence: "1",

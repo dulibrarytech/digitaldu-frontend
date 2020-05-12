@@ -58,7 +58,6 @@ var config = require('../config/' + process.env.CONFIGURATION_FILE),
     }
     path = "/" + object.object_type || "";
 
-    // Push the current object view data to the list
     objectList.push({
         pid: pid,
         tn: tn,

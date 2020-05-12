@@ -58,9 +58,7 @@ exports.renderRootCollection = function(req, res) {
 	page = req.query.page || 1,
 	path = config.rootUrl + req._parsedOriginalUrl.path;
 
-	// Get all root collections
 	Service.getTopLevelCollections(page, function(error, response) {
-		// Get the view data
 		if(error) {
 			console.log(error);
 			data.error = "Error: could not retrieve collections.";
@@ -70,14 +68,12 @@ exports.renderRootCollection = function(req, res) {
 			data.searchFields = config.searchFields;
 		}
 
-		// Get facets for all data
 		Service.getFacets(null, function(error, facets) {
 			if(error) {
 				console.log(error);
 			}
 			else {
 				var facetList = Facets.getFacetList(facets, []);
-				// Only show the specified front page display facets, remove others here
 				for(var key in facetList) {
 					if(config.frontPageFacets.includes(key) === false) {
 						delete facetList[key];
@@ -133,7 +129,6 @@ exports.renderCollection = function(req, res) {
 		data.options["expandFacets"] = [];
 		data.options["perPageCountOptions"] = config.resultCountOptions;
 
-		// Get all collections in this community
 		Service.getObjectsInCollection(pid, page, reqFacets, function(error, response) {
 			if(error) {
 				console.log(error);
@@ -151,21 +146,16 @@ exports.renderCollection = function(req, res) {
 				var facetList = Facets.getFacetList(response.facets, showAll);
 				delete facetList.Collections;
 
-				/* This variable should always be null here, as rendering the collection view is separate from a keyword search and no request facets should be present here.  
-				 * The below code is to prevent a potential crash of the appication, just in case */
 				if(reqFacets) {
 					reqFacets = Facets.getSearchFacetObject(reqFacets);
 				}
 
 				Format.formatFacetDisplay(facetList, function(error, facetList) {
-					
-					// Add collections and collection data	
 					data.pagination = Paginator.create(response.list, page, config.maxCollectionsPerPage, response.count, path);
 					data.facets = Facets.create(facetList, config.rootUrl);
 					data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(reqFacets, null, config.rootUrl);
 					data.collection_breadcrumb_trail = Helper.getCollectionBreadcrumbObject(parentCollections);
 
-					// If there are no facets to display, set to null so the view does not show the facets section
 					if(AppHelper.isObjectEmpty(data.facets)) {
 						data.facets = null;
 					}
@@ -254,7 +244,6 @@ exports.renderObjectView = function(req, res) {
 				res.render('error', data);
 			}
 			else {
-				// Get array of parent collections for the parent collection breadcrumb list
 				Service.getCollectionHeirarchy(object.is_member_of_collection, function(collectionTitles) {
 					data.summary = Metadata.createSummaryDisplayObject(object);
 					object.type = Helper.normalizeLabel("Type", object.type || "")
@@ -287,7 +276,6 @@ exports.getDatastream = function(req, res) {
 		index = config.elasticsearchPublicIndex,
 		key = null;
 
-	// Extract the part index value, and separate it from the pid
 	let pidElements;
 	part = part == "0" ? null : part;
 	if(part == null && pid.indexOf(config.compoundObjectPartID) > 0) {
@@ -295,13 +283,11 @@ exports.getDatastream = function(req, res) {
 		pid = pid.split(config.compoundObjectPartID,1)[0];
 	}
 
-	// If a valid api key is passed in with the request, get data from the the private index
 	if(req.query.key && req.query.key == config.apiKey) {
 		index = config.elasticsearchPrivateIndex;
 		key = req.query.key;
 	}
 
-	// Get the datastream and pipe it
 	Service.getDatastream(index, pid, ds, part, key, function(error, stream, contentType=null) {
 		if(error || !stream) {
 			if(config.nodeEnv == "devlog") {
@@ -338,7 +324,6 @@ exports.getIIIFManifest = function(req, res) {
 		index = config.elasticsearchPublicIndex,
 		key = null;
 
-	// If a valid api key is passed in with the request, get data from the the private index
 	if(req.query.key && req.query.key == config.apiKey) {
 		index = config.elasticsearchPrivateIndex;
 		key = req.query.key;
@@ -374,7 +359,6 @@ exports.getKalturaViewer = function(req, res) {
 	let pid = req.params.pid || "",
 		part = parseInt(req.params.part) || 1;
 
-	// Get the object data
 	Service.fetchObjectByPid(config.elasticsearchPublicIndex, pid, function(error, object) {
 		if(error) {
 			console.log(error, pid);
@@ -385,12 +369,9 @@ exports.getKalturaViewer = function(req, res) {
 			res.send("<h4>Error loading viewer, object not found");
 		}
 		else {
-			// If the object is found, check if it is a compound object.  If it is, and a part has been requested, get the part object
 			if(AppHelper.isParentObject(object) && part) {
 				object = AppHelper.getCompoundObjectPart(object, part);
 			}
-
-			// Get the iframe html for the object and return it to the client
 			res.send(Viewer.getKalturaViewer(object));
 		}
 	});
@@ -441,7 +422,6 @@ exports.getObjectViewer = function(req, res) {
 		script = "",
 		errors = "";
 
-	// If a valid api key is passed in with the request, get data from the the private index
 	if(req.query.key && req.query.key == config.apiKey) {
 		index = config.elasticsearchPrivateIndex;
 		key = req.query.key;
@@ -457,9 +437,10 @@ exports.getObjectViewer = function(req, res) {
 		}
 		else {
 			var page = req.params.page && isNaN(parseInt(req.params.page)) === false ? req.params.page : "1";
-			// Render a parent object with child objects
-			if(AppHelper.isParentObject(object)) {viewer += CompoundViewer.getCompoundObjectViewer(object, page, key)}
-			// Render single object
+
+			if(AppHelper.isParentObject(object)) {
+				viewer += CompoundViewer.getCompoundObjectViewer(object, page, key)
+			}
 			else {
 				if(page != "1") {
 					let msg = "Object not found: " + pid;
@@ -475,7 +456,6 @@ exports.getObjectViewer = function(req, res) {
 				}
 			}
 
-			// Add transcript viewer if a transcript is present in the record
 			if(object.transcript && object.transcript.length > 0) {
 				viewer += "<div id='transcript-view-wrapper' style='display: block;'><div id='transcript-view'>";
 				viewer += object.transcript;
@@ -485,7 +465,6 @@ exports.getObjectViewer = function(req, res) {
 			viewer += "</div>";
 		}
 
-		// Render page
 		res.render('page', {
 			error: errors,
 			root_url: config.rootUrl,
@@ -497,8 +476,6 @@ exports.getObjectViewer = function(req, res) {
 
 exports.downloadObjectFile = function(req, res) {
 	var pid = req.params.pid || "";
-
-	// Remove file extension if present
 	for(var key in config.fileExtensions) {
 		if(pid.indexOf(key) > 0) {
 			let ext = "." + key;
@@ -506,14 +483,12 @@ exports.downloadObjectFile = function(req, res) {
 		}
 	}
 
-	// Parse out the part index value if present
 	let part = null;
 	if(pid.indexOf(config.compoundObjectPartID) > 0) {
 		part = pid.substring(pid.indexOf(config.compoundObjectPartID)+1, pid.length);	
 		pid = pid.split(config.compoundObjectPartID,1)[0];
 	}
 
-	// TODO request uri
 	res.sendStatus(200)
 }
 
