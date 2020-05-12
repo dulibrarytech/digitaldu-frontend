@@ -5,7 +5,7 @@
 
 html,
 body {
-  background: #e5e3e1;
+  background: white;
   font-family: 'Montserrat', 'Poppins', 'Raleway', sans-serif;
   font-size: 16px;
   line-height: 1;
@@ -90,7 +90,7 @@ header {
 
 main {
   padding-top: 50px;
-  padding-bottom: 230px;
+  /*padding-bottom: 230px;*/
   /*min-height: 538px;*/
   min-height: 100vh;
 }
@@ -1223,11 +1223,11 @@ div.object-citations {
 
 }
 
-.citation-section h5 {
+.citation h5 {
   font-size: 1rem;
 }
 
-.citation-section p {
+.citation p {
   font-size: 0.9em;
 }
 
@@ -1304,8 +1304,8 @@ footer {
   /* height: 230px; [C22] */
   padding: 50px 0 25px 0;
   overflow: hidden;
-  position: absolute;
-  bottom: 0;
+  /*position: absolute;
+  bottom: 0;*/
   width: 100%;
 }
 

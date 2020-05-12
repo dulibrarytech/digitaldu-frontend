@@ -177,14 +177,14 @@ module.exports = {
     /*
      * Show the object download options
      */
-    enableFileDownload: true,
+    enableFileDownload: false,
 
     /*
      * IIIF API 
      */
     IIIFUrl: process.env.IIIF_URL,
     IIIFAPiKeyPrefix: "__",
-    IIIFManifestPageSize: 20,
+    IIIFManifestPageSize: -1,
 
     /*
      * IIIF Object Types
@@ -199,7 +199,7 @@ module.exports = {
         "pdf": "foaf:Document"
     },
 
-    IIIFThumbnailWidth: "67",
+    IIIFThumbnailWidth: "150",
     IIIFThumbnailHeight: "",
 
 
