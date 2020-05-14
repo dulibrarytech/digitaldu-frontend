@@ -100,7 +100,7 @@ exports.removeEmptyFacetKeys = function(facets) {
 exports.getResultsLabel = function(query, facets, bool, field) {
   let queryLabel = " ", // One space character is required here (" ")
       appendLabel = "";
-  if(query.length > 0) {
+  if(query && query.length > 0) {
     for(let index in query) {
       // Handle special case of a collection field advanced search
       if(field[index] && field[index].toLowerCase() == "collection") {
