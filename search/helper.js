@@ -103,8 +103,7 @@ exports.getResultsLabel = function(query, facets, bool, field) {
   if(query.length > 0) {
     for(let index in query) {
       // Handle special case of a collection field advanced search
-      if(field[index].toLowerCase() == "collection") {
-        //appendLabel = " IN " + query[index];
+      if(field[index] && field[index].toLowerCase() == "collection") {
         continue;
       }
       if(query[index].length == 0) {
