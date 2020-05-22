@@ -56,6 +56,7 @@ const async = require('async'),
  * @return {undefined}
  */
 exports.search = function(req, res) {
+		console.log("TEST req.query", req.query)
 	var query = req.query.q || [""],
 		field = req.query.field || ["all"], 
 		type = req.query.type || ["contains"],
