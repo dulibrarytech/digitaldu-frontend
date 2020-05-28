@@ -58,13 +58,14 @@ exports.renderRootCollection = function(req, res) {
 	page = req.query.page || 1,
 	path = config.rootUrl + req._parsedOriginalUrl.path;
 
-	Service.getTopLevelCollections(page, function(error, response) {
+	Service.getTopLevelCollections(null, function(error, response) {
 		if(error) {
 			console.log(error);
 			data.error = "Error: could not retrieve collections.";
 		}
 		else {
-			data.collections = response.list;
+			data.allCollections = response.list;
+			data.collections = Helper.getArrayPage(response.list, parseInt(page), config.maxCollectionsPerPage);
 			data.searchFields = config.searchFields;
 		}
 
@@ -83,7 +84,7 @@ exports.renderRootCollection = function(req, res) {
 				data.facets = Facets.create(facetList, config.rootUrl);
 				data.typeCount = Helper.getTypeFacetTotalsObject(facets);
 				data.facetThumbnails = config.facetThumbnails;
-				data.pagination = Paginator.create(response.list, page, config.maxCollectionsPerPage, response.count, path);
+				data.pagination = Paginator.create(data.collections, page, config.maxCollectionsPerPage, response.count, path);
 				data.pagination["anchor"] = "#collections";
 			}
 			

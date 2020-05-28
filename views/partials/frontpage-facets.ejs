@@ -23,7 +23,19 @@
     </ul>
   </div>
 
-  <!-- dynamic facet list -->
+  <!-- Collection list -->
+  <button class="accordion" alt="Collections">
+    <h4>Collections</h4><i class="fas fa-caret-right facet-caret"></i>
+  </button>
+  <div id="collections-window" class="panel facet-panel panel-collapsed">
+    <ul>
+      <% for(var index in allCollections) { %>
+        <li><span class="facet-name"><a href="<%- root_url %><%= allCollections[index].path %>/<%= allCollections[index].pid %>" title="<%= allCollections[index].title %>"><%= allCollections[index].title %></a></span></li>
+      <% } %>
+    </ul>
+  </div>
+
+  <!-- Dynamic facet list -->
   <% for(var key in facets) { %>
     <% if(key != 'Type' && key != 'type') { %>
       <button class="accordion" alt="<%= key %>">

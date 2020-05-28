@@ -180,13 +180,18 @@ var getObjectsInCollection = function(collectionID, pageNum=1, facets=null, call
         }
         sortArr.push(sortField);
 
-        // Use local index to find the collection children
+        let from = 0, size = 10000;
+        if(pageNum) {
+          from = (pageNum - 1) * config.maxCollectionsPerPage;
+          size = config.maxCollectionsPerPage;
+        }
+
         var data = {  
           index: config.elasticsearchPublicIndex,
           type: config.searchIndexType,
           body: {
-            from : (pageNum - 1) * config.maxCollectionsPerPage,
-            size : config.maxCollectionsPerPage,
+            from : from,
+            size : size,
             query: {
                 "bool": {
                   "must": {

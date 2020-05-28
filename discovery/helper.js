@@ -355,5 +355,14 @@ exports.getCitations = function(object)  {
   return citations;
 }
 
+/*
+ * Slice the array elements to current page and page size
+ */
+exports.getArrayPage = function(array, pageNum, pageSize) {
+  let from = (pageNum-1) * pageSize;
+  let to = from + pageSize;
+  return array.slice(from, to);
+}
+
 
 

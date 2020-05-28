@@ -629,6 +629,10 @@ div.home-facets {
   margin: 2.5em 0.5em;
 }
 
+div#collections-window span.facet-name {
+  width: 98%;
+}
+
 div.facets .facet-count > div {
   float: right;
   padding-right: 7px;
