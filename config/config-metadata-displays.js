@@ -69,9 +69,7 @@ module.exports = {
                 "path": "names.title"
             },
             "Description": {
-                "path": "notes.content",
-                "matchField": "type",
-                "matchValue": "abstract"
+                "path": "abstract"
             }
         }
     },

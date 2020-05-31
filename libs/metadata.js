@@ -175,17 +175,19 @@ exports.addResultMetadataDisplays = function(resultArray) {
 		parentCollection = null;
 
 	for(var result of resultArray) {
-		if(result.objectType == "collection") {
-			resultsDisplay = metadataConfig.resultsDisplay["collection"] || {}
-		}
-		else {
-			resultsDisplay = metadataConfig.resultsDisplay["default"] || {}
-		}
-
 		metadata = {};
 		if(result.itemType) {
 			metadata["Type"] = result.itemType;
 		}
+
+		if(result.objectType == "collection") {
+			resultsDisplay = metadataConfig.resultsDisplay["collection"] || {};
+			metadata["Type"] = "Collection";
+		}
+		else {
+			resultsDisplay = metadataConfig.resultsDisplay["default"] || {};
+		}
+
 		displayRecord = result[config.displayRecordField] || {};
 		parentCollection = result.collection || null;
 
