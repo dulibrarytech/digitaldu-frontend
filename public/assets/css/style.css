@@ -1263,6 +1263,7 @@ div.metadata-content {
 div#transcript-view-wrapper {
   padding-bottom: 1.5em;
   background: white;
+  width: 100%;
 }
 
 div#transcript-view {
