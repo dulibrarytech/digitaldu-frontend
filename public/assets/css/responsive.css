@@ -288,6 +288,10 @@
   .item-title a {
     font-size: 14px;
   }
+
+  div.collection-thumb div.item-details h4 {
+    font-size: 13px;
+  }
 }
 /* Small devices (tablets, 768px and up) */
 @media (min-width: 768px) and (max-width: 991px) {
@@ -354,6 +358,10 @@
 
   div.home-facets {
     margin: 2.5em 0;
+  }
+
+  div.collection-thumb div.item-details h4 {
+    font-size: 13px;
   }
 }
 /* tablets/desktops and up ----------- */
