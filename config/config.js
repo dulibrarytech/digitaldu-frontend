@@ -518,6 +518,9 @@ module.exports = {
         },
         "Collection": {
             "path": "is_member_of_collection"
+        },
+        "Object Type": {
+            "path": "object_type"
         }
     },
 
