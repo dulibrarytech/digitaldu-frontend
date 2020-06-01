@@ -321,10 +321,8 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
 
     if(config.nodeEnv == "devlog") {console.log("DEV query object:", util.inspect(queryObj, {showHidden: false, depth: null}));}
 
-    // Get elasticsearch aggregations object 
     var facetAggregations = Helper.getFacetAggregationObject(config.facets);
 
-    // Apply sort option
     let sortArr = [];
     if(sort) {
       let data = {},
@@ -332,31 +330,26 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
 
       if(field) {
         if(field.matchField && field.matchField.length > 0) {
-          // build nested data sort query
           let filterObj = {
             "term": {}
           };
 
-          // Apply the sort if all of the required values are present and valid
           if(field.matchTerm && field.matchTerm.length > 0) {
-            // Build the sort query object
             filterObj.term[field.matchField + ".keyword"] = field.matchTerm;
             data[field.path + ".keyword"] = {
-              "order": sort.order,
+              "order": sort.order || "asc",
               "nested_path": field.path.substring(0,field.path.lastIndexOf(".")),
               "nested_filter": filterObj
             }
           }
         }
         else {
-          // Sort on non nested data
           data[field.path + ".keyword"] = {
-            "order": sort.order
+            "order": sort.order || "asc"
           }
         }
       }
-
-      sortArr.push(data); // sortData
+      sortArr.push(data);
     }
 
     // Create elasticsearch data object

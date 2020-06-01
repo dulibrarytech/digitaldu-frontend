@@ -364,5 +364,33 @@ exports.getArrayPage = function(array, pageNum, pageSize) {
   return array.slice(from, to);
 }
 
+/**
+ * Convert the sort params array into a data array for the search function
+ * Sorting by "relevance" will return null, no sorting is required
+ *
+ * @param {String} sort - The sort string: two terms delimited by "," (ex "sort field,sort type" or "Title,asc")
+ *
+ * @typedef {Object} sortData
+ * @property {String} field - First value of comma delimited "sort" string
+ * @property {String} order - Second value of comma delimited "sort" string
+ *
+ * @return {sortData|null} - The sort data object.  Null will be returned if the sort value is "relevance"
+ */
+exports.getSortDataArray = function(sort) {
+  let sortData = null;
+  if(sort && sort != "") {
+    sort = sort.split(",");
+
+    // If the sort field value is "relevance", do not assign the sort data, this is the default search
+    if(sort[0].toLowerCase() != "relevance") {
+      sortData = {
+        field: sort[0],
+        order: sort[1] || null
+      }
+    }
+  }
+  return sortData;
+}
+
 
 

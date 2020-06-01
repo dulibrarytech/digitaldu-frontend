@@ -445,12 +445,24 @@ module.exports = {
             "matchTerm": "local"
         }
     },
+    defaultSearchSortField: "relevance",
 
     collectionSortFields: {
         "Title": {
-            "path": "title.keyword"
+            "path": "title"
+        },
+        "Call Number": {
+            "path": "display_record.identifiers.identifier",
+            "matchField": "display_record.identifiers.type",
+            "matchTerm": "local"
+        },
+        "Creation Date": {
+            "path": "display_record.dates.begin",
+            "matchField": "display_record.dates.label",
+            "matchTerm": "creation"
         }
     },
+    defaultCollectionSortField: "Call Number,asc",
 
     /*
      * Options to appear in the search sort dropdown menu

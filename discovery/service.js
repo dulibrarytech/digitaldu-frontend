@@ -84,7 +84,7 @@ exports.getTopLevelCollections = function(pageNum=0, callback) {
         }
 
         //Query the index for root collection members
-        getObjectsInCollection(config.topLevelCollectionPID, pageNum, null, function(error, collections) {
+        getObjectsInCollection(config.topLevelCollectionPID, pageNum, null, null, function(error, collections) {
           if(error) {
             callback(error, null);
 
@@ -118,7 +118,7 @@ exports.getTopLevelCollections = function(pageNum=0, callback) {
  * @param {String|null} Error message or null
  * @param {collection|null} Null if error 
  */
-var getObjectsInCollection = function(collectionID, pageNum=1, facets=null, callback) {
+var getObjectsInCollection = function(collectionID, pageNum=1, facets=null, sort=null, callback) {
   Repository.getCollectionObjects(collectionID, facets).catch(error => {
     callback(error, null);
   })
@@ -142,6 +142,8 @@ var getObjectsInCollection = function(collectionID, pageNum=1, facets=null, call
         callback(null, collection);
       }
       else {
+
+        // TODO: Replace code below with call to /search
 
         // If facet data is present, add it to the search
         var facetFilters = [];
@@ -172,13 +174,34 @@ var getObjectsInCollection = function(collectionID, pageNum=1, facets=null, call
           }
         }
 
-        // Sort collections by title a-z
-        let sortArr = [],
-            sortField = {};
-        sortField[config.collectionSortFields["Title"].path] = {
-          "order": "asc"
+        let sortArr = [];
+        if(sort) {
+          let data = {},
+              field = config.searchSortFields[sort.field] || null;
+
+          if(field) {
+            if(field.matchField && field.matchField.length > 0) {
+              let filterObj = {
+                "term": {}
+              };
+
+              if(field.matchTerm && field.matchTerm.length > 0) {
+                filterObj.term[field.matchField + ".keyword"] = field.matchTerm;
+                data[field.path + ".keyword"] = {
+                  "order": sort.order,
+                  "nested_path": field.path.substring(0,field.path.lastIndexOf(".")),
+                  "nested_filter": filterObj
+                }
+              }
+            }
+            else {
+              data[field.path + ".keyword"] = {
+                "order": sort.order
+              }
+            }
+          }
+          sortArr.push(data);
         }
-        sortArr.push(sortField);
 
         let from = 0, size = 10000;
         if(pageNum) {

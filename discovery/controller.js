@@ -117,7 +117,8 @@ exports.renderCollection = function(req, res) {
 			pagination: {},
 			root_url: config.rootUrl,
 			searchFields: config.searchFields,
-			options: {}
+			options: {},
+			sortType: req.query.sort || config.defaultCollectionSortField || "Title"
 		};
 			
 		var	pid = req.params.pid || "",
@@ -130,7 +131,8 @@ exports.renderCollection = function(req, res) {
 		data.options["expandFacets"] = [];
 		data.options["perPageCountOptions"] = config.resultCountOptions;
 
-		Service.getObjectsInCollection(pid, page, reqFacets, function(error, response) {
+		let sortBy = Helper.getSortDataArray(data.sortType);
+		Service.getObjectsInCollection(pid, page, reqFacets, sortBy, function(error, response) {
 			if(error) {
 				console.log(error);
 				data.error = "Could not open collection.";

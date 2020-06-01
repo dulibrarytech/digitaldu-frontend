@@ -34,7 +34,6 @@ var exampleFormatter = function(object) {
  * Add custom format functions here
  */
 exports.formatFacetDisplay = function(object, callback) {
-    console.log("TEST formatter", object)
   formatFacets(object || []); // format all facets
   formatTypeFacets(object["Type"] || []);
   formatDateFacets(object["Date"] || []);
