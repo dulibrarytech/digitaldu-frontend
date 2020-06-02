@@ -267,7 +267,8 @@ var getObjectsInCollection = function(collectionID, pageNum=1, facets=null, sort
                   callback("Invalid collection: " + object.pid, []);
                 }
                 else {
-                  collection.title = object.title;
+                  collection.title = object.title || "No Title";
+                  collection.abstract = object.abstract || object.description || "";
                   callback(null, collection);
                 }
               });

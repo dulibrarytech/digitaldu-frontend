@@ -148,6 +148,7 @@ exports.renderCollection = function(req, res) {
 				data.collections = response.list;
 				data.current_collection = pid;
 				data.current_collection_title = response.title || "Untitled";
+				data.current_collection_abstract = response.abstract || "";
 
 				/* Get the list of facets for this collection, remove the 'Collections' facets (Can re-add this field, if we ever show facets for nested collections: 
 				 * ie there will be multiple collections facets present when one collection is open) */
