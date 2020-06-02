@@ -633,6 +633,10 @@ div#collections-window span.facet-name {
   width: 98%;
 }
 
+div.collections-wrapper > h2 {
+  display: inline;
+}
+
 div.facets .facet-count > div {
   float: right;
   padding-right: 7px;
@@ -1045,6 +1049,7 @@ div.search-results-menu > div {
 div.search-results-menu-element {
   margin-left: 20px;
   margin-top: 10px;
+  display: inline-block;
 }
 
 div#search-results-wrapper h4 {

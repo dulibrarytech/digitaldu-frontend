@@ -37,6 +37,28 @@
 
 	<div class="col-md-9 collections-wrapper">
 		<h2><%= current_collection_title %></h2>
+		<div class="search-results-menu-element">
+	        <select id="results-per-page" class="form-control" title="Select Number of Results per Page">
+	            <% for (var i = 0; i < options.perPageCountOptions.length; i++) { %>
+	              <% if(options.perPageCountOptions[i] == options.pageSize) { %>
+	                <option value="<%= options.perPageCountOptions[i] %>" selected><%= options.perPageCountOptions[i] %> per page</option>
+	              <% } else { %>
+	                <option value="<%= options.perPageCountOptions[i] %>"><%= options.perPageCountOptions[i] %> per page</option>
+	              <% } %>
+	            <% } %>
+	        </select>
+	    </div>
+	    <div class="search-results-menu-element">
+	        <select id="sort-by-select" class="form-control" title="Select Sort Results By">
+	            <% for (var key in options.sortByOptions) { %>
+	                <% if(options.sortByOptions[key] == sortType) { %>
+	                  <option value="<%= options.sortByOptions[key] %>" selected>Sort By <%= key %></option>
+	                <% } else { %>
+	                  <option value="<%= options.sortByOptions[key] %>">Sort By <%= key %></option>
+	                <% } %>
+	            <% } %>
+	        </select>
+	    </div>
 	    <hr>
 	    <% if(error) { %>
   			<h5><%- error %></h5>

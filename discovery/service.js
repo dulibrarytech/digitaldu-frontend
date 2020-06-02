@@ -84,7 +84,7 @@ exports.getTopLevelCollections = function(pageNum=0, callback) {
         }
 
         //Query the index for root collection members
-        getObjectsInCollection(config.topLevelCollectionPID, pageNum, null, null, function(error, collections) {
+        getObjectsInCollection(config.topLevelCollectionPID, pageNum, null, {"field": "Title", "order": "asc"}, 12, function(error, collections) {
           if(error) {
             callback(error, null);
 
@@ -118,7 +118,7 @@ exports.getTopLevelCollections = function(pageNum=0, callback) {
  * @param {String|null} Error message or null
  * @param {collection|null} Null if error 
  */
-var getObjectsInCollection = function(collectionID, pageNum=1, facets=null, sort=null, callback) {
+var getObjectsInCollection = function(collectionID, pageNum=1, facets=null, sort=null, pageSize=10, callback) {
   Repository.getCollectionObjects(collectionID, facets).catch(error => {
     callback(error, null);
   })
@@ -205,8 +205,8 @@ var getObjectsInCollection = function(collectionID, pageNum=1, facets=null, sort
 
         let from = 0, size = 10000;
         if(pageNum) {
-          from = (pageNum - 1) * config.maxCollectionsPerPage;
-          size = config.maxCollectionsPerPage;
+          from = (pageNum - 1) * pageSize;
+          size = pageSize || config.defaultCollectionsPerPage;
         }
 
         var data = {  

@@ -53,7 +53,8 @@ exports.renderRootCollection = function(req, res) {
 		paginator: {},
 		typeCount: {},
 		error: null,
-		root_url: config.rootUrl
+		root_url: config.rootUrl,
+		options: {}
 	},
 	page = req.query.page || 1,
 	path = config.rootUrl + req._parsedOriginalUrl.path;
@@ -65,8 +66,9 @@ exports.renderRootCollection = function(req, res) {
 		}
 		else {
 			data.allCollections = response.list;
-			data.collections = Helper.getArrayPage(response.list, parseInt(page), config.maxCollectionsPerPage);
+			data.collections = Helper.getArrayPage(response.list, parseInt(page), config.defaultHomePageCollectionsCount);
 			data.searchFields = config.searchFields;
+			data.options["perPageCountOptions"] = config.defaultHomePageCollectionsCount;
 		}
 
 		Service.getFacets(null, function(error, facets) {
@@ -84,7 +86,7 @@ exports.renderRootCollection = function(req, res) {
 				data.facets = Facets.create(facetList, config.rootUrl);
 				data.typeCount = Helper.getTypeFacetTotalsObject(facets);
 				data.facetThumbnails = config.facetThumbnails;
-				data.pagination = Paginator.create(data.collections, page, config.maxCollectionsPerPage, response.count, path);
+				data.pagination = Paginator.create(data.collections, page, config.defaultHomePageCollectionsCount, response.count, path);
 				data.pagination["anchor"] = "#collections";
 			}
 			
@@ -123,6 +125,7 @@ exports.renderCollection = function(req, res) {
 			
 		var	pid = req.params.pid || "",
 			page = req.query.page || 1,
+			pageSize = req.query.resultsPerPage || config.defaultCollectionsPerPage || 12,
 			path = config.rootUrl + req._parsedOriginalUrl.path,
 			reqFacets = req.query.f || null,
 			showAll = req.query.showAll || [];
@@ -130,9 +133,11 @@ exports.renderCollection = function(req, res) {
 		data.collectionID = pid;
 		data.options["expandFacets"] = [];
 		data.options["perPageCountOptions"] = config.resultCountOptions;
+		data.options["pageSize"] = pageSize;
+		data.options["sortByOptions"] = config.collectionSortByOptions;
 
 		let sortBy = Helper.getSortDataArray(data.sortType);
-		Service.getObjectsInCollection(pid, page, reqFacets, sortBy, function(error, response) {
+		Service.getObjectsInCollection(pid, page, reqFacets, sortBy, pageSize, function(error, response) {
 			if(error) {
 				console.log(error);
 				data.error = "Could not open collection.";
@@ -154,7 +159,7 @@ exports.renderCollection = function(req, res) {
 				}
 
 				Format.formatFacetDisplay(facetList, function(error, facetList) {
-					data.pagination = Paginator.create(response.list, page, config.maxCollectionsPerPage, response.count, path);
+					data.pagination = Paginator.create(response.list, page, pageSize, response.count, path);
 					data.facets = Facets.create(facetList, config.rootUrl);
 					data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(reqFacets, null, config.rootUrl);
 					data.collection_breadcrumb_trail = Helper.getCollectionBreadcrumbObject(parentCollections);

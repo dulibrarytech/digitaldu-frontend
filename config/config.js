@@ -89,7 +89,8 @@ module.exports = {
     /*
      * Collection results per page
      */
-    maxCollectionsPerPage: 12,
+    defaultHomePageCollectionsCount: 12,
+    defaultCollectionsPerPage: 10,
 
     /*
      * Max number of page links shown in the page list
@@ -480,6 +481,8 @@ module.exports = {
     },
 
     collectionSortByOptions: {
+        "Call Number (asc)": "Call Number,asc", // default
+        "Call Number (desc)": "Call Number,desc",
         "Title (a - z)": "Title,asc",
         "Title (z - a)": "Title,desc"
     },
