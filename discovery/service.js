@@ -483,7 +483,7 @@ exports.getTitleString = getTitleString;
 var getParentTrace = function(pid, collections, callback) {
   fetchObjectByPid(config.elasticsearchPublicIndex, pid, function(error, response) {
       var title = "",
-          url = config.rootUrl + "/collection/" + pid;
+          url = config.rootUrl + "/object/" + pid;
 
       if(error) {
         callback(error, null);

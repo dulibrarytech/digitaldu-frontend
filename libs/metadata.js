@@ -133,7 +133,7 @@ exports.createMetadataDisplayObject = function(result, collections=[]) {
 	let titles = [];
 	for(var collection of collections) {
 		if(collection.name != config.topLevelCollectionName) {
-			titles.push('<a href="' + config.rootUrl + '/collection/' + collection.pid + '">' + collection.name + '</a>');
+			titles.push('<a href="' + config.rootUrl + '/object/' + collection.pid + '">' + collection.name + '</a>');
 		}
 	}
 	if(titles.length > 0) {

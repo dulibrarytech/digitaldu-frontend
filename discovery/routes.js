@@ -35,7 +35,7 @@ module.exports = function (app) {
         .get(Discovery.renderRootCollection)
 
     app.route('/collection/:pid')
-        .get(Discovery.renderCollection)
+        .get(Discovery.renderCollection) 
 
     app.route('/object/:pid')
     	.get(Discovery.renderObjectView)

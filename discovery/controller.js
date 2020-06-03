@@ -107,7 +107,7 @@ exports.renderRootCollection = function(req, res) {
  *
  * @return {undefined}
  */
-exports.renderCollection = function(req, res) {
+var renderCollection = function(req, res) {
 	Service.getCollectionHeirarchy(req.params.pid, function(parentCollections) {
 		var data = {
 			error: null,
@@ -175,6 +175,7 @@ exports.renderCollection = function(req, res) {
 		});
 	});
 }
+exports.renderCollection = renderCollection;
 
 /**
  * Gets an array of all collection names
@@ -233,35 +234,40 @@ exports.renderObjectView = function(req, res) {
 			res.render('page-not-found', data);
 		}
 		else {
-			var object = response,
+			if(response.object_type == "collection") {
+				renderCollection(req, res);
+			}
+			else {
+				var object = response,
 				page = req.params.page && isNaN(parseInt(req.params.page)) === false ? req.params.page : null;
 
-			if(object.transcript && object.transcript.length > 0) {
-				data.transcript = object.transcript;
-			}
+				if(object.transcript && object.transcript.length > 0) {
+					data.transcript = object.transcript;
+				}
 
-			if(AppHelper.isParentObject(object)) {
-				data.viewer = CompoundViewer.getCompoundObjectViewer(object, page);
-			}
-			else {
-				data.viewer = Viewer.getObjectViewer(object);
-			}
+				if(AppHelper.isParentObject(object)) {
+					data.viewer = CompoundViewer.getCompoundObjectViewer(object, page);
+				}
+				else {
+					data.viewer = Viewer.getObjectViewer(object);
+				}
 
-			if(data.viewer.length <= 0) {
-				data.error = config.viewerErrorMessage;
-				data.devError = "Object viewer error";
-				res.render('error', data);
-			}
-			else {
-				Service.getCollectionHeirarchy(object.is_member_of_collection, function(collectionTitles) {
-					data.summary = Metadata.createSummaryDisplayObject(object);
-					object.type = Helper.normalizeLabel("Type", object.type || "")
-					data.metadata = Object.assign(data.metadata, Metadata.createMetadataDisplayObject(object, collectionTitles));
-					data.id = pid;
-					data.downloads = config.enableFileDownload ? AppHelper.getFileDownloadLinks(object, Helper.getDsType(object.mime_type || "")) : null; // PROD
-					data.citations = Helper.getCitations(object);
-					res.render('object', data);
-				});
+				if(data.viewer.length <= 0) {
+					data.error = config.viewerErrorMessage;
+					data.devError = "Object viewer error";
+					res.render('error', data);
+				}
+				else {
+					Service.getCollectionHeirarchy(object.is_member_of_collection, function(collectionTitles) {
+						data.summary = Metadata.createSummaryDisplayObject(object);
+						object.type = Helper.normalizeLabel("Type", object.type || "")
+						data.metadata = Object.assign(data.metadata, Metadata.createMetadataDisplayObject(object, collectionTitles));
+						data.id = pid;
+						data.downloads = config.enableFileDownload ? AppHelper.getFileDownloadLinks(object, Helper.getDsType(object.mime_type || "")) : null; // PROD
+						data.citations = Helper.getCitations(object);
+						res.render('object', data);
+					});
+				}
 			}
 		}
 	});
