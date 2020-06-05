@@ -71,9 +71,9 @@
 			</p>
 		    </div>	
 		    
-		   
+
                     <div class="collection-abstract">
-                        <p>Collection Description: <%= current_collection_abstract %></p>
+                        <p>Collection Description: <%= current_collection_abstract.replace(/(<([^>]+)>)/ig,"") %></p>
                     </div>
   			<%- include('partials/paginator') -%>
 
