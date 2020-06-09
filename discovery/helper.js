@@ -56,7 +56,7 @@ var config = require('../config/' + process.env.CONFIGURATION_FILE),
     if(!object.object_type) {
       console.log("Error: Object " + object + " has no object_type value");
     }
-    path = "/" + object.object_type || "";
+    path = "/object";
 
     objectList.push({
         pid: pid,
