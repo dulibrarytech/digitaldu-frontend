@@ -250,7 +250,7 @@ var getObjectsInCollection = function(collectionID, pageNum=1, facets=null, sort
               results.push(index._source);
             }
 
-            collection.list = Helper.getObjectLinkDisplayList(results); // Get the view data list from the elastic results array
+            collection.list = Helper.getObjectLinkDisplayList(results);
             collection.facets = response.aggregations;
             collection.count = response.hits.total;
 
@@ -268,7 +268,7 @@ var getObjectsInCollection = function(collectionID, pageNum=1, facets=null, sort
                 }
                 else {
                   collection.title = object.title || "No Title";
-                  collection.abstract = object.abstract || object.description || "";
+                  collection.abstract = (object.abstract && typeof object.abstract == "object") ? object.abstract[0] : object.abstract || "";
                   callback(null, collection);
                 }
               });
