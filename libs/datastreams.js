@@ -176,7 +176,7 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
     var isCached = false;
     for(var type in config.objectTypes) {
       if(config.objectTypes[type].includes(object.mime_type)) {
-        if(config.cacheTypes.includes(type)) {
+        if(config.objectDerivativeCacheEnabled && config.cacheTypes.includes(type)) {
           isCached = true;
         }
       }
