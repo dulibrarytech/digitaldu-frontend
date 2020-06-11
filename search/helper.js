@@ -132,11 +132,12 @@ exports.getResultsLabel = function(query, facets, bool, field) {
 exports.getDateRangeQuery = function(daterange) {
   var dateQuery = {
     "bool": {
-      "should": [],
       "must": []
     }
   },
-  beginRange = {}, endRange = {};
+  dateQueries = [],
+  beginRange = {}, 
+  endRange = {};
 
   // Add the match field query if a match field has been set
   if(config.dateFieldMatchField && config.dateFieldMatchField.length > 0) {
@@ -147,63 +148,54 @@ exports.getDateRangeQuery = function(daterange) {
     });
   }
 
-  // QI Check if begin date is included in the range
-  beginRange[config.beginDateField] = {
+  // Query 1: begin field is in bounds
+  let rangeQuery = {};
+  rangeQuery[config.beginDateField] = {
     "gte": daterange.from,
     "lte": daterange.to
   };
-  dateQuery.bool.should.push({
-    "range": beginRange
+  dateQueries.push({
+    "range": rangeQuery
   });
 
-  // QII Check if end date is included in the range
-  endRange[config.endDateField] = {
+  // Query 2: end field is in bounds
+  rangeQuery = {};
+  rangeQuery[config.endDateField] = {
     "gte": daterange.from,
     "lte": daterange.to
   };
-  dateQuery.bool.should.push({
-    "range": endRange
+  dateQueries.push({
+    "range": rangeQuery
   });
 
-  // QIII Check for object date span that envelops the selected daterange
-  // var temp = [], beginRange = {}, endRange = {};
-  // beginRange[config.beginDateField] = {
-  //   "lte": daterange.from
-  // };
-  // temp.push({
-  //   "range": beginRange
-  // });
-  // endRange[config.endDateField] = {
-  //   "gte": daterange.to
-  // };
-  // temp.push({
-  //   "range": endRange
-  // });
-  // dateQuery.bool.should.push({
-  //   "bool": {
-  //     "must": temp
-  //   }
-  // });
+  // Query 3: begin and end field are out of bounds, but begin is < range start, and end is > range end
+  let query = {
+    "bool": {
+      "must": []
+    }
+  };
+  rangeQuery = {};
+  rangeQuery[config.beginDateField] = {
+    "lte": daterange.from
+  };
+  query.bool.must.push({
+    "range": rangeQuery
+  });
+  rangeQuery = {};
+  rangeQuery[config.endDateField] = {
+    "gte": daterange.to
+  };
+  query.bool.must.push({
+    "range": rangeQuery
+  });
+  dateQueries.push(query);
 
-  // QIV Check for object date span included in the selected daterange
-  // temp = [];
-  // beginRange[config.beginDateField] = {
-  //   "gte": daterange.from
-  // };
-  // temp.push({
-  //   "range": beginRange
-  // });
-  // endRange[config.endDateField] = {
-  //   "lte": daterange.to
-  // };
-  // temp.push({
-  //   "range": endRange
-  // });
-  // dateQuery.bool.should.push({
-  //   "bool": {
-  //     "must": temp
-  //   }
-  // });
+  // Add datequeries: one hit means object is in range
+  dateQuery.bool.must.push({
+    "bool": {
+      "should": dateQueries
+    }
+  });
 
   return config.nestedDateField ? {
     nested: {
@@ -363,6 +355,28 @@ exports.updateQueryTermsForField = function(terms="", field, type, bool) {
   return terms;
 }
 
-exports.sanitizeRequestQueryParams = function(requestQueryObj) {
+/**
+ * Update the format of the date query to YYYY-MM-DD format for Elastic
+ *
+ * @typedef {Object} daterangeQuery 
+ * @property {String} from - from date. Must be of format (Will update )
+ * @property {String} to - to date
+ *
+ * @return {Object} - Updated date fields
+ */
+exports.formatDateFieldForElasticQuery = function(daterangeQuery) {
+  let formatted = {
+    from: daterangeQuery.from,
+    to: daterangeQuery.to
+  };
+  
+  // Update YYYY input format
+  if(/[0-9][0-9][0-9][0-9]/.test(daterangeQuery.from)) {
+    formatted.from = daterangeQuery.from + "-01-01";
+  }
+  if(/[0-9][0-9][0-9][0-9]/.test(daterangeQuery.to)) {
+    formatted.to = daterangeQuery.to + "-12-31";
+  }
 
+  return formatted;
 }

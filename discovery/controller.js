@@ -130,6 +130,8 @@ var renderCollection = function(req, res) {
 			reqFacets = req.query.f || null,
 			showAll = req.query.showAll || [];
 
+			console.log("TEST path is", path)
+
 		data.collectionID = pid;
 		data.options["expandFacets"] = [];
 		data.options["perPageCountOptions"] = config.resultCountOptions;

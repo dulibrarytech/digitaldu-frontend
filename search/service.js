@@ -145,12 +145,8 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
             if(field.boost) {
               keywordObj["boost"] = field.boost;
             }
-
             fieldObj[field.field] = keywordObj;
           }
-          // else if(queryType == "wildcard") {
-            
-          // }
           else {
             fieldObj[field.field] = terms;
           }
@@ -264,14 +260,8 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
     }
 
     //If a date range is present, add the date range query to the must match array
-    if(daterange) {
-      let fullDate = {};
-      if(!/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/.test(daterange.from)) {
-        fullDate["from"] = daterange.from + "-01-01";
-      }
-      if(!/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/.test(daterange.to)) {
-        fullDate["to"] = daterange.to + "-12-31";
-      }
+    if(daterange && daterange.from && daterange.to) {
+      let fullDate = Helper.formatDateFieldForElasticQuery(daterange);
       filters.push(Helper.getDateRangeQuery(fullDate));
     }
 

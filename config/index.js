@@ -27,7 +27,7 @@
 const config = require('../config/' + process.env.CONFIGURATION_FILE);
 const elasticsearch = require('elasticsearch');
 
-let esLogType = config.nodeEnv == 'devlog' ? 'trace' : 'warning';
+let esLogType = config.nodeEnv == 'devlogelastic' ? 'trace' : 'warning';
 const client = new elasticsearch.Client({
   host: config.elasticsearchHost + ':' + config.elasticsearchPort,
   log: esLogType,
