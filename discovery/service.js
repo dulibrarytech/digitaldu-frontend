@@ -235,6 +235,8 @@ var getObjectsInCollection = function(collectionID, pageNum=1, facets=null, sort
           }
         }
 
+        if(config.nodeEnv == "devlog") {console.log("DEV query object:", util.inspect(data, {showHidden: false, depth: null}));}
+
         // Get child objects of this collection
         es.search(data, function (error, response, status) {
           var responseData = {};

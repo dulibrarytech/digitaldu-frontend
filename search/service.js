@@ -309,8 +309,6 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       }
     }
 
-    if(config.nodeEnv == "devlog") {console.log("DEV query object:", util.inspect(queryObj, {showHidden: false, depth: null}));}
-
     var facetAggregations = Helper.getFacetAggregationObject(config.facets);
 
     let sortArr = [];
@@ -354,6 +352,8 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
         aggregations: facetAggregations
       }
     }
+
+    if(config.nodeEnv == "devlog") {console.log("DEV query object:", util.inspect(data, {showHidden: false, depth: null}));}
 
     // Query the index
     es.search(data, function (error, response, status) {

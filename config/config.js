@@ -484,7 +484,9 @@ module.exports = {
         "Call Number (asc)": "Call Number,asc", // default
         "Call Number (desc)": "Call Number,desc",
         "Title (a - z)": "Title,asc",
-        "Title (z - a)": "Title,desc"
+        "Title (z - a)": "Title,desc",
+        "Creation Date (asc)": "Creation Date,asc",
+        "Creation Date (desc)": "Creation Date,desc"
     },
 
     /*
