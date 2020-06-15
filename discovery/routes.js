@@ -26,22 +26,24 @@ var Discovery = require('../discovery/controller');
 
 module.exports = function (app) {
 
-    app.route('/islandora/object/:pid')
-        .get(function(req, res) {
-            res.redirect("/object/" + req.params.pid);
-    });
-
     app.route('/')
         .get(Discovery.renderRootCollection)
 
     app.route('/collection/:pid')
         .get(Discovery.renderCollection) 
 
-    app.route('/object/:pid')
-    	.get(Discovery.renderObjectView)
-
     app.route('/object/:pid/:page')
         .get(Discovery.renderObjectView)
+
+    app.route('/object/:pid')
+        .get(function(req, res) {
+            if(/codu[:_][0-9]+/.test(req.params.pid)) {
+                Discovery.renderHandleErrorPage(req, res);
+            }
+            else {
+                Discovery.renderObjectView(req, res);
+            }
+    });
 
     app.route('/viewer/:pid')
         .get(Discovery.getObjectViewer)
@@ -75,6 +77,11 @@ module.exports = function (app) {
 
     app.route('/download/:pid/:extension')
         .get(Discovery.downloadObjectFile)
+
+    app.route('/islandora/object/:pid')
+        .get(function(req, res) {
+            res.redirect("/object/" + req.params.pid);
+    });
 };
 
 

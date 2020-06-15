@@ -507,3 +507,9 @@ exports.downloadObjectFile = function(req, res) {
 	res.sendStatus(200)
 }
 
+exports.renderHandleErrorPage = function(req, res) {
+	res.render('handle-error', {
+		root_url: config.rootUrl
+	});
+}
+
