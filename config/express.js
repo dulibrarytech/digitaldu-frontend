@@ -25,6 +25,7 @@
 
 const http = require('http'),
     express = require('express'),
+    compression = require('compression'),
     helmet = require('helmet'),
     bodyParser = require('body-parser'),
     config = require('./config.js'),
@@ -37,7 +38,7 @@ module.exports = function () {
     if (process.env.NODE_ENV === 'development') {
         process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
     } else if (process.env.NODE_ENV === 'production') {
-        app.use(compress());
+        app.use(compression());
     }
 
     app.use(bodyParser.urlencoded({
