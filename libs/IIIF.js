@@ -43,7 +43,7 @@ exports.getManifest = function(container, objects, apikey, callback) {
 		mediaSequences = [];
 
 	// Define the manifest
-	manifest["@context"] = "http://iiif.io/api/presentation/2/context.json";
+	manifest["@context"] = container.protocol + "://iiif.io/api/presentation/2/context.json";
 	manifest["@id"] = config.IIIFUrl + "/" + container.resourceID + "/manifest";
 	manifest["@type"] = "sc:Manifest";
 	manifest["label"] = container.title;
@@ -295,12 +295,12 @@ var getThumbnailObject = function(container, object, apikey) {
 	thumbnail["height"] = config.IIIFThumbnailHeight;
 	thumbnail["width"] = config.IIIFThumbnailWidth;
 
-	service["@context"] = "http://iiif.io/api/image/2/context.json";
+	service["@context"] = container.protocol + "://iiif.io/api/image/2/context.json";
 	service["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + apikey;
-	service["protocol"] = "http://iiif.io/api/image";
+	service["protocol"] = container.protocol + "://iiif.io/api/image";
 	service["height"] = config.IIIFThumbnailHeight;
 	service["width"] = config.IIIFThumbnailWidth;
-	service["profile"] = ['"http://iiif.io/api/image/2/level0.json"'];
+	service["profile"] = container.protocol + "://iiif.io/api/image/2/level0.json";
 	thumbnail["service"] = service;
 
 	return thumbnail;
@@ -332,7 +332,7 @@ var getImageCanvas = function(container, object, apikey) {
 	canvas["width"] = "";
 	canvas['images'] = [];
 
-	image["@context"] = "http://iiif.io/api/presentation/2/context.json";
+	image["@context"] = container.protocol + "://iiif.io/api/presentation/2/context.json";
 	image["@id"] = config.IIIFUrl + "/" + container.resourceID + "/image/i" + object.sequence;
 	image["@type"] =  "oa:Annotation";
 	image["motivation"] = "";

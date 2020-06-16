@@ -543,7 +543,8 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
           "Title": object.title,
           "Creator": object.creator,
           "Description": object.abstract
-        }
+        },
+        protocol: /https/.test(config.IIIFUrl) ? "https" : "http"
       };
 
       // Compound objects
@@ -565,7 +566,6 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
 
         for(var key in parts) {
           resourceUrl = config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType(parts[key].type) + "/" + parts[key].order;
-
           children.push({
             label: parts[key].title,
             sequence: parts[key].order || key,
@@ -592,7 +592,6 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
       // Single objects
       else {
         resourceUrl = config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType(object.mime_type);
-
         children.push({
           label: object.title,
           sequence: "1",
