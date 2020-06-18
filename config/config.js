@@ -185,7 +185,7 @@ module.exports = {
      */
     IIIFUrl: process.env.IIIF_URL,
     IIIFAPiKeyPrefix: "__",
-    IIIFManifestPageSize: -1,
+    IIIFManifestPageSize: 20,
 
     /*
      * IIIF Object Types
@@ -200,7 +200,7 @@ module.exports = {
         "pdf": "foaf:Document"
     },
 
-    IIIFThumbnailWidth: "150",
+    IIIFThumbnailWidth: "67",
     IIIFThumbnailHeight: "",
 
 
