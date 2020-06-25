@@ -178,7 +178,7 @@ module.exports = {
     /*
      * Show the object download options
      */
-    enableFileDownload: false,
+    enableFileDownload: true,
 
     /*
      * IIIF API 
