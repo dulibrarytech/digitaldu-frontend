@@ -50,12 +50,13 @@ $( document ).ready(function() {
 	});
 
   	$("#file-download").click(function(event) {
-  		if($(".download-links").hasClass("panel-collapsed")) {
-  			$(".download-links").removeClass("panel-collapsed");
-  		}
-  		else {
-  			$(".download-links").addClass("panel-collapsed");
-  		}
+  		/* Disabled until update for multiple download options 6/25/20 */
+  		// if($(".download-links").hasClass("panel-collapsed")) {
+  		// 	$(".download-links").removeClass("panel-collapsed");
+  		// }
+  		// else {
+  		// 	$(".download-links").addClass("panel-collapsed");
+  		// }
 	});
 
 	$("#home-search button").click(function(event) {
