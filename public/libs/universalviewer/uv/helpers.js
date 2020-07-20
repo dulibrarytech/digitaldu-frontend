@@ -45,7 +45,7 @@ function createUV(selector, data, dataProvider) {
 
     uv.on('created', function(obj) {
        $(".uv-preload-msg").remove();
-       $("#sidebar-nav-buttons").css("display", "block");
+       // $("#sidebar-nav-buttons").css("display", "block");
        resize();
     }, false);
 
