@@ -65,6 +65,12 @@ All other content is released under [CC-BY-4.0](https://creativecommons.org/lice
         CANTALOUPE_URL={cantaloupe api domain}
         CANTALOUPE_PORT={port}
         IIIF_URL={iiif api}
+
+        IIIF_IMAGE_SERVER_URL={cantaloupe api domain}
+        IIIF_IMAGE_SERVER_PATH={relative path to cantaloupe endpoint, if any}
+        IIIF_DOMAIN={iiif api domain}
+        IIIF_PATH={relative path to iiif, should be '/iiif'}
+
     ```
     4. APP_HOST is the url to the server.  Do not add the port to this url, add that to APP_PORT.  Set APP_PORT to whatever port the nodejs app should run on.
     

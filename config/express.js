@@ -49,7 +49,7 @@ module.exports = function () {
     app.use(noCache());
     app.use(helmet.contentSecurityPolicy({
       directives: {
-        defaultSrc: ["'self'", config.IIIFServerUrl, config.repositoryDomain, 'www.google-analytics.com', 'cdnapisec.kaltura.com', 'data:', 'blob:', 'www.du.edu', 'fonts.gstatic.com', 'use.fontawesome.com'],
+        defaultSrc: ["'self'", config.IIIFServerDomain, config.IIIFDomain, config.repositoryDomain, 'www.google-analytics.com', 'cdnapisec.kaltura.com', 'data:', 'blob:', 'www.du.edu', 'fonts.gstatic.com', 'use.fontawesome.com'],
         styleSrc: ["'self'", "'unsafe-inline'", 'maxcdn.bootstrapcdn.com', 'use.fontawesome.com', 'vjs.zencdn.net', 'code.jquery.com', 'fonts.googleapis.com'],
         scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'www.google-analytics.com', 'vjs.zencdn.net', 'use.fontawesome.com', 'code.jquery.com'],
         fontSrc: ["'self'", 'data:', 'fonts.gstatic.com', 'use.fontawesome.com']

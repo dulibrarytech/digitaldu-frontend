@@ -57,8 +57,6 @@ module.exports = {
     elasticsearchPort: process.env.ELASTICSEARCH_PORT,
     elasticsearchPublicIndex: process.env.ELASTICSEARCH_PUBLIC_INDEX,
     elasticsearchPrivateIndex: process.env.ELASTICSEARCH_PRIVATE_INDEX,
-    IIIFServerUrl: process.env.CANTALOUPE_URL,
-    cantaloupePort: process.env.CANTALOUPE_PORT,
 
     /*
      * Root collection
@@ -183,7 +181,10 @@ module.exports = {
     /*
      * IIIF API 
      */
-    IIIFUrl: process.env.IIIF_URL,
+    IIIFServerUrl: process.env.IIIF_IMAGE_SERVER_URL + process.env.IIIF_IMAGE_SERVER_PATH,
+    IIIFServerDomain: process.env.IIIF_IMAGE_SERVER_URL,
+    IIIFDomain: process.env.IIIF_DOMAIN,
+    IIIFUrl: process.env.IIIF_DOMAIN + process.env.IIIF_PATH,
     IIIFAPiKeyPrefix: "__",
     IIIFManifestPageSize: 20,
 
