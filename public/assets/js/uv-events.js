@@ -31,9 +31,9 @@ $( document ).ready(function() {
 						baseUrl = uri.substring(0, uri.indexOf("/object"));
 
 					// Get the Kaltura viewer content
-		  			let kalturaViewerUri = baseUrl + "/viewer/kaltura/" + viewerContent.objectID + "/" + part;
+		  			let kalturaViewerUri = baseUrl + "/viewer/kaltura/" + params.objectID + "/" + part;
 		  			$.get(kalturaViewerUri, function(viewerContent, status) {
-					    if(status == "success") {$("[id^=mep_]").html(params.viewerContent)}
+					    if(status == "success") {console.log("TEST v rx success", viewerContent); $("[id^=mep_]").html(viewerContent)}
 					    else {console.log("Error: Can not retrieve Kaltura content. Status is ", status)}
 					});
 		  		});
