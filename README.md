@@ -62,10 +62,6 @@ All other content is released under [CC-BY-4.0](https://creativecommons.org/lice
         REPOSITORY_USER={repository username}
         REPOSITORY_PWD={repository password}
         PDF_JS_VIEWER_PORT={port}
-        CANTALOUPE_URL={cantaloupe api domain}
-        CANTALOUPE_PORT={port}
-        IIIF_URL={iiif api}
-
         IIIF_IMAGE_SERVER_URL={cantaloupe api domain}
         IIIF_IMAGE_SERVER_PATH={relative path to cantaloupe endpoint, if any}
         IIIF_DOMAIN={iiif api domain}
