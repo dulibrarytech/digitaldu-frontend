@@ -607,6 +607,10 @@ div.paginator a {
   line-height: 30px;
 }
 
+div.paginator-nav {
+  padding-left: 0;
+}
+
 div.paginator > span {
   color: #555351;
 }
@@ -622,6 +626,23 @@ div.paginator-pages a {
 
 div.paginator-pages a + a {
   margin-left: 10px;
+}
+
+form.goto-page-form {
+  margin: 15px 0 0 30px;
+}
+
+input#set-page-number {
+  width: 75px;
+  margin-left: 8px;
+  padding-left: 5px;
+}
+
+button#set-page-number-button {
+    padding: .075rem .75rem;
+    position: relative;
+    left: 10px;
+    bottom: 2px;
 }
 
 /* Begin facet section */

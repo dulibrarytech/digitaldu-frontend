@@ -138,7 +138,9 @@
           <% } %>
         </div>
       <% } %>
-      <%- include('partials/paginator') -%>
+      <% if(results.length > 0) { %>
+        <%- include('partials/paginator') -%>
+      <% } %>
     <% } %>
   </div>
 </div>
