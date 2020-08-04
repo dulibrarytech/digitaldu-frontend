@@ -598,7 +598,7 @@ div.sidebar-section {
 }
 
 div.paginator {
-  margin: 35px 0 0 30px;
+  margin: 35px 0 10px 30px;
 }
 
 div.paginator a {
@@ -628,7 +628,11 @@ div.paginator-pages a + a {
   margin-left: 10px;
 }
 
-form.goto-page-form {
+div#home-collections form#goto-page-form {
+  display: none;
+}
+
+form#goto-page-form {
   margin: 15px 0 0 30px;
 }
 
