@@ -152,7 +152,8 @@ exports.getFileDownloadLinks = function(object, dsid, part=null) {
 		let extension = getFileExtensionForMimeType(object.mime_type),
 			link = {
 				uri: config.rootUrl + "/datastream/" + object.pid + "/" + dsid + "/" + part + "/" + object.pid + "." + extension,
-				filename: object.pid + "." + extension
+				filename: object.pid + "." + extension,
+				extension: extension
 			};
 		links.push(link);
 	}
