@@ -218,7 +218,6 @@ exports.renderObjectView = function(req, res) {
 		root_url: config.rootUrl
 	},
 	pid = req.params.pid || "";
-
 	Service.fetchObjectByPid(config.elasticsearchPublicIndex, pid, function(error, response) {
 		if(error) {
 			data.error = config.viewerErrorMessage;
@@ -258,9 +257,11 @@ exports.renderObjectView = function(req, res) {
 					res.render('error', data);
 				}
 				else {
+					data["returnLink"] = (req.header('Referer') && req.header('Referer').indexOf(config.rootUrl + "/search?") >= 0) ? req.header('Referer') : false;
+
 					Service.getCollectionHeirarchy(object.is_member_of_collection, function(collectionTitles) {
-						data.summary = Metadata.createSummaryDisplayObject(object);
 						object.type = Helper.normalizeLabel("Type", object.type || "")
+						data.summary = Metadata.createSummaryDisplayObject(object);
 						data.metadata = Object.assign(data.metadata, Metadata.createMetadataDisplayObject(object, collectionTitles));
 						data.id = pid;
 						data.downloads = config.enableFileDownload ? AppHelper.getFileDownloadLinks(object, Helper.getDsType(object.mime_type || "")) : null; // PROD

@@ -589,6 +589,16 @@ div.sidebar-search .search-element {
   width: 60%;
 }
 
+div.left-float-anchor-list {
+  float: left;
+  margin-bottom: 15px;
+}
+
+div.left-float-anchor-list a {
+  color: initial;
+  text-decoration: underline;
+}
+
 div#sidebar {
   padding: 0 15px;
 }
