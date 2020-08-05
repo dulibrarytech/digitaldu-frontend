@@ -62,7 +62,7 @@ exports.create = function(items, page, maxItems, totalItems, path) {
 
 	// The total number of search results
 	pagination['totalHits'] = totalItems;
-	pagination['buttons'] = getButtons(items.length, page, maxItems, totalItems);
+	pagination['buttons'] = getButtons(page, maxItems, totalItems);
 
 	// Add the path to the prev/next buttons
 	pagination['path'] = {};
@@ -156,7 +156,7 @@ exports.paginateResults = function(results, page) {
  * @param 
  * @return 
  */
-var getButtons = function(pageItemCount, page, maxItems, totalItems) {
+var getButtons = function(page, maxItems, totalItems) {
 	var buttons = {
 		prev: 0,
 		next: 0
@@ -166,21 +166,12 @@ var getButtons = function(pageItemCount, page, maxItems, totalItems) {
 		page = parseInt(page);
 	}
 
-	// This is the first page
-	if(pageItemCount < maxItems || pageItemCount == maxItems && totalItems % maxItems == 0) {
-		buttons.next = 0;
-		buttons.prev = page-1;
-	}
-
-	// This is the last page
-	else if(pageItemCount == maxItems && page == 1) {
+	// Show a next button if curent page * items per page still leaves room for more results
+	if(page * maxItems <= totalItems) {
 		buttons.next = page+1;
-		buttons.prev = 0;
 	}
-
-	// Any other page between first/last
-	else {
-		buttons.next = page+1;
+	// Show a previous button if this is not the first page
+	if(page > 1) {
 		buttons.prev = page-1;
 	}
 
