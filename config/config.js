@@ -62,7 +62,7 @@ module.exports = {
      * Root collection
      */
     topLevelCollectionPID: "codu:root",
-    topLevelCollectionName: "Root Collection",
+    topLevelCollectionName: "Collection",
 
     /*
      * Index type name
