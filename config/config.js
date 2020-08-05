@@ -464,7 +464,7 @@ module.exports = {
             "matchTerm": "creation"
         }
     },
-    defaultCollectionSortField: "Call Number,asc",
+    defaultCollectionSortField: "Creation Date,asc",
 
     /*
      * Options to appear in the search sort dropdown menu
@@ -482,12 +482,12 @@ module.exports = {
     },
 
     collectionSortByOptions: {
-        "Call Number (asc)": "Call Number,asc", // default
-        "Call Number (desc)": "Call Number,desc",
+        "Creation Date (asc)": "Creation Date,asc", // default
+        "Creation Date (desc)": "Creation Date,desc",
         "Title (a - z)": "Title,asc",
         "Title (z - a)": "Title,desc",
-        "Creation Date (asc)": "Creation Date,asc",
-        "Creation Date (desc)": "Creation Date,desc"
+        "Call Number (asc)": "Call Number,asc", 
+        "Call Number (desc)": "Call Number,desc"
     },
 
     /*
