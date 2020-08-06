@@ -92,6 +92,9 @@ All other content is released under [CC-BY-4.0](https://creativecommons.org/lice
 "display_record": {object} Object with metadata display fields.  This is accessed to build the metadata displays for the object: Search result display, objet view summary, object metadata display
 "parts": {array} Array of constituent part objects of a parent compound object.  Objects that are not compound do not require this field
 
+##### Sample Index
+elastic-index-mapping.json
+
 ##### Compound Object Required Fields
 
 "mime_type": Mime type of the part object
