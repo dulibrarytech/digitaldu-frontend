@@ -73,6 +73,7 @@ module.exports = {
      * Search results limit
      */
     maxDisplayResults: 1000,
+    maxElasticSearchResultCount: 10000,
 
     /*
      * Max search results on results page

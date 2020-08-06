@@ -93,9 +93,9 @@ exports.search = function(req, res) {
 
 	page = parseInt(page);
 	pageSize = parseInt(pageSize);
-	let from = (page - 1) * pageSize;
-	if(from + pageSize > 10000) {
-		let msg = "Search result pages are limited to 1000. Please select a page from 1 to 1000";
+	let maxPages = config.maxElasticSearchResultCount / pageSize;
+	if(page > maxPages) {
+		let msg = "Search results are limited to " + config.maxElasticSearchResultCount + ". Please select a page from 1 to " + maxPages;
 		console.log(msg);
 		data.error = msg;
 		return res.render('results', data);
@@ -144,4 +144,4 @@ exports.search = function(req, res) {
 			});
 		}
 	});
-}
+} 

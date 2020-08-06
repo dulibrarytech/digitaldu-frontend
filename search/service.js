@@ -361,22 +361,19 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
         callback(error, {});
       }
       else {
-
         // Remove selected facet from the facet panel list.  The list should not show a facet option if the facet has already been selected
         Helper.removeSelectedFacets(facets, response);
         
         // Return the aggregation results for the facet display
         var responseData = {};
         responseData['facets'] = Helper.removeEmptyFacetKeys(response.aggregations);
-        responseData['count'] = response.hits.total;
+        responseData['count'] = response.hits.total <= config.maxElasticSearchResultCount ? response.hits.total : config.maxElasticSearchResultCount;
 
         try {
 
           // Create a normalized data object for the search results
           var results = [], tn, resultData, resultObj;
           for(var result of response.hits.hits) {
-
-            // Get the thumbnail for this search result
             tn = config.rootUrl + "/datastream/" + result._source.pid.replace('_', ':') + "/tn";
               
             // Push a new result object to the results data array
@@ -393,7 +390,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
             // Add the display record
             resultObj[config.displayRecordField] = result._source[config.displayRecordField] || {};
 
-            // Ad current result to the results array
+            // Add current result to the results array
             results.push(resultObj);
           }
 
