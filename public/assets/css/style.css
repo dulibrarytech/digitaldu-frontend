@@ -432,7 +432,7 @@ div.intro-text {
 
 div.facet-breadcrumbs a {
   text-decoration: underline;
-  margin-right: 20px;
+  margin-left: 20px;
   color: inherit;
 }
 
@@ -782,7 +782,7 @@ div.facet-breadcrumbs {
   width: 80%;
 }
 
-div.facet-breadcrumbs span {
+div.facet-breadcrumbs > span {
   border: none;
   background: #e5e3e1;
   padding: 6px 12px;
