@@ -153,6 +153,19 @@ exports.createMetadataDisplayObject = function(result, collections=[]) {
 		pathArray = metadataDisplay[key].path.split(".") || [];
 		extractValues(pathArray, displayRecord, metadataDisplay[key].matchField || null, metadataDisplay[key].matchValue || null, metadataDisplay[key].condition || "true", values);
 		if(values.length > 0) {
+			// Truncate the content, add hidden section containing the full content, and a link to show the hidden section
+			if(metadataDisplay[key].truncateText) {
+				let cullLength = parseInt(metadataDisplay[key].truncateText), 
+					content = "", hiddenText, length;
+
+				for(var index in values) {
+					content += (values[index] + "<br><br>") 
+				}
+				length = content.length;
+				hiddenText = '<a aria-label="show all text" class="metadata-in-text-link" style="margin-left: 10px" onclick="javascript:this.nextSibling.style.display = \'inline\'; this.style.display = \'none\'">Show all text</a><span style="display: none">' + content.substring(cullLength, length) + '</span>';
+				content = content.substring(0, cullLength) + hiddenText;
+				values = content;
+			}
 			displayObj[key] = values;
 		}
 	}

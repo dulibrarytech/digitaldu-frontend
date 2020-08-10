@@ -131,7 +131,8 @@ module.exports = {
                 "path": "notes.content",
                 "matchField": "type",
                 "matchValue": "abstract",
-                "condition": "false"
+                "condition": "false",
+                "truncateText": "200"
             }
         },
 

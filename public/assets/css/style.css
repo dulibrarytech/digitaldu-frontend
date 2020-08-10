@@ -1294,6 +1294,12 @@ div.metadata-content {
   padding: 0;
   overflow: hidden;
 }
+
+.metadata-in-text-link,
+a.metadata-in-text-link:not([href]):not([tabindex]) {
+  color: blue;
+  text-decoration: underline;
+}
 /* End object data section */
 
 .kaltura-viewer h3 {
