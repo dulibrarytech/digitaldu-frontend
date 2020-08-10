@@ -1,20 +1,18 @@
 <div class="paginator row">
 
 	<div class="paginator-nav col-lg-5 col-md-6">
-  	<% if(pagination.buttons.prev > 0) { %><< <a href="<%= pagination.path.prev %><%= pagination.anchor %>" title="previous page">Previous</a> | <% } %>
+	  	<% if(pagination.buttons.prev > 0) { %><< <a href="<%= pagination.path.prev %><%= pagination.anchor %>" title="previous page">Previous</a> | <% } %>
 
-  	<% if(pagination.totalHits > 0) { %>
-  	<strong><%= pagination.beginCount %> - <%= pagination.pageHits %></strong> of <strong><%= pagination.totalHits %></strong>
-  	<% } %>
-
-  	<% if(pagination.buttons.next > 0) { %> | <a href="<%= pagination.path.next %><%= pagination.anchor %>" title="next page">Next</a> >><% } %>
+	  	<% if(pagination.totalHits > 0) { %>
+	  		<strong><%= pagination.beginCount %> - <%= pagination.pageHits %></strong> of <strong><%= pagination.totalHits %></strong>
+	  	<% } %>
+	  	<% if(pagination.buttons.next > 0) { %> | <a href="<%= pagination.path.next %><%= pagination.anchor %>" title="next page">Next</a> >><% } %>
   	</div>
 
   	<div class="paginator-pages col-lg-5 col-md-6">
 		<% if(pagination.firstPage > 0) { %>
-
 				<% for(var i=pagination.firstPage; i<=pagination.lastPage; i++) { %>
-					<a href="<%= pagination.path.current %>page=<%= i %><%= pagination.anchor %>" title="page <%= i %>"> 
+					<a aria-label="Page <%= i %>" href="<%= pagination.path.current %>page=<%= i %><%= pagination.anchor %>" title="Go to page <%= i %>"> 
 						<% if(pagination.page == i) { %>
 							<strong class="highlight-text"><%= i %></strong>
 						<% } else { %>
@@ -22,8 +20,7 @@
 						<% } %>
 					</a>
 				<% } %>
-
 		<% } %>
 	</div>
 </div>
-<form id="goto-page-form">Page<label for="set-page-number" style="display: none">Set page number</label><input id="set-page-number" type="text" value="<%= pagination.page %>"/>&nbsp;&nbsp;of&nbsp;&nbsp;<span id="page-count"><%= pagination.pageCount %></span><button type="button" class="btn" id="set-page-number-button">Go</button></form>
+<!-- <form id="goto-page-form">Page<label for="set-page-number" style="display: none">Set page number</label><input id="set-page-number" type="text" value="<%= pagination.page %>"/>&nbsp;&nbsp;of&nbsp;&nbsp;<span id="page-count"><%= pagination.pageCount %></span><button type="button" class="btn" id="set-page-number-button">Go</button></form> -->

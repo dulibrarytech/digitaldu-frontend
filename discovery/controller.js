@@ -260,10 +260,10 @@ exports.renderObjectView = function(req, res) {
 					data["returnLink"] = (req.header('Referer') && req.header('Referer').indexOf(config.rootUrl + "/search?") >= 0) ? req.header('Referer') : false;
 
 					Service.getCollectionHeirarchy(object.is_member_of_collection, function(collectionTitles) {
+						data.id = pid;
 						object.type = Helper.normalizeLabel("Type", object.type || "")
 						data.summary = Metadata.createSummaryDisplayObject(object);
 						data.metadata = Object.assign(data.metadata, Metadata.createMetadataDisplayObject(object, collectionTitles));
-						data.id = pid;
 						data.downloads = config.enableFileDownload ? AppHelper.getFileDownloadLinks(object, Helper.getDsType(object.mime_type || "")) : null; // PROD
 						data.citations = Helper.getCitations(object);
 						res.render('object', data);
