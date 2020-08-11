@@ -121,10 +121,17 @@
                 <div class="col-md-9 search-result-data">
                   <dl>
                     <dt class="result-title"><%= (i+1)+((page-1)*options.pageSize) %>.&nbsp&nbsp<a href="<%= root_url %>/<%= results[i].objectType %>/<%= results[i].pid %>"><%= results[i].title %></a></dt><dd></dd>
-
                       <% for (var key in results[i].metadata) { %>
-                        <dt><%- key %>:</dt>
+                        <% if(key.length > 0) { %>
+                        <dt>
+                          
+                            <%- key %>:
+                          
+                        </dt>
                         <dd><%= results[i].metadata[key] %></dd>
+                        <% } else { %>
+                        <p><%= results[i].metadata[key] %></p>
+                        <% } %>
                       <% } %>
                   </dl>
                 </div>

@@ -173,6 +173,8 @@ exports.createMetadataDisplayObject = function(result, collections=[]) {
 			// Convert values to links, per configuration
 			if(metadataDisplay[key].link) {
 				for(var index in values) {
+
+					// Facet search option
 					if(metadataDisplay[key].link.facetSearch) {
 						let facet = metadataDisplay[key].link.facetSearch;
 						values[index] = '<a href="' + config.rootUrl + '/search?q=&f[' + facet + '][]=' + values[index] + '">' + values[index] + '</a>';
@@ -203,13 +205,8 @@ exports.addResultMetadataDisplays = function(resultArray) {
 
 	for(var result of resultArray) {
 		metadata = {};
-		if(result.itemType) {
-			metadata["Type"] = result.itemType;
-		}
-
 		if(result.objectType == "collection") {
 			resultsDisplay = metadataConfig.resultsDisplay["collection"] || {};
-			metadata["Type"] = "Collection";
 		}
 		else {
 			resultsDisplay = metadataConfig.resultsDisplay["default"] || {};
@@ -227,6 +224,10 @@ exports.addResultMetadataDisplays = function(resultArray) {
 			if(values.length > 0) {
 				metadata[key] = values;
 			}
+		}
+
+		if(result.itemType || result.objectType) {
+			metadata["Type"] = result.objectType == "collection" ? "Collection" : result.itemType;
 		}
 
 		if(Helper.isObjectEmpty(metadata)) {

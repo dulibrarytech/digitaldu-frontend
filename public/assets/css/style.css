@@ -1132,6 +1132,10 @@ dl.search-result-data {
   min-height: 225px;
 }
 
+div.search-result-data p {
+  margin-left: 6px;
+}
+
 div.search-result-tn {
   border-radius: 5px;
   width: 200px;
