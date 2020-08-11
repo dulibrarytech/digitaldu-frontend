@@ -104,7 +104,10 @@ module.exports = {
                 "matchValue": "abstract"
             },
             "Subjects": {
-                "path": "subjects.title"
+                "path": "subjects.title",
+                "link": {
+                    "facetSearch": "Subject"
+                }
             },
             "Topics": {
                 "path": "subjects.terms.term",

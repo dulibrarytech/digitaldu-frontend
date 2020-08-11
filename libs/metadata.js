@@ -140,32 +140,46 @@ exports.createMetadataDisplayObject = function(result, collections=[]) {
 		displayObj["In Collections"] = titles;
 	}
 
-	// Build the metadata display
+	// Add fields external to the main display configuration
 	if(result.type) {
 		displayObj["Item Type"] = result.type;
 	}
 	if(result.mime_type) {
 		displayObj["Mimetype"] = result.mime_type;
 	}
+
+	// Add the fields and values to the display, apply config options and formatting to the field values
 	let pathArray;
 	for(var key in metadataDisplay) {
 		let values = [];
 		pathArray = metadataDisplay[key].path.split(".") || [];
 		extractValues(pathArray, displayRecord, metadataDisplay[key].matchField || null, metadataDisplay[key].matchValue || null, metadataDisplay[key].condition || "true", values);
 		if(values.length > 0) {
-			// Truncate the content, add hidden section containing the full content, and a link to show the hidden section
+
+			// Truncate the text, add hidden section containing the full text, and a link to show the hidden section
 			if(metadataDisplay[key].truncateText) {
 				let cullLength = parseInt(metadataDisplay[key].truncateText), 
 					content = "", hiddenText, length;
 
 				for(var index in values) {
-					content += (values[index] + "<br><br>") 
+					content += (values[index] + "<br><br>");
 				}
 				length = content.length;
 				hiddenText = '<a aria-label="show all text" class="metadata-in-text-link" style="margin-left: 10px" onclick="javascript:this.nextSibling.style.display = \'inline\'; this.style.display = \'none\'">Show all text</a><span style="display: none">' + content.substring(cullLength, length) + '</span>';
 				content = content.substring(0, cullLength) + hiddenText;
 				values = content;
 			}
+
+			// Convert values to links, per configuration
+			if(metadataDisplay[key].link) {
+				for(var index in values) {
+					if(metadataDisplay[key].link.facetSearch) {
+						let facet = metadataDisplay[key].link.facetSearch;
+						values[index] = '<a href="' + config.rootUrl + '/search?q=&f[' + facet + '][]=' + values[index] + '">' + values[index] + '</a>';
+					}
+				}
+			}
+
 			displayObj[key] = values;
 		}
 	}
