@@ -608,7 +608,7 @@ div.sidebar-section {
 }
 
 div.paginator {
-  margin: 35px 0 10px 30px;
+  margin: 35px 0 10px 15px;
 }
 
 div.paginator a {
@@ -1099,7 +1099,7 @@ div#search-results-wrapper h4 span {
 }
 
 div.search-results-list {
-  margin-top: 60px;
+  margin-top: 30px;
 }
 
 div.search-results-list > h3 {
@@ -1132,10 +1132,6 @@ dl.search-result-data {
   min-height: 225px;
 }
 
-div.search-result-data p {
-  margin-left: 6px;
-}
-
 div.search-result-tn {
   border-radius: 5px;
   width: 200px;
@@ -1151,8 +1147,12 @@ div.search-result-tn a img {
 }
 
 div.search-result-data {
-  padding: 0 40px;
+  padding: 0;
   font-size: 1em;
+}
+
+div.search-result-data p {
+  margin-left: 6px;
 }
 
 div.search-result-data dt:not(.result-title) {
