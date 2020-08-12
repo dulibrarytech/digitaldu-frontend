@@ -81,9 +81,12 @@ exports.getCompoundObjectPart = function(object, partIndex) {
 	var parts = [],
 		objectPart = null;
 		
-	/* Part data must appear in Elastic _source object or in _source.display_record */
+	// Get the parts array	
 	if(object.parts) {
 		parts = object.parts;
+	}
+	else if(object.compound) {
+		parts = object.compound;
 	}
 	else if(object[config.displayRecordField] && object[config.displayRecordField].parts) {
 		parts = object[config.displayRecordField].parts;
@@ -158,4 +161,24 @@ exports.getFileDownloadLinks = function(object, dsid, part=null) {
 		links.push(link);
 	}
 	return links;
+}
+
+ /**
+ * Finds the DDU datastream ID that corresponds with an object's mime type
+ *
+ * @param {String} mimeType - Object mime type (ex "audio/mp3")
+ * @return {String} DDU datastream ID
+ */
+exports.getDsType = function(mimeType) {
+  let datastreams = config.datastreams,
+      datastream = "",
+      objectType = null;
+
+  for(var key in datastreams) {
+    if(datastreams[key].includes(mimeType)) {
+      datastream = key;
+    }
+  }
+
+  return datastream;
 }

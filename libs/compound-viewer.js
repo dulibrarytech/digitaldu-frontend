@@ -37,7 +37,7 @@ const 	config = require('../config/' + process.env.CONFIGURATION_FILE),
 exports.getCompoundObjectViewer = function(object, page, apikey=null) {
  	var viewer = "",
  	    embedKaltura = false;
- 	    
+ 	     	    
  	if(config.objectTypes.audio.includes(object.mime_type) || config.objectTypes.video.includes(object.mime_type)) {
  		embedKaltura = config.universalViewerKalturaPlayer;
  	}

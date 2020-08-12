@@ -637,7 +637,7 @@ module.exports = {
      },
 
       /*
-      * Content type to associate with each file extension
+      * Content type of each file extension, for datatream response 
       */
      contentTypes: {
         "tif": "image/tiff",

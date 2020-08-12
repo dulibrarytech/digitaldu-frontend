@@ -194,12 +194,13 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
     }
 
     else {
-      // Stream data from Kaltura server
+      // Stream data from Kaltura server, if this is an a/v object with an entry_id value
+      let viewerId = object.entry_id || object.kaltura_id || null;
       if(object.mime_type && 
         (config.objectTypes["audio"].includes(object.mime_type)) || (object.mime_type && config.objectTypes["video"].includes(object.mime_type)) &&
-        (object.entry_id && object.entry_id.length > 0)) {
+        viewerId) {
 
-          let kalturaStreamUri = Kaltura.getStreamingMediaUrl(object.entry_id, extension);
+          let kalturaStreamUri = Kaltura.getStreamingMediaUrl(viewerId, extension);
           streamKalturaData(kalturaStreamUri, function(error, status, stream) {
             if(error) { callback(error, null) }
             else { 

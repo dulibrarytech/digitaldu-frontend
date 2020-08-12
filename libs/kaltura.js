@@ -35,7 +35,7 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
 exports.getViewerContent = function(object) {
 	const partner_id = config.kalturaPartnerID,
 		uiconf_id = config.kalturaUI_ID,
-		entry_id = object.entry_id,
+		entry_id = object.entry_id || object.kaltura_id || "",
 		unique_object_id = config.kalturaUniqueObjectID,
 		title = object.title;
 
@@ -60,7 +60,7 @@ exports.getViewerContent = function(object) {
  * @return 
  */
 exports.getThumbnailUrl = function(object) {
-	const entry_id = object.entry_id,
+	const entry_id = object.entry_id || object.kaltura_id || "",
 		partner_id = config.kalturaPartnerID,
 		width = config.kalturaThumbnailWidth,
 		height = config.kalturaThumbnailHeight;
