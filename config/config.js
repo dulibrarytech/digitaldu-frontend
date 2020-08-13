@@ -598,9 +598,9 @@ module.exports = {
             "Text": ["text", "text/plain"],
             "Sound Recording": ["sound recording", "sound recording,[object Object]", "audio/mp3"],
             "Music Recording": ["sound recording-musical"],
-            "Nonmusic Recording": ["sound recording-nonmusical"],
+            "Nonmusic Recording": ["sound recording-nonmusical", "sound recording nonmusical"],
             "Map": ["cartographic"],
-            "Mixed Material": ["mixed material", "application/pdf"],
+            "Mixed Material": ["mixed material", "application/pdf", "mixed materials"],
             "3D Object": ["three dimensional object", "three dimensional object,[object Object]"],
             "Unknown": ["[object Object]"],
             "Collection": ["collection"]
