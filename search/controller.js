@@ -120,7 +120,6 @@ exports.search = function(req, res) {
 			// Add the metadata display field from the configuration, then add the results list to the view data
 			Metadata.addResultMetadataDisplays(response.results);
 			data.results = response.results;
-				console.log("TEST result arr", data.results)
 
 			// Create paginator data object, add it to the view data
 			let path = config.rootUrl + req.url.substring(req.url.indexOf('search')-1);

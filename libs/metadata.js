@@ -105,7 +105,7 @@ exports.createSummaryDisplayObject = function(result) {
 		pathArray = summaryDisplay[key].path.split(".");
 		extractValues(pathArray, displayRecord, summaryDisplay[key].matchField || null, summaryDisplay[key].matchValue || null, summaryDisplay[key].condition || "true", values);
 		if(values.length > 0) {
-			displayObj[key] = values;
+			displayObj[key] = Helper.stripHtmlTags(values);
 		}
 	}
 
@@ -156,6 +156,11 @@ exports.createMetadataDisplayObject = function(result, collections=[]) {
 		extractValues(pathArray, displayRecord, metadataDisplay[key].matchField || null, metadataDisplay[key].matchValue || null, metadataDisplay[key].condition || "true", values);
 		if(values.length > 0) {
 
+			// Remove html elements 
+			if(config.removemetadataDisplayHtml) {
+				Helper.stripHtmlTags(values);
+			}
+
 			// Truncate the text, add hidden section containing the full text, and a link to show the hidden section
 			if(metadataDisplay[key].truncateText) {
 				let cullLength = parseInt(metadataDisplay[key].truncateText), 
@@ -173,7 +178,6 @@ exports.createMetadataDisplayObject = function(result, collections=[]) {
 			// Convert values to links, per configuration
 			if(metadataDisplay[key].link) {
 				for(var index in values) {
-
 					// Facet search option
 					if(metadataDisplay[key].link.facetSearch) {
 						let facet = metadataDisplay[key].link.facetSearch;
@@ -222,7 +226,7 @@ exports.addResultMetadataDisplays = function(resultArray) {
 
 			extractValues(pathArray, displayRecord, resultsDisplay[key].matchField || null, resultsDisplay[key].matchValue || null, resultsDisplay[key].condition || "true", values);
 			if(values.length > 0) {
-				metadata[key] = values;
+				metadata[key] = Helper.stripHtmlTags(values);
 			}
 		}
 

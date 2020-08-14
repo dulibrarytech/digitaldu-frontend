@@ -336,6 +336,7 @@ module.exports = {
      * The index field that contains the display record data
      */
     displayRecordField: "display_record",
+    removemetadataDisplayHtml: true,
 
     /*
      * Fulltext search fields 

@@ -218,6 +218,7 @@ exports.renderObjectView = function(req, res) {
 		root_url: config.rootUrl
 	},
 	pid = req.params.pid || "";
+	
 	Service.fetchObjectByPid(config.elasticsearchPublicIndex, pid, function(error, response) {
 		if(error) {
 			data.error = config.viewerErrorMessage;
@@ -319,7 +320,6 @@ exports.getDatastream = function(req, res) {
 			else if(stream.headers && stream.headers["content-type"]) {
 				res.set('Content-Type', stream.headers["content-type"]);
 			}
-
 			stream.pipe(res);
 		}
 	});

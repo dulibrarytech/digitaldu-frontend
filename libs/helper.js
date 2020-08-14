@@ -53,10 +53,38 @@ exports.isObjectEmpty = function(object) {
     return true;
 }
 
+/*
+ * 
+ */
 exports.removeHtmlEntities = function(string) {
 	return string.replace(/&amp;/g, "").replace(/&lt;/g, "").replace(/&gt;/g, "").replace(/&quot;/g, "");
 }
 
+/*
+ * data can be a string or an array of strings, single or multi dimension 
+ */
+var stripHtmlTags = function(data) {
+	if(typeof data == "string") {
+		data = data.replace(/<\/{0,1}[a-zA-Z]+>/g, "");
+	}
+	else if(typeof data == "object") {
+		for(var index in data) {
+			if(typeof data[index] == "string") {
+				data[index] = data[index].replace(/<\/{0,1}[a-zA-Z]+>/g, "");
+			}
+			else if(typeof data[index] == "object") {
+				stripHtmlTags(data[index]);
+			}
+		}
+	}
+
+	return data;
+}
+exports.stripHtmlTags = stripHtmlTags;
+
+/*
+ * 
+ */
 exports.sanitizeHttpParamsObject = function(object) {
 	for(var key in object) {
 		if(typeof object[key] == 'object') {
