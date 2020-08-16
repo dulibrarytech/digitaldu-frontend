@@ -244,11 +244,11 @@ function createBreadcrumbTrail(data, dates, baseUrl) {
     var html = '';
 
     for (var i = 0; i < data.length; i++) {
-        html += '<span><span aria-label="Limit by ' + data[i].type + ' ' + data[i].name + '">' + data[i].type + '&nbsp&nbsp<strong aria-hidden="true" style="color: green"> > </strong>&nbsp&nbsp' + data[i].name + '<a aria-label="remove facet" title="Remove Facet" onclick="removeFacet(\'' + data[i].type + '\', \'' + data[i].facet.replace(/'/g, "\\'") + '\', \'' + baseUrl + '\')"><strong aria-hidden="true" style="color: red">X</strong></a></span></span>';
+        html += '<span><span aria-label="Limit by ' + data[i].type + ' ' + data[i].name + '">' + data[i].type + '&nbsp&nbsp<strong aria-hidden="true" style="color: green"> > </strong>&nbsp&nbsp' + data[i].name + '<a aria-label="remove facet" title="Remove Facet" onclick="removeFacet(\'' + data[i].type + '\', \'' + data[i].facet.replace(/'/g, "\\'") + '\', \'' + baseUrl + '\')"><strong aria-hidden="true">X</strong></a></span></span>';
     }
 
     for (i = 0; i < dates.length; i++) {
-        html += '<span><a aria-label="remove date range" title="remove date range" onclick="removeDateRange(\'' + dates[i].from + '\', \'' + dates[i].to + '\')"><strong style="color: red">X</strong></a>&nbsp&nbspDate Range&nbsp&nbsp<strong style="color: green"> > </strong>&nbsp&nbsp' + dates[i].from + ' - ' + dates[i].to + '</span>';   // good
+        html += '<span><a aria-label="remove date range" title="remove date range" onclick="removeDateRange(\'' + dates[i].from + '\', \'' + dates[i].to + '\')"><strong>X</strong></a>&nbsp&nbspDate Range&nbsp&nbsp<strong style="color: green"> > </strong>&nbsp&nbsp' + dates[i].from + ' - ' + dates[i].to + '</span>';   // good
     }
     return html;
 };
