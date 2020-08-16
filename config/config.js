@@ -626,11 +626,10 @@ module.exports = {
      },
 
      /*
-      * File extensions for the local cache
-      * File will be cached with the file extension that matches the mime type of the object
+      * Cache file extension for mimetype
       */
      fileExtensions: {
-        "tif": ["image/tiff"],
+        "jp2": ["image/tiff"],
         "jpg": ["image/jpg", "image/jpeg"],
         "mp3": ["audio/mp3", "audio/x-wav"],
         "mp4": ["video/mp4"],

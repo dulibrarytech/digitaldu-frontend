@@ -130,6 +130,13 @@ exports.getCompoundObjectPart = function(object, partIndex) {
 	return objectPart;
 }
 
+var getFileExtension = function(filename) {
+  let extIndex = filename.lastIndexOf("."),
+      extension = filename.substring(extIndex+1);
+  return extension;
+}
+exports.getFileExtension = getFileExtension;
+
 /**
  * Return the file extension that a mimetype is associated with
  *
@@ -180,12 +187,13 @@ exports.getFileDownloadLinks = function(object, dsid, part=null) {
 	// if(objType == "smallImage" || objType == "largeImage" || objType == "pdf" || objType == "audio" || objType == "video") {
 		links = [];
 		part = part ? part : "0";
-		let extension = getFileExtensionForMimeType(object.mime_type),
+		let extension = getFileExtension(object.object || ""),
 			link = {
 				uri: config.rootUrl + "/datastream/" + object.pid + "/" + dsid + "/" + part + "/" + object.pid + "." + extension,
 				filename: object.pid + "." + extension,
 				extension: extension
 			};
+
 		links.push(link);
 	}
 	return links;
