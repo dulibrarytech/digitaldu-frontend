@@ -398,7 +398,7 @@ exports.getFacets = getFacets;
 exports.getDatastream = function(indexName, objectID, datastreamID, part, authKey, callback) {
   fetchObjectByPid(indexName, objectID, function(error, object) {
     if(object) {
-      let contentType = Helper.getContentType(datastreamID, object, part, (object.mime_type || null));
+      let contentType = AppHelper.getContentType(datastreamID, object, part, (object.mime_type || null));
       Datastreams.getDatastream(object, objectID, datastreamID, part, authKey, function(error, stream) {   
         callback(error, stream, contentType);
       });
@@ -565,7 +565,7 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
         }
 
         for(var key in parts) {
-          resourceUrl = config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType(parts[key].type) + "/" + parts[key].order;
+          resourceUrl = config.rootUrl + "/datastream/" + object.pid + "/" + AppHelper.getDsType(parts[key].type) + "/" + parts[key].order;
           children.push({
             label: parts[key].title,
             sequence: parts[key].order || key,
@@ -575,7 +575,7 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
             resourceID: object.pid + config.compoundObjectPartID + parts[key].order || "",
             downloadFileName: parts[key].title,
             resourceUrl: resourceUrl,
-            thumbnailUrl: config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType("thumbnail") + "/" + parts[key].order
+            thumbnailUrl: config.rootUrl + "/datastream/" + object.pid + "/" + AppHelper.getDsType("thumbnail") + "/" + parts[key].order
           });
         }
 
@@ -591,7 +591,7 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
 
       // Single objects
       else {
-        resourceUrl = config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType(object.mime_type);
+        resourceUrl = config.rootUrl + "/datastream/" + object.pid + "/" + AppHelper.getDsType(object.mime_type);
         children.push({
           label: object.title,
           sequence: "1",
@@ -600,7 +600,7 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
           type: Helper.getIIIFObjectType(object.mime_type) || "",
           resourceID: object.pid,
           resourceUrl: resourceUrl,
-          thumbnailUrl: config.rootUrl + "/datastream/" + object.pid + "/" + Helper.getDsType("thumbnail")
+          thumbnailUrl: config.rootUrl + "/datastream/" + object.pid + "/" + AppHelper.getDsType("thumbnail")
         });
 
         IIIF.getManifest(container, children, apikey, function(error, manifest) {

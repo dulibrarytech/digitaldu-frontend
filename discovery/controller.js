@@ -265,7 +265,7 @@ exports.renderObjectView = function(req, res) {
 						object.type = Helper.normalizeLabel("Type", object.type || "")
 						data.summary = Metadata.createSummaryDisplayObject(object);
 						data.metadata = Object.assign(data.metadata, Metadata.createMetadataDisplayObject(object, collectionTitles));
-						data.downloads = config.enableFileDownload ? AppHelper.getFileDownloadLinks(object, Helper.getDsType(object.mime_type || "")) : null; // PROD
+						data.downloads = config.enableFileDownload ? AppHelper.getFileDownloadLinks(object, AppHelper.getDsType(object.mime_type || "")) : null; // PROD
 						data.citations = Helper.getCitations(object);
 						res.render('object', data);
 					});

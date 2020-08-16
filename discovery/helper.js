@@ -216,8 +216,9 @@ exports.getIIIFObjectType = function(mimeType) {
  * @return {String} III "format" mimetype
  */
 exports.getIIIFFormat = function(mimeType) {
-  let objType = getObjectType(mimeType),
+  let objType = AppHelper.getObjectType(mimeType),
       format = "";
+
   switch(objType) {
     case "smallImage":
     case "largeImage":
@@ -238,72 +239,6 @@ exports.getIIIFFormat = function(mimeType) {
   }
   return format;
 }
-
- /**
- * Finds the DDU datastream ID that corresponds with an object's mime type TODO: move to AH
- *
- * @param {String} mimeType - Object mime type (ex "audio/mp3")
- * @return {String} DDU datastream ID
- */
-exports.getDsType = function(mimeType) {
-  let datastreams = config.datastreams,
-      datastream = "",
-      objectType = null;
-
-  for(var key in datastreams) {
-    if(datastreams[key].includes(mimeType)) {
-      datastream = key;
-    }
-  }
-
-  return datastream;
-}
-
- /**
- * Finds the DDU object type that corresponds with an object's mime type TODO: move to AH
- *
- * @param {String} mimeType - Object mime type (ex "audio/mp3")
- * @return {String} DDU object type
- */
-var getObjectType = function(mimeType) {
-  let type = "";
-  for(var key in config.objectTypes) {
-    if(config.objectTypes[key].includes(mimeType)) {
-      type = key;
-    }
-  }
-  return type;
-}
-exports.getObjectType = getObjectType;
-
- /**
- * Returns the HTTP response "content-type" for an object, based on its object file extension TODO: move to AH
- * All thumbnail datastreams are image/jpg at this point
- *
- * @param {String} datastream - Object datastream ID
- * @param {String} mimeType - Object mime type (ex "audio/mp3")
- * @return {String} HTTP content type
- */
-var getContentType = function(datastream, object, part, mimeType) {
-  let contentType = "application/octet-stream";
-  if(part && object.display_record.parts) {
-    part = parseInt(part);
-    object = object.display_record.parts[part-1] || null;
-  }
-
-  if(datastream.toLowerCase() == "tn") {
-    contentType = "image/jpg";
-  }
-  else if(datastream.toLowerCase() != "object") {
-    contentType = config.contentTypes[datastream] || "";
-  }
-  else if(object && object.object) {
-    let ext = AppHelper.getFileExtension(object.object),
-        contentType = config.contentTypes[ext] || "";
-  }
-  return contentType;
-}
-exports.getContentType = getContentType;
 
  /**
  * Create an array of citation data objects for the view model

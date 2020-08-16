@@ -173,6 +173,35 @@ var getObjectType = function(mimeType) {
 exports.getObjectType = getObjectType;
 
  /**
+ * Returns the HTTP response "content-type" for an object, based on its object file extension TODO: move to AH
+ * All thumbnail datastreams are image/jpg at this point
+ *
+ * @param {String} datastream - Object datastream ID
+ * @param {String} mimeType - Object mime type (ex "audio/mp3")
+ * @return {String} HTTP content type
+ */
+var getContentType = function(datastream, object, part, mimeType) {
+  let contentType = "application/octet-stream";
+  if(part && object.display_record.parts) {
+    part = parseInt(part);
+    object = object.display_record.parts[part-1] || null;
+  }
+
+  if(datastream.toLowerCase() == "tn") {
+    contentType = "image/jpg";
+  }
+  else if(datastream.toLowerCase() != "object") {
+    contentType = config.contentTypes[datastream] || "";
+  }
+  else if(object && object.object) {
+    let ext = getFileExtension(object.object),
+        contentType = config.contentTypes[ext] || "";
+  }
+  return contentType;
+}
+exports.getContentType = getContentType;
+
+ /**
  * TODO: Determine available file download formats (via config or object properties. Only access config file here)
  *
  * @param {Object} object - DDU Elastic index doc
