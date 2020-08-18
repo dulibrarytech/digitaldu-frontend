@@ -25,7 +25,7 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
 exports.cacheDatastream = function(objectType, objectID, stream, extension, callback) {
 	let filepath;
 	if(objectType == 'thumbnail') {
-		filepath = config.thumbnailImageCacheLocation + "/" + objectID + config.thumbnailFileExtension;
+		filepath = config.thumbnailImageCacheLocation + "/" + objectID + "." + config.thumbnailFileExtension;
 	}
 	else if(objectType == 'object') {
 		filepath = config.objectDerivativeCacheLocation + "/" + objectID + "." + extension;
@@ -47,7 +47,7 @@ exports.cacheDatastream = function(objectType, objectID, stream, extension, call
 exports.exists = function(objectType, objectID, extension="") {
 	let filepath;	
 	if(objectType == 'thumbnail') {
-		filepath = config.thumbnailImageCacheLocation + "/" + objectID + config.thumbnailFileExtension;
+		filepath = config.thumbnailImageCacheLocation + "/" + objectID + "." + config.thumbnailFileExtension;
 	}
 	else if(objectType == 'object') {
 		filepath = config.objectDerivativeCacheLocation + "/" + objectID + "." + extension;
@@ -61,7 +61,7 @@ exports.exists = function(objectType, objectID, extension="") {
 exports.getFileStream = function(objectType, objectID, extension="", callback) {
 	let filepath;	
 	if(objectType == 'thumbnail') {
-		filepath = config.thumbnailImageCacheLocation + "/" + objectID + config.thumbnailFileExtension;
+		filepath = config.thumbnailImageCacheLocation + "/" + objectID + "." + config.thumbnailFileExtension;
 	}
 	else if(objectType == 'object') {
 		filepath = config.objectDerivativeCacheLocation + "/" + objectID + "." + extension;

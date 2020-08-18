@@ -174,7 +174,6 @@ exports.getObjectType = getObjectType;
 
  /**
  * Returns the HTTP response "content-type" for an object, based on its object file extension TODO: move to AH
- * All thumbnail datastreams are image/jpg at this point
  *
  * @param {String} datastream - Object datastream ID
  * @param {String} mimeType - Object mime type (ex "audio/mp3")
@@ -188,7 +187,7 @@ var getContentType = function(datastream, object, part, mimeType) {
   }
 
   if(datastream.toLowerCase() == "tn") {
-    contentType = "image/jpg";
+    contentType = "image/" + config.thumbnailFileExtension || "jpg";
   }
   else if(datastream.toLowerCase() != "object") {
     contentType = config.contentTypes[datastream] || "";

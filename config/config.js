@@ -250,7 +250,7 @@ module.exports = {
      * Before a thumbnail is rendered, this location is checked for a source file before requesting it from the repository
      */
     thumbnailDefaultImagePath: "files/default/thumbnail/",
-    thumbnailFileExtension: ".jpg",
+    thumbnailFileExtension: "jpg",
     defaultThumbnailImage: "tn-placeholder.jpg",
     thumbnailImageCacheEnabled: true,
     thumbnailImageCacheLocation: "cache/thumbnail",
