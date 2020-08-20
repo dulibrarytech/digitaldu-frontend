@@ -88,11 +88,7 @@ exports.getManifest = function(container, objects, apikey, callback) {
 
 	// Define the canvas objects.  Create a mediaSequence object if a/v or pdf items are present.  For each of these, insert an element object
 	for(var object of objects) {
-		if(object.type == config.IIIFObjectTypes["largeImage"]) {
-			images.push(object);
-			canvases.push(getImageCanvas(container, object, apikey));
-		}
-		else if(object.type == config.IIIFObjectTypes["smallImage"]) {
+		if(object.type == config.IIIFObjectTypes["still image"]) {
 			images.push(object);
 			canvases.push(getImageCanvas(container, object, apikey));
 		}
@@ -263,7 +259,7 @@ var getThumbnailCanvas = function(container, object) {
 	resource = {};
 
 	resource["@id"] = object.thumbnailUrl;
-	resource["@type"] = config.IIIFObjectTypes["smallImage"];
+	resource["@type"] = config.IIIFObjectTypes["still image"];
 	resource["height"] = config.IIIFThumbnailHeight;
 	resource["width"] = config.IIIFThumbnailWidth;
 
@@ -291,7 +287,7 @@ var getThumbnailObject = function(container, object, apikey) {
 	apikey = apikey ? (config.IIIFAPiKeyPrefix + apikey) : "";
 
 	thumbnail["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + "/full/" + config.IIIFThumbnailWidth + ",/0/default.jpg" + apikey;
-	thumbnail["@type"] = config.IIIFObjectTypes["smallImage"];
+	thumbnail["@type"] = config.IIIFObjectTypes["still image"];
 	thumbnail["height"] = config.IIIFThumbnailHeight;
 	thumbnail["width"] = config.IIIFThumbnailWidth;
 

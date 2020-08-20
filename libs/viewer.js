@@ -65,11 +65,7 @@ exports.getObjectViewer = function(object, mimeType="", apikey=null) {
  			viewer += getVideoViewer(object, apikey);
  			break;
 
- 		case "smallImage":
- 			viewer += getLargeImageViewer(object, apikey);
- 			break;
-
- 		case "largeImage":
+ 		case "still image":
  			viewer += getLargeImageViewer(object, apikey);
  			break;
 

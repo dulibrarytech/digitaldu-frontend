@@ -211,8 +211,7 @@ exports.getFileDownloadLinks = function(object, dsid, part=null) {
 		links = null;
 
 	// DEV Temporarily disable file downloads for compound objects, until part download links can be generated 
-	if((objType == "smallImage" || objType == "largeImage" || objType == "pdf" || objType == "audio" || objType == "video") && object.is_compound == 0) {
-	// if(objType == "smallImage" || objType == "largeImage" || objType == "pdf" || objType == "audio" || objType == "video") {
+	if((objType == "still image" || objType == "pdf" || objType == "audio" || objType == "video") && object.is_compound == 0) {
 		links = [];
 		part = part ? part : "0";
 		let extension = getFileExtension(object.object || ""),

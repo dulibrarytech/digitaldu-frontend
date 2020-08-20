@@ -96,8 +96,8 @@ var validateCompoundObject = function(object) {
 	else if(config.objectTypes["pdf"].includes(mimeType)) {
 		isValid = validateCompoundObjectParts(parts || [], ["pdf"]);
 	}
-	else if(config.objectTypes["smallImage"].includes(mimeType) || config.objectTypes["largeImage"].includes(mimeType)) {
-		isValid = validateCompoundObjectParts(parts || [], ["smallImage", "largeImage"]);
+	else if(config.objectTypes["still image"].includes(mimeType)) {
+		isValid = validateCompoundObjectParts(parts || [], ["still image"]);
 	}
 	else {
 		console.log("Invalid compound object mime type");

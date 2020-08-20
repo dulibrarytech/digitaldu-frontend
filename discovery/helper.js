@@ -220,8 +220,7 @@ exports.getIIIFFormat = function(mimeType) {
       format = "";
 
   switch(objType) {
-    case "smallImage":
-    case "largeImage":
+    case "still image":
       format = "image/jpg";
       break;
     case "audio":

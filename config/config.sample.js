@@ -24,7 +24,7 @@
 'use strict';
 
 module.exports = {
-    appTitle: "Discovery App",
+    appTitle: "Digital Collections @ DU",
 
     /*
      * Runtime environment
@@ -61,7 +61,7 @@ module.exports = {
     /*
      * Root collection
      */
-    topLevelCollectionPID: "root",
+    topLevelCollectionPID: "{pid of index document for top level collection}",
     topLevelCollectionName: "Collection",
 
     /*
@@ -197,8 +197,7 @@ module.exports = {
     IIIFObjectTypes: {
         "audio": "dctypes:Sound",
         "video": "dctypes:MovingImage",
-        "smallImage": "dctypes:Image",
-        "largeImage": "dctypes:Image",
+        "still image": "dctypes:Image",
         "pdf": "foaf:Document"
     },
 
@@ -209,9 +208,9 @@ module.exports = {
     /*
      * Kaltura viewer settings
      */
-    kalturaUI_ID: "12345",
-    kalturaPartnerID: "12345",
-    kalturaUniqueObjectID: "kaltura_player_12345",
+    kalturaUI_ID: "{kaltura id}",
+    kalturaPartnerID: "{kaltura partner id}",
+    kalturaUniqueObjectID: "kaltura_player_{unique player id}",
     kalturaPlayerHeight: "923px",  // Height without the transcript player
     kalturaPlayerWidth: "100%",
     showKalturaTitle: false,
@@ -240,8 +239,7 @@ module.exports = {
     objectTypes: {
         "audio": ["audio/mpeg", "audio/x-wav", "audio/mp3"],
         "video": ["video/mp4", "video/quicktime", "video/mov"],
-        "smallImage": ["image/png", "image/jpg", "image/jpeg"],
-        "largeImage": ["image/tiff", "image/jp2"],
+        "still image": ["image/png", "image/jpg", "image/jpeg", "image/tiff", "image/jp2"],
         "pdf": ["application/pdf"]
     },
 
@@ -255,12 +253,12 @@ module.exports = {
     thumbnailImageCacheEnabled: true,
     thumbnailImageCacheLocation: "cache/thumbnail",
     objectDerivativeCacheEnabled: false,
-    objectDerivativeCacheLocation: "/var/cache/digcoll",
+    objectDerivativeCacheLocation: "/var/cache/{cache folder name}",
 
     /*
      * Object types to cache
      * Add to array
-     * ["audio" | "video" | "smallImage" | "largeImage" | "pdf"]
+     * ["audio" | "video" | "still image" | "pdf"]
      */
     cacheTypes: ["pdf"],
 
@@ -272,8 +270,7 @@ module.exports = {
         "audio": "audio-tn.png",
         "video": "video-tn.png",
         "pdf": "pdf-tn.png",
-        "smallImage": "image-tn.png",
-        "largeImage": "image-tn.png"
+        "still image": "image-tn.png"
     },
 
     /*
@@ -292,13 +289,7 @@ module.exports = {
         },
         "object": {
             "type": {
-                "smallImage": {
-                    "streamOption": "iiif",
-                    "uri": "", 
-                    "source": "repository",
-                    "cache": true
-                },
-                "largeImage": {
+                "still image": {
                     "streamOption": "iiif",
                     "uri": "", 
                     "source": "repository",
@@ -377,7 +368,7 @@ module.exports = {
      */ 
     searchAllFields: [
         {"label": "Title", "id": "title", "field": "title", "boost": "5"},
-        {"label": "Collection", "id": "collection", "field": "is_member_of_collection"},
+        {"label": "Collection", "id": "collection", "field": "is_member_of_collection", "boost": "6"},
         {"label": "Creator", "id": "creator", "field": "creator", "boost": "3"},
         {"label": "Subject", "id": "subject", "field": "f_subjects", "boost": "2"},
         {"label": "Topic", "id": "topic", "field": "display_record.subjects.terms.term", "matchField": "display_record.subjects.terms.type", "matchTerm": "topical"},
@@ -385,7 +376,7 @@ module.exports = {
         {"label": "Description", "id": "description", "field": "abstract", "boost": "4"},
         {"label": "Language", "id": "language", "field": "display_record.t_language.text", "boost": "1"},
         {"label": "Creation Date", "id": "create_date", "field": "display_record.dates.expression", "isNestedType": "true", "matchField": "display_record.dates.label", "matchTerm": "creation"},
-        {"label": "Call Number", "id": "call_number", "field": "display_record.identifiers.identifier", "isNestedType": "true", "matchField": "display_record.identifiers.type", "matchTerm": "local"},
+        {"label": "Archival Identifier", "id": "call_number", "field": "display_record.identifiers.identifier", "isNestedType": "true", "matchField": "display_record.identifiers.type", "matchTerm": "local"},
         {"label": "Transcript", "id": "transcript", "field": "transcript"}
     ],
 
@@ -413,7 +404,7 @@ module.exports = {
         {"Description": "description"},
         {"Creation Date": "create_date"},
         {"Language": "language"},
-        {"Call Number": "call_number"},
+        {"Archival Identifier": "call_number"},
         {"Topic": "topic"},
         {"Collection": "collection"},
         {"Transcript Text": "transcript"}
@@ -443,7 +434,7 @@ module.exports = {
             "matchField": "display_record.dates.label",
             "matchTerm": "creation"
         },
-        "Call Number": {
+        "Archival Identifier": {
             "path": "display_record.identifiers.identifier",
             "matchField": "display_record.identifiers.type",
             "matchTerm": "local"
@@ -455,7 +446,7 @@ module.exports = {
         "Title": {
             "path": "title"
         },
-        "Call Number": {
+        "Archival Identifier": {
             "path": "display_record.identifiers.identifier",
             "matchField": "display_record.identifiers.type",
             "matchTerm": "local"
@@ -478,18 +469,19 @@ module.exports = {
         "Title (z - a)": "Title,desc",
         "Creator (a - z)": "Creator,asc",
         "Creator (z - a)": "Creator,desc",
-        "Creation Date (asc)": "Creation Date,asc",
-        "Creation Date (desc)": "Creation Date,desc",
-        "Call Number (asc)": "Call Number,asc"
+        "Creation Date (oldest to newest)": "Creation Date,asc",
+        "Creation Date (newest to oldest)": "Creation Date,desc",
+        "Archival Identifier (a to z)": "Archival Identifier,asc",
+        "Archival Identifier (z to a)": "Archival Identifier,desc"
     },
 
     collectionSortByOptions: {
-        "Creation Date (asc)": "Creation Date,asc", // default
-        "Creation Date (desc)": "Creation Date,desc",
+        "Creation Date (oldest to newest)": "Creation Date,asc", // default
+        "Creation Date (newest to oldest)": "Creation Date,desc",
         "Title (a - z)": "Title,asc",
         "Title (z - a)": "Title,desc",
-        "Call Number (asc)": "Call Number,asc", 
-        "Call Number (desc)": "Call Number,desc"
+        "Archival Identifier (a to z)": "Archival Identifier,asc", 
+        "Archival Identifier (z to a)": "Archival Identifier,desc"
     },
 
     /*
@@ -581,7 +573,6 @@ module.exports = {
             "Text": "path/to/TN.png"
         }
     },
-
     /*
      * Create facet display labels to select multiple facet values
      */

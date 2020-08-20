@@ -197,8 +197,7 @@ module.exports = {
     IIIFObjectTypes: {
         "audio": "dctypes:Sound",
         "video": "dctypes:MovingImage",
-        "smallImage": "dctypes:Image",
-        "largeImage": "dctypes:Image",
+        "still image": "dctypes:Image",
         "pdf": "foaf:Document"
     },
 
@@ -240,8 +239,7 @@ module.exports = {
     objectTypes: {
         "audio": ["audio/mpeg", "audio/x-wav", "audio/mp3"],
         "video": ["video/mp4", "video/quicktime", "video/mov"],
-        "smallImage": ["image/png", "image/jpg", "image/jpeg"],
-        "largeImage": ["image/tiff", "image/jp2"],
+        "still image": ["image/png", "image/jpg", "image/jpeg", "image/tiff", "image/jp2"],
         "pdf": ["application/pdf"]
     },
 
@@ -260,7 +258,7 @@ module.exports = {
     /*
      * Object types to cache
      * Add to array
-     * ["audio" | "video" | "smallImage" | "largeImage" | "pdf"]
+     * ["audio" | "video" | "still image" | "pdf"]
      */
     cacheTypes: ["pdf"],
 
@@ -272,8 +270,7 @@ module.exports = {
         "audio": "audio-tn.png",
         "video": "video-tn.png",
         "pdf": "pdf-tn.png",
-        "smallImage": "image-tn.png",
-        "largeImage": "image-tn.png"
+        "still image": "image-tn.png"
     },
 
     /*
@@ -292,13 +289,7 @@ module.exports = {
         },
         "object": {
             "type": {
-                "smallImage": {
-                    "streamOption": "iiif",
-                    "uri": "", 
-                    "source": "repository",
-                    "cache": true
-                },
-                "largeImage": {
+                "still image": {
                     "streamOption": "iiif",
                     "uri": "", 
                     "source": "repository",
