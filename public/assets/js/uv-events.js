@@ -21,6 +21,7 @@ $( document ).ready(function() {
 				// Replace UV viewer content with the Kaltura viewer content
 		  		$( "#uv" ).css("visibility", "visible");
 		  		$( "#uv" ).css("background-color", "#000000");
+	  			$("#uv .imageBtn.share").css("visibility", "hidden");
 		  		$("[id^=mep_]").html("");
 		  		$("[id^=mep_]").append(params.viewerContent);
 
