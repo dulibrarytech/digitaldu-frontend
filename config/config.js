@@ -521,7 +521,7 @@ module.exports = {
             "path": "f_subjects"
         },
         "Type": {
-            "path": "type"
+            "path": "type",
         },
         "Date": {
             "path": "display_record.dates.expression",

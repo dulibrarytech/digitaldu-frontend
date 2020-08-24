@@ -197,18 +197,21 @@ exports.isValidExtension = isValidExtension;
  * @return {String} HTTP content type
  */
 var getContentType = function(datastream, object, part, mimeType) {
+  // Default content type
   var contentType = "application/octet-stream";
   if(part && object.display_record.parts) {
     part = parseInt(part);
     object = object.display_record.parts[part-1] || null;
   }
-
+  // Thumbnail datastream, use specified file type
   if(datastream.toLowerCase() == "tn") {
     contentType = "image/" + config.thumbnailFileExtension || "jpg";
   }
+  // File type specific datasreeam (mp3, jpg, etc)
   else if(datastream.toLowerCase() != "object") {
     contentType = config.contentTypes[datastream] || "";
   }
+  // Determine the file type via the object path file extension
   else if(object && object.object) {
     let ext = getFileExtensionFromFilePath(object.object);
     contentType = config.contentTypes[ext] || "";
@@ -227,6 +230,7 @@ exports.getContentType = getContentType;
  */
 exports.getFileDownloadLinks = function(object, dsid, part=null) {
 	let links = [];
+	// Object path is required for object download. If no path, do not add download links
 	if(object && object.object) {
 		let extension = getFileExtensionForMimeType(object.mime_type || "");
 		if(!extension) {
@@ -235,7 +239,7 @@ exports.getFileDownloadLinks = function(object, dsid, part=null) {
 				extension = pathExtension;
 			}
 		}
-
+		// 'part' can be null here
 		if(extension) {
 			let link = {
 				uri: config.rootUrl + "/datastream/" + object.pid + "/" + dsid + "/" + part + "/" + object.pid + "." + extension,

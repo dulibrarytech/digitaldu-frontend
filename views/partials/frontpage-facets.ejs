@@ -1,25 +1,24 @@
 <div class="facets home-facets">
+
+  <!-- Object type list -->
   <button id="type-facet" alt="Type" class="accordion active">
     <h4>Type</h4><i class="fas fa-caret-down facet-caret"></i>
   </button>
-
   <div class="static-facets panel" style="display: block;">
-    <!-- Static type facet list -->
     <ul class="list-group">
-      <% for(var key in typeCount) { %>
+      <% for(var key in typeList) { %>
         <li class="list-group-item">
           <div class="row">
-            <% if(facetThumbnails.Type[key]) { %>
-              <div class="col-md-2-nostack facet-thumbnail"><img src="<%= facetThumbnails.Type[key] %>" alt="<%= key %>"/></div>
+            <% if(typeList[key].thumbnail) { %>
+              <div class="col-md-2-nostack facet-thumbnail"><img src="<%= typeList[key].thumbnail %>" alt="<%= key %>"/></div>
             <% } else { %>
               <div class="col-md-2-nostack facet-thumbnail"><div style="min-height: 25px"></div></div>
             <% } %>
-            <div class="col-md-8-nostack facet-name"><a onclick="selectFacet('Type', '<%= typeCount[key].key %>', '<%= root_url %>')"><%= key %></a></div>
-            <div class="col-md-2-nostack facet-count"><div>(<%= typeCount[key].count %>)</div></div>
+            <div class="col-md-8-nostack facet-name"><a onclick="selectFacet('Type', '<%= typeList[key].key %>', '<%= root_url %>')"><%= key %></a></div>
+            <div class="col-md-2-nostack facet-count"><div>(<%= typeList[key].count %>)</div></div>
           </div>
         </li>
       <% } %>
-
     </ul>
   </div>
 
@@ -35,7 +34,7 @@
     </ul>
   </div>
 
-  <!-- Dynamic facet list -->
+  <!-- Other facets -->
   <% for(var key in facets) { %>
     <% if(key != 'Type' && key != 'type') { %>
       <button class="accordion" alt="<%= key %>">

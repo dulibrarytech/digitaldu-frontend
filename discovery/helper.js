@@ -70,12 +70,12 @@ var config = require('../config/' + process.env.CONFIGURATION_FILE),
 }
 
  /**
- * Get facet counts by name
+ * Get data for frontpage type list
  *
  * @param {Array} facets - Elastic aggregations object
  * @return {Object} Object of facet count data
  */
-exports.getTypeFacetTotalsObject = function(facets) {
+exports.getTypeDisplayList = function(facets) {
   var totals = {};
   for(var facet of facets.Type.buckets) {
     for(var key in config.facetLabelNormalization.Type) {
@@ -83,7 +83,11 @@ exports.getTypeFacetTotalsObject = function(facets) {
         totals[key] = {
           "count": facet.doc_count,
           "key": facet.key
-        };
+        }; 
+
+        if(config.facetThumbnails.Type[key]) {
+          totals[key]["thumbnail"] = config.facetThumbnails.Type[key];
+        }
       }
     }
   }
