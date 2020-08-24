@@ -130,12 +130,12 @@ exports.getCompoundObjectPart = function(object, partIndex) {
 	return objectPart;
 }
 
-var getFileExtension = function(filename) {
+var getFileExtensionFromFilePath = function(filename) {
   let extIndex = filename.lastIndexOf("."),
       extension = filename.substring(extIndex+1);
   return extension;
 }
-exports.getFileExtension = getFileExtension;
+exports.getFileExtensionFromFilePath = getFileExtensionFromFilePath;
 
 /**
  * Return the file extension that a mimetype is associated with
@@ -144,7 +144,7 @@ exports.getFileExtension = getFileExtension;
  * @return {String} file extension
  */
 var getFileExtensionForMimeType = function(mimeType) {
-	var extension = "file";
+	var extension = null;
 	for(key in config.fileExtensions) {
       if(config.fileExtensions[key].includes(mimeType)) {
       	extension = key;
@@ -173,6 +173,23 @@ var getObjectType = function(mimeType) {
 exports.getObjectType = getObjectType;
 
  /**
+ * Finds the DDU object type that corresponds with an object's mime type
+ *
+ * @param {String} extension - a file extension (no '.' prefix)
+ * @return {Boolean} true if extension is valid (in configuration) false if not recognized 
+ */
+var isValidExtension = function(extension) {
+	let isValid = false;
+	for(var key in config.fileExtensions) {
+		if(extension == key) {
+			isValid = true;
+		}
+	}
+	return isValid;
+}
+exports.isValidExtension = isValidExtension;
+
+ /**
  * Returns the HTTP response "content-type" for an object, based on its object file extension TODO: move to AH
  *
  * @param {String} datastream - Object datastream ID
@@ -180,7 +197,7 @@ exports.getObjectType = getObjectType;
  * @return {String} HTTP content type
  */
 var getContentType = function(datastream, object, part, mimeType) {
-  let contentType = "application/octet-stream";
+  var contentType = "application/octet-stream";
   if(part && object.display_record.parts) {
     part = parseInt(part);
     object = object.display_record.parts[part-1] || null;
@@ -193,35 +210,40 @@ var getContentType = function(datastream, object, part, mimeType) {
     contentType = config.contentTypes[datastream] || "";
   }
   else if(object && object.object) {
-    let ext = getFileExtension(object.object),
-        contentType = config.contentTypes[ext] || "";
+    let ext = getFileExtensionFromFilePath(object.object);
+    contentType = config.contentTypes[ext] || "";
+
   }
   return contentType;
 }
 exports.getContentType = getContentType;
 
  /**
- * TODO: Determine available file download formats (via config or object properties. Only access config file here)
+ * Return an array of links to download the object file 
+ * Currently only single link option, creates link to download file extension registered to the object's mime type
  *
  * @param {Object} object - DDU Elastic index doc
  * @return {Array.<String>} Array of download link uris
  */
 exports.getFileDownloadLinks = function(object, dsid, part=null) {
-	let objType = getObjectType(object.mime_type || ""),
-		links = null;
+	let links = [];
+	if(object && object.object) {
+		let extension = getFileExtensionForMimeType(object.mime_type || "");
+		if(!extension) {
+			let pathExtension = getFileExtensionFromFilePath(object.object);
+			if(isValidExtension(pathExtension)) {
+				extension = pathExtension;
+			}
+		}
 
-	// DEV Temporarily disable file downloads for compound objects, until part download links can be generated 
-	if((objType == "still image" || objType == "pdf" || objType == "audio" || objType == "video") && object.is_compound == 0) {
-		links = [];
-		part = part ? part : "0";
-		let extension = getFileExtension(object.object || ""),
-			link = {
+		if(extension) {
+			let link = {
 				uri: config.rootUrl + "/datastream/" + object.pid + "/" + dsid + "/" + part + "/" + object.pid + "." + extension,
 				filename: object.pid + "." + extension,
 				extension: extension
 			};
-
-		links.push(link);
+			links.push(link);
+		}
 	}
 	return links;
 }

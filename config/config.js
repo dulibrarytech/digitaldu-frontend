@@ -609,7 +609,7 @@ module.exports = {
      datastreams: {
         "tn": "thumbnail",
         "jpg": ["image/jpeg", "image/jpg"],
-        "tif": ["image/tiff"],
+        "jp2": ["image/tiff"],
         "mp3": ["audio/mp3", "audio/mpeg", "audio/x-wav"],
         "mp4": ["video/mp4"],
         "mov": ["video/mov"],

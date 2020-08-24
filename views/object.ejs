@@ -41,7 +41,7 @@
           <% if(citations) { %>
             <button id="view-citations" alt="View Citations" type="button">Cite This Item</button>
           <% } %>
-          <% if(downloads) { %>
+          <% if(downloads.length > 0) { %>
             <a href="<%= downloads[link].uri %>" download><button id="file-download" class="download-button" alt="Download <%= downloads[0].extension %>">Download <%= downloads[0].extension %></button></a>
           <% } %>
           <% if(transcript) { %>

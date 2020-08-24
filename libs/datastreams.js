@@ -182,6 +182,9 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
       }
     }
     var extension = Helper.getFileExtensionForMimeType(mimeType);
+    if(!extension) {
+      extension = "file";
+    }
     if(isCached && Cache.exists('object', objectID, extension) == true) {
       Cache.getFileStream('object', objectID, extension, function(error, stream) {
         if(error) {
