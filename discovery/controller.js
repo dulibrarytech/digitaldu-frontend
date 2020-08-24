@@ -224,6 +224,7 @@ exports.renderObjectView = function(req, res) {
 			data.error = config.viewerErrorMessage;
 			data.devError = error;
 			console.error(error);
+			res.status(500);
 			res.render('error', data);
 		}
 		else if(response == null) {
@@ -231,6 +232,7 @@ exports.renderObjectView = function(req, res) {
 			data.error = msg;
 			data.devError = msg + pid;
 			console.log(msg + pid);
+			res.status(404);
 			res.render('page-not-found', data);
 		}
 		else {
@@ -446,14 +448,15 @@ exports.getObjectViewer = function(req, res) {
 		if(error) {
 			console.error(error);
 			errors += "Viewer error";
+			res.status(500);
 		}
 		else if(object == null) {
 			console.log("Object not found: " + pid);
 			errors += "Object not found";
+			res.status(404);
 		}
 		else {
 			var page = req.params.page && isNaN(parseInt(req.params.page)) === false ? req.params.page : "1";
-
 			if(AppHelper.isParentObject(object)) {
 				viewer += CompoundViewer.getCompoundObjectViewer(object, page, key)
 			}
