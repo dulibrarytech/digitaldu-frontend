@@ -503,6 +503,11 @@ module.exports = {
     searchTermFuzziness: "1",
 
     /*
+     * Label to use for the object "type" facet panels
+     */
+    typeLabel: "Type",
+
+    /*
      * Facets to display on the search results view
      *
      * @example
@@ -560,7 +565,7 @@ module.exports = {
      /*
      * Facets to display on the front page
      */
-    frontPageFacets: ["Creator", "Subject", "Type"],
+    frontPageFacets: ["Creator", "Subject"],
 
     /*
      * Thumbnail images for the frontpage facet panels

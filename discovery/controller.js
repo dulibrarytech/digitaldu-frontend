@@ -52,6 +52,7 @@ exports.renderRootCollection = function(req, res) {
 		facets: {},
 		paginator: {},
 		typeList: {},
+		typeLabel: config.typeLabel || "Type",
 		error: null,
 		root_url: config.rootUrl,
 		options: {}

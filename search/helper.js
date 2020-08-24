@@ -58,7 +58,7 @@ exports.removeSelectedFacets = function(facets, results) {
   for(var facetKey in facets) {
     for(var index in facets[facetKey]) {
       var facetString = facets[facetKey][index],
-          bucket = results.aggregations[facetKey].buckets;
+          bucket = results.aggregations[facetKey] ? results.aggregations[facetKey].buckets : [];
       for(let facetIndex in bucket) {
         if(bucket[facetIndex].key == facetString) {
           bucket.splice(facetIndex,1);

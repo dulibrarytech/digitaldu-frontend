@@ -235,7 +235,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
           facetData = config.facets[facet];
 
           // Add facet to filters
-          if(facetData.path) {
+          if(facetData && facetData.path) {
             query[facetData.path] = value;
             let filter = {
               "bool": {

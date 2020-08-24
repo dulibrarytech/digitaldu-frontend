@@ -1,8 +1,8 @@
 <div class="facets home-facets">
 
   <!-- Object type list -->
-  <button id="type-facet" alt="Type" class="accordion active">
-    <h4>Type</h4><i class="fas fa-caret-down facet-caret"></i>
+  <button id="type-facet" class="accordion active">
+    <h4><%= typeLabel %></h4><i class="fas fa-caret-down facet-caret"></i>
   </button>
   <div class="static-facets panel" style="display: block;">
     <ul class="list-group">
@@ -14,7 +14,7 @@
             <% } else { %>
               <div class="col-md-2-nostack facet-thumbnail"><div style="min-height: 25px"></div></div>
             <% } %>
-            <div class="col-md-8-nostack facet-name"><a onclick="selectFacet('Type', '<%= typeList[key].key %>', '<%= root_url %>')"><%= key %></a></div>
+            <div class="col-md-8-nostack facet-name"><a onclick="selectFacet('<%= typeLabel %>', '<%= typeList[key].key %>', '<%= root_url %>')"><%= key %></a></div>
             <div class="col-md-2-nostack facet-count"><div>(<%= typeList[key].count %>)</div></div>
           </div>
         </li>
@@ -36,7 +36,7 @@
 
   <!-- Other facets -->
   <% for(var key in facets) { %>
-    <% if(key != 'Type' && key != 'type') { %>
+    <% if(key != typeLabel) { %>
       <button class="accordion" alt="<%= key %>">
         <h4><%= key %></h4><i class="fas fa-caret-right facet-caret"></i>
       </button>

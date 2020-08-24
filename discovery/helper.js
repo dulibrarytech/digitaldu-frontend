@@ -76,17 +76,18 @@ var config = require('../config/' + process.env.CONFIGURATION_FILE),
  * @return {Object} Object of facet count data
  */
 exports.getTypeDisplayList = function(facets) {
-  var totals = {};
-  for(var facet of facets.Type.buckets) {
-    for(var key in config.facetLabelNormalization.Type) {
-      if(config.facetLabelNormalization.Type[key].includes(facet.key)) {
+  var totals = {},
+      typeLabel = config.typeLabel || "Type";
+  for(var facet of facets[typeLabel].buckets) {
+    for(var key in config.facetLabelNormalization[typeLabel]) {
+      if(config.facetLabelNormalization[typeLabel][key].includes(facet.key)) {
         totals[key] = {
           "count": facet.doc_count,
           "key": facet.key
         }; 
 
-        if(config.facetThumbnails.Type[key]) {
-          totals[key]["thumbnail"] = config.facetThumbnails.Type[key];
+        if(config.facetThumbnails[typeLabel][key]) {
+          totals[key]["thumbnail"] = config.facetThumbnails[typeLabel][key];
         }
       }
     }
