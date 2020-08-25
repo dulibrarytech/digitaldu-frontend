@@ -124,10 +124,6 @@
     margin-top: 40px;
   }
 
-  div.facets .panel {
-    padding: 10px 0;
-  }
-
   div#collections .row:not(:first-child) {
     margin-top: 8vw;
   }
@@ -352,10 +348,6 @@
     font-size: 12px;
   }
 
-  div.facets .panel {
-      padding: 10px 0;
-  }
-
   div.home-facets {
     margin: 2.5em 0;
   }
@@ -398,10 +390,6 @@
   .item-title a {
       font-size: 13px;
   }
-
-  div.facets .panel {
-      padding: 10px 0;
-  }
 }
 /* Desktops and laptops ----------- */
 @media only screen and (min-width : 1224px) {
@@ -409,17 +397,9 @@
   .logo h1 {
       font-size: 4.4em;
   }
-
-  div.facets .panel {
-      padding: 10px 0;
-  }
 }
 
 @media (min-width: 1224px) and (max-width: 1399px) {
-  div.facets .panel {
-      padding: 10px 0;
-  }
-
   div.facets ul {
       font-size: 13px;
   }
@@ -431,10 +411,6 @@
 }
 
 @media (min-width: 1400px) and (max-width: 1699px) {
-  div.facets .panel {
-      padding: 10px 0;
-  }
-
   div#sidebar {
       padding: 0;
   }

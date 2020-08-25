@@ -74,7 +74,6 @@ var formatTypeFacets = function(typeFacets) {
     var types = [];
     for(var index of typeFacets) {
       for(var key in config.facetLabelNormalization[config.typeLabel]) {
-          console.log("TEST key", key)
         if(config.facetLabelNormalization[config.typeLabel][key].includes(index.facet)) {
           index.name = key;
         }
