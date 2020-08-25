@@ -35,7 +35,7 @@ var exampleFormatter = function(object) {
  */
 exports.formatFacetDisplay = function(object, callback) {
   formatFacets(object || []); // format all facets
-  formatTypeFacets(object["Type"] || []);
+  formatTypeFacets(object[config.typeLabel] || []);
   formatDateFacets(object["Date"] || []);
   formatObjectTypeFacets(object["Object Type"] || []);
   formatCollectionFacets(object["Collection"] || [], function(error) {
@@ -73,8 +73,9 @@ var formatFacets = function(facets) {
 var formatTypeFacets = function(typeFacets) {
     var types = [];
     for(var index of typeFacets) {
-      for(var key in config.facetLabelNormalization.Type) {
-        if(config.facetLabelNormalization.Type[key].includes(index.facet)) {
+      for(var key in config.facetLabelNormalization[config.typeLabel]) {
+          console.log("TEST key", key)
+        if(config.facetLabelNormalization[config.typeLabel][key].includes(index.facet)) {
           index.name = key;
         }
       }

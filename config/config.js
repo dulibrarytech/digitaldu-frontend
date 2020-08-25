@@ -372,7 +372,7 @@ module.exports = {
         {"label": "Creator", "id": "creator", "field": "creator", "boost": "3"},
         {"label": "Subject", "id": "subject", "field": "f_subjects", "boost": "2"},
         {"label": "Topic", "id": "topic", "field": "display_record.subjects.terms.term", "matchField": "display_record.subjects.terms.type", "matchTerm": "topical"},
-        {"label": "Type", "id": "type", "field": "type", "boost": "3"},
+        {"label": "Format", "id": "type", "field": "type", "boost": "3"},
         {"label": "Description", "id": "description", "field": "abstract", "boost": "4"},
         {"label": "Language", "id": "language", "field": "display_record.t_language.text", "boost": "1"},
         {"label": "Creation Date", "id": "create_date", "field": "display_record.dates.expression", "isNestedType": "true", "matchField": "display_record.dates.label", "matchTerm": "creation"},
@@ -388,7 +388,7 @@ module.exports = {
         {"Title": "title"},
         {"Creator": "creator"},
         {"Subject": "subject"},
-        {"Type": "type"},
+        {"Format": "type"},
         {"Description": "description"}
     ],
 
@@ -400,7 +400,7 @@ module.exports = {
         {"Title": "title"},
         {"Creator": "creator"},
         {"Subject": "subject"},
-        {"Type": "type"},
+        {"Format": "type"},
         {"Description": "description"},
         {"Creation Date": "create_date"},
         {"Language": "language"},
@@ -505,7 +505,7 @@ module.exports = {
     /*
      * Label to use for the object "type" facet panels
      */
-    typeLabel: "Type",
+    typeLabel: "Format",
 
     /*
      * Facets to display on the search results view
@@ -525,7 +525,7 @@ module.exports = {
         "Subject": {
             "path": "f_subjects"
         },
-        "Type": {
+        "Format": {
             "path": "type",
         },
         "Date": {
@@ -572,7 +572,7 @@ module.exports = {
      * Path is relative to the /public folder
      */
     facetThumbnails: {
-        "Type": {
+        "Format": {
             "Still Image": "assets/img/picture-in-frame-TN.png",
             "Moving Image": "assets/img/film-camera-TN.png",
             "Text": "assets/img/old-book-TN.png",
@@ -590,7 +590,7 @@ module.exports = {
      * Create facet display labels to select multiple facet values
      */
     facetLabelNormalization: {
-        "Type": {
+        "Format": {
             "Still Image": ["still image", "image/tiff", "image/jp2", "image/jp3"],
             "Moving Image": ["moving image", "moving_image", "video/mp4"],
             "Text": ["text", "text/plain"],

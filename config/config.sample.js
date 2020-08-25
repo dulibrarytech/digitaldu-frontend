@@ -503,6 +503,11 @@ module.exports = {
     searchTermFuzziness: "1",
 
     /*
+     * Label to use for the object "type" facet panels
+     */
+    typeLabel: "Type",
+
+    /*
      * Facets to display on the search results view
      *
      * @example
