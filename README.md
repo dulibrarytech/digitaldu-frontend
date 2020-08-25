@@ -129,21 +129,20 @@ HttpSource.lookup_strategy = ScriptLookupStrategy
 Implement the following hook to detect an api key in the incoming request, and append it to the DigitalCollections /datastream route request.  This will create the path to the resource in DigitalCollections for Cantaloupe, appending an api key if present in the initial iiif request to Cantaloupe:
 
 def httpsource_resource_info(options = {})
-    # Detect an api key parameter in the request url, retrieve and add it to the DigitalCollections /datastream route url
     request_uri = context['request_uri']
     key = ''
-
+    str = 'http://localhost:9006/datastream/'
+    
     if context['identifier'].include? '__'
+      puts "__ present"
       parts = context['identifier'].split('__')
       key = '?key='
       key.concat(parts[1])
+      str.concat(parts[0])
+    else
+      str.concat(context['identifier'])
     end
 
-    # DigitalCollections datastream route prefix
-    str = 'http://localhost:9006/datastream/'
-    # Object identifier
-    str.concat(context['identifier'])
-    # DigitalCollections datastream route suffix
     str.concat('/object')
     str.concat(key)
   end

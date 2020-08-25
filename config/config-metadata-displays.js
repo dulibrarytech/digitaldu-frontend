@@ -109,11 +109,11 @@ module.exports = {
                     "facetSearch": "Subject"
                 }
             },
-            // "Topics": {
-            //     "path": "subjects.terms.term",
-            //     "matchField": "type",
-            //     "matchValue": "topical"
-            // },
+            "Topics": {
+                "path": "subjects.terms.term",
+                "matchField": "type",
+                "matchValue": "topical"
+            },
             "Geographic": {
                 "path": "subjects.terms.term",
                 "matchField": "type",

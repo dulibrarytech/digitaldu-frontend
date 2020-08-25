@@ -439,7 +439,7 @@ exports.getObjectViewer = function(req, res) {
 		key = null,
 		script = "",
 		errors = "";
-
+			console.log("TEST query key", req.query.key)
 	if(req.query.key && req.query.key == config.apiKey) {
 		index = config.elasticsearchPrivateIndex;
 		key = req.query.key;
