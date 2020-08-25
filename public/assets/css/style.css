@@ -688,7 +688,7 @@ div.facets .facet-count > div {
 }
 
 div.facets .list-group-item {
-  padding: 0.4rem 1.25rem;
+  padding: 0.4rem 10px;
   border: none;
 }
 
@@ -699,6 +699,10 @@ div.facets .panel {
   max-height: 327px;
   overflow-y: scroll;
   padding: 10px 0;
+}
+
+div.facet-panel ul {
+  margin-bottom: 0;
 }
 
 div.facet-panel li > a {
