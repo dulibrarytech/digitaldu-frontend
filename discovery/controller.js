@@ -265,6 +265,7 @@ exports.renderObjectView = function(req, res) {
 					Service.getCollectionHeirarchy(object.is_member_of_collection, function(collectionTitles) {
 						data.id = pid;
 						object.type = Helper.normalizeLabel("Type", object.type || "")
+							console.log("TEST type", object.type)
 						data.summary = Metadata.createSummaryDisplayObject(object);
 						data.metadata = Object.assign(data.metadata, Metadata.createMetadataDisplayObject(object, collectionTitles));
 						data.downloads = config.enableFileDownload ? Helper.getFileDownloadLinks(object, AppHelper.getDsType(object.mime_type || "")) : null; // PROD

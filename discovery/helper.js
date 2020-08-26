@@ -341,10 +341,10 @@ exports.getFileDownloadLinks = function(object, dsid, part=null) {
   let links = [];
   // Object path is required for object download. If no path, do not add download links
   if(object && object.object) {
-    let extension = getFileExtensionForMimeType(object.mime_type || "");
+    let extension = AppHelper.getFileExtensionForMimeType(object.mime_type || "");
     if(!extension) {
-      let pathExtension = getFileExtensionFromFilePath(object.object);
-      if(isValidExtension(pathExtension)) {
+      let pathExtension = AppHelper.getFileExtensionFromFilePath(object.object);
+      if(AppHelper.isValidExtension(pathExtension)) {
         extension = pathExtension;
       }
     }
