@@ -222,37 +222,6 @@ var getContentType = function(datastream, object, part, mimeType) {
 exports.getContentType = getContentType;
 
  /**
- * Return an array of links to download the object file 
- * Currently only single link option, creates link to download file extension registered to the object's mime type
- *
- * @param {Object} object - DDU Elastic index doc
- * @return {Array.<String>} Array of download link uris
- */
-exports.getFileDownloadLinks = function(object, dsid, part=null) {
-	let links = [];
-	// Object path is required for object download. If no path, do not add download links
-	if(object && object.object) {
-		let extension = getFileExtensionForMimeType(object.mime_type || "");
-		if(!extension) {
-			let pathExtension = getFileExtensionFromFilePath(object.object);
-			if(isValidExtension(pathExtension)) {
-				extension = pathExtension;
-			}
-		}
-		// 'part' can be null here
-		if(extension) {
-			let link = {
-				uri: config.rootUrl + "/datastream/" + object.pid + "/" + dsid + "/" + part + "/" + object.pid + "." + extension,
-				filename: object.pid + "." + extension,
-				extension: extension
-			};
-			links.push(link);
-		}
-	}
-	return links;
-}
-
- /**
  * Finds the DDU datastream ID that corresponds with an object's mime type
  *
  * @param {String} mimeType - Object mime type (ex "audio/mp3")
