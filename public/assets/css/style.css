@@ -336,10 +336,6 @@ div.banner-search {
   width: 30%;
 }
 
-div.banner-search > form {
-  float: right;
-}
-
 div.banner-search input {
   width: 70%;
   height: 34px;
@@ -798,7 +794,7 @@ button.accordion {
 /* End facet section */
 
 div.facet-breadcrumbs {
-  margin: 127px auto 0 auto;
+  margin: 45px auto 0 auto;
   width: 80%;
 }
 

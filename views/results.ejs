@@ -12,13 +12,12 @@
 </div>
 
 <div class="facet-breadcrumbs">
-  <a id="new-search-link" href="<%- root_url %>">Start Over</a>
-
   <% if (isAdvancedSearch) { %>
     <a id="advanced-search-return-link" href="<%- root_url %>/advanced-search">Return to Advanced Search</a>
   <% } %>
 
   <% if (facet_breadcrumb_trail) { %>
+    <a id="new-search-link" href="<%- root_url %>">Start Over</a>
     <%- facet_breadcrumb_trail %>
   <% } %>
 </div>
