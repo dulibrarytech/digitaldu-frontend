@@ -248,7 +248,8 @@ function createBreadcrumbTrail(data, dates, baseUrl) {
     }
 
     for (i = 0; i < dates.length; i++) {
-        html += '<span><a aria-label="remove date range" title="remove date range" onclick="removeDateRange(\'' + dates[i].from + '\', \'' + dates[i].to + '\')"><strong>X</strong></a>&nbsp&nbspDate Range&nbsp&nbsp<strong style="color: green"> > </strong>&nbsp&nbsp' + dates[i].from + ' - ' + dates[i].to + '</span>';   // good
+        //html += '<span><a aria-label="remove date range" title="remove date range" onclick="removeDateRange(\'' + dates[i].from + '\', \'' + dates[i].to + '\')"><strong>X</strong></a>&nbsp&nbspDate Range&nbsp&nbsp<strong style="color: green"> > </strong>&nbsp&nbsp' + dates[i].from + ' - ' + dates[i].to + '</span>';
+        html += '<span><span aria-label="Limit to date range' + dates[i].from + 'to' + dates[i].to + '">Date Range&nbsp&nbsp<strong aria-hidden="true" style="color: green"> > </strong>&nbsp&nbsp' + dates[i].from + '-' + dates[i].to + '<a aria-label="remove date range" title="Remove Date Range" onclick="removeDateRange(\'' + dates[i].from + '\', \'' + dates[i].to + '\')"><strong aria-hidden="true">X</strong></a></span></span>';   // good
     }
     return html;
 };

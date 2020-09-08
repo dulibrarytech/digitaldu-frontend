@@ -26,12 +26,12 @@
 				<%- include('partials/sidebar-search') -%>
 			</div>
 			<div class="result-facets sidebar-section">
-				<% if(facets) { %>
-					<h4>Filter By</h4>
-					<hr>
-					<%- include('partials/facets') -%>
-					<%- include('partials/daterange-search') -%>
+				<% if(results.length > 0) { %>
+				  <h4>Filter By</h4>
+				  <hr>
 				<% } %>
+				<%- include('partials/facets') -%>
+				<%- include('partials/daterange-search') -%>
 			</div>
 		<% } %>
 	</div>
@@ -79,29 +79,31 @@
 
   			<div id="collections">
   				<div class="row">
-	  				<% for (var i = 0; i < results.length; i++) { %>
-	  					<div class="col-sm-3 collection-thumb">
-							<dl class="item">
-								<a href="<%= root_url %><%= results[i].path %>/<%= results[i].pid %>">
-									<dt>
-										<div class="item-thumb">
-											<img src="<%= results[i].tn %>" alt="<%= results[i].title %>">
-										</div>
-									</dt>
-									<dd>
-										<div class="item-details">
-											<h3 class="item-title"><%= results[i].title %></h3>
-										</div>
-									</dd>
-								</a>
-							</dl>
-						</div>
-	  				<% } %>
+  					<% if(results.length > 0) { %>
+		  				<% for (var i = 0; i < results.length; i++) { %>
+		  					<div class="col-sm-3 collection-thumb">
+								<dl class="item">
+									<a href="<%= root_url %><%= results[i].path %>/<%= results[i].pid %>">
+										<dt>
+											<div class="item-thumb">
+												<img src="<%= results[i].tn %>" alt="<%= results[i].title %>">
+											</div>
+										</dt>
+										<dd>
+											<div class="item-details">
+												<h3 class="item-title"><%= results[i].title %></h3>
+											</div>
+										</dd>
+									</a>
+								</dl>
+							</div>
+		  				<% } %>
+		  			<% } else { %>
+		  				<strong>No collection items found</strong>
+		  			<% } %>
 	  			</div>
-
 	    	</div>
-
-
+	    	<%- include('partials/paginator') -%>
 	    <% } %>
 	</div>
 </div>
