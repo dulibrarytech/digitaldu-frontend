@@ -32,11 +32,12 @@ const Datastreams = require("../libs/datastreams");
 const Kaltura = require('../libs/kaltura');
 const IIIF = require("../libs/IIIF");
 const util = require('util');
+const Search = require("../search/service");
 
 /**
  * Create a list of the root level collections
  *
- * @param {String} pageNum - Get this page of result collections
+ * @param {String} page - Get this page of result collections
  *
  * @typedef {Object} collections - Collection data
  * @property {Array} list - Array of collection objects
@@ -52,7 +53,7 @@ const util = require('util');
  * @param {String|null} Error message or null
  * @param {collections|null} Null if error
  */
-exports.getTopLevelCollections = function(pageNum=0, callback) {
+exports.getTopLevelCollections = function(page=1, callback) {
   Repository.getRootCollections().catch(error => {
     callback(error, null);
   })
@@ -84,10 +85,9 @@ exports.getTopLevelCollections = function(pageNum=0, callback) {
         }
 
         //Query the index for root collection members
-        getObjectsInCollection(config.topLevelCollectionPID, pageNum, null, {"field": "Title", "order": "asc"}, 12, function(error, collections) {
+        getObjectsInCollection(config.topLevelCollectionPID, page, null, {"field": "Title", "order": "asc"}, 12, null, function(error, collections) {
           if(error) {
             callback(error, null);
-
           }
           else {
             callback(null, collections);
@@ -100,7 +100,7 @@ exports.getTopLevelCollections = function(pageNum=0, callback) {
 /**
  * Get all objects in a collection, including facet data for collection members
  *
- * @param {String} pageNum - Get this page of result objects.  0, return all collections.
+ * @param {String} page - Get this page of result objects.  0, return all collections.
  *
  * @typedef {Object} collection - Collection data
  * @property {String} title - Title of the collection to be displayed in the view
@@ -118,8 +118,8 @@ exports.getTopLevelCollections = function(pageNum=0, callback) {
  * @param {String|null} Error message or null
  * @param {collection|null} Null if error 
  */
-var getObjectsInCollection = function(collectionID, pageNum=1, facets=null, sort=null, pageSize=10, callback) {
-  Repository.getCollectionObjects(collectionID, facets).catch(error => {
+var getObjectsInCollection = function(collectionId, page=1, facets=null, sort=null, pageSize=10, daterange=null, callback) {
+  Repository.getCollectionObjects(collectionId, facets).catch(error => {
     callback(error, null);
   })
   .then( response => {
@@ -142,142 +142,62 @@ var getObjectsInCollection = function(collectionID, pageNum=1, facets=null, sort
         callback(null, collection);
       }
       else {
+        var queryData = [];
+        queryData.push({
+          terms: "",
+          field: "all",
+          type: "contains",
+          bool: "or"
+        });
 
-        // TODO: Replace code below with call to /search
-
-        // If facet data is present, add it to the search
-        var facetFilters = [];
-        if(facets) {
-          let facetData, count=0;
-          for(let facet in facets) {
-            for(let value of facets[facet]) {
-              let query = {};
-              count++;
-
-              // Get the facet key from the configuration, using the facet name
-              facetData = config.facets[facet];
-
-              // Add to filters
-              query[facetData.path] = value;
-              facetFilters.push({
-                "match_phrase": query 
-              });
-
-              if(facetData.matchField && facetData.matchField.length > 0) {
-                query = {};
-                query[facetData.matchField] = facetData.matchTerm; 
-                facetFilters.push({
-                  "match_phrase": query 
-                });
-              }
-            }
-          }
-        }
-
-        let sortArr = [];
-        if(sort) {
-          let data = {},
-              field = config.searchSortFields[sort.field] || null;
-
-          if(field) {
-            if(field.matchField && field.matchField.length > 0) {
-              let filterObj = {
-                "term": {}
-              };
-
-              if(field.matchTerm && field.matchTerm.length > 0) {
-                filterObj.term[field.matchField + ".keyword"] = field.matchTerm;
-                data[field.path + ".keyword"] = {
-                  "order": sort.order,
-                  "nested_path": field.path.substring(0,field.path.lastIndexOf(".")),
-                  "nested_filter": filterObj
-                }
-              }
-            }
-            else {
-              data[field.path + ".keyword"] = {
-                "order": sort.order
-              }
-            }
-          }
-          sortArr.push(data);
-        }
-
-        let from = 0, size = 10000;
-        if(pageNum) {
-          from = (pageNum - 1) * pageSize;
-          size = pageSize || config.defaultCollectionsPerPage;
-        }
-
-        var data = {  
-          index: config.elasticsearchPublicIndex,
-          type: config.searchIndexType,
-          body: {
-            from : from,
-            size : size,
-            query: {
-                "bool": {
-                  "must": {
-                      "match_phrase": {
-                        "is_member_of_collection": collectionID
-                      }
-                  },
-                  "must_not": {
-                    "exists": {
-                        "field": "is_child_of"
-                    }
-                  },
-                  "filter": facetFilters
-                }
-            },
-            sort: sortArr,
-            aggs: facetAggregations
-          }
-        }
-
-        if(config.nodeEnv == "devlog") {console.log("DEV query object:", util.inspect(data, {showHidden: false, depth: null}));}
-
-        // Get child objects of this collection
-        es.search(data, function (error, response, status) {
-          var responseData = {};
-          if (error){
+        pageSize = pageSize || config.defaultCollectionsPerPage || 10;
+        var from = (page - 1) * pageSize;
+        Search.searchIndex(queryData, facets, collectionId, page, pageSize, daterange, sort, null, function(error, response) {
+          if(error) {
             callback(error, null);
           }
-          else if(data.body.from > response.hits.total) {
-            callback("Invalid page number", null);
-          }
           else {
-            var results = [];
-            for(var index of response.hits.hits) {
-              results.push(index._source);
+            var responseData = {};
+            response = response.elasticResponse;
+            if (error){
+              callback(error, null);
             }
-
-            collection.list = Helper.getObjectLinkDisplayList(results);
-            collection.facets = response.aggregations;
-            collection.count = response.hits.total;
-
-            if(collectionID != config.topLevelCollectionPID) {
-              fetchObjectByPid(config.elasticsearchPublicIndex, collectionID, function(error, object) {
-                if(error) {
-                  collection.title = "";
-                  callback(error, []);
-                }
-                else if(!object) {
-                  callback("Object not found", []);
-                }
-                else if(object.object_type != "collection") {
-                  callback("Invalid collection: " + object.pid, []);
-                }
-                else {
-                  collection.title = object.title || "No Title";
-                  collection.abstract = (object.abstract && typeof object.abstract == "object") ? object.abstract[0] : object.abstract || "";
-                  callback(null, collection);
-                }
-              });
+            else if(from > response.hits.total) {
+              callback("Invalid page number", null);
             }
             else {
-                collection.title = config.topLevelCollectionName || "";
-                callback(null, collection);
+              var results = [];
+              for(var index of response.hits.hits) {
+                results.push(index._source);
+              }
+
+              collection.list = Helper.getObjectLinkDisplayList(results);
+              collection.facets = response.aggregations;
+              collection.count = response.hits.total;
+
+              if(collectionId != config.topLevelCollectionPID) {
+                fetchObjectByPid(config.elasticsearchPublicIndex, collectionId, function(error, object) {
+                  if(error) {
+                    collection.title = "";
+                    callback(error, []);
+                  }
+                  else if(!object) {
+                    callback("Object not found", []);
+                  }
+                  else if(object.object_type != "collection") {
+                    callback("Invalid collection: " + object.pid, []);
+                  }
+                  else {
+                    collection.title = object.title || "No Title";
+                    collection.abstract = (object.abstract && typeof object.abstract == "object") ? object.abstract[0] : object.abstract || "";
+                    callback(null, collection);
+                  }
+                });
+              }
+              else {
+                  collection.title = config.topLevelCollectionName || "";
+                  callback(null, collection);
+              }
             }
           }
         });

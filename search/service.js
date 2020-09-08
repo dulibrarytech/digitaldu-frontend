@@ -265,6 +265,15 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       filters.push(Helper.getDateRangeQuery(fullDate));
     }
 
+    // Restrict results to members of collection
+    if(collection) {
+      booleanQuery.bool.must.push({
+        "match": {
+          "is_member_of_collection": collection
+        }
+      });
+    }
+
     // Do not show collection objects
     if(config.showCollectionObjectsInSearchResults == false) {
       restrictions.push({
@@ -294,17 +303,19 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       }
     }
 
-    // If empty querystring, search for all items that are not collections
     else {
-      restrictions.push({
-        match: {
-          "object_type": "collection"
-        }
-      });
+      if(!collection) {
+        restrictions.push({
+          match: {
+            "object_type": "collection"
+          }
+        });
+      }
       queryObj = {
         "bool": {
           "must": booleanQuery,
-          "must_not": restrictions
+          "must_not": restrictions,
+          "filter": filter
         }
       }
     }
@@ -396,6 +407,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
 
           // Add the results array, send the response
           responseData['results'] = results;
+          responseData['elasticResponse'] = response;
           callback(null, responseData);
         }
         catch(error) {

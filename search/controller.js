@@ -133,6 +133,7 @@ exports.search = function(req, res) {
 				data.fromDate = daterange.from;
 				data.toDate = daterange.to;
 			}
+
 			// Get a normalized list of the facet data returned from the search.  
 			let facetList = Facets.getFacetList(response.facets, showAll);
 			Format.formatFacetDisplay(facetList, function(error, facetList) {

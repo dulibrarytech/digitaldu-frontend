@@ -30,6 +30,7 @@
 					<h4>Filter By</h4>
 					<hr>
 					<%- include('partials/facets') -%>
+					<%- include('partials/daterange-search') -%>
 				<% } %>
 			</div>
 		<% } %>
@@ -78,25 +79,23 @@
 
   			<div id="collections">
   				<div class="row">
-	  				<% for (var i = 0; i < collections.length; i++) { %>
-
+	  				<% for (var i = 0; i < results.length; i++) { %>
 	  					<div class="col-sm-3 collection-thumb">
 							<dl class="item">
-								<a href="<%= root_url %><%= collections[i].path %>/<%= collections[i].pid %>">
+								<a href="<%= root_url %><%= results[i].path %>/<%= results[i].pid %>">
 									<dt>
 										<div class="item-thumb">
-											<img src="<%= collections[i].tn %>" alt="<%= collections[i].title %>">
+											<img src="<%= results[i].tn %>" alt="<%= results[i].title %>">
 										</div>
 									</dt>
 									<dd>
 										<div class="item-details">
-											<h3 class="item-title"><%= collections[i].title %></h3>
+											<h3 class="item-title"><%= results[i].title %></h3>
 										</div>
 									</dd>
 								</a>
 							</dl>
 						</div>
-
 	  				<% } %>
 	  			</div>
 

@@ -794,7 +794,7 @@ button.accordion {
 /* End facet section */
 
 div.facet-breadcrumbs {
-  margin: 45px auto 0 auto;
+  margin: 33px auto 0 auto;
   width: 80%;
 }
 
@@ -954,7 +954,7 @@ div.collection-breadcrumbs {
   font-size: 13px;
   padding-left: 20px;
   margin: 20px auto 0 auto;
-  width: 80%;
+  width: 82%;
 }
 
 div.collection-breadcrumbs a {

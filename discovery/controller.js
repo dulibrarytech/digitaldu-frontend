@@ -60,7 +60,7 @@ exports.renderRootCollection = function(req, res) {
 	page = req.query.page || 1,
 	path = config.rootUrl + req._parsedOriginalUrl.path;
 
-	Service.getTopLevelCollections(null, function(error, response) {
+	Service.getTopLevelCollections(page, function(error, response) {
 		if(error) {
 			console.log(error);
 			data.error = "Error: could not retrieve collections.";
@@ -120,7 +120,9 @@ var renderCollection = function(req, res) {
 			root_url: config.rootUrl,
 			searchFields: config.searchFields,
 			options: {},
-			sortType: req.query.sort || config.defaultCollectionSortField || "Title"
+			sortType: req.query.sort || config.defaultCollectionSortField || "Title",
+			fromDate: config.defaultDaterangeFromDate,
+			toDate: new Date().getFullYear()
 		};
 			
 		var	pid = req.params.pid || "",
@@ -128,16 +130,21 @@ var renderCollection = function(req, res) {
 			pageSize = req.query.resultsPerPage || config.defaultCollectionsPerPage || 12,
 			path = config.rootUrl + req._parsedOriginalUrl.path,
 			reqFacets = req.query.f || null,
-			showAll = req.query.showAll || [];
+			showAll = req.query.showAll || [],
+			daterange = (req.query.from || req.query.to) && (parseInt(req.query.from) < parseInt(req.query.to)) ? {
+				from: req.query.from || config.defaultDaterangeFromDate,
+				to: req.query.to || new Date().getFullYear()
+			} : null;
 
 		data.collectionID = pid;
 		data.options["expandFacets"] = [];
 		data.options["perPageCountOptions"] = config.resultCountOptions;
 		data.options["pageSize"] = pageSize;
 		data.options["sortByOptions"] = config.collectionSortByOptions;
+		data.options["showDateRange"] = config.showDateRangeLimiter;
 
 		let sortBy = Helper.getSortDataArray(data.sortType);
-		Service.getObjectsInCollection(pid, page, reqFacets, sortBy, pageSize, function(error, response) {
+		Service.getObjectsInCollection(pid, page, reqFacets, sortBy, pageSize, daterange, function(error, response) {
 			if(error) {
 				console.log(error);
 				data.error = "Could not open collection.";
@@ -145,7 +152,7 @@ var renderCollection = function(req, res) {
 				return res.render('collection', data);
 			}
 			else {
-				data.collections = response.list;
+				data.results = response.list;
 				data.current_collection = pid;
 				data.current_collection_title = response.title || "Untitled";
 				data.current_collection_abstract = response.abstract || "";
@@ -158,6 +165,10 @@ var renderCollection = function(req, res) {
 				if(reqFacets) {
 					reqFacets = Facets.getSearchFacetObject(reqFacets);
 				}
+				if(daterange) {
+					data.fromDate = daterange.from;
+					data.toDate = daterange.to;
+				}
 
 				Format.formatFacetDisplay(facetList, function(error, facetList) {
 					data.pagination = Paginator.create(response.list, page, pageSize, response.count, path);
@@ -169,7 +180,10 @@ var renderCollection = function(req, res) {
 						data.facets = null;
 					}
 
-					return res.render('collection', data);
+					Format.formatFacetBreadcrumbs(reqFacets, function(error, facets) {
+						data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(reqFacets, daterange, config.rootUrl);		
+						return res.render('collection', data);
+					});
 				});
 			}
 		});
@@ -265,7 +279,6 @@ exports.renderObjectView = function(req, res) {
 					Service.getCollectionHeirarchy(object.is_member_of_collection, function(collectionTitles) {
 						data.id = pid;
 						object.type = Helper.normalizeLabel("Type", object.type || "")
-							console.log("TEST type", object.type)
 						data.summary = Metadata.createSummaryDisplayObject(object);
 						data.metadata = Object.assign(data.metadata, Metadata.createMetadataDisplayObject(object, collectionTitles));
 						data.downloads = config.enableFileDownload ? Helper.getFileDownloadLinks(object, AppHelper.getDsType(object.mime_type || "")) : null; // PROD
