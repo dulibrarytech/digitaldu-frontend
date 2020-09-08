@@ -182,7 +182,7 @@ var getObjectsInCollection = function(collectionId, page=1, facets=null, sort=nu
                     callback(error, []);
                   }
                   else if(!object) {
-                    callback("Object not found", []);
+                    callback("Object not found: " + collectionId, []);
                   }
                   else if(object.object_type != "collection") {
                     callback("Invalid collection: " + object.pid, []);

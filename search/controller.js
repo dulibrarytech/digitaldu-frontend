@@ -111,11 +111,11 @@ exports.search = function(req, res) {
 		}
 		else {
 			data.options["expandFacets"] = expandFacets;
-			data.options["perPageCountOptions"] = config.resultCountOptions;
-			data.options["resultsViewOptions"] = config.resultsViewOptions;
-			data.options["sortByOptions"] = config.sortByOptions;
+			data.options["perPageCountOptions"] = config.resultCountOptions || [];
+			data.options["resultsViewOptions"] = config.resultsViewOptions || [];
+			data.options["sortByOptions"] = config.sortByOptions || {};
 			data.options["pageSize"] = pageSize;
-			data.options["showDateRange"] = config.showDateRangeLimiter;
+			data.options["showDateRange"] = config.showSearchResultsDateRangeLimiter || false;
 
 			// Add the metadata display field from the configuration, then add the results list to the view data
 			Metadata.addResultMetadataDisplays(response.results);

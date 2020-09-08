@@ -23,12 +23,13 @@
 <script type="text/javascript">
 	function submitDateRange() {
 		var decoded = decodeURIComponent(window.location.href);
-		var url = decoded.replace(/&from=[0-9]+&to=[0-9]+/g, "") + "&" + $("#daterange-form").serialize();
+		var queryPrefix = decoded.indexOf("?") >= 0 ? "&" : "?";
+		var url = decoded.replace(/[&?]from=[0-9]+&to=[0-9]+/g, "") + queryPrefix + $("#daterange-form").serialize();
 		window.location.assign(encodeURI(url));
 	}
 	function removeDateRange(from, to) {
 		var searchUrl = decodeURIComponent(window.location.href);
-		window.location.assign(encodeURI(searchUrl.replace(/&from=[0-9]+&to=[0-9]+/g, "")));
+		window.location.assign(encodeURI(searchUrl.replace(/&{0,1}from=[0-9]+&to=[0-9]+/g, "")));
 	}
 </script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>

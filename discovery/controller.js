@@ -138,10 +138,10 @@ var renderCollection = function(req, res) {
 
 		data.collectionID = pid;
 		data.options["expandFacets"] = [];
-		data.options["perPageCountOptions"] = config.resultCountOptions;
+		data.options["perPageCountOptions"] = config.resultCountOptions || [];
 		data.options["pageSize"] = pageSize;
-		data.options["sortByOptions"] = config.collectionSortByOptions;
-		data.options["showDateRange"] = config.showDateRangeLimiter;
+		data.options["sortByOptions"] = config.collectionSortByOptions || {};
+		data.options["showDateRange"] = config.showCollectionViewDateRangeLimiter || false;
 
 		let sortBy = Helper.getSortDataArray(data.sortType);
 		Service.getObjectsInCollection(pid, page, reqFacets, sortBy, pageSize, daterange, function(error, response) {
