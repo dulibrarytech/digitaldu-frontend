@@ -1098,6 +1098,10 @@ div.search-results-menu > div {
   display: inline-block;
 }
 
+span.search-results-menu-group {
+  display: inline-block;
+}
+
 div.search-results-menu-element {
   margin-left: 20px;
   margin-top: 10px;

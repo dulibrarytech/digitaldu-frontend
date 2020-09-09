@@ -47,30 +47,31 @@
               <h4>Results for: <span><%- query %></span></h4>
             </div>
           <% } %>
-          <div class="search-results-menu-element">
-            <select id="results-per-page" class="form-control" title="Select Number of Results per Page">
-                <% for (var i = 0; i < options.perPageCountOptions.length; i++) { %>
-                  <% if(options.perPageCountOptions[i] == options.pageSize) { %>
-                    <option value="<%= options.perPageCountOptions[i] %>" selected><%= options.perPageCountOptions[i] %> per page</option>
-                  <% } else { %>
-                    <option value="<%= options.perPageCountOptions[i] %>"><%= options.perPageCountOptions[i] %> per page</option>
+          <span class="search-results-menu-group">
+            <div class="search-results-menu-element">
+              <select id="results-per-page" class="form-control" title="Select Number of Results per Page">
+                  <% for (var i = 0; i < options.perPageCountOptions.length; i++) { %>
+                    <% if(options.perPageCountOptions[i] == options.pageSize) { %>
+                      <option value="<%= options.perPageCountOptions[i] %>" selected><%= options.perPageCountOptions[i] %> per page</option>
+                    <% } else { %>
+                      <option value="<%= options.perPageCountOptions[i] %>"><%= options.perPageCountOptions[i] %> per page</option>
+                    <% } %>
                   <% } %>
-                <% } %>
-            </select>
-          </div>
+              </select>
+            </div>
 
-          <div class="search-results-menu-element">
-            <select id="results-view-select" class="form-control" title="Select Results View">
-                <% for (var i = 0; i < options.resultsViewOptions.length; i++) { %>
-                  <% if(options.resultsViewOptions[i] == view) { %>
-                    <option value="<%= options.resultsViewOptions[i] %>" selected><%= options.resultsViewOptions[i] %> View</option>
-                  <% } else { %>
-                    <option value="<%= options.resultsViewOptions[i] %>"><%= options.resultsViewOptions[i] %> View</option>
+            <div class="search-results-menu-element">
+              <select id="results-view-select" class="form-control" title="Select Results View">
+                  <% for (var i = 0; i < options.resultsViewOptions.length; i++) { %>
+                    <% if(options.resultsViewOptions[i] == view) { %>
+                      <option value="<%= options.resultsViewOptions[i] %>" selected><%= options.resultsViewOptions[i] %> View</option>
+                    <% } else { %>
+                      <option value="<%= options.resultsViewOptions[i] %>"><%= options.resultsViewOptions[i] %> View</option>
+                    <% } %>
                   <% } %>
-                <% } %>
-            </select>
-          </div>
-
+              </select>
+            </div>
+          </span>
           <div class="search-results-menu-element">
             <select id="sort-by-select" class="form-control" title="Select Sort Results By">
                 <% for (var key in options.sortByOptions) { %>
