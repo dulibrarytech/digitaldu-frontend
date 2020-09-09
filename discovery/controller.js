@@ -66,8 +66,8 @@ exports.renderRootCollection = function(req, res) {
 			data.error = "Error: could not retrieve collections.";
 		}
 		else {
-			data.allCollections = response.list;
-			data.collections = Helper.getArrayPage(response.list, parseInt(page), config.defaultHomePageCollectionsCount);
+			data.collections = response.list;
+			//data.collections = Helper.getArrayPage(response.list, parseInt(page), config.defaultHomePageCollectionsCount);
 			data.searchFields = config.searchFields;
 			data.options["perPageCountOptions"] = config.defaultHomePageCollectionsCount;
 		}

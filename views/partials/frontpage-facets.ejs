@@ -28,8 +28,8 @@
   </button>
   <div id="collections-window" class="panel facet-panel panel-collapsed">
     <ul>
-      <% for(var index in allCollections) { %>
-        <li><span class="facet-name"><a href="<%- root_url %><%= allCollections[index].path %>/<%= allCollections[index].pid %>" title="<%= allCollections[index].title %>"><%= allCollections[index].title %></a></span></li>
+      <% for(var index in collections) { %>
+        <li><span class="facet-name"><a href="<%- root_url %><%= collections[index].path %>/<%= collections[index].pid %>" title="<%= collections[index].title %>"><%= collections[index].title %></a></span></li>
       <% } %>
     </ul>
   </div>
