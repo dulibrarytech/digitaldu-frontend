@@ -171,7 +171,6 @@ function getVideoViewer(object, apikey) {
  */
 function getSmallImageViewer(object, apikey) {
 	var viewer = '<div id="small-image-viewer" class="viewer-section">',
-		// image = Repository.getDatastreamUrl("jpg", object.pid);
 		image = config.rootUrl + "/datastream/" + object.pid + "/jpg" + apikey;
 
 	viewer += '<div id="viewer-content-wrapper" class="small-image"><img class="viewer-content" src="' + image + '"/></div>';
@@ -189,7 +188,6 @@ function getSmallImageViewer(object, apikey) {
  */
 function getLargeImageViewer(object, apikey) {
 	var viewer = "";
-
 	switch(config.largeImageViewer) {
 		case "browser":
 			viewer += getSmallImageViewer(object, apikey);

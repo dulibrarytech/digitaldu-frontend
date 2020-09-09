@@ -65,34 +65,25 @@ exports.getCollectionObjects = function(collectionID, facets) {
  */
 var getRepositoryUrl = function() {
 	var url = "", auth = "";	
-
-	// Add authentication credentials if present
 	if((uname && uname != "") && (pword && pword != "")) {
 		auth = uname + ":" + pword + "@";
 	}
 	url = protocol + "://" + auth + domain + path;
-
 	return url;
 }
 
 
 /**
- * Duraspace does not provide datastream api
- * Use DDU app /datastreams route, which will stream data directly from Duraspace
+ * Get datastream url for Duracloud
  *
  * @param {String} dsid - The DDU datastream ID
  * @param {String} pid - PID of the object from which to stream data
  * @return {String} - Url to DDU datastream for the object
  */
-exports.getDatastreamUrl = function(dsid, pid) {
-	return config.rootUrl + "/datastream/" + pid + "/" + datastream;
-}
-
-// Get datastream url for Archivespace
-exports.getDatastreamUrl = function(dsid, pid=null, object) {
+exports.getDatastreamUrl = function(dsid, object) {
 	var url = getRepositoryUrl();
-	if(dsid == "tn") {url += "/" + object.thumbnail;}
-	else {url += "/" + object.object;}
+	if(dsid == "tn") {url += "/" + object.thumbnail}
+	else {url += "/" + object.object}
 	return url;
 }
 
@@ -123,7 +114,6 @@ exports.streamData = function(object, dsid, callback) {
 		}
 		else {url += ("/" + object.object)}
 
-		// Fetch the stream 
 		rs(url, {}, function(err, res) {
 			if(err) {
 				callback("Could not open datastream. " + err + " Check connection to repository", null);
