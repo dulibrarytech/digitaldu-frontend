@@ -147,7 +147,7 @@ var renderCollection = function(req, res) {
 		Service.getObjectsInCollection(pid, page, reqFacets, sortBy, pageSize, daterange, function(error, response) {
 			if(error) {
 				console.log(error);
-				data.error = "Could not open collection<br>" + error;
+				data.error = "Could not open collection: " + error;
 				data.current_collection_title = "Error";
 				return res.render('collection', data);
 			}

@@ -25,6 +25,7 @@
 		var decoded = decodeURIComponent(window.location.href);
 		var queryPrefix = decoded.indexOf("?") >= 0 ? "&" : "?";
 		var url = decoded.replace(/[&?]from=[0-9]+&to=[0-9]+/g, "") + queryPrefix + $("#daterange-form").serialize();
+		url = url.replace(/page=[1234567890]*/g, ""); // Reset results to page 1
 		window.location.assign(encodeURI(url));
 	}
 	function removeDateRange(from, to) {
