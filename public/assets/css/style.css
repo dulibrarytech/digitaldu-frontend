@@ -330,10 +330,13 @@ div.header-logo img {
 
 /* Begin search banner */
 div.banner-search {
-  /*position: relative;
-  top: 32px;*/
-  margin: 48px auto 0 auto;
-  width: 30%;
+  /*margin: 48px auto 0 auto;
+  width: 30%;*/
+}
+
+div.banner-search form {
+  width: 33%;
+  margin-left: 15px;
 }
 
 div.banner-search input {
@@ -456,8 +459,7 @@ input.search-element {
   padding: 0 7px;
 }
 
-div.searchform form,
-div.banner-search form {
+div.searchform form {
   width: 100%;
 }
 
@@ -794,7 +796,7 @@ button.accordion {
 /* End facet section */
 
 div.facet-breadcrumbs {
-  margin: 33px auto 0 auto;
+  margin: 40px auto 0 auto;
   width: 80%;
 }
 
