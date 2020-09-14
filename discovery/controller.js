@@ -64,34 +64,33 @@ exports.renderRootCollection = function(req, res) {
 		if(error) {
 			console.log(error);
 			data.error = "Error: could not retrieve collections.";
+			res.render('collections', data);
 		}
 		else {
 			data.collections = response.list;
-			//data.collections = Helper.getArrayPage(response.list, parseInt(page), config.defaultHomePageCollectionsCount);
 			data.searchFields = config.searchFields;
 			data.options["perPageCountOptions"] = config.defaultHomePageCollectionsCount;
-		}
 
-		Service.getFacets(null, function(error, facets) {
-			if(error) {
-				console.log(error);
-			}
-			else {
-				var facetList = Facets.getFacetList(facets, []);
-				for(var key in facetList) {
-					if(config.frontPageFacets.includes(key) === false) {
-						delete facetList[key];
-					}
+			Service.getFacets(null, function(error, facets) {
+				if(error) {
+					console.log(error);
 				}
+				else {
+					var facetList = Facets.getFacetList(facets, []);
+					for(var key in facetList) {
+						if(config.frontPageFacets.includes(key) === false) {
+							delete facetList[key];
+						}
+					}
 
-				data.facets = Facets.create(facetList, config.rootUrl);
-				data.typeList = Helper.getTypeDisplayList(facets);
-				data.pagination = Paginator.create(data.collections, page, config.defaultHomePageCollectionsCount, response.count, path);
-				data.pagination["anchor"] = "#collections";
-			}
-			
-			res.render('collections', data);
-		});
+					data.facets = Facets.create(facetList, config.rootUrl);
+					data.typeList = Helper.getTypeDisplayList(facets);
+					data.pagination = Paginator.create(data.collections, page, config.defaultHomePageCollectionsCount, response.count, path);
+					data.pagination["anchor"] = "#collections";
+				}
+				res.render('collections', data);
+			});
+		}
 	});
 }
 

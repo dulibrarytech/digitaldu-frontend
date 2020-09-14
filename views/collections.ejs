@@ -2,20 +2,23 @@
 <%- include('partials/banner') -%>
 
 <div id="frontpage-content" class="row no-side-margin section content">
-	<div id="sidebar" class="col-md-3 .col-sm-4">
-		<h3>Browse by</h3>
-		<hr>
-		<%- include('partials/frontpage-facets') -%>
-	</div>
+	<% if(collections && collections.length > 0) { %>
+		<div id="sidebar" class="col-md-3 .col-sm-4">
+			<h3>Browse by</h3>
+			<hr>
+			<%- include('partials/frontpage-facets') -%>
+		</div>
+	<% } %>
 
 	<div id="page-content" class="col-md-9 .col-sm-8">
 		<div id="home-collections">
-			<a id="collections"></a>
-			<h3>Collections</h3>
-			<br/>
-			<div class="content-message">Notice: Our digital collections contain materials that are racist, sexist, and may be painful or traumatizing to researchers.</div>
-			<hr>
-
+			<% if(collections && collections.length > 0) { %>
+				<a id="collections"></a>
+				<h3>Collections</h3>
+				<br/>
+				<div class="content-message">Notice: Our digital collections contain materials that are racist, sexist, and may be painful or traumatizing to researchers.</div>
+				<hr>
+			<% } %>
 			<% if(error) { %>
 	  			<h5><%- error %></h5>
 	  		<% } else { %>
