@@ -7,9 +7,9 @@
 	<h5><%- error %></h5>
 </div>
 
-<% if (devError) { %>
+<% if (typeof logMsg != "undefined") { %>
 	<script>
-		console.log('<% devError %>')
+		console.log('<% logMsg %>')
 	</script>
 <% } %>
 

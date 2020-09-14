@@ -9,9 +9,9 @@
 	<h5>You may have mistyped the address, or the page or record that was here has been withdrawn or moved.</h5>
 </div>
 
-<% if (devError) { %>
+<% if (typeof logMsg != "undefined") { %>
 	<script>
-		console.log('<% devError %>')
+		console.log('<% logMsg %>')
 	</script>
 <% } %>
 

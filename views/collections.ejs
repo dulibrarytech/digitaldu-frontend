@@ -51,6 +51,9 @@
 
 <script>
 	localStorage.setItem("ADVANCED_SEARCH_FORM_STATE", null);
+	<%if(typeof logMsg != "undefined") { %>
+		console.log("<%= logMsg %>");
+	<% } %>
 </script>
 
 <%- include('partials/footer') -%>

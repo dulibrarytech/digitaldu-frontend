@@ -161,5 +161,12 @@
     <% } %>
   </div>
 </div>
+
+<script>
+  <%if(typeof logMsg != "undefined") { %>
+    console.log("<%= logMsg %>");
+  <% } %>
+</script>
+
 <%- include('partials/footer') -%>
 

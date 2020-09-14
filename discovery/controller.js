@@ -62,7 +62,7 @@ exports.renderRootCollection = function(req, res) {
 
 	Service.getTopLevelCollections(page, function(error, response) {
 		if(error) {
-			console.log(error);
+			data["logMsg"] = error;
 			data.error = "Error: could not retrieve collections.";
 			res.render('collections', data);
 		}
@@ -73,7 +73,7 @@ exports.renderRootCollection = function(req, res) {
 
 			Service.getFacets(null, function(error, facets) {
 				if(error) {
-					console.log(error);
+					data["logMsg"] = error;
 				}
 				else {
 					var facetList = Facets.getFacetList(facets, []);
@@ -146,7 +146,8 @@ var renderCollection = function(req, res) {
 		Service.getObjectsInCollection(pid, page, reqFacets, sortBy, pageSize, daterange, function(error, response) {
 			if(error) {
 				console.log(error);
-				data.error = "Could not open collection: " + error;
+				data.error = "Could not open collection";
+				data["logMsg"] = error;
 				data.current_collection_title = "Error";
 				return res.render('collection', data);
 			}
@@ -224,7 +225,6 @@ exports.renderObjectView = function(req, res) {
 		summary: null,
 		metadata: {},
 		error: null,
-		devError: null,
 		citations: null,
 		downloads: null,
 		transcript: null,
@@ -235,7 +235,7 @@ exports.renderObjectView = function(req, res) {
 	Service.fetchObjectByPid(config.elasticsearchPublicIndex, pid, function(error, response) {
 		if(error) {
 			data.error = config.viewerErrorMessage;
-			data.devError = error;
+			data["logMsg"] = error;
 			console.error(error);
 			res.status(500);
 			res.render('error', data);
@@ -243,7 +243,7 @@ exports.renderObjectView = function(req, res) {
 		else if(response == null) {
 			let msg = "Object not found";
 			data.error = msg;
-			data.devError = msg + pid;
+			data["logMsg"] = msg + pid;
 			console.log(msg + pid);
 			res.status(404);
 			res.render('page-not-found', data);
@@ -269,7 +269,7 @@ exports.renderObjectView = function(req, res) {
 
 				if(data.viewer.length <= 0) {
 					data.error = config.viewerErrorMessage;
-					data.devError = "Object viewer error";
+					data["logMsg"] = "Object viewer error, can not retrieve viewer content";
 					res.render('error', data);
 				}
 				else {

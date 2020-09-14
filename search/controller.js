@@ -96,7 +96,6 @@ exports.search = function(req, res) {
 	let maxPages = config.maxElasticSearchResultCount / pageSize;
 	if(page > maxPages) {
 		let msg = "Search results are limited to " + config.maxElasticSearchResultCount + ". Please select a page from 1 to " + maxPages;
-		console.log(msg);
 		data.error = msg;
 		return res.render('results', data);
 	}
@@ -106,7 +105,8 @@ exports.search = function(req, res) {
 	Service.searchIndex(queryData, facets, collection, page, pageSize, daterange, sortBy, advancedSearch, function(error, response) {
 		if(error) {
 			console.error(error);
-			data.error = error;
+			data.error = "Error: There was a problem performing your search";
+			data["logMsg"] = error;
 			return res.render('results', data);
 		}
 		else {
