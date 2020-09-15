@@ -72,6 +72,12 @@ exports.create = function(items, page, maxItems, totalItems, path) {
 	if(pagination.buttons.next > 0) {
 		pagination.path['next'] = path + prefix + "page=" + parseInt(pagination.buttons.next);
 	}
+	if(pagination.buttons.first > 0) {
+		pagination.path["first"] = path + prefix + "page=1";
+	}
+	if(pagination.buttons.last > 0) {
+		pagination.path["last"] = path + prefix + "page=" + parseInt(pagination.pageCount);
+	}
 	pagination.path['current'] = path + prefix;
 
 	// Get the max number of page links to show
@@ -84,33 +90,33 @@ exports.create = function(items, page, maxItems, totalItems, path) {
 		if(page <= (pagination.maxPageLinks / 2)) {
 
 			// First page is always 1 here
-			pagination['firstPage'] = 1;
+			pagination['firstPageLink'] = 1;
 
 			// Get the last page value.  If pages present are less than max links per page value, the last page is the max value.
 			if(pagination.pageCount <= pagination.maxPageLinks) {
-				pagination['lastPage'] = pagination.pageCount;
+				pagination['lastPageLink'] = pagination.pageCount;
 			}
 			else {
-				pagination['lastPage'] = pagination.maxPageLinks;
+				pagination['lastPageLink'] = pagination.maxPageLinks;
 			}
 		}
 
 		// Pages present exceed the range of max links.  Show the current page at the center of the page list for ease of forward/backward navigation
 		else {
-			pagination['firstPage'] = parseInt(page) - (pagination.maxPageLinks / 2);
-			pagination['lastPage'] = parseInt(page) + (pagination.maxPageLinks / 2);
+			pagination['firstPageLink'] = parseInt(page) - (pagination.maxPageLinks / 2);
+			pagination['lastPageLink'] = parseInt(page) + (pagination.maxPageLinks / 2);
 
 			// Make sure the page list does not exceed the page count
-			if(pagination.lastPage > pagination.pageCount) {
-				pagination.lastPage = pagination.pageCount;
+			if(pagination.lastPageLink > pagination.pageCount) {
+				pagination.lastPageLink = pagination.pageCount;
 			}
 		}
 	}
 
 	// If no search results, do not show any page links
 	else {
-		pagination['firstPage'] = 0;
-		pagination['lastPage'] = 0;
+		pagination['firstPageLink'] = 0;
+		pagination['lastPageLink'] = 0;
 	}
 
 	return pagination;
@@ -159,9 +165,12 @@ exports.paginateResults = function(results, page) {
 var getButtons = function(page, maxItems, totalItems) {
 	var buttons = {
 		prev: 0,
-		next: 0
+		next: 0,
+		first: 0,
+		last: 0
 	}
-		
+	buttons.first = 1;
+
 	if(typeof page == "string") {
 		page = parseInt(page);
 	}
@@ -169,6 +178,7 @@ var getButtons = function(page, maxItems, totalItems) {
 	// Show a next button if curent page * items per page still leaves room for more results
 	if(page * maxItems <= totalItems) {
 		buttons.next = page+1;
+		buttons.last = 1;
 	}
 	// Show a previous button if this is not the first page
 	if(page > 1) {

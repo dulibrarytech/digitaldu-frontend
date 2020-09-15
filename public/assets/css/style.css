@@ -626,7 +626,7 @@ div.paginator {
 }
 
 div.paginator a {
-  text-decoration: none;
+  text-decoration: underline;
   color: inherit;
   line-height: 30px;
 }
@@ -657,7 +657,7 @@ div#home-collections form#goto-page-form {
 }
 
 form#goto-page-form {
-  margin: 15px 0 0 30px;
+  margin: 15px 0 0 15px;
 }
 
 input#set-page-number {
