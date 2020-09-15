@@ -169,7 +169,6 @@ var getButtons = function(page, maxItems, totalItems) {
 		first: 0,
 		last: 0
 	}
-	buttons.first = 1;
 
 	if(typeof page == "string") {
 		page = parseInt(page);
@@ -183,6 +182,7 @@ var getButtons = function(page, maxItems, totalItems) {
 	// Show a previous button if this is not the first page
 	if(page > 1) {
 		buttons.prev = page-1;
+		buttons.first = 1;
 	}
 
 	return buttons;
