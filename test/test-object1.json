@@ -1,0 +1,131 @@
+{
+    "pid": "7479257d-3c34-4e87-8358-05460a828ca1",
+    "is_member_of_collection": "61ed6a68-618b-48eb-b9bd-3e7484e0590a",
+    "handle": "http://hdl.handle.net/10176/7479257d-3c34-4e87-8358-05460a828ca1",
+    "thumbnail": "2c58/eff8/dc59/41c5/acbd/e696/7542/a8fc/1e1fce45-dd23-48bd-a8cf-5654a83d989b_U116.01.0001.01683_transfer-7479257d-3c34-4e87-8358-05460a828ca1/thumbnails/b8029159-0113-42a5-b995-7084e66ebd18.jpg",
+    "object": "2c58/eff8/dc59/41c5/acbd/e696/7542/a8fc/1e1fce45-dd23-48bd-a8cf-5654a83d989b_U116.01.0001.01683_transfer-7479257d-3c34-4e87-8358-05460a828ca1/objects/b8029159-0113-42a5-b995-7084e66ebd18-U116.01.0001.01683.jp2",
+    "mime_type": "image/tiff",
+    "uri": "/repositories/2/archival_objects/83349",
+    "object_type": "object",
+    "is_published": "1",
+    "is_compound": 0,
+    "title": "Founders Bell, 2008 November 19",
+    "creator": "Armstrong, Wayne, 1961-",
+    "f_subjects": [
+        "Universities and colleges",
+        "Colorado",
+        "Denver (Colo.)",
+        "Publicity photographs",
+        "University of Denver"
+    ],
+    "abstract": "The Founders Bell, situated in front of the alumni center at the time this photo was taken. The inscription on the bell reads, ''Rio Grand, John Evans, Chairman of the Board.'' The inscription on the plaque reads: ''Dedicated with pride to the University of Denver by Leo K. Goto, BSBA '67, MBA '74.''.",
+    "type": "still image",
+    "display_record": {
+        "title": "Founders Bell, 2008 November 19",
+        "uri": "/repositories/2/archival_objects/83349",
+        "identifiers": [
+            {
+                "type": "local",
+                "identifier": "U116.01.0001.01683"
+            }
+        ],
+        "resource_type": "still image",
+        "dates": [
+            {
+                "encoding": "w3cdtf",
+                "label": "creation",
+                "type": "single",
+                "expression": "2008 November 19",
+                "begin": "2008-11-19"
+            }
+        ],
+        "extents": [
+            "1 items (whole)"
+        ],
+        "subjects": [
+            {
+                "authority": "lcsh",
+                "title": "Universities and colleges",
+                "terms": [
+                    {
+                        "type": "topical",
+                        "term": "Universities and colleges"
+                    }
+                ],
+                "authority_id": "http://id.loc.gov/authorities/subjects/sh85141086"
+            },
+            {
+                "authority": "lcnaf",
+                "title": "Colorado",
+                "terms": [
+                    {
+                        "type": "geographic",
+                        "term": "Colorado"
+                    }
+                ],
+                "authority_id": "http://id.loc.gov/authorities/names/n80125532"
+            },
+            {
+                "authority": "lcnaf",
+                "title": "Denver (Colo.)",
+                "terms": [
+                    {
+                        "type": "geographic",
+                        "term": "Denver (Colo.)"
+                    }
+                ],
+                "authority_id": "http://id.loc.gov/authorities/names/n79055157"
+            },
+            {
+                "authority": "tgm",
+                "title": "Publicity photographs",
+                "terms": [
+                    {
+                        "type": "genre_form",
+                        "term": "Publicity photographs"
+                    }
+                ],
+                "authority_id": "http://id.loc.gov/vocabulary/graphicMaterials/tgm008390"
+            },
+            {
+                "authority": "naf",
+                "title": "University of Denver",
+                "authority_id": "http://id.loc.gov/authorities/names/n80050497"
+            }
+        ],
+        "notes": [
+            {
+                "type": "odd",
+                "content": "born digital Title from creator's filename."
+            },
+            {
+                "type": "abstract",
+                "content": "The Founders Bell, situated in front of the alumni center at the time this photo was taken. The inscription on the bell reads, ''Rio Grand, John Evans, Chairman of the Board.'' The inscription on the plaque reads: ''Dedicated with pride to the University of Denver by Leo K. Goto, BSBA '67, MBA '74.''."
+            },
+            {
+                "type": "phystech",
+                "content": "image/tiff     color"
+            },
+            {
+                "type": "userestrict",
+                "content": "Copyright University of Denver"
+            }
+        ],
+        "names": [
+            {
+                "title": "Armstrong, Wayne, 1961-",
+                "source": "local",
+                "role": "creator"
+            }
+        ],
+        "parts": [
+            {
+                "order": "1",
+                "title": "U116.01.0001.01683.tif",
+                "type": "image/tiff",
+                "caption": null
+            }
+        ],
+        "is_compound": false
+    }
+}
