@@ -175,7 +175,7 @@ var getButtons = function(page, maxItems, totalItems) {
 	}
 
 	// Show a next button if curent page * items per page still leaves room for more results
-	if(page * maxItems <= totalItems) {
+	if(page * maxItems < totalItems) {
 		buttons.next = page+1;
 		buttons.last = 1;
 	}
