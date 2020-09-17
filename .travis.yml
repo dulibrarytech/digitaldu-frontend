@@ -1,47 +1,41 @@
 language: node_js
 node_js:
-  - 10.16.3
+- 10.16.3
 env:
   global:
-  # removing these breaks the build sometimes, don't know what some do, don't touch
   - CXX=g++-4.8
   - CHROME_BIN=/usr/bin/google-chrome
   - DISPLAY=:99.0
 services:
-  - elasticsearch
+- elasticsearch
 addons:
   chrome: stable
 before_install:
-  # unencrypt .env file and move to root project folder
-  - cd test
-  - openssl aes-256-cbc -K $encrypted_3c84dcdc6bbe_key -iv $encrypted_3c84dcdc6bbe_iv
-    -in .env.enc -out .env -d
-  - cd ..
-  - mv test/.env .
-  # move cache of thumbnails into root of project
-  - mv test/cache .
+- openssl aes-256-cbc -K $encrypted_3c84dcdc6bbe_key -iv $encrypted_3c84dcdc6bbe_iv
+  -in .env.enc -out .env -d
+- cd test
+- cd ..
+- mv test/.env .
+- mv test/cache .
 install:
-  - npm install
-  - sudo apt update
-  - sudo apt install openjdk-8-jdk
+- npm install
+- sudo apt update
+- sudo apt install openjdk-8-jdk
 before_script:
-  # add objects to the elasticsearch database, and start it
-  - sudo service elasticsearch start
-  - sleep 10
-  - curl -XPUT http://localhost:9200/repo_public -d @test/index_schema.json
-  - curl -XPOST http://localhost:9200/repo_public/data/61ed6a68-618b-48eb-b9bd-3e7484e0590a
-    -d @test/test-collection.json
-  - curl -XPOST http://localhost:9200/repo_public/data/7479257d-3c34-4e87-8358-05460a828ca1
-    -d @test/test-object1.json
-  - curl -XPOST http://localhost:9200/repo_public/data/81c733ec-b597-48d1-9488-90f2a67627ed
-    -d @test/test-object2.json
-  - curl -XPOST http://localhost:9200/repo_public/data/d3dcaa18-d441-4396-9f0a-887e1277b279
-    -d @test/test-object3.json
-  # check elasticsearch startup
-  - curl -v http://localhost:9200/
-  - curl -v http://localhost:9200/repo_public
+- sudo service elasticsearch start
+- sleep 10
+- curl -XPUT http://localhost:9200/repo_public -d @test/index_schema.json
+- curl -XPOST http://localhost:9200/repo_public/data/61ed6a68-618b-48eb-b9bd-3e7484e0590a
+  -d @test/test-collection.json
+- curl -XPOST http://localhost:9200/repo_public/data/7479257d-3c34-4e87-8358-05460a828ca1
+  -d @test/test-object1.json
+- curl -XPOST http://localhost:9200/repo_public/data/81c733ec-b597-48d1-9488-90f2a67627ed
+  -d @test/test-object2.json
+- curl -XPOST http://localhost:9200/repo_public/data/d3dcaa18-d441-4396-9f0a-887e1277b279
+  -d @test/test-object3.json
+- curl -v http://localhost:9200/
+- curl -v http://localhost:9200/repo_public
 script:
-  # start app and tests
-  - node discovery.js &
-  - sleep 10
-  - npm test
+- node discovery.js &
+- sleep 10
+- npm test
