@@ -124,7 +124,6 @@ exports.search = function(req, res) {
 			// Create paginator data object, add it to the view data
 			let path = config.rootUrl + req.url.substring(req.url.indexOf('search')-1);
 			data.pagination = Paginator.create(data.results, data.page, pageSize, response.count, path);
-
 			if(facets) {
 				facets = Facets.getSearchFacetObject(facets);
 			}

@@ -76,7 +76,7 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
       }
     }
 
-    // Get the thumbnail configuration settings for this object
+    // Get the thumbnail configuration settings
     var settings = config.thumbnails[object.object_type] || null;
     if(!object.mime_type && object.object_type != "collection") {settings = null}
     if(settings) {
@@ -85,7 +85,8 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
       }
 
       if(settings.cache == false || Cache.exists('thumbnail', objectID) == false) {
-        // Stream the uri from the repository or external source
+
+        // Get the stream from the repository
         if(settings.source == "repository") {
           Repository.streamData(object, "tn", function(error, stream) {
             if(error) {
@@ -108,24 +109,26 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
             }
           });
         }
+
+        // Get the stream from an external source
         else {
-            let uri = settings.uri || null;
-            switch(settings.streamOption || "") {
-              case "iiif":
-                uri = IIIF.getThumbnailUri(objectID, apiKey);
-                break;
-              case "kaltura":
-                uri = Kaltura.getThumbnailUrl(object);
-                break;
-              case "external":
-                break;
-              case "index":
-                uri = getIndexTnUri(object.thumbnail || uri);
-                break;
-              default:
-                callback("Error retrieving datastream for " + objectID + ", object type " + object.object_type + "is invalid", null);
-                break;
-            }
+          let uri = settings.uri || null;
+          switch(settings.streamOption || "") {
+            case "iiif":
+              uri = IIIF.getThumbnailUri(objectID, apiKey);
+              break;
+            case "kaltura":
+              uri = Kaltura.getThumbnailUrl(object);
+              break;
+            case "external":
+              break;
+            case "index":
+              uri = getIndexTnUri(object.thumbnail || uri);
+              break;
+            default:
+              callback("Error retrieving datastream for " + objectID + ", object type " + object.object_type + "is invalid", null);
+              break;
+          }
 
           streamRemoteData(uri, function(error, status, stream) {
             if(error) {
@@ -162,7 +165,7 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
         Cache.getFileStream('thumbnail', objectID, null, function(error, stream) {
           if(error) {callback(error, null)}
           else {callback(null, stream)}
-        })
+        });
       }
     }
     else {

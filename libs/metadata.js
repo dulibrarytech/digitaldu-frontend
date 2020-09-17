@@ -152,47 +152,65 @@ exports.createMetadataDisplayObject = function(result, collections=[]) {
 	}
 
 	// Add the fields and values to the display, apply config options and formatting to the field values
-	let pathArray;
+	// "path" can be an array with multiple path mappings to various data in the index. If it is an array, loop all tha paths, retrieving data from each location in the index. 
+	let pathArray, fields = [], values = [];
 	for(var key in metadataDisplay) {
-		let values = [];
-		pathArray = metadataDisplay[key].path.split(".") || [];
-		extractValues(pathArray, displayRecord, metadataDisplay[key].matchField || null, metadataDisplay[key].matchValue || null, metadataDisplay[key].condition || "true", values);
-		if(values.length > 0) {
-			// Remove html elements 
-			if(config.removemetadataDisplayHtml) {
-				Helper.stripHtmlTags(values);
-			}
+		values = [];
+		fields = [];
 
-			// Truncate the text, add hidden section containing the full text, and a link to show the hidden section
-			if(metadataDisplay[key].truncateText) {
-				let cullLength = parseInt(metadataDisplay[key].truncateText), 
-					content = "", hiddenText, length;
+		// Only one field is specified in the configuration for this display item
+		if(typeof metadataDisplay[key].field.length == "undefined") {
+			fields.push(metadataDisplay[key].field)
+		}
+		// Multiple fields are present
+		else {
+			fields = metadataDisplay[key].field;
+		}
 
-				// Concat the array elements into one string
-				for(var index in values) {
-					content += (values[index] + "<br><br>");
+		// Retrieve data from each field in the index document, add it to the display
+		for(var field of fields) {
+			pathArray = field.path.split(".") || [];
+			extractValues(pathArray, displayRecord, field.matchField || null, field.matchValue || null, field.condition || "true", values);
+			if(values.length > 0) {
+				// Remove html elements 
+				if(config.removemetadataDisplayHtml) {
+					Helper.stripHtmlTags(values);
 				}
 
-				// Truncate the string if its length exceeds the threshold by a small amount
-				length = content.length;
-				if(length > (metadataDisplay[key].truncateText + 20)) {
-					hiddenText = '<a aria-label="show all text" class="metadata-in-text-link" style="margin-left: 10px" onclick="javascript:this.nextSibling.style.display = \'inline\'; this.style.display = \'none\'">Show all text</a><span style="display: none">' + content.substring(cullLength, length) + '</span>';
-					content = content.substring(0, cullLength) + hiddenText;
-				}
-				values = content;
-			}
+				// Truncate the text, add hidden section containing the full text, and a link to show the hidden section
+				if(field.truncateText) {
+					let cullLength = parseInt(field.truncateText), 
+						content = "", hiddenText, length;
 
-			// Convert values to links, per configuration
-			if(metadataDisplay[key].link) {
-				for(var index in values) {
-					// Facet search option
-					if(metadataDisplay[key].link.facetSearch) {
-						let facet = metadataDisplay[key].link.facetSearch;
-						values[index] = '<a href="' + config.rootUrl + '/search?q=&f[' + facet + '][]=' + values[index] + '">' + values[index] + '</a>';
+					// Concat the values into one string
+					for(var index in values) {
+						content += (values[index] + "<br><br>");
 					}
+
+					// Truncate the string if its length exceeds the threshold by a small amount
+					length = content.length;
+					if(length > (field.truncateText + 20)) {
+						hiddenText = '<a aria-label="show all text" class="metadata-in-text-link" style="margin-left: 10px" onclick="javascript:this.nextSibling.style.display = \'inline\'; this.style.display = \'none\'">Show all text</a><span style="display: none">' + content.substring(cullLength, length) + '</span>';
+						content = content.substring(0, cullLength) + hiddenText;
+					}
+					values = content;
 				}
 			}
+		}
 
+		// Convert values to links, per configuration
+		if(metadataDisplay[key].link) {
+			for(var index in values) {
+				// Facet search option
+				if(metadataDisplay[key].link.facetSearch) {
+					let facet = metadataDisplay[key].link.facetSearch;
+					values[index] = '<a href="' + config.rootUrl + '/search?q=&f[' + facet + '][]=' + values[index] + '">' + values[index] + '</a>';
+				}
+			}
+		}
+
+		// Add the values to the display
+		if(values.length > 0) {
 			displayObj[key] = values;
 		}
 	}

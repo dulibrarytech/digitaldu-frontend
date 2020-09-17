@@ -80,62 +80,127 @@ module.exports = {
     metadataDisplay: {
         "default": {
             "Title": {
-                "path": "title"
+                "field": {
+                    "path": "title"
+                }
             },
             "Creator": {
-                "path": "names.title"
+                "field": {
+                    "path": "names.title"
+                }
             },
             "Creation Date": {
-                "path": "dates.expression",
-                "matchField": "label",
-                "matchValue": "creation"
+                "field": {
+                    "path": "dates.expression",
+                    "matchField": "label",
+                    "matchValue": "creation"
+                }
             },
             "Digitization Date": {
-                "path": "dates.expression",
-                "matchField": "label",
-                "matchValue": "digitization"
+                "field": {
+                    "path": "dates.expression",
+                    "matchField": "label",
+                    "matchValue": "digitization"
+                }
             },
             "Language": {
-                "path": "t_language.text"
+                "field": {
+                    "path": "t_language.text"
+                }
             },
             "Abstract": {
-                "path": "notes.content",
-                "matchField": "type",
-                "matchValue": "abstract"
+                "field": {
+                    "path": "notes.content",
+                    "matchField": "type",
+                    "matchValue": "abstract"
+                }
             },
-            "Subjects": {
-                "path": "subjects.title",
+            "Topics": {
+                "field": [
+                    {
+                        "path": "subjects.terms.term",
+                        "matchField": "type",
+                        "matchValue": "topical"
+                    },
+                    {
+                        "path": "subjects.terms.term",
+                        "matchField": "type",
+                        "matchValue": "geographic"
+                    },
+                    {
+                        "path": "subjects.terms.term",
+                        "matchField": "type",
+                        "matchValue": "genre_form"
+                    },
+                    {
+                        "path": "subjects.terms.term",
+                        "matchField": "type",
+                        "matchValue": "occupation"
+                    },
+                    {
+                        "path": "subjects.terms.term",
+                        "matchField": "type",
+                        "matchValue": "function"
+                    },
+                    {
+                        "path": "subjects.terms.term",
+                        "matchField": "type",
+                        "matchValue": "uniform_title"
+                    },
+                    {
+                        "path": "subjects.terms.term",
+                        "matchField": "type",
+                        "matchValue": "temporal"
+                    },
+                    {
+                        "path": "subjects.terms.term",
+                        "matchField": "type",
+                        "matchValue": "style_period"
+                    }
+                ],
                 "link": {
                     "facetSearch": "Subject"
                 }
             },
-            "Topics": {
-                "path": "subjects.terms.term",
-                "matchField": "type",
-                "matchValue": "topical"
+            "Places": {
+                "field": {
+                    "path": "subjects.terms.term",
+                    "matchField": "type",
+                    "matchValue": "geographic"
+                }
             },
-            "Geographic": {
-                "path": "subjects.terms.term",
-                "matchField": "type",
-                "matchValue": "geographic"
+            "Genre/Form": {
+                "field": {
+                    "path": "subjects.terms.term",
+                    "matchField": "type",
+                    "matchValue": "genre_form"
+                }
             },
             "Extents": {
-                "path": "extents"
+                "field": {
+                    "path": "extents"
+                }
             },
             "Resource URI": {
-                "path": "uri"
+                "field": {
+                    "path": "uri"
+                }
             },
             "Call Number": {
-                "path": "identifiers.identifier",
-                "matchField": "type",
-                "matchValue": "local"
+                "field": {
+                    "path": "identifiers.identifier",
+                    "matchField": "type",
+                    "matchValue": "local"
+                }
             },
             "Notes": {
-                "path": "notes.content",
-                "matchField": "type",
-                "matchValue": "abstract",
-                "condition": "false",
-                "truncateText": "200"
+                "field": {
+                    "path": "notes.content",
+                    "matchField": "type",
+                    "matchValue": "abstract",
+                    "condition": "false",
+                    "truncateText": "200"
+                }
             }
         },
 
