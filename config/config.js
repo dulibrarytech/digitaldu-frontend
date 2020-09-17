@@ -201,8 +201,8 @@ module.exports = {
         "pdf": "foaf:Document"
     },
 
-    IIIFThumbnailWidth: "200",
-    IIIFThumbnailHeight: "",
+    IIIFThumbnailWidth: 200,
+    IIIFThumbnailHeight: null,
 
 
     /*
@@ -251,7 +251,7 @@ module.exports = {
     thumbnailDefaultImagePath: "files/default/thumbnail/",
     thumbnailFileExtension: "jpg",
     defaultThumbnailImage: "tn-placeholder.jpg",
-    thumbnailImageCacheEnabled: true,
+    thumbnailImageCacheEnabled: false,
     thumbnailImageCacheLocation: "cache/thumbnail",
     objectDerivativeCacheEnabled: false,
     objectDerivativeCacheLocation: "/var/cache/digcoll",
@@ -294,31 +294,31 @@ module.exports = {
                     "streamOption": "iiif",
                     "uri": "", 
                     "source": "repository",
-                    "cache": true
+                    "cache": false
                 },
                 "audio": {
                     "streamOption": "kaltura",
                     "uri": "", 
                     "source": "remote",
-                    "cache": true
+                    "cache": false
                 },
                 "video": {
                     "streamOption": "kaltura",
                     "uri": "", 
                     "source": "remote",
-                    "cache": true
+                    "cache": false
                 },
                 "pdf": {
                     "streamOption": "iiif",
                     "uri": "", 
                     "source": "remote",
-                    "cache": true
+                    "cache": false
                 },
                 "compound": {
                     "streamOption": "index",
                     "uri": "",
                     "source": "repository",
-                    "cache": true
+                    "cache": false
                 }
             }
         }
