@@ -29,7 +29,9 @@ const 	config = require('../config/' + process.env.CONFIGURATION_FILE),
 
 exports.getThumbnailUri = function(objectID, apikey) {
 	apikey = apikey ? (config.IIIFAPiKeyPrefix + apikey) : "";
-	return config.IIIFServerUrl + "/iiif/2/" + objectID + apikey + "/full/" + config.IIIFThumbnailWidth + "," + config.IIIFThumbnailHeight + "/0/default.jpg";
+	let width = config.IIIFThumbnailWidth || "";
+	let height = config.IIIFThumbnailHeight || "";
+	return config.IIIFServerUrl + "/iiif/2/" + objectID + apikey + "/full/" + width + "," + height + "/0/default.jpg";
 }
 
 /**
@@ -43,7 +45,7 @@ exports.getManifest = function(container, objects, apikey, callback) {
 		mediaSequences = [];
 
 	// Define the manifest
-	manifest["@context"] = container.protocol + "://iiif.io/api/presentation/2/context.json";
+	manifest["@context"] = "http://iiif.io/api/presentation/2/context.json";
 	manifest["@id"] = config.IIIFUrl + "/" + container.resourceID + "/manifest";
 	manifest["@type"] = "sc:Manifest";
 	manifest["label"] = container.title;
@@ -107,34 +109,54 @@ exports.getManifest = function(container, objects, apikey, callback) {
 		}
 	}
 
-	// Get the image data for the item from the iiif server, if any images are present in this manifest.
-	getImageData(images, [], apikey, function(error, data) {
-		if(error) {
-			callback(error, manifest);
+	if(config.IIIFUseGenericImageData) {
+		// Assign generic image data, bypass IIIF server info.json request
+		for(let canvas of canvases) {
+			if(canvas.images && typeof canvas.images[0].resource.service != "undefined" && canvas.images[0].resource.service.profile != "undefined") {
+				apikey = apikey ? (config.IIIFAPiKeyPrefix + apikey) : "";
+				canvas.images[0].resource.service["@context"] = "http://iiif.io/api/image/2/context.json";
+				canvas.images[0].resource.service.profile = "http://iiif.io/api/image/2/level1.json";
+			}
 		}
-		else {
-			if(images.length > 0) {
-				let imageData;
-				for(let canvas of canvases) {
-					if(canvas.images && typeof canvas.images[0].resource.service != "undefined" && canvas.images[0].resource.service.profile != "undefined") {
-						imageData = data.shift();
-						canvas.height = imageData.height;
-						canvas.width = imageData.width;
-						canvas.images[0].resource.height = imageData.height;
-						canvas.images[0].resource.width = imageData.width;
-						canvas.images[0].resource.service["@context"] = imageData["@context"];
-						canvas.images[0].resource.service.profile = imageData.profile;
+		manifest.sequences[0].canvases = canvases;
+		if(elements.length > 0) {
+			mediaSequences[0].elements = elements;
+			manifest["mediaSequences"] = mediaSequences;
+		}
+		callback(null, manifest);
+	}
+
+	else {
+		// Get the image data for the item from the iiif server, if any images are present in this manifest.
+		getImageData(images, [], apikey, function(error, data) {
+			if(error) {
+				callback(error, manifest);
+			}
+			else {
+				if(images.length > 0) {
+					let imageData;
+					for(let canvas of canvases) {
+						if(canvas.images && typeof canvas.images[0].resource.service != "undefined" && canvas.images[0].resource.service.profile != "undefined") {
+							imageData = data.shift();
+							canvas.height = imageData.height;
+							canvas.width = imageData.width;
+							canvas.images[0].resource["height"] = imageData.height;
+							canvas.images[0].resource["width"] = imageData.width;
+							canvas.images[0].resource.service["@context"] = imageData["@context"];
+							canvas.images[0].resource.service.profile = imageData.profile;
+							canvas.images[0].resource.service.profile = "http://iiif.io/api/image/2/level1.json";
+						}
 					}
 				}
+				manifest.sequences[0].canvases = canvases;
+				if(elements.length > 0) {
+					mediaSequences[0].elements = elements;
+					manifest["mediaSequences"] = mediaSequences;
+				}
+				callback(null, manifest);
 			}
-			manifest.sequences[0].canvases = canvases;
-			if(elements.length > 0) {
-				mediaSequences[0].elements = elements;
-				manifest["mediaSequences"] = mediaSequences;
-			}
-			callback(null, manifest);
-		}
-	});
+		});
+	}
 }
 
 var getImageData = function(objects, data=[], apikey, callback) {
@@ -157,7 +179,8 @@ var getImageData = function(objects, data=[], apikey, callback) {
 				getImageData(objects, data, apikey, callback);
 			}
 			else {
-				data.push(JSON.parse(body));
+				let object = JSON.parse(body);
+				data.push(object);
 				getImageData(objects, data, apikey, callback);
 			}
 		});
@@ -236,7 +259,7 @@ var getPDFCanvas = function(container, object, apikey) {
 
 	items["@id"] = config.IIIFUrl + "/" + container.resourceID + "/annotation/a" + object.sequence;
 	items["@type"] = "Annotation";
-	items["motivation"] = "painting";
+	items["motivation"] = "sc:painting";
 	items["body"] = {
 		id: object.resourceUrl,
 		type: "PDF",
@@ -260,8 +283,10 @@ var getThumbnailCanvas = function(container, object) {
 
 	resource["@id"] = object.thumbnailUrl;
 	resource["@type"] = config.IIIFObjectTypes["still image"];
-	resource["height"] = config.IIIFThumbnailHeight;
-	resource["width"] = config.IIIFThumbnailWidth;
+	// resource["height"] = config.IIIFThumbnailHeight;
+	// resource["width"] = config.IIIFThumbnailWidth;
+	if(config.IIIFThumbnailHeight) {resource["height"] = config.IIIFThumbnailHeight}
+	if(config.IIIFThumbnailWidth) {resource["width"] = config.IIIFThumbnailWidth}
 
 	image["@id"] = object.thumbnailUrl;
 	image["@type"] = "oa:Annotation";
@@ -272,8 +297,10 @@ var getThumbnailCanvas = function(container, object) {
 	canvas["@type"] = "sc:Canvas";
 	canvas["label"] = "Placeholder Image";
 	canvas["thumbnail"] = object.thumbnailUrl;
-	canvas["height"] = config.IIIFThumbnailHeight;
-	canvas["width"] = config.IIIFThumbnailWidth;
+	// canvas["height"] = config.IIIFThumbnailHeight;
+	// canvas["width"] = config.IIIFThumbnailWidth;
+	if(config.IIIFThumbnailHeight) {canvas["height"] = config.IIIFThumbnailHeight}
+	if(config.IIIFThumbnailWidth) {canvas["width"] = config.IIIFThumbnailWidth}
 	image["on"] = canvas["@id"];
 	canvas.images.push(image);
 
@@ -288,15 +315,19 @@ var getThumbnailObject = function(container, object, apikey) {
 
 	thumbnail["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + "/full/" + config.IIIFThumbnailWidth + ",/0/default.jpg" + apikey;
 	thumbnail["@type"] = config.IIIFObjectTypes["still image"];
-	thumbnail["height"] = config.IIIFThumbnailHeight;
-	thumbnail["width"] = config.IIIFThumbnailWidth;
+	// thumbnail["height"] = config.IIIFThumbnailHeight;
+	// thumbnail["width"] = config.IIIFThumbnailWidth;
+	if(config.IIIFThumbnailHeight) {thumbnail["height"] = config.IIIFThumbnailHeight}
+	if(config.IIIFThumbnailWidth) {thumbnail["width"] = config.IIIFThumbnailWidth}
 
-	service["@context"] = container.protocol + "://iiif.io/api/image/2/context.json";
+	service["@context"] = "http://iiif.io/api/image/2/context.json";
 	service["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + apikey;
-	service["protocol"] = container.protocol + "://iiif.io/api/image";
-	service["height"] = config.IIIFThumbnailHeight;
-	service["width"] = config.IIIFThumbnailWidth;
-	service["profile"] = container.protocol + "://iiif.io/api/image/2/level0.json";
+	service["protocol"] = "http://iiif.io/api/image";
+	// service["height"] = config.IIIFThumbnailHeight;
+	// service["width"] = config.IIIFThumbnailWidth;
+	if(config.IIIFThumbnailHeight) {service["height"] = config.IIIFThumbnailHeight}
+	if(config.IIIFThumbnailWidth) {service["width"] = config.IIIFThumbnailWidth}
+	service["profile"] = "http://iiif.io/api/image/2/level0.json";
 	thumbnail["service"] = service;
 
 	return thumbnail;
@@ -324,14 +355,15 @@ var getImageCanvas = function(container, object, apikey) {
 	// }
 	canvas["thumbnail"] = getThumbnailObject(container, object, apikey);
 
-	canvas["height"] = "";
-	canvas["width"] = "";
+	// canvas["height"] = "";
+	// canvas["width"] = "";
 	canvas['images'] = [];
 
-	image["@context"] = container.protocol + "://iiif.io/api/presentation/2/context.json";
-	image["@id"] = config.IIIFUrl + "/" + container.resourceID + "/image/i" + object.sequence;
+	// image["@context"] = "http://iiif.io/api/presentation/2/context.json";
+	//image["@id"] = config.IIIFUrl + "/" + container.resourceID + "/image/i" + object.sequence;
+	image["@id"] = config.rootUrl + "/datastream/" + container.resourceID + "/object/" + container.resourceID + ".jp2" + apikey;
 	image["@type"] =  "oa:Annotation";
-	image["motivation"] = "";
+	image["motivation"] = "sc:painting";
 
 	resource["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + "/full/!1024,1024/0/default.jpg" + apikey;
 	//resource["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + apikey + "/full/full/0/default.jpg";
@@ -339,13 +371,14 @@ var getImageCanvas = function(container, object, apikey) {
 	resource["format"] = object.format; 
 
 	service["@context"] = "";
-	//service["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID;	
-	service["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + apikey;	
+	service["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + apikey;	// cantaloupe
+	//service['@id'] = config.rootUrl + "/datastream/" + container.resourceID + "/object/" + container.resourceID + ".jp2" + apikey;	// ddu
+	service["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + apikey
 	//service["profile"] = [];
 
 	resource["service"] = service;
-	resource["height"] = "";
-	resource["width"] = "";
+	// resource["height"] = "";
+	// resource["width"] = "";
 
 	image["resource"] = resource;
 	image["on"] = canvas["@id"];

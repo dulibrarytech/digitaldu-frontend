@@ -188,6 +188,7 @@ module.exports = {
     IIIFUrl: process.env.IIIF_DOMAIN + process.env.IIIF_PATH,
     IIIFAPiKeyPrefix: "__",
     IIIFManifestPageSize: null,
+    IIIFUseGenericImageData: true,
 
     /*
      * IIIF Object Types
