@@ -371,7 +371,7 @@ exports.getIIIFManifest = function(req, res) {
 			res.send(JSON.stringify(manifest));
 		}
 		else {
-			res.send("Item not found");
+			res.status(404).send("Item not found");
 		}
 	});
 }

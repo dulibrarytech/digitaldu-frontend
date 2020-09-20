@@ -49,13 +49,14 @@ exports.getCompoundObjectViewer = function(object, page, apikey=null) {
 	 			viewer += Viewer.getIIIFObjectViewer(object, page, embedKaltura, apikey);
 	 			break;
 	 		default:
-	 			console.log("Viewer error: No compound viewer found.  Please check configuration");
-	 			viewer += "No viewer is available for this object";
+	 			console.log("Viewer error: No compound viewer found.  Please check viewer configuration.");
+	 			viewer += "<h3>Sorry, this object can not be displayed. Please contact technical support</h3>";
 	 			break;
 	 	}
  	}
  	else {
- 		console.log("Viewer error: Invalid compound object parts. Pid: ", + object.pid);
+ 		console.log("Viewer error: Invalid compound object part(s). Pid: " + object.pid);
+ 		viewer += "<h3>Sorry, this object can not be displayed. Please contact technical support</h3>";
  	}
 
  	return viewer;
@@ -127,9 +128,15 @@ var validateCompoundObjectParts = function(parts, objectTypes) {
 	if(parts && parts.length > 0) {
 		isValid = true;
 		for(var part of parts) {
+			if(typeof part.object == 'undefined' || !part.object) {
+				isValid = false;
+				break;
+			}
+
 			mimeType = part.mime_type || part.type || "";
 			if(acceptedMimeTypes.includes(mimeType) == false) {
 				isValid = false;
+				break;
 			}
 		}
 	}
