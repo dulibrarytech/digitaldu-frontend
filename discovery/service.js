@@ -471,9 +471,8 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
       if(AppHelper.isParentObject(object)) {
         // Add the child objects of the main parent object
         let parts = AppHelper.getCompoundObjectPart(object, -1) || [];
-
         // Get the page of object parts
-        if(page && page > 0) {
+        if(config.IIIFManifestPageSize && page && page > 0) {
           let size = config.IIIFManifestPageSize || 10,
               offset = (page-1) * size;
           if(parts.length > offset+size) {
