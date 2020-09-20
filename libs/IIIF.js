@@ -114,6 +114,8 @@ exports.getManifest = function(container, objects, apikey, callback) {
 		for(let canvas of canvases) {
 			if(canvas.images && typeof canvas.images[0].resource.service != "undefined" && canvas.images[0].resource.service.profile != "undefined") {
 				apikey = apikey ? (config.IIIFAPiKeyPrefix + apikey) : "";
+				canvas["height"] = config.IIIFDefaultCanvasHeight || 1000;
+				canvas["width"] = config.IIIFDefaultCanvasWidth || 750;
 				canvas.images[0].resource.service["@context"] = "http://iiif.io/api/image/2/context.json";
 				canvas.images[0].resource.service.profile = "http://iiif.io/api/image/2/level1.json";
 			}

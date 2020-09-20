@@ -189,6 +189,8 @@ module.exports = {
     IIIFAPiKeyPrefix: "__",
     IIIFManifestPageSize: null,
     IIIFUseGenericImageData: true,
+    IIIFDefaultCanvasHeight: 1000,
+    IIIFDefaultCanvasWidth: 750,
 
     /*
      * IIIF Object Types
