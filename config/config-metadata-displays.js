@@ -125,16 +125,6 @@ module.exports = {
                     {
                         "path": "subjects.terms.term",
                         "matchField": "type",
-                        "matchValue": "geographic"
-                    },
-                    {
-                        "path": "subjects.terms.term",
-                        "matchField": "type",
-                        "matchValue": "genre_form"
-                    },
-                    {
-                        "path": "subjects.terms.term",
-                        "matchField": "type",
                         "matchValue": "occupation"
                     },
                     {

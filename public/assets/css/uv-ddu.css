@@ -186,6 +186,11 @@
   margin-left: 10px;
 }
 
+#uv .genericDialogue a {
+  color: blue;
+  text-decoration: underline;
+}
+
 @media screen and (max-width: 800px) {
   #sidebar-nav-buttons {
     display: none !important;
