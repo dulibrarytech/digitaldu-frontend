@@ -234,6 +234,7 @@ exports.renderObjectView = function(req, res) {
 	
 	Service.fetchObjectByPid(config.elasticsearchPublicIndex, pid, function(error, response) {
 		if(error) {
+				console.log("TEST here1")
 			data.error = config.viewerErrorMessage;
 			data["logMsg"] = error;
 			console.error(error);
@@ -268,6 +269,7 @@ exports.renderObjectView = function(req, res) {
 				}
 
 				if(data.viewer.length <= 0) {
+						console.log("TEST here2")
 					data.error = config.viewerErrorMessage;
 					data["logMsg"] = "Object viewer error, can not retrieve viewer content";
 					res.render('error', data);

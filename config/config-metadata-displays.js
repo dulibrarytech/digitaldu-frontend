@@ -146,6 +146,11 @@ module.exports = {
                         "path": "subjects.terms.term",
                         "matchField": "type",
                         "matchValue": "style_period"
+                    },
+                    {
+                        "path": "subjects.title",
+                        "matchField": "authority",
+                        "matchValue": "local"
                     }
                 ],
                 "link": {
