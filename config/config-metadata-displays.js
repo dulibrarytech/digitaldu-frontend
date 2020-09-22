@@ -151,6 +151,16 @@ module.exports = {
                         "path": "subjects.title",
                         "matchField": "authority",
                         "matchValue": "local"
+                    },
+                    {
+                        "path": "subjects.title",
+                        "matchField": "authority",
+                        "matchValue": "naf"
+                    },
+                    {
+                        "path": "subjects.title",
+                        "matchField": "authority",
+                        "matchValue": "viaf"
                     }
                 ],
                 "link": {
