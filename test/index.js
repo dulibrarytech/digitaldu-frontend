@@ -1007,7 +1007,7 @@ describe('Special Collections (Selenium) Tests', function() {
           return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[4]/div[2]/div[4]/div/div[1]/dl/a/dd/div/h3'))
           .getAttribute('innerHTML')
           .then(function(text) {
-            expect(text).to.include('Center High School Class of 1909, 1909');
+            expect(text).to.include('Central High School Class of 1909, 1909');
           });
         });
 
