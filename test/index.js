@@ -128,7 +128,7 @@ describe('Special Collections (Selenium) Tests', function() {
           });
         });
 
-        it('Search hockey', function() {
+        it('Search for object', function() {
           return browser.findElement(webdriver.By.name('q[]')).sendKeys('Founders Bell');
         });
 
