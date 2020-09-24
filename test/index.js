@@ -129,7 +129,9 @@ describe('Special Collections (Selenium) Tests', function() {
         });
 
         it('Search for object', function() {
-          return browser.findElement(webdriver.By.name('q[]')).sendKeys('Founders Bell');
+          browser.findElement(webdriver.By.name('q[]')).sendKeys('Founders Bell');
+          return browser.findElement(webdriver.by.xpath('/html/body/div/main/div/div[1]/div/div[2]/form/div[3]/button'))
+          .click();
         });
 
         it('Search success test', function() {
