@@ -246,7 +246,10 @@ var getPDFCanvas = function(container, object, apikey) {
 		items = {};
 
 	canvas["@id"] = config.IIIFUrl + "/" + container.resourceID + "/canvas/c" + object.sequence;
-	canvas["@type"] = "Canvas";
+	canvas["@type"] = "sc:Canvas";
+	canvas["label"] = "Placeholder image";
+	canvas["height"] = config.IIIFDefaultCanvasHeight || 1000;
+	canvas["width"] = config.IIIFDefaultCanvasWidth || 750;
 	canvas["thumbnail"] = getThumbnailObject(container, object, apikey)
 	canvas["rendering"] = {
 		"@id": object.resourceUrl + "/" + container.downloadFileName + ".pdf",
