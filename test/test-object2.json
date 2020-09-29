@@ -1,0 +1,168 @@
+{
+    "pid": "81c733ec-b597-48d1-9488-90f2a67627ed",
+    "is_member_of_collection": "61ed6a68-618b-48eb-b9bd-3e7484e0590a",
+    "handle": "http://hdl.handle.net/10176/81c733ec-b597-48d1-9488-90f2a67627ed",
+    "thumbnail": "0193/031a/3f2d/4d8c/8764/e351/772e/e4ea/ab0ed225-3a5f-4c49-9a8e-d104a9b0845f_B063.02.0033.0011.00001_transfer-81c733ec-b597-48d1-9488-90f2a67627ed/thumbnails/39c25249-bb28-47b1-892c-50013e36ece3.jpg",
+    "object": "0193/031a/3f2d/4d8c/8764/e351/772e/e4ea/ab0ed225-3a5f-4c49-9a8e-d104a9b0845f_B063.02.0033.0011.00001_transfer-81c733ec-b597-48d1-9488-90f2a67627ed/objects/39c25249-bb28-47b1-892c-50013e36ece3-B063.02.0033.0011.00001.jp2",
+    "mime_type": "image/tiff",
+    "uri": "/repositories/2/archival_objects/64241",
+    "object_type": "object",
+    "is_published": "1",
+    "is_compound": 0,
+    "title": "Central High School Class of 1909, 1909",
+    "creator": "Storm Photo",
+    "f_subjects": [
+        "Classes (Groups of students)",
+        "High schools",
+        "Jewish children",
+        "Denver (Colo.)",
+        "Students",
+        "Central High School (Denver, Colo.)",
+        "Storm Photo",
+        "Stein, Irene Miller, 1894-2000"
+    ],
+    "abstract": "Students pose sitting and standing in front of the entrance to Central High School in Denver, Colorado for a class photograph. Irene Miller (Stein) is one of the students, possibly in the middle of the top row indicated by an arrow.",
+    "type": "still image",
+    "display_record": {
+        "title": "Central High School Class of 1909, 1909",
+        "uri": "/repositories/2/archival_objects/64241",
+        "identifiers": [
+            {
+                "type": "local",
+                "identifier": "B063.02.0033.0011.00001"
+            }
+        ],
+        "resource_type": "still image",
+        "dates": [
+            {
+                "encoding": "w3cdtf",
+                "label": "creation",
+                "type": "single",
+                "expression": "1909",
+                "begin": "1909"
+            }
+        ],
+        "extents": [
+            "1 items (whole)"
+        ],
+        "subjects": [
+            {
+                "authority": "lcsh",
+                "title": "Classes (Groups of students)",
+                "terms": [
+                    {
+                        "type": "topical",
+                        "term": "Classes (Groups of students)"
+                    }
+                ],
+                "authority_id": "http://id.loc.gov/authorities/subjects/sh96010588"
+            },
+            {
+                "authority": "lcsh",
+                "title": "High schools",
+                "terms": [
+                    {
+                        "type": "topical",
+                        "term": "High schools"
+                    }
+                ],
+                "authority_id": "http://id.loc.gov/authorities/subjects/sh85060731"
+            },
+            {
+                "authority": "lcsh",
+                "title": "Jewish children",
+                "terms": [
+                    {
+                        "type": "topical",
+                        "term": "Jewish children"
+                    }
+                ],
+                "authority_id": "http://id.loc.gov/authorities/subjects/sh85070263"
+            },
+            {
+                "authority": "lcnaf",
+                "title": "Denver (Colo.)",
+                "terms": [
+                    {
+                        "type": "geographic",
+                        "term": "Denver (Colo.)"
+                    }
+                ],
+                "authority_id": "http://id.loc.gov/authorities/names/n79055157"
+            },
+            {
+                "authority": "lcsh",
+                "title": "Students",
+                "terms": [
+                    {
+                        "type": "topical",
+                        "term": "Students"
+                    }
+                ],
+                "authority_id": "http://id.loc.gov/authorities/subjects/sh85129296"
+            },
+            {
+                "authority": "local",
+                "title": "Central High School (Denver, Colo.)"
+            },
+            {
+                "authority": "local",
+                "title": "Storm Photo"
+            },
+            {
+                "authority": "local",
+                "title": "Stein, Irene Miller, 1894-2000"
+            }
+        ],
+        "notes": [
+            {
+                "type": "odd",
+                "content": "reformatted digital Title supplied by archivist."
+            },
+            {
+                "type": "abstract",
+                "content": "Students pose sitting and standing in front of the entrance to Central High School in Denver, Colorado for a class photograph. Irene Miller (Stein) is one of the students, possibly in the middle of the top row indicated by an arrow."
+            },
+            {
+                "type": "odd",
+                "content": "Printed on a seal on the matting: ''Storm Photo.'' Handwritten on the back: ''#725, Irene Stein, Central High school, Denver, 1909.''"
+            },
+            {
+                "type": "phystech",
+                "content": "Good  8 x 10 inches   black and white  The photograph is mounted on 11 x 14 inch cardboard."
+            },
+            {
+                "type": "custodhist",
+                "content": "The photograph was donated by Irene Miller Stein."
+            },
+            {
+                "type": "userestrict",
+                "content": "Copyright restrictions may apply. User is responsible for all copyright compliance."
+            }
+        ],
+        "names": [
+            {
+                "title": "Storm Photo",
+                "source": "local",
+                "role": "creator",
+                "relator": "Photographer"
+            }
+        ],
+        "parts": [
+            {
+                "order": "1",
+                "title": "B063.02.0033.0011.00001.tif",
+                "type": "tiff",
+                "caption": null
+            }
+        ],
+        "is_compound": false,
+        "t_language": [
+            {
+                "text": "English",
+                "code": "eng",
+                "authority": "iso639-2b"
+            }
+        ]
+    }
+}

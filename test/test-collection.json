@@ -1,0 +1,16 @@
+{
+    "pid": "61ed6a68-618b-48eb-b9bd-3e7484e0590a",
+    "uri": "/repositories/2/resources/1164",
+    "is_member_of_collection": "codu:root",
+    "handle": "http://hdl.handle.net/10176/61ed6a68-618b-48eb-b9bd-3e7484e0590a",
+    "object_type": "collection",
+    "title": "Test Collection",
+    "thumbnail": "784ec287-90d5-494c-a639-adbd8a03283c",
+    "is_published": 1,
+    "date": "2019-10-24T20:28:33.000Z",
+    "abstract": "This is a test collection",
+    "display_record": {
+        "title": "Test Collection",
+        "abstract": "This is a test collection"
+    }
+}
