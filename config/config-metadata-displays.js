@@ -117,50 +117,15 @@ module.exports = {
             },
             "Topics": {
                 "field": [
-                    {
-                        "path": "subjects.terms.term",
-                        "matchField": "type",
-                        "matchValue": "topical"
-                    },
-                    {
-                        "path": "subjects.terms.term",
-                        "matchField": "type",
-                        "matchValue": "occupation"
-                    },
-                    {
-                        "path": "subjects.terms.term",
-                        "matchField": "type",
-                        "matchValue": "function"
-                    },
-                    {
-                        "path": "subjects.terms.term",
-                        "matchField": "type",
-                        "matchValue": "uniform_title"
-                    },
-                    {
-                        "path": "subjects.terms.term",
-                        "matchField": "type",
-                        "matchValue": "temporal"
-                    },
-                    {
-                        "path": "subjects.terms.term",
-                        "matchField": "type",
-                        "matchValue": "style_period"
-                    },
+                    // {
+                    //     "path": "subjects.terms.term",
+                    //     "excludeField": "type",
+                    //     "excludeValue": "['geographic', 'genre_form']"
+                    // },
                     {
                         "path": "subjects.title",
-                        "matchField": "authority",
-                        "matchValue": "local"
-                    },
-                    {
-                        "path": "subjects.title",
-                        "matchField": "authority",
-                        "matchValue": "naf"
-                    },
-                    {
-                        "path": "subjects.title",
-                        "matchField": "authority",
-                        "matchValue": "viaf"
+                        "excludeField": "terms.type",
+                        "excludeValue": "['geographic', 'genre_form']"
                     }
                 ],
                 "link": {

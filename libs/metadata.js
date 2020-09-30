@@ -33,17 +33,49 @@ var config = require('../config/' + process.env.CONFIGURATION_FILE),
 /*
  * 
  */
-var extractValues = function(pathArray, object, matchField, matchValue, condition, bucket) {
+var extractValues = function(pathArray, object, matchField, matchValue, excludeField, excludeValue, condition, bucket) {
 	var nextKey,
 		nextObject,
 		nextArray;
 
 	// We have drilled into the specified field.  Locate the value
 	if(pathArray.length == 1) {
+		let excludeCondition = false;
+		if(excludeField) {
+			if(excludeField.indexOf('.') > 0) {
+				let path = excludeField.split('.'), 
+					currentPath, 
+					temp,
+					tempObject = {};
+
+				tempObject = Object.assign(tempObject, object);
+				for(var index in path) {
+					currentPath = path[index];
+					if(!tempObject[currentPath]) {
+						continue;
+					}
+
+					if(typeof tempObject[currentPath] == 'string') {
+						excludeCondition = excludeValue.includes(tempObject[currentPath]);
+					}
+					else if(typeof tempObject[currentPath].length != "undefined") {
+						tempObject = tempObject[currentPath][0];
+					}
+					else {
+						tempObject = tempObject[currentPath];
+					}
+				}
+			}
+			else {
+				excludeCondition = excludeField ? excludeValue.includes(object[excludeField]) : false;  // TODO update redundancy
+			}
+		}
+
 		if(matchField) {
 			if(object[pathArray] && 
 				condition == "true" && 
-				object[matchField] == matchValue) {
+				object[matchField] == matchValue &&
+				excludeCondition == false) {
 
 				if(bucket.includes(object[pathArray]) === false && object[pathArray].length > 0) {
 					bucket.push(object[pathArray]);
@@ -60,8 +92,10 @@ var extractValues = function(pathArray, object, matchField, matchValue, conditio
 		}
 		else if(object[pathArray]) {
 
-			if(bucket.includes(object[pathArray]) === false && object[pathArray].length > 0) {
-				bucket.push(object[pathArray]);
+			if(excludeCondition == false) {
+				if(bucket.includes(object[pathArray]) === false && object[pathArray].length > 0) {
+					bucket.push(object[pathArray]);
+				}
 			}
 		}
 	}
@@ -77,11 +111,11 @@ var extractValues = function(pathArray, object, matchField, matchValue, conditio
 		}
 		else if(nextObject.length) {
 			for(var index in nextObject) {
-				extractValues(nextArray, nextObject[index], matchField, matchValue, condition, bucket);
+				extractValues(nextArray, nextObject[index], matchField, matchValue, excludeField, excludeValue, condition, bucket);
 			}
 		}
 		else {
-			extractValues(nextArray, nextObject, matchField, matchValue, condition, bucket);
+			extractValues(nextArray, nextObject, matchField, matchValue, excludeField, excludeValue, condition, bucket);
 		}
 	}
 }
@@ -103,7 +137,7 @@ exports.createSummaryDisplayObject = function(result) {
 	for(var key in summaryDisplay) {
 		let values = [];
 		pathArray = summaryDisplay[key].path.split(".");
-		extractValues(pathArray, displayRecord, summaryDisplay[key].matchField || null, summaryDisplay[key].matchValue || null, summaryDisplay[key].condition || "true", values);
+		extractValues(pathArray, displayRecord, summaryDisplay[key].matchField || null, summaryDisplay[key].matchValue || null, summaryDisplay[key].excludeField || null, summaryDisplay[key].excludeValue || null, summaryDisplay[key].condition || "true", values);
 		if(values.length > 0) {
 			displayObj[key] = Helper.stripHtmlTags(values);
 		}
@@ -170,7 +204,7 @@ exports.createMetadataDisplayObject = function(result, collections=[]) {
 		// Retrieve data from each field in the index document, add it to the display
 		for(var field of fields) {
 			pathArray = field.path.split(".") || [];
-			extractValues(pathArray, displayRecord, field.matchField || null, field.matchValue || null, field.condition || "true", values);
+			extractValues(pathArray, displayRecord, field.matchField || null, field.matchValue || null, field.excludeField || null, field.excludeValue || null, field.condition || "true", values);
 			if(values.length > 0) {
 				// Remove html elements 
 				if(config.removemetadataDisplayHtml) {
@@ -249,7 +283,7 @@ exports.addResultMetadataDisplays = function(resultArray) {
 			let values = [];
 			pathArray = resultsDisplay[key].path.split(".");
 
-			extractValues(pathArray, displayRecord, resultsDisplay[key].matchField || null, resultsDisplay[key].matchValue || null, resultsDisplay[key].condition || "true", values);
+			extractValues(pathArray, displayRecord, resultsDisplay[key].matchField || null, resultsDisplay[key].matchValue || null, resultsDisplay[key].excludeField || null, resultsDisplay[key].excludeValue || null, resultsDisplay[key].condition || "true", values);
 			if(values.length > 0) {
 				metadata[key] = Helper.stripHtmlTags(values);
 			}
