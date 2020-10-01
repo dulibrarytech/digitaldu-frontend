@@ -232,13 +232,29 @@ exports.createMetadataDisplayObject = function(result, collections=[]) {
 			}
 		}
 
-		// Convert values to links, per configuration
 		if(metadataDisplay[key].link) {
 			for(var index in values) {
+				
 				// Facet search option
 				if(metadataDisplay[key].link.facetSearch) {
 					let facet = metadataDisplay[key].link.facetSearch;
 					values[index] = '<a href="' + config.rootUrl + '/search?q=&f[' + facet + '][]=' + values[index] + '">' + values[index] + '</a>';
+				}
+
+				// External link option
+				else if(metadataDisplay[key].link.type == "external") {
+					let prefix = metadataDisplay[key].link.prefix || "",
+						suffix = metadataDisplay[key].link.suffix || "",
+						url = prefix + values[index] + suffix;
+					values[index] = '<a href="' + url + '" target="_blank">' + url + '</a>';
+				}
+
+				// Internal link option
+				else if(metadataDisplay[key].link.type == "internal") {
+					let prefix = metadataDisplay[key].link.prefix || "",
+						suffix = metadataDisplay[key].link.suffix || "",
+						url = config.rootUrl + prefix + values[index] + suffix;
+					values[index] = '<a href="' + url + '" target="_blank">' + url + '</a>';
 				}
 			}
 		}
@@ -247,6 +263,12 @@ exports.createMetadataDisplayObject = function(result, collections=[]) {
 		if(values.length > 0) {
 			displayObj[key] = values;
 		}
+	}
+
+	// Add fields external to the main display configuration (these will appear after the display record)
+	if(result.pid) {
+		let manifestUrl = config.rootUrl + "/iiif/" + result.pid + "/manifest";
+		displayObj["IIIF Manifest"] = '<a href="' + manifestUrl + '">' + manifestUrl + '</a>';
 	}
 
 	return displayObj;

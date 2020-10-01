@@ -154,6 +154,10 @@ module.exports = {
             "Resource URI": {
                 "field": {
                     "path": "uri"
+                },
+                "link": {
+                    "type": "external",
+                    "prefix": "https://duarchives.coalliance.org"
                 }
             },
             "Call Number": {
