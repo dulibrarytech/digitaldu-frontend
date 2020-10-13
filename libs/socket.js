@@ -9,24 +9,9 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
     WebSocket = require("ws"),
     websocketServer = new WebSocket.Server({ server });
 
-//when a websocket connection is established
-websocketServer.on('connection', (webSocketClient) => {
-    //send feedback to the incoming connection
-    webSocketClient.send('{ "connection" : "ok"}');
-
-    //when a message is received
-    webSocketClient.on('message', (message) => {
-        //for each websocket client
-        websocketServer
-        .clients
-        .forEach( client => {
-            //send the client the current message
-            client.send(`{ "message" : ${message} }`);
-        });
-    });
-});
-
 //start the web server
 server.listen(serverPort, () => {
     console.log(`Websocket server started on port ` + serverPort);
 });
+
+module.exports = websocketServer;

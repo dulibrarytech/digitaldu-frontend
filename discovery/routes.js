@@ -75,7 +75,7 @@ module.exports = function (app) {
     app.route('/advanced-search')
         .get(Discovery.advancedSearch)
 
-    app.route('/download/:pid/:extension')
+    app.route('/download/:pid/:filename')
         .get(Discovery.downloadObjectFile)
 
     app.route('/islandora/object/:pid')

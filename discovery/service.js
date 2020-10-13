@@ -34,6 +34,16 @@ const IIIF = require("../libs/IIIF");
 const util = require('util');
 const Search = require("../search/service");
 
+/*
+ * TEMP
+ * For file functions
+ */
+var http = require('http');
+var request = require('request');
+/*
+ * 
+ */
+
 /**
  * Create a list of the root level collections
  *

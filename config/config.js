@@ -177,9 +177,10 @@ module.exports = {
     universalViewerKalturaPlayer: true,
 
     /*
-     * Show the object download options
+     * Download options
      */
     enableFileDownload: true,
+    batchFileDownloadTemporaryFolder: "./temporary-download",
 
     /*
      * IIIF API 

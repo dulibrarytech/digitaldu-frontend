@@ -33,7 +33,9 @@ const async = require('async'),
     Paginator = require('../libs/paginator'),
     Metadata = require('../libs/metadata'),
     Search = require('../search/service'),
-    Format = require("../libs/format");
+    Format = require("../libs/format"),
+    Download = require("../libs/download"),
+    File = require("../libs/file");
 
 /**
  * Renders the front page
@@ -476,7 +478,7 @@ exports.getObjectViewer = function(req, res) {
 			else {
 				if(page != "1") {
 					let msg = "Object not found: " + pid;
-					console.error(msg)
+					console.log(msg)
 					errors = msg;
 				}
 				else {
@@ -508,20 +510,82 @@ exports.getObjectViewer = function(req, res) {
 
 exports.downloadObjectFile = function(req, res) {
 	var pid = req.params.pid || "";
-	for(var key in config.fileExtensions) {
-		if(pid.indexOf(key) > 0) {
-			let ext = "." + key;
-			pid = pid.replace(ext, "");
+	Service.fetchObjectByPid(config.elasticsearchPublicIndex, pid, function(error, object) {
+		if(error) {
+			console.log(error, pid);
+			res.sendStatus(500);
 		}
-	}
+		else if(object == null) {
+			console.log("Object not found", pid);
+			res.sendStatus(404);
+		}
+		else {
+			if(AppHelper.isParentObject(object) == true) {
+				const websocketServer = require("../libs/socket.js");
+				websocketServer.on('connection', (webSocketClient) => {
+				  	console.log("Client connected to socket server. Downloading object files for", object.pid)
+					let msg = {
+					  status: "1",
+					  connection: "ok", // check "webSocketClient" object for connection data/message
+					  itemCount: AppHelper.getCompoundObjectItemCount(object) || 0
+					};
+					webSocketClient.send(JSON.stringify(msg));
 
-	let part = null;
-	if(pid.indexOf(config.compoundObjectPartID) > 0) {
-		part = pid.substring(pid.indexOf(config.compoundObjectPartID)+1, pid.length);	
-		pid = pid.split(config.compoundObjectPartID,1)[0];
-	}
+					Download.downloadCompoundObjectFiles(object, function(error, filepath) {
+						if(error) {
+							let error = "Error downloading object files: " + error;
+							console.log(message)
+							let msg = {
+							  status: "5",
+							  message: error
+							};
+							webSocketClient.send(JSON.stringify(msg));
+							res.sendStatus(500);
+						}
+						else {
+							let msg = {
+							  status: "3"
+							};
+							webSocketClient.send(JSON.stringify(msg));
+							res.download(filepath, function(error) { 
+								if(typeof error != 'undefined' && error) {
+									let error = "Error sending file to client: " + error + "Filepath: " + filepath;
+									console.log(error);
+									let msg = {
+									  status: "5",
+									  message: error
+									};
+									webSocketClient.send(JSON.stringify(msg));
+								}
+								else {
+									let msg = {
+									  status: "4",
+									  connection: "disconnect"
+									};
+									webSocketClient.send(JSON.stringify(msg));
+								}
 
-	res.sendStatus(200)
+								let folderPath = filepath.substring(0, filepath.lastIndexOf("/"));
+								File.removeDir(folderPath, function(error) {
+									if(error) {
+										console.log("Error removing temp folder: ", error);
+									}
+								});
+						    }); 
+						}
+					}, webSocketClient);
+				});
+
+				// TODO Add websocket rx message handler, to handle the 'cancel' message. Here, disconnect the webclient and stop the server
+			}
+			else {
+				// Download.downloadObjectFile(object, function(error, response) {
+
+				// });
+				res.sendStatus(501);
+			}
+		}
+	});
 }
 
 exports.renderHandleErrorPage = function(req, res) {
