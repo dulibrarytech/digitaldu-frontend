@@ -1,3 +1,7 @@
+'use strict'
+
+import { ProgressBar } from './progress-bar.js';
+
 $( document ).ready(function() {
 	$('#results-per-page').change(function(event) {
 		var searchUrl = decodeURIComponent(window.location.href).replace(/[&?]resultsPerPage=[0-9]+/g, "");
@@ -21,20 +25,6 @@ $( document ).ready(function() {
 		searchUrl += "sort=" + $('#sort-by-select').val();
 		window.location.replace(encodeURI(searchUrl));
 	});
-
-	function submitGotoPage() {
-		if($('#set-page-number').val().match(/^[0-9]+$/)) {
-			var searchUrl = decodeURIComponent(window.location.href).replace(/[&?]page=[a-zA-Z0-9, ]+/g, ""),
-				val = $('#set-page-number').val() <= parseInt($('#page-count').html()) ? $('#set-page-number').val() : parseInt($('#page-count').html());
-
-			if(searchUrl.indexOf("?") >= 0) { searchUrl += ("&page=" + val) }
-			else { searchUrl += ("?page=" + val) }
-			window.location.replace(encodeURI(searchUrl));
-		}
-		else {
-			console.log("Invalid input, must be integer")
-		}
-	}
 
 	$( "#goto-page-form" ).bind( "keydown", function(event) {
 		if(event.keyCode == 13) {
@@ -78,7 +68,7 @@ $( document ).ready(function() {
   		}
 	});
 
-  	$("#file-download").click(function(event) {
+	$(".file-download").click(function(event) {
   		/* Disabled until update for multiple download options 6/25/20 */
   		// if($(".download-links").hasClass("panel-collapsed")) {
   		// 	$(".download-links").removeClass("panel-collapsed");
@@ -86,6 +76,59 @@ $( document ).ready(function() {
   		// else {
   		// 	$(".download-links").addClass("panel-collapsed");
   		// }
+	});
+
+  	$(".batch-file-download").click(function(event) {
+  		var progressBar = new ProgressBar("file-download-progress", "100");
+  		$('#file-download-progress').show();
+  		setTimeout(function() { 
+			var socket = new WebSocket("ws://localhost:9007");
+
+			socket.onopen = function(event) {
+			  	console.log("Connection to socket established.");
+
+			  	socket.onmessage = function (event) {
+				  	var msg = JSON.parse(event.data);
+				  	try {
+					  	switch(msg.status) {
+					  		case "1":
+					  			progressBar.setMaxValue(msg.itemCount);
+					  			break;
+					  		case "2":
+					  			progressBar.increment(1);
+					  			break;
+					  		case "3": 
+					  			//progressBar.displayMessage("Zipping files...");
+					  			break;
+					  		case "4":
+					  			progressBar.remove();
+					  			$('#file-download-progress').hide();
+					  			console.log("Closing socket");
+					  			socket.close();
+					  			break;
+					  		case "5":
+					  			console.log(msg.message);
+					  			break;
+					  		default:
+					  			socket.close();
+					  			console.log("Invalid socket status");
+					  			break;
+					  	}
+					} catch (e) {
+		  				console.log(e);
+					}
+				}
+
+				socket.onerror = function(event) {
+				  	socket.close();
+		  			console.log(event);
+				};
+			};
+		}, 2000);
+	});
+
+	$(".cancel-progress-bar").click(function(event) {
+
 	});
 
 	$("#home-search button").click(function(event) {
@@ -105,6 +148,20 @@ $( document ).ready(function() {
 		$(".sidebar-search input[type='text']").val(DOMPurify.sanitize($(".sidebar-search input[type='text']").val()));
 		$(".sidebar-search form").submit();
 	});
+
+	function submitGotoPage() {
+		if($('#set-page-number').val().match(/^[0-9]+$/)) {
+			var searchUrl = decodeURIComponent(window.location.href).replace(/[&?]page=[a-zA-Z0-9, ]+/g, ""),
+				val = $('#set-page-number').val() <= parseInt($('#page-count').html()) ? $('#set-page-number').val() : parseInt($('#page-count').html());
+
+			if(searchUrl.indexOf("?") >= 0) { searchUrl += ("&page=" + val) }
+			else { searchUrl += ("?page=" + val) }
+			window.location.replace(encodeURI(searchUrl));
+		}
+		else {
+			console.log("Invalid input, must be integer")
+		}
+	}
 
 	// TODO convert above functions to pure JS from JQuery
 	var accordions = document.getElementsByClassName("collapsible");

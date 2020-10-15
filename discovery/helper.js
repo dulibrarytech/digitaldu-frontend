@@ -344,7 +344,8 @@ exports.getFileDownloadLinks = function(object, dsid, part=null) {
     let link = {
       uri: config.rootUrl + "/download/" + object.pid + "/" + object.pid + ".zip",
       filename: object.pid + ".zip",
-      extension: "zip"
+      extension: "zip",
+      isBatch: true
     };
     links.push(link);
   }
@@ -362,7 +363,8 @@ exports.getFileDownloadLinks = function(object, dsid, part=null) {
         let link = {
           uri: config.rootUrl + "/datastream/" + object.pid + "/" + dsid + "/" + part + "/" + object.pid + "." + extension,
           filename: object.pid + "." + extension,
-          extension: extension
+          extension: extension,
+          isBatch: false
         };
         links.push(link);
       }

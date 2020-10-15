@@ -276,7 +276,6 @@ exports.renderObjectView = function(req, res) {
 				}
 				else {
 					data["returnLink"] = (req.header('Referer') && req.header('Referer').indexOf(config.rootUrl + "/search?") >= 0) ? req.header('Referer') : false;
-
 					Service.getCollectionHeirarchy(object.is_member_of_collection, function(collectionTitles) {
 						data.id = pid;
 						object.type = Helper.normalizeLabel("Type", object.type || "")
@@ -549,11 +548,11 @@ exports.downloadObjectFile = function(req, res) {
 							webSocketClient.send(JSON.stringify(msg));
 							res.download(filepath, function(error) { 
 								if(typeof error != 'undefined' && error) {
-									let error = "Error sending file to client: " + error + "Filepath: " + filepath;
-									console.log(error);
+									let err = "Error sending file to client: " + error + "Filepath: " + filepath;
+									console.log(err);
 									let msg = {
 									  status: "5",
-									  message: error
+									  message: err
 									};
 									webSocketClient.send(JSON.stringify(msg));
 								}

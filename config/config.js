@@ -180,7 +180,7 @@ module.exports = {
      * Download options
      */
     enableFileDownload: true,
-    batchFileDownloadTemporaryFolder: "./temporary-download",
+    batchFileDownloadTemporaryFolder: "./cache/temporary-download",
 
     /*
      * IIIF API 
