@@ -340,7 +340,7 @@ exports.getSortDataArray = function(sort) {
 exports.getFileDownloadLinks = function(object, dsid, part=null) {
   let links = [];
 
-  if(AppHelper.isParentObject(object)) {
+  if(AppHelper.isParentObject(object) && config.enableCompoundObjectBatchDownload == true) {
     let link = {
       uri: config.rootUrl + "/download/" + object.pid + "/" + object.pid + ".zip",
       filename: object.pid + ".zip",

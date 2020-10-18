@@ -1,8 +1,10 @@
 'use strict'
 
+import { Configuration } from '../../config/configuration.js';
 import { ProgressBar } from './progress-bar.js';
 
 $( document ).ready(function() {
+	const config = new Configuration;
 	$('#results-per-page').change(function(event) {
 		var searchUrl = decodeURIComponent(window.location.href).replace(/[&?]resultsPerPage=[0-9]+/g, "");
 		searchUrl = searchUrl.replace(/&*page=[0-9]+/g, "");
@@ -82,8 +84,7 @@ $( document ).ready(function() {
   		var progressBar = new ProgressBar("file-download-progress", "100");
   		$('#file-download-progress').show();
   		setTimeout(function() { 
-			var socket = new WebSocket("ws://localhost:9007");
-
+			var socket = new WebSocket(config.getSettings('wsUrl'));
 			socket.onopen = function(event) {
 			  	console.log("Connection to socket established.");
 
@@ -98,7 +99,6 @@ $( document ).ready(function() {
 					  			progressBar.increment(1);
 					  			break;
 					  		case "3": 
-					  			//progressBar.displayMessage("Zipping files...");
 					  			break;
 					  		case "4":
 					  			progressBar.remove();

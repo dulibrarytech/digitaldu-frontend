@@ -44,7 +44,7 @@ exports.downloadObjectFile = function(object, callback) {
  * Zip the object and metadata files
  */
 exports.downloadCompoundObjectFiles = function(object, callback, websocket=null) {
-  var path = config.batchFileDownloadTemporaryFolder += ("_" + new Date().getTime()),
+  var path = config.batchFileDownloadTemporaryFolder + ("_" + new Date().getTime()),
       files = [],
       metadata = {},
       pid = object.pid || "",

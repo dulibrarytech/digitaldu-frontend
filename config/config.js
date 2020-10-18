@@ -180,6 +180,7 @@ module.exports = {
      * Download options
      */
     enableFileDownload: true,
+    enableCompoundObjectBatchDownload: true,
     batchFileDownloadTemporaryFolder: "./cache/temporary-download",
 
     /*
