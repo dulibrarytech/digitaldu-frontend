@@ -181,7 +181,7 @@ module.exports = {
      */
     enableFileDownload: true,
     enableCompoundObjectBatchDownload: true,
-    batchFileDownloadTemporaryFolder: "./cache/temporary-download",
+    batchFileDownloadTemporaryFolder: "./cache/download/temporary-download",
 
     /*
      * IIIF API 

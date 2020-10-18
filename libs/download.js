@@ -61,21 +61,21 @@ exports.downloadCompoundObjectFiles = function(object, callback, websocket=null)
     function(callback){
       fetchResourceFiles(path, files, function(error) {
         if(error) {error = "Error downloading file(s):" + error}
-        callback(error);
+        callback(error || null);
       }, websocket);
     },
     function(callback){
       let metadata = Metadata.getMetadataFieldValues(object) || {};
       createMetadataFiles(object.pid, path, metadata, function(error) {
         if(error) {error = "Error creating metadata file(s):" + error}
-            callback(error);
+            callback(error || null);
       });
     },
     function(callback){
       let filepath = path + "/" + pid + ".zip";
       zipFolder.zipFolder(path, filepath, function(error) {
         if(error) {error = "Error creating zip file for download:" + error}
-          callback(error, filepath);
+          callback(error || null, filepath);
       });
     }
   ], function (error, filepath) {
@@ -93,8 +93,7 @@ var fetchResourceFiles = function(path, files, callback, websocket=null) {
       directory: path,
       filename: ""
     },
-    count = 0,
-    errors = null;
+    count = 0;
 
   for(var fileUri of files) {
     options.filename = fileUri.substring(fileUri.lastIndexOf('/')+1) || "noname.file";
@@ -102,8 +101,7 @@ var fetchResourceFiles = function(path, files, callback, websocket=null) {
     download(fileUri, options, function(error, filename){
       count++;
       if(error) {
-        if(!errors) {errors = []}
-        errors.push("Error downloading file: " + error);
+        console.log("Error downloading file: " + fileUri + " Error: " + error);
       }
       else {
         console.log("Successfully downloaded file: " + filename, count, files.length);
@@ -117,7 +115,7 @@ var fetchResourceFiles = function(path, files, callback, websocket=null) {
         }
       }
       if(count == files.length) {
-        callback(errors);
+        callback(null);
       }
     });
   }

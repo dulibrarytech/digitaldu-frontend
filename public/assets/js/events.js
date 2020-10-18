@@ -85,9 +85,17 @@ $( document ).ready(function() {
   		$('#file-download-progress').show();
   		setTimeout(function() { 
 			var socket = new WebSocket(config.getSettings('wsUrl'));
+
+			$("#batch-file-download-cancel").click(function(event) {
+	  			socket.send(JSON.stringify({abort: true}));
+	  			progressBar.remove();
+	  			$('#file-download-progress').hide();
+	  			console.log("TEST Closing socket");
+	  			//socket.send(JSON.stringify({test: "closing now"}));
+			});
+
 			socket.onopen = function(event) {
 			  	console.log("Connection to socket established.");
-
 			  	socket.onmessage = function (event) {
 				  	var msg = JSON.parse(event.data);
 				  	try {
@@ -104,10 +112,11 @@ $( document ).ready(function() {
 					  			progressBar.remove();
 					  			$('#file-download-progress').hide();
 					  			console.log("Closing socket");
-					  			socket.close();
+					  			socket.send(JSON.stringify({test: "closing now"}));
 					  			break;
 					  		case "5":
 					  			console.log(msg.message);
+					  			socket.close();
 					  			break;
 					  		default:
 					  			socket.close();

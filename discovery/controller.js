@@ -532,11 +532,11 @@ exports.downloadObjectFile = function(req, res) {
 
 					Download.downloadCompoundObjectFiles(object, function(error, filepath) {
 						if(error) {
-							let error = "Error downloading object files: " + error;
-							console.log(message)
+							let errorMsg = "Error downloading object files: " + error;
+							console.log(errorMsg);
 							let msg = {
 							  status: "5",
-							  message: error
+							  message: "Error downloading object files: " + error
 							};
 							webSocketClient.send(JSON.stringify(msg));
 							res.sendStatus(500);
@@ -564,18 +564,21 @@ exports.downloadObjectFile = function(req, res) {
 									webSocketClient.send(JSON.stringify(msg));
 								}
 
-								let folderPath = filepath.substring(0, filepath.lastIndexOf("/"));
-								File.removeDir(folderPath, function(error) {
-									if(error) {
-										console.log("Error removing temp folder: ", error);
-									}
-								});
+								removeDownloadTempFolder(filepath);
+								websocketServer.close();
 						    }); 
 						}
 					}, webSocketClient);
-				});
 
-				// TODO Add websocket rx message handler, to handle the 'cancel' message. Here, disconnect the webclient and stop the server
+					webSocketClient.on('message', function incoming(data) {
+			  			if(data.abort) {
+			  				console.log("File download aborted by client");
+			  				removeDownloadTempFolder(filepath);
+							websocketServer.close();
+							res.sendStatus(200);
+			  			}
+					});
+				});
 			}
 			else {
 				// Download.downloadObjectFile(object, function(error, response) {
@@ -583,6 +586,16 @@ exports.downloadObjectFile = function(req, res) {
 				// });
 				res.sendStatus(501);
 			}
+		}
+	});
+}
+
+var removeDownloadTempFolder = function(filepath) {
+	let folderPath = filepath.substring(0, filepath.lastIndexOf("/"));
+	console.log("Removing temp folder " + folderPath + "...");
+	File.removeDir(folderPath, function(error) {
+		if(error) {
+			console.log("Error removing temp folder: ", error);
 		}
 	});
 }
