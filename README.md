@@ -32,6 +32,8 @@ All other content is released under [CC-BY-4.0](https://creativecommons.org/lice
 
 @freyesdulib, @kimpham54, @jackflaps, @josephlabrecque
 
+### Nginx Setup
+    TODO
 
 ### Local Development Setup
 
@@ -40,45 +42,13 @@ All other content is released under [CC-BY-4.0](https://creativecommons.org/lice
     
     2. Run "sudo npm install" from the root folder to install dependencies
     
-    3. Create a file ".env" in the project root folder. It should contain the following properties:
-    ```
-        NODE_ENV={development|devlog|production} 
-        NODE_TLS_REJECT_UNAUTHORIZED=1
-        APP_HOST={nodejs app domain}
-        APP_PORT={nodejs app port}
-        WEB_SOCKET_DOMAIN=ws://localhost
-        WEB_SOCKET_PORT=9007
-        ENABLE_TEST={if true and NODE_ENV is set to 'development': will include express router in /test folder}
-        API_KEY={frontend api key}
-        CLIENT_HOST={client domain - same as APP_HOST + APP_PORT unless dns is registered for client domain}
-        # Use leading slash
-        CLIENT_PATH={client relative path from domain}
-        CONFIGURATION_FILE={name of main app configuration file}
-        ELASTICSEARCH_HOST={elastic server domain}
-        ELASTICSEARCH_PORT={elastic server port}
-        ELASTICSEARCH_PUBLIC_INDEX={public elastic index}
-        ELASTICSEARCH_PRIVATE_INDEX={private elastic index}
-        REPOSITORY_DOMAIN={duraspace domain}
-        REPOSITORY_PATH={relative duraspace dip-store url}
-        REPOSITORY_PROTOCOL={http|https}
-        REPOSITORY_USER={repository username}
-        REPOSITORY_PWD={repository password}
-        PDF_JS_VIEWER_PORT={port}
-        IIIF_IMAGE_SERVER_URL={cantaloupe api domain}
-        IIIF_IMAGE_SERVER_PATH={relative path to cantaloupe endpoint, if any}
-        IIIF_DOMAIN={iiif api domain}
-        IIIF_PATH={relative path to iiif, should be '/iiif'}
+    3. Create a file ".env" in the project root folder. See .env.sample
+    
+    4. Setup a local instance of Cantaloupe image server and update the CANTALOUPE_URL field in .env
+    
+    5. Run the app by using "node discovery.js" or "nodejs discovery.js" from the app root folder.
 
-    ```
-    4. APP_HOST is the url to the server.  Do not add the port to this url, add that to APP_PORT.  Set APP_PORT to whatever port the nodejs app should run on.
-    
-    5. CLIENT_HOST is the url to the client.  Add the port to the end if necessary
-    
-    6. IIIF_URL can be localhost, as the service is included with DigitalCollections.  Make sure the port listed here is the port that DigitalCollections is running on.
-    
-    7. Setup a local instance of Cantaloupe image server and update the CANTALOUPE_URL field in .env
-    
-    8. Run the app by using "node discovery.js" or "nodejs discovery.js" from the app root folder.
+    6. Update the client settings in the Configuration class "public/config/configuration.js" 
 
     #### Index required fields
 
