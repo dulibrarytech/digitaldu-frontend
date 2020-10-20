@@ -23,13 +23,13 @@
 'use strict'
 
 const config = require('../config/' + process.env.CONFIGURATION_FILE),
-      download = require('file-download'),
       fs = require('fs'),
       stringifyObject = require('stringify-object'),
       waterfall = require('async-waterfall'),
       zipFolder = require('zip-a-folder'),
       Helper = require('./helper.js'),
-      Metadata = require('./metadata.js');
+      Metadata = require('./metadata.js'),
+      File = require('./file.js');
 
 /*
  *
@@ -43,7 +43,7 @@ exports.downloadObjectFile = function(object, callback) {
  * Create a text file containing the object's metadata
  * Zip the object and metadata files
  */
-exports.downloadCompoundObjectFiles = function(object, callback, websocket=null) {
+exports.downloadCompoundObjectFiles = function(object, callbackC, websocket=null) {
   var path = config.batchFileDownloadTemporaryFolder + ("_" + new Date().getTime()),
       files = [],
       metadata = {},
@@ -53,7 +53,7 @@ exports.downloadCompoundObjectFiles = function(object, callback, websocket=null)
   let uri, part;
   for(var index in parts) {
     part = parseInt(parts[index].order) || index;
-    uri = config.rootUrl + "/datastream/" + pid + "/tn/" + part + "/" + pid + "_" + part + "." + Helper.getFileExtensionForMimeType(object.mime_type || "");
+    uri = config.rootUrl + "/datastream/" + pid + "/object/" + part + "/" + pid + "_" + part + "." + Helper.getFileExtensionForMimeType(object.mime_type || "");
     files[part-1] = uri;
   }
 
@@ -79,46 +79,48 @@ exports.downloadCompoundObjectFiles = function(object, callback, websocket=null)
       });
     }
   ], function (error, filepath) {
-      if(error) {callback(error, null)}
-      else {callback(null, filepath)}
+      if(error) {callbackC(error, null)}
+      else {callbackC(null, filepath)}
   });
 }
 
 /**
  * Fetch a list of files, and store them in a local folder
  */
-var fetchResourceFiles = function(path, files, callback, websocket=null) {
+var fetchResourceFiles = async function(path, files, callback, websocket=null) {
   var url = "",
-      options = {
-      directory: path,
-      filename: ""
-    },
-    count = 0;
+      filename,
+      count = 0,
+      msg,
+      response;
 
   for(var fileUri of files) {
-    options.filename = fileUri.substring(fileUri.lastIndexOf('/')+1) || "noname.file";
-    console.log("Fetching resource file: uri", fileUri, "Saving to file", options.filename);
-    download(fileUri, options, function(error, filename){
-      count++;
-      if(error) {
-        console.log("Error downloading file: " + fileUri + " Error: " + error);
+    count++;
+    filename = fileUri.substring(fileUri.lastIndexOf('/')+1) || "noname.file";
+    console.log("Fetching resource file: uri", fileUri, "Saving to file", filename);
+
+    response = await File.downloadToFileSync(fileUri, path, filename);
+    if(websocket) {
+      if(websocket.abort) {
+        msg = {
+          status: "6",
+          message: "Socket connection aborted by client."
+        };
+        websocket.send(JSON.stringify(msg));
+        break;
       }
       else {
-        console.log("Successfully downloaded file: " + filename, count, files.length);
-        if(websocket) {
-          let msg = {
-            status: "2",
-            currentItem: count,
-            itemCount: files.length || -1
-          };
-          websocket.send(JSON.stringify(msg));
-        }
+        msg = {
+          status: "2",
+          currentItem: count,
+          itemCount: files.length || -1
+        };
+        websocket.send(JSON.stringify(msg));
       }
-      if(count == files.length) {
-        callback(null);
-      }
-    });
+    }
   }
+
+  callback(null);
 }
 exports.fetchResourceFiles = fetchResourceFiles;
 
@@ -131,7 +133,8 @@ var createMetadataFiles = function(pid, path, metadata, callback) {
   try {
     let filename = path + "/" + pid + "_metadata.txt";
     fs.writeFile(filename, objectString, error => {
-      callback(error);
+      if(error) throw error;
+      else {callback(null)}
     })
   }
   catch(e) {

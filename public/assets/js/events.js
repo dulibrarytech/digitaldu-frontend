@@ -88,10 +88,6 @@ $( document ).ready(function() {
 
 			$("#batch-file-download-cancel").click(function(event) {
 	  			socket.send(JSON.stringify({abort: true}));
-	  			progressBar.remove();
-	  			$('#file-download-progress').hide();
-	  			console.log("TEST Closing socket");
-	  			//socket.send(JSON.stringify({test: "closing now"}));
 			});
 
 			socket.onopen = function(event) {
@@ -115,13 +111,22 @@ $( document ).ready(function() {
 					  			socket.send(JSON.stringify({test: "closing now"}));
 					  			break;
 					  		case "5":
-					  			console.log(msg.message);
+					  			socket.close();
+					  			break;
+					  		case "6":
+					  			progressBar.remove();
+					  			$('#file-download-progress').hide();
+					  			console.log("Closing socket");
 					  			socket.close();
 					  			break;
 					  		default:
 					  			socket.close();
 					  			console.log("Invalid socket status");
 					  			break;
+
+					  		if(msg.message) {
+					  			console.log(msg.message);
+					  		}
 					  	}
 					} catch (e) {
 		  				console.log(e);
@@ -134,10 +139,6 @@ $( document ).ready(function() {
 				};
 			};
 		}, 2000);
-	});
-
-	$(".cancel-progress-bar").click(function(event) {
-
 	});
 
 	$("#home-search button").click(function(event) {
@@ -172,7 +173,6 @@ $( document ).ready(function() {
 		}
 	}
 
-	// TODO convert above functions to pure JS from JQuery
 	var accordions = document.getElementsByClassName("collapsible");
 	for (var i = 0; i < accordions.length; i++) {
 	    accordions[i].addEventListener("click", function() {

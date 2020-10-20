@@ -1377,13 +1377,17 @@ div#transcript-view {
   line-height: 1.4em;
 }
 
+#file-download-progress button {
+  background-color: #e5e3e1;
+  border-color: #e5e3e1;
+  border-width: 1px;
+  padding: 3px 10px 1px 10px;
+}
+
 footer {
   background: #8b2332;
-  /* height: 230px; [C22] */
   padding: 50px 0 25px 0;
   overflow: hidden;
-  /*position: absolute;
-  bottom: 0;*/
   width: 100%;
 }
 
