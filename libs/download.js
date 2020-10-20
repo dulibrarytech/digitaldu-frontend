@@ -142,3 +142,13 @@ var createMetadataFiles = function(pid, path, metadata, callback) {
   }
 }
 exports.createMetadataFiles = createMetadataFiles;
+
+exports.removeDownloadTempFolder = function(filepath) {
+  let folderPath = filepath.substring(0, filepath.lastIndexOf("/"));
+  console.log("Removing temp folder " + folderPath + "...");
+  File.removeDir(folderPath, function(error) {
+    if(error) {
+      console.log("Error removing temp folder: ", error);
+    }
+  });
+}

@@ -521,15 +521,16 @@ exports.downloadObjectFile = function(req, res) {
 		else {
 			if(AppHelper.isParentObject(object) == true) {
 				const websocketServer = require("../libs/socket.js");
+
 				websocketServer.on('connection', (webSocketClient) => {
 				  	console.log("Client connected to socket server. Downloading object files for", object.pid)
 					let msg = {
 					  status: "1",
-					  connection: "ok", // check "webSocketClient" object for connection data/message
 					  itemCount: AppHelper.getCompoundObjectItemCount(object) || 0
 					};
 					webSocketClient.send(JSON.stringify(msg));
 
+					// Handle messages from the client
 					webSocketClient.on('message', function incoming(data) {
 			  			if(JSON.parse(data).abort == true) {
 			  				console.log("File download aborted by client");
@@ -547,8 +548,8 @@ exports.downloadObjectFile = function(req, res) {
 							  message: errorMsg
 							};
 							webSocketClient.send(JSON.stringify(msg));
-							res.sendStatus(500);
 							webSocketClient.close();
+							res.sendStatus(500);
 						}
 						else {
 							let msg = {
@@ -557,9 +558,9 @@ exports.downloadObjectFile = function(req, res) {
 							webSocketClient.send(JSON.stringify(msg));
 							
 							if(webSocketClient.abort) {
+								Download.removeDownloadTempFolder(filepath);
 								webSocketClient.close();
 								res.sendStatus(200);
-								removeDownloadTempFolder(filepath);
 							}
 							else {
 								res.download(filepath, function(error) { 
@@ -579,7 +580,7 @@ exports.downloadObjectFile = function(req, res) {
 										};
 										webSocketClient.send(JSON.stringify(msg));
 									}
-									removeDownloadTempFolder(filepath);
+									Download.removeDownloadTempFolder(filepath);
 									webSocketClient.close();
 							    });
 							} 
@@ -590,16 +591,6 @@ exports.downloadObjectFile = function(req, res) {
 			else {
 				res.sendStatus(501);
 			}
-		}
-	});
-}
-
-var removeDownloadTempFolder = function(filepath) {
-	let folderPath = filepath.substring(0, filepath.lastIndexOf("/"));
-	console.log("Removing temp folder " + folderPath + "...");
-	File.removeDir(folderPath, function(error) {
-		if(error) {
-			console.log("Error removing temp folder: ", error);
 		}
 	});
 }
