@@ -27,6 +27,12 @@ export class Configuration {
 		 * Required for compound object and other batch file downloads
 		 */
 		this.settings["wsUrl"] = "ws://localhost:9007";
+
+		 /*
+		 * Delay in ms after the batch download is initiated from the client, and the connect request is sent to the server websocket
+		 * This allows server to start the websocket and for it to be available, after receiving the download request
+		 */
+		this.settings["wsConnectDelay"] = 3000;
 	}
 
 	getSettings(setting) {

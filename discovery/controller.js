@@ -564,7 +564,7 @@ exports.downloadObjectFile = function(req, res) {
 							else {
 								res.download(filepath, function(error) { 
 									if(typeof error != 'undefined' && error) {
-										let err = "Error sending file to client: " + error + "Filepath: " + filepath;
+										let err = "Error sending file to client: " + error + " Filepath: " + filepath;
 										console.log(err);
 										let msg = {
 										  status: "5",

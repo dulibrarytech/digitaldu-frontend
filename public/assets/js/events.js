@@ -138,7 +138,7 @@ $( document ).ready(function() {
 		  			console.log(event);
 				};
 			};
-		}, 2000);
+		}, config.getSettings('wsConnectDelay'));
 	});
 
 	$("#home-search button").click(function(event) {
