@@ -37,6 +37,8 @@ const async = require('async'),
     Download = require("../libs/download"),
     File = require("../libs/file");
 
+var websocketServer = require("../libs/socket.js");
+
 /**
  * Renders the front page
  * Retrieves all objects in the root collection
@@ -520,12 +522,11 @@ exports.downloadObjectFile = function(req, res) {
 		}
 		else {
 			if(AppHelper.isParentObject(object) == true) {
-				const websocketServer = require("../libs/socket.js");
-
 				websocketServer.on('connection', (webSocketClient) => {
 				  	console.log("Client connected to socket server. Downloading object files for", object.pid)
 					let msg = {
 					  status: "1",
+					  message: "Client connected",
 					  itemCount: AppHelper.getCompoundObjectItemCount(object) || 0
 					};
 					webSocketClient.send(JSON.stringify(msg));
@@ -548,18 +549,19 @@ exports.downloadObjectFile = function(req, res) {
 							  message: errorMsg
 							};
 							webSocketClient.send(JSON.stringify(msg));
-							webSocketClient.close();
+							webSocketClient.terminate();
 							res.sendStatus(500);
 						}
 						else {
 							let msg = {
-							  status: "3"
+							  status: "3",
+							  message: "File download complete. Transferring files..."
 							};
 							webSocketClient.send(JSON.stringify(msg));
 							
 							if(webSocketClient.abort) {
 								Download.removeDownloadTempFolder(filepath);
-								webSocketClient.close();
+								webSocketClient.terminate();
 								res.sendStatus(200);
 							}
 							else {
@@ -576,12 +578,15 @@ exports.downloadObjectFile = function(req, res) {
 									else {
 										let msg = {
 										  status: "4",
-										  connection: "disconnect"
+										  connection: "disconnect",
+										  message: "Disconnecting..."
 										};
 										webSocketClient.send(JSON.stringify(msg));
 									}
 									Download.removeDownloadTempFolder(filepath);
-									webSocketClient.close();
+									websocketServer.clients.forEach(function each(ws) {
+									    ws.terminate();
+									});
 							    });
 							} 
 						}

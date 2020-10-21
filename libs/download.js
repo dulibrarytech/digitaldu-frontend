@@ -97,9 +97,7 @@ var fetchResourceFiles = async function(path, files, callback, websocket=null) {
   for(var fileUri of files) {
     count++;
     filename = fileUri.substring(fileUri.lastIndexOf('/')+1) || "noname.file";
-    console.log("Fetching resource file: uri", fileUri, "Saving to file", filename);
 
-    response = await File.downloadToFileSync(fileUri, path, filename);
     if(websocket) {
       if(websocket.abort) {
         msg = {
@@ -112,12 +110,15 @@ var fetchResourceFiles = async function(path, files, callback, websocket=null) {
       else {
         msg = {
           status: "2",
+          message: "Downloading " + count + " of " + files.length,
           currentItem: count,
           itemCount: files.length || -1
         };
         websocket.send(JSON.stringify(msg));
       }
     }
+    console.log("Fetching resource file: uri", fileUri, "Saving to file", filename);
+    response = await File.downloadToFileSync(fileUri, path, filename);
   }
 
   callback(null);
