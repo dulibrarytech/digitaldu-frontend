@@ -83,6 +83,7 @@ $( document ).ready(function() {
   	$(".batch-file-download").click(function(event) {
   		var progressBar = new ProgressBar("file-download-progress", "100");
   		$('#file-download-progress').show();
+  		progressBar.displayMessage("Connecting to server...");
   		setTimeout(function() { 
 			var socket = new WebSocket(config.getSettings('wsUrl'));
 
@@ -96,23 +97,34 @@ $( document ).ready(function() {
 				  	var msg = JSON.parse(event.data);
 				  	try {
 					  	switch(msg.status) {
+					  		// Server acknowledges handshake
 					  		case "1":
+					  			progressBar.displayMessage("Downloading files, please wait...");
 					  			progressBar.setMaxValue(msg.itemCount);
 					  			break;
+					  		// Single file was transferred
 					  		case "2":
 					  			progressBar.increment(1);
 					  			break;
+					  		// File transfer complete
 					  		case "3": 
+					  			//progressBar.displayMessage("Download complete");
 					  			break;
+					  		// Download complete
 					  		case "4":
 					  			progressBar.remove();
 					  			$('#file-download-progress').hide();
 					  			console.log("Closing socket");
-					  			socket.send(JSON.stringify({test: "closing now"}));
-					  			break;
-					  		case "5":
 					  			socket.close();
 					  			break;
+					  		// Error
+					  		case "5":
+					  			progressBar.remove();
+					  			$('#file-download-progress').hide();
+					  			console.log("Error");
+					  			socket.close();
+					  			break;
+					  		// Server received abort message
 					  		case "6":
 					  			progressBar.remove();
 					  			$('#file-download-progress').hide();
@@ -123,11 +135,11 @@ $( document ).ready(function() {
 					  			socket.close();
 					  			console.log("Invalid socket status");
 					  			break;
-
-					  		if(msg.message) {
-					  			console.log(msg.message);
-					  		}
 					  	}
+
+				  		if(msg.message) {
+				  			console.log(msg.message);
+				  		}
 					} catch (e) {
 		  				console.log(e);
 					}

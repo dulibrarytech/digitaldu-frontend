@@ -24,20 +24,24 @@ export class ProgressBar {
 	add() {
 		let parent = document.getElementById(this.parentId);
 		let progBar = document.createElement("PROGRESS");
-		let message = document.createElement("DIV");
+		let label = document.createElement("DIV");
+		let button = document.createElement("BUTTON");
+		label.setAttribute("id", this.parentId + "_progress-bar-message");
+		parent.appendChild(label);
 		progBar.setAttribute("value", "0");
 		progBar.setAttribute("max", this.maxValue);
 		parent.appendChild(progBar);
-		message.setAttribute("id", this.parentId + "_progress-bar-message");
-		message.setAttribute("style", "font-size: 0.8em; margin-top: 10px");
-		parent.appendChild(message);
+		button.innerHTML = "Cancel";
+  		button.setAttribute("id", "batch-file-download-cancel");
+  		parent.appendChild(button);
 		this.progBar = progBar;
-		this.message = message;
+		this.label = label;
 	}
 
 	remove() {
 		let parent = document.getElementById(this.parentId);
 		parent.removeChild(this.progBar);
+		parent.removeChild(this.label);
 	}
 
 	setMaxValue(value) {
@@ -52,10 +56,10 @@ export class ProgressBar {
 	}
 
 	displayMessage(text) {
-		this.message.innerHTML = text;
+		this.label.innerHTML = text;
 	}
 
 	resetMessage() {
-		this.message.innerHTML = "";
+		this.label.innerHTML = "";
 	}
 }
