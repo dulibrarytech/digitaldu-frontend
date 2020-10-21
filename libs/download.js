@@ -53,7 +53,7 @@ exports.downloadCompoundObjectFiles = function(object, callbackC, websocket=null
   let uri, part;
   for(var index in parts) {
     part = parseInt(parts[index].order) || index;
-    uri = config.rootUrl + "/datastream/" + pid + "/object/" + part + "/" + pid + "_" + part + "." + Helper.getFileExtensionForMimeType(object.mime_type || "");
+    uri = config.rootUrl + "/datastream/" + pid + "/tn/" + part + "/" + pid + "_" + part + "." + Helper.getFileExtensionForMimeType(object.mime_type || "");
     files[part-1] = uri;
   }
 

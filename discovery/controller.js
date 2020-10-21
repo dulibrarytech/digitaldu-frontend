@@ -565,29 +565,31 @@ exports.downloadObjectFile = function(req, res) {
 								res.sendStatus(200);
 							}
 							else {
-								res.download(filepath, function(error) { 
-									if(typeof error != 'undefined' && error) {
-										let err = "Error sending file to client: " + error + " Filepath: " + filepath;
-										console.log(err);
-										let msg = {
-										  status: "5",
-										  message: err
-										};
-										webSocketClient.send(JSON.stringify(msg));
-									}
-									else {
-										let msg = {
-										  status: "4",
-										  connection: "disconnect",
-										  message: "Disconnecting..."
-										};
-										webSocketClient.send(JSON.stringify(msg));
-									}
-									Download.removeDownloadTempFolder(filepath);
-									websocketServer.clients.forEach(function each(ws) {
-									    ws.terminate();
-									});
-							    });
+								if(res._headerSent == false) {
+									res.download(filepath, function(error) { 
+										if(typeof error != 'undefined' && error) {
+											let err = "Error sending file to client: " + error + " Filepath: " + filepath;
+											console.log(err);
+											let msg = {
+											  status: "5",
+											  message: err
+											};
+											webSocketClient.send(JSON.stringify(msg));
+										}
+										else {
+											let msg = {
+											  status: "4",
+											  connection: "disconnect",
+											  message: "Disconnecting..."
+											};
+											webSocketClient.send(JSON.stringify(msg));
+										}
+										Download.removeDownloadTempFolder(filepath);
+										websocketServer.clients.forEach(function each(ws) {
+										    ws.close();
+										});
+								    });
+								}
 							} 
 						}
 					}, webSocketClient);

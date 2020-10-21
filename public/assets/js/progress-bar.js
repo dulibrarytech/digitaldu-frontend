@@ -40,8 +40,9 @@ export class ProgressBar {
 
 	remove() {
 		let parent = document.getElementById(this.parentId);
-		parent.removeChild(this.progBar);
-		parent.removeChild(this.label);
+		while (parent.firstChild) {
+	        parent.removeChild(parent.firstChild);
+	    }
 	}
 
 	setMaxValue(value) {
