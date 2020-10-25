@@ -83,6 +83,7 @@ $( document ).ready(function() {
   	$(".batch-file-download").click(function(event) {
   		var progressBar = new ProgressBar("file-download-progress", "100");
   		$('#file-download-progress').show();
+  		$("#batch-file-download-cancel").prop("disabled",true);
   		progressBar.displayMessage("Connecting to server...");
   		setTimeout(function() { 
 			var socket = new WebSocket(config.getSettings('wsUrl'));
@@ -104,6 +105,7 @@ $( document ).ready(function() {
 					  			break;
 					  		// Single file was transferred
 					  		case "2":
+					  			$("#batch-file-download-cancel").prop("disabled",false);
 					  			progressBar.increment(1);
 					  			break;
 					  		// File transfer complete
