@@ -549,8 +549,12 @@ exports.downloadObjectFile = function(req, res) {
 							  message: errorMsg
 							};
 							webSocketClient.send(JSON.stringify(msg));
-							webSocketClient.terminate();
-							res.sendStatus(500);
+							websocketServer.clients.forEach(function each(ws) {
+							    ws.close();
+							});
+							if(res._headerSent == false) {
+								res.sendStatus(500);
+							}
 						}
 						else {
 							let msg = {
@@ -559,38 +563,31 @@ exports.downloadObjectFile = function(req, res) {
 							};
 							webSocketClient.send(JSON.stringify(msg));
 							
-							if(webSocketClient.abort) {
-								Download.removeDownloadTempFolder(filepath);
-								webSocketClient.terminate();
-								res.sendStatus(200);
+							if(res._headerSent == false) {
+								res.download(filepath, function(error) { 
+									if(typeof error != 'undefined' && error) {
+										let err = "Error sending file to client: " + error + " Filepath: " + filepath;
+										console.log(err);
+										let msg = {
+										  status: "5",
+										  message: err
+										};
+										webSocketClient.send(JSON.stringify(msg));
+									}
+									else {
+										let msg = {
+										  status: "4",
+										  connection: "disconnect",
+										  message: "Disconnecting..."
+										};
+										webSocketClient.send(JSON.stringify(msg));
+									}
+									Download.removeDownloadTempFolder(filepath);
+									websocketServer.clients.forEach(function each(ws) {
+									    ws.close();
+									});
+							    });
 							}
-							else {
-								if(res._headerSent == false) {
-									res.download(filepath, function(error) { 
-										if(typeof error != 'undefined' && error) {
-											let err = "Error sending file to client: " + error + " Filepath: " + filepath;
-											console.log(err);
-											let msg = {
-											  status: "5",
-											  message: err
-											};
-											webSocketClient.send(JSON.stringify(msg));
-										}
-										else {
-											let msg = {
-											  status: "4",
-											  connection: "disconnect",
-											  message: "Disconnecting..."
-											};
-											webSocketClient.send(JSON.stringify(msg));
-										}
-										Download.removeDownloadTempFolder(filepath);
-										websocketServer.clients.forEach(function each(ws) {
-										    ws.close();
-										});
-								    });
-								}
-							} 
 						}
 					}, webSocketClient);
 				});

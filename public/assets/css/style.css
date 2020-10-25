@@ -1390,6 +1390,10 @@ div#transcript-view {
   bottom: 5px;
 }
 
+#file-download-progress_progress-bar-message {
+  margin-bottom: 5px;
+}
+
 footer {
   background: #8b2332;
   padding: 50px 0 25px 0;

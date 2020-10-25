@@ -131,16 +131,11 @@ var createMetadataFiles = function(pid, path, metadata, callback) {
       singleQuotes: false
   });
 
-  try {
-    let filename = path + "/" + pid + "_metadata.txt";
-    fs.writeFile(filename, objectString, error => {
-      if(error) throw error;
-      else {callback(null)}
-    })
-  }
-  catch(e) {
-    callback(e);
-  }
+  let filename = path + "/" + pid + "_metadata.txt";
+  fs.writeFile(filename, objectString, error => {
+    if(error) {callback(error)}
+    else {callback(null)}
+  });
 }
 exports.createMetadataFiles = createMetadataFiles;
 
