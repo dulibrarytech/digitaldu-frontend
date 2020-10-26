@@ -25,15 +25,12 @@ export class ProgressBar {
 		let parent = document.getElementById(this.parentId);
 		let progBar = document.createElement("PROGRESS");
 		let label = document.createElement("DIV");
-		let button = document.createElement("BUTTON");
 		label.setAttribute("id", this.parentId + "_progress-bar-message");
 		parent.appendChild(label);
 		progBar.setAttribute("value", "0");
 		progBar.setAttribute("max", this.maxValue);
 		parent.appendChild(progBar);
-		button.innerHTML = "Cancel";
-  		button.setAttribute("id", "batch-file-download-cancel");
-  		parent.appendChild(button);
+  		parent.style.display = "block";
 		this.progBar = progBar;
 		this.label = label;
 	}
@@ -43,6 +40,7 @@ export class ProgressBar {
 		while (parent.firstChild) {
 	        parent.removeChild(parent.firstChild);
 	    }
+	    document.getElementById(this.parentId).style.display = "none";
 	}
 
 	setMaxValue(value) {

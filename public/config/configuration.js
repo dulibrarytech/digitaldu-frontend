@@ -14,28 +14,26 @@
     limitations under the License.
  */
 
-export class Configuration {
-	constructor(values) {
-		this.settings = {};
-
+export const Configuration = (function () {
+	let config = {};
+	let settings = {
 		/*
-		 * Client settings object
-		 */
-
-		 /*
 		 * Url to the websocket connector
 		 * Required for compound object and other batch file downloads
 		 */
-		this.settings["wsUrl"] = "ws://localhost:9007";
+		wsUrl : "ws://localhost:9007",
 
 		 /*
 		 * Delay in ms after the batch download is initiated from the client, and the connect request is sent to the server websocket
 		 * This allows server to start the websocket and for it to be available, after receiving the download request
 		 */
-		this.settings["wsConnectDelay"] = 3000;
+		wsConnectDelay : 3000
 	}
 
-	getSettings(setting) {
-		return this.settings[setting];
+	config.getSetting = function(value) {
+		return settings[value];
 	}
-}
+
+	return config;
+
+}());

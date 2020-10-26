@@ -37,7 +37,7 @@ const async = require('async'),
     Download = require("../libs/download"),
     File = require("../libs/file");
 
-var websocketServer = require("../libs/socket.js");
+var webSocketServer = require("../libs/socket.js");
 
 /**
  * Renders the front page
@@ -510,7 +510,9 @@ exports.getObjectViewer = function(req, res) {
 }
 
 exports.downloadObjectFile = function(req, res) {
-	var pid = req.params.pid || "";
+	var pid = req.params.pid || "",
+		clientHost = req.hostname || "";
+
 	Service.fetchObjectByPid(config.elasticsearchPublicIndex, pid, function(error, object) {
 		if(error) {
 			console.log(error, pid);
@@ -522,75 +524,75 @@ exports.downloadObjectFile = function(req, res) {
 		}
 		else {
 			if(AppHelper.isParentObject(object) == true) {
-				websocketServer.on('connection', (webSocketClient) => {
-				  	console.log("Client connected to socket server. Downloading object files for", object.pid)
-					let msg = {
-					  status: "1",
-					  message: "Client connected",
-					  itemCount: AppHelper.getCompoundObjectItemCount(object) || 0
-					};
-					webSocketClient.send(JSON.stringify(msg));
+					let webSocketClient = webSocketServer.getLastClient();
+					if(webSocketClient) {
+						console.log("Client connected to socket server. Downloading object files for", object.pid)
+						let msg = {
+						  status: "1",
+						  message: "Client connected",
+						  itemCount: AppHelper.getCompoundObjectItemCount(object) || 0
+						};
+						webSocketClient.send(JSON.stringify(msg));
 
-					// Handle messages from the client
-					webSocketClient.on('message', function incoming(data) {
-			  			if(JSON.parse(data).abort == true) {
-			  				console.log("File download aborted by client");
-			  				webSocketClient["abort"] = true;
-			  				// TODO Send message to client "Cancelling..." Client displays message on progbar
-			  			}
-					});
+						// Handle messages from the client
+						webSocketClient.on('message', function incoming(data) {
+				  			if(JSON.parse(data).abort == true) {
+				  				console.log("File download aborted by client");
+				  				webSocketClient["abort"] = true;
+				  			}
+						});
 
-					Download.downloadCompoundObjectFiles(object, function(error, filepath) {
-						if(error) {
-							let errorMsg = "Error downloading object files: " + error;
-							console.log(errorMsg);
-							let msg = {
-							  status: "5",
-							  message: errorMsg
-							};
-							webSocketClient.send(JSON.stringify(msg));
-							websocketServer.clients.forEach(function each(ws) {
-							    ws.close();
-							});
-							if(res._headerSent == false) {
-								res.sendStatus(500);
+						Download.downloadCompoundObjectFiles(object, function(error, filepath) {
+							if(error) {
+								let errorMsg = "Error downloading object files: " + error;
+								console.log(errorMsg);
+								let msg = {
+								  status: "5",
+								  message: errorMsg
+								};
+								webSocketClient.send(JSON.stringify(msg));
+								webSocketClient.close();
+								if(res._headerSent == false) {
+									res.sendStatus(500);
+								}
 							}
-						}
-						else {
-							let msg = {
-							  status: "3",
-							  message: "File download complete. Transferring files..."
-							};
-							webSocketClient.send(JSON.stringify(msg));
-							
-							if(res._headerSent == false) {
-								res.download(filepath, function(error) { 
-									if(typeof error != 'undefined' && error) {
-										let err = "Error sending file to client: " + error + " Filepath: " + filepath;
-										console.log(err);
-										let msg = {
-										  status: "5",
-										  message: err
-										};
-										webSocketClient.send(JSON.stringify(msg));
-									}
-									else {
-										let msg = {
-										  status: "4",
-										  connection: "disconnect",
-										  message: "Disconnecting..."
-										};
-										webSocketClient.send(JSON.stringify(msg));
-									}
-									Download.removeDownloadTempFolder(filepath);
-									websocketServer.clients.forEach(function each(ws) {
-									    ws.close();
-									});
-							    });
+							else {
+								let msg = {
+								  status: "3",
+								  message: "File download complete. Transferring files..."
+								};
+								webSocketClient.send(JSON.stringify(msg));
+								
+								if(res._headerSent == false) {
+									res.download(filepath, function(error) { 
+										if(typeof error != 'undefined' && error) {
+											let err = "Error sending file to client: " + error + " Filepath: " + filepath;
+											console.log(err);
+											let msg = {
+											  status: "5",
+											  message: err
+											};
+											webSocketClient.send(JSON.stringify(msg));
+										}
+										else {
+											let msg = {
+											  status: "4",
+											  connection: "disconnect",
+											  message: "Disconnecting..."
+											};
+											webSocketClient.send(JSON.stringify(msg));
+										}
+										Download.removeDownloadTempFolder(filepath);
+										webSocketClient.close();
+								    });
+								}
 							}
-						}
-					}, webSocketClient);
-				});
+						}, webSocketClient);
+					}
+					else {
+						console.log("Error establishing connection to websocket")
+						res.sendStatus(500);
+					}
 			}
 			else {
 				res.sendStatus(501);

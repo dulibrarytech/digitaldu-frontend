@@ -1,10 +1,29 @@
+  /**
+    Copyright 2020 University of Denver
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+
+    You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+ */
+
+ /*
+  *	Page element event handlers
+  */
+
 'use strict'
 
 import { Configuration } from '../../config/configuration.js';
-import { ProgressBar } from './progress-bar.js';
+import { Downloader } from './downloader.js';
 
 $( document ).ready(function() {
-	const config = new Configuration;
 	$('#results-per-page').change(function(event) {
 		var searchUrl = decodeURIComponent(window.location.href).replace(/[&?]resultsPerPage=[0-9]+/g, "");
 		searchUrl = searchUrl.replace(/&*page=[0-9]+/g, "");
@@ -70,89 +89,8 @@ $( document ).ready(function() {
   		}
 	});
 
-	$(".file-download").click(function(event) {
-  		/* Disabled until update for multiple download options 6/25/20 */
-  		// if($(".download-links").hasClass("panel-collapsed")) {
-  		// 	$(".download-links").removeClass("panel-collapsed");
-  		// }
-  		// else {
-  		// 	$(".download-links").addClass("panel-collapsed");
-  		// }
-	});
-
-  	$(".batch-file-download").click(function(event) {
-  		var progressBar = new ProgressBar("file-download-progress", "100");
-  		$('#file-download-progress').show();
-  		$("#batch-file-download-cancel").prop("disabled",true);
-  		progressBar.displayMessage("Connecting to server...");
-  		setTimeout(function() { 
-			var socket = new WebSocket(config.getSettings('wsUrl'));
-
-			$("#batch-file-download-cancel").click(function(event) {
-	  			socket.send(JSON.stringify({abort: true}));
-			});
-
-			socket.onopen = function(event) {
-			  	console.log("Connection to socket established.");
-			  	socket.onmessage = function (event) {
-				  	var msg = JSON.parse(event.data);
-				  	try {
-					  	switch(msg.status) {
-					  		// Server acknowledges handshake
-					  		case "1":
-					  			progressBar.displayMessage("Downloading files, please wait...");
-					  			progressBar.setMaxValue(msg.itemCount);
-					  			break;
-					  		// Single file was transferred
-					  		case "2":
-					  			$("#batch-file-download-cancel").prop("disabled",false);
-					  			progressBar.increment(1);
-					  			break;
-					  		// File transfer complete
-					  		case "3": 
-					  			//progressBar.displayMessage("Download complete");
-					  			break;
-					  		// Download complete
-					  		case "4":
-					  			progressBar.remove();
-					  			$('#file-download-progress').hide();
-					  			console.log("Closing socket");
-					  			socket.close();
-					  			break;
-					  		// Error
-					  		case "5":
-					  			progressBar.remove();
-					  			$('#file-download-progress').hide();
-					  			console.log("Error");
-					  			socket.close();
-					  			break;
-					  		// Server received abort message
-					  		case "6":
-					  			progressBar.remove();
-					  			$('#file-download-progress').hide();
-					  			console.log("Closing socket");
-					  			socket.close();
-					  			break;
-					  		default:
-					  			socket.close();
-					  			console.log("Invalid socket status");
-					  			break;
-					  	}
-
-				  		if(msg.message) {
-				  			console.log(msg.message);
-				  		}
-					} catch (e) {
-		  				console.log(e);
-					}
-				}
-
-				socket.onerror = function(event) {
-				  	socket.close();
-		  			console.log(event);
-				};
-			};
-		}, config.getSettings('wsConnectDelay'));
+  	$(".download-button").click(function(event) {
+  		Downloader.downloadBatch($(".download-button").prop("value"), Configuration.getSetting('wsUrl'));
 	});
 
 	$("#home-search button").click(function(event) {
