@@ -1,34 +1,59 @@
+  /**
+    Copyright 2020 University of Denver
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+
+    You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+ */
+
 "use strict";
 
-const config = require('../config/' + process.env.CONFIGURATION_FILE),
-	serverPort = config.webSocketPort || 9007,
-    http = require("http"),
-    express = require("express"),
-    app = express(),
-    server = http.createServer(app),
-    WebSocket = require("ws"),
-    webSocketServer = new WebSocket.Server({ server }),
-    clientConnections = [];
+const WebSocket = require("ws");
 
-server.listen(serverPort, () => {
-    console.log(`Websocket server started on port ` + serverPort);
-});
+const WebSocketServer = (function () {
+	let object = {};
 
-webSocketServer.on('connection', (webSocketClient, req) => {
-	// Add the new connection to the client connection array
-	clientConnections.push(webSocketClient);
+	var config = require('../config/' + process.env.CONFIGURATION_FILE),
+    	http = require("http"),
+    	express = require("express"),
+    	app = express(),
+    	webSocketServer = null,
+    	clientConnections = [];
 
-	webSocketClient.on('close', (webSocketClient) => {
-		console.log("Websocket client closed");
-	});
-});
+    object.startServer = function(port) {
+    	let server = http.createServer(app);
+    	webSocketServer = new WebSocket.Server({ server });
 
-webSocketServer.getClient = function(clientHost) {
-	return clientConnections[clientHost] || null;
-}
+    	server.listen(port, () => {
+		    console.log("Websocket server started on port " + port);
+		});
 
-webSocketServer.getLastClient = function() {
-	return clientConnections[clientConnections.length-1];
-}
+		webSocketServer.on('connection', (webSocketClient, req) => {
+			// Add the new connection to the client connection array
+			clientConnections.push(webSocketClient);
 
-module.exports = webSocketServer;
+			webSocketClient.on('close', (webSocketClient) => {
+				console.log("Websocket client closed");
+			});
+		});
+    }
+
+    object.getClient = function(index) {
+    	return clientConnections[index];
+    }
+
+    object.getLastClient = function() {
+    	return clientConnections[clientConnections.length-1];
+    }
+
+	return object
+}());
+module.exports = WebSocketServer;

@@ -38,7 +38,7 @@ const async = require('async'),
     File = require("../libs/file");
 
 var webSocketServer = require("../libs/socket.js");
-
+webSocketServer.startServer(config.webSocketPort || 9007);
 /**
  * Renders the front page
  * Retrieves all objects in the root collection
