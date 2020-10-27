@@ -43,6 +43,6 @@
     "mocha": "^7.1.2",
     "selenium-webdriver": "^4.0.0-alpha.7",
     "supertest": "^4.0.2",
-    "chromedriver": "^84.0.1"
+    "chromedriver": "^86.0.0"
   }
 }
