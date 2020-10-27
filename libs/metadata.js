@@ -265,10 +265,11 @@ exports.createMetadataDisplayObject = function(result, collections=[]) {
 		}
 	}
 
-	// Add fields external to the main display configuration (these will appear after the display record)
+	// Fields external to the main display configuration (these will appear after the display record)
 	if(result.pid) {
 		let manifestUrl = config.rootUrl + "/iiif/" + result.pid + "/manifest";
 		displayObj["IIIF Manifest"] = '<a href="' + manifestUrl + '">' + manifestUrl + '</a>';
+		displayObj["IIIF Manifest"] += '<a id="copy-manifest-link"><img src="' + config.rootUrl + '/assets/img/cut-copy-and-paste.jpg" width="40" height="25" style="margin-left: 6px"/></a>';
 	}
 
 	return displayObj;
