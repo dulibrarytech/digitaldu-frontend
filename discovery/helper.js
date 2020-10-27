@@ -339,28 +339,41 @@ exports.getSortDataArray = function(sort) {
  */
 exports.getFileDownloadLinks = function(object, dsid, part=null) {
   let links = [];
-  // Object path is required for object download. If no path, do not add download links
-  if(object && object.object) {
-    let extension = AppHelper.getFileExtensionForMimeType(object.mime_type || "");
-    if(!extension) {
-      let pathExtension = AppHelper.getFileExtensionFromFilePath(object.object);
-      if(AppHelper.isValidExtension(pathExtension)) {
-        extension = pathExtension;
-      }
-    }
-    // 'part' can be null here
-    if(extension) {
-      let link = {
-        uri: config.rootUrl + "/datastream/" + object.pid + "/" + dsid + "/" + part + "/" + object.pid + "." + extension,
-        filename: object.pid + "." + extension,
-        extension: extension
-      };
-      links.push(link);
-    }
+
+  if(AppHelper.isParentObject(object) && config.enableCompoundObjectBatchDownload == true) {
+    let link = {
+      uri: config.rootUrl + "/download/" + object.pid + "/" + object.pid + ".zip",
+      filename: object.pid + ".zip",
+      extension: "zip",
+      isBatch: true
+    };
+    links.push(link);
   }
   else {
-    console.log("Can not create download links for object " + object.pid + ", object path is missing");
+    if(object.object) {
+      let extension = AppHelper.getFileExtensionForMimeType(object.mime_type || "");
+      if(!extension) {
+        let pathExtension = AppHelper.getFileExtensionFromFilePath(object.object);
+        if(AppHelper.isValidExtension(pathExtension)) {
+          extension = pathExtension;
+        }
+      }
+
+      if(extension) {
+        let link = {
+          uri: config.rootUrl + "/datastream/" + object.pid + "/" + dsid + "/" + part + "/" + object.pid + "." + extension,
+          filename: object.pid + "." + extension,
+          extension: extension,
+          isBatch: false
+        };
+        links.push(link);
+      }
+    }
+    else {
+      console.log("Can not create download links for object " + object.pid + ", object path is missing");
+    }
   }
+
   return links;
 }
 

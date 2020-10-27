@@ -169,7 +169,7 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
       }
     }
     else {
-      console.error("Error retrieving datastream for " + objectID + ", can not find configuration settings for object type " + object.object_type, null);
+      console.log("Error retrieving datastream for " + objectID + ", can not find configuration settings for object type " + object.object_type, null);
       streamDefaultThumbnail(object, callback);
     }
   }

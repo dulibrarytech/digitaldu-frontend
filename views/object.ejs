@@ -41,8 +41,12 @@
           <% if(citations) { %>
             <button id="view-citations" alt="View Citations" type="button">Cite This Item</button>
           <% } %>
-          <% if(downloads.length > 0) { %>
-            <a href="<%= downloads[link].uri %>" download><button id="file-download" class="download-button" alt="Download <%= downloads[0].extension %>">Download <%= downloads[0].extension %></button></a>
+          <% if(downloads.length > 0) { %> <!-- Loop downloads object here for multiple links for(link of downloads)-->
+            <% if(downloads[0].isBatch) { %>
+              <button class="download-button" alt="Download <%= downloads[0].extension %>" value="<%= downloads[0].uri %>">Download <%= downloads[0].extension %></button>
+            <% } else { %>
+              <a class="file-download" href="<%= downloads[0].uri %>" download><button class="download-button" alt="Download <%= downloads[0].extension %>">Download <%= downloads[0].extension %></button></a>
+            <% } %>
           <% } %>
           <% if(transcript) { %>
             <button id="view-transcript" alt="View Transcript" type="button">View Transcript</button>
@@ -50,6 +54,8 @@
         </span>
     </div>
   </div>
+
+  <div id="file-download-progress" class="container" style="display: none"></div>
 
   <% if(citations) { %>
     <div class="container object-citations citation-text panel-collapsed">

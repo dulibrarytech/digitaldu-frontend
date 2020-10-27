@@ -16,6 +16,7 @@
   "license": "MIT",
   "dependencies": {
     "async": "^3.2.0",
+    "async-waterfall": "^0.1.5",
     "body-parser": "^1.19.0",
     "compression": "^1.7.4",
     "crel": "^4.2.1",
@@ -25,12 +26,18 @@
     "elasticsearch": "^16.7.1",
     "express": "^4.17.1",
     "express-template-cache": "^0.1.0",
+    "file-download": "^0.1.2",
     "file-system": "^2.2.2",
     "helmet": "^3.22.0",
     "nocache": "^2.1.0",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.1",
     "request-stream": "^1.2.2",
-    "sanitize-html": "^1.23.0"
+    "sanitize-html": "^1.23.0",
+    "stringify-object": "^3.3.0",
+    "write": "^2.0.0",
+    "ws": "^7.3.1",
+    "xmlhttprequest": "^1.8.0",
+    "zip-a-folder": "0.0.12"
   },
   "devDependencies": {
     "chai": "^4.2.0",

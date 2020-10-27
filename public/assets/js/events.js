@@ -1,3 +1,28 @@
+  /**
+    Copyright 2020 University of Denver
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+
+    You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+ */
+
+ /*
+  *	Page element event handlers
+  */
+
+'use strict'
+
+import { Configuration } from '../../config/configuration.js';
+import { Downloader } from './downloader.js';
+
 $( document ).ready(function() {
 	$('#results-per-page').change(function(event) {
 		var searchUrl = decodeURIComponent(window.location.href).replace(/[&?]resultsPerPage=[0-9]+/g, "");
@@ -21,20 +46,6 @@ $( document ).ready(function() {
 		searchUrl += "sort=" + $('#sort-by-select').val();
 		window.location.replace(encodeURI(searchUrl));
 	});
-
-	function submitGotoPage() {
-		if($('#set-page-number').val().match(/^[0-9]+$/)) {
-			var searchUrl = decodeURIComponent(window.location.href).replace(/[&?]page=[a-zA-Z0-9, ]+/g, ""),
-				val = $('#set-page-number').val() <= parseInt($('#page-count').html()) ? $('#set-page-number').val() : parseInt($('#page-count').html());
-
-			if(searchUrl.indexOf("?") >= 0) { searchUrl += ("&page=" + val) }
-			else { searchUrl += ("?page=" + val) }
-			window.location.replace(encodeURI(searchUrl));
-		}
-		else {
-			console.log("Invalid input, must be integer")
-		}
-	}
 
 	$( "#goto-page-form" ).bind( "keydown", function(event) {
 		if(event.keyCode == 13) {
@@ -78,14 +89,8 @@ $( document ).ready(function() {
   		}
 	});
 
-  	$("#file-download").click(function(event) {
-  		/* Disabled until update for multiple download options 6/25/20 */
-  		// if($(".download-links").hasClass("panel-collapsed")) {
-  		// 	$(".download-links").removeClass("panel-collapsed");
-  		// }
-  		// else {
-  		// 	$(".download-links").addClass("panel-collapsed");
-  		// }
+  	$(".download-button").click(function(event) {
+  		Downloader.downloadBatch($(".download-button").prop("value"), Configuration.getSetting('wsUrl'));
 	});
 
 	$("#home-search button").click(function(event) {
@@ -106,7 +111,20 @@ $( document ).ready(function() {
 		$(".sidebar-search form").submit();
 	});
 
-	// TODO convert above functions to pure JS from JQuery
+	function submitGotoPage() {
+		if($('#set-page-number').val().match(/^[0-9]+$/)) {
+			var searchUrl = decodeURIComponent(window.location.href).replace(/[&?]page=[a-zA-Z0-9, ]+/g, ""),
+				val = $('#set-page-number').val() <= parseInt($('#page-count').html()) ? $('#set-page-number').val() : parseInt($('#page-count').html());
+
+			if(searchUrl.indexOf("?") >= 0) { searchUrl += ("&page=" + val) }
+			else { searchUrl += ("?page=" + val) }
+			window.location.replace(encodeURI(searchUrl));
+		}
+		else {
+			console.log("Invalid input, must be integer")
+		}
+	}
+
 	var accordions = document.getElementsByClassName("collapsible");
 	for (var i = 0; i < accordions.length; i++) {
 	    accordions[i].addEventListener("click", function() {

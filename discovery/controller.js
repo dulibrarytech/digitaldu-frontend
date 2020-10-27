@@ -33,8 +33,12 @@ const async = require('async'),
     Paginator = require('../libs/paginator'),
     Metadata = require('../libs/metadata'),
     Search = require('../search/service'),
-    Format = require("../libs/format");
+    Format = require("../libs/format"),
+    Download = require("../libs/download"),
+    File = require("../libs/file");
 
+var webSocketServer = require("../libs/socket.js");
+webSocketServer.startServer(config.webSocketPort || 9007);
 /**
  * Renders the front page
  * Retrieves all objects in the root collection
@@ -276,7 +280,6 @@ exports.renderObjectView = function(req, res) {
 				}
 				else {
 					data["returnLink"] = (req.header('Referer') && req.header('Referer').indexOf(config.rootUrl + "/search?") >= 0) ? req.header('Referer') : false;
-
 					Service.getCollectionHeirarchy(object.is_member_of_collection, function(collectionTitles) {
 						data.id = pid;
 						object.type = Helper.normalizeLabel("Type", object.type || "")
@@ -478,7 +481,7 @@ exports.getObjectViewer = function(req, res) {
 			else {
 				if(page != "1") {
 					let msg = "Object not found: " + pid;
-					console.error(msg)
+					console.log(msg)
 					errors = msg;
 				}
 				else {
@@ -509,21 +512,95 @@ exports.getObjectViewer = function(req, res) {
 }
 
 exports.downloadObjectFile = function(req, res) {
-	var pid = req.params.pid || "";
-	for(var key in config.fileExtensions) {
-		if(pid.indexOf(key) > 0) {
-			let ext = "." + key;
-			pid = pid.replace(ext, "");
+	var pid = req.params.pid || "",
+		clientHost = req.hostname || "";
+
+	Service.fetchObjectByPid(config.elasticsearchPublicIndex, pid, function(error, object) {
+		if(error) {
+			console.log(error, pid);
+			res.sendStatus(500);
 		}
-	}
+		else if(object == null) {
+			console.log("Object not found", pid);
+			res.sendStatus(404);
+		}
+		else {
+			if(AppHelper.isParentObject(object) == true) {
+					let webSocketClient = webSocketServer.getLastClient();
+					if(webSocketClient) {
+						console.log("Client connected to socket server. Downloading object files for", object.pid)
+						let msg = {
+						  status: "1",
+						  message: "Client connected",
+						  itemCount: AppHelper.getCompoundObjectItemCount(object) || 0
+						};
+						webSocketClient.send(JSON.stringify(msg));
 
-	let part = null;
-	if(pid.indexOf(config.compoundObjectPartID) > 0) {
-		part = pid.substring(pid.indexOf(config.compoundObjectPartID)+1, pid.length);	
-		pid = pid.split(config.compoundObjectPartID,1)[0];
-	}
+						// Handle messages from the client
+						webSocketClient.on('message', function incoming(data) {
+				  			if(JSON.parse(data).abort == true) {
+				  				console.log("File download aborted by client");
+				  				webSocketClient["abort"] = true;
+				  			}
+						});
 
-	res.sendStatus(200)
+						Download.downloadCompoundObjectFiles(object, function(error, filepath) {
+							if(error) {
+								let errorMsg = "Error downloading object files: " + error;
+								console.log(errorMsg);
+								let msg = {
+								  status: "5",
+								  message: errorMsg
+								};
+								webSocketClient.send(JSON.stringify(msg));
+								webSocketClient.close();
+								if(res._headerSent == false) {
+									res.sendStatus(500);
+								}
+							}
+							else {
+								let msg = {
+								  status: "3",
+								  message: "File download complete. Transferring files..."
+								};
+								webSocketClient.send(JSON.stringify(msg));
+								
+								if(res._headerSent == false) {
+									res.download(filepath, function(error) { 
+										if(typeof error != 'undefined' && error) {
+											let err = "Error sending file to client: " + error + " Filepath: " + filepath;
+											console.log(err);
+											let msg = {
+											  status: "5",
+											  message: err
+											};
+											webSocketClient.send(JSON.stringify(msg));
+										}
+										else {
+											let msg = {
+											  status: "4",
+											  connection: "disconnect",
+											  message: "Disconnecting..."
+											};
+											webSocketClient.send(JSON.stringify(msg));
+										}
+										Download.removeDownloadTempFolder(filepath);
+										webSocketClient.close();
+								    });
+								}
+							}
+						}, webSocketClient);
+					}
+					else {
+						console.log("Error establishing connection to websocket")
+						res.sendStatus(500);
+					}
+			}
+			else {
+				res.sendStatus(501);
+			}
+		}
+	});
 }
 
 exports.renderHandleErrorPage = function(req, res) {

@@ -44,6 +44,8 @@ module.exports = {
     appPath: process.env.CLIENT_PATH,
     baseUrl: process.env.CLIENT_HOST,
     rootUrl: process.env.CLIENT_HOST + process.env.CLIENT_PATH,
+    webSocketDomain: process.env.WEB_SOCKET_DOMAIN,
+    webSocketPort: process.env.WEB_SOCKET_PORT,
 
     /*
      * External services
@@ -175,9 +177,11 @@ module.exports = {
     universalViewerKalturaPlayer: true,
 
     /*
-     * Show the object download options
+     * Download options
      */
     enableFileDownload: true,
+    enableCompoundObjectBatchDownload: true,
+    batchFileDownloadTemporaryFolder: "./cache/download/temporary-download",
 
     /*
      * IIIF API 

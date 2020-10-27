@@ -105,7 +105,7 @@ exports.sanitizeHttpParamsObject = function(object) {
 	}
 }
 
-exports.getCompoundObjectPart = function(object, partIndex) {
+var getCompoundObjectPart = function(object, partIndex) {
 	var parts = [],
 		objectPart = null;
 		
@@ -128,6 +128,103 @@ exports.getCompoundObjectPart = function(object, partIndex) {
 	}
 
 	return objectPart;
+}
+exports.getCompoundObjectPart = getCompoundObjectPart;
+
+/**
+ * Determines if a compound object's children meet a certain criteria
+ * Currently, only audio and video objects, or small and large images can be combined in a compound object.  All other combinations of child object types are invalid
+ *
+ * @param {Object} object - index document
+ * @return {Boolean} - true if valid, false if not
+ */
+var validateCompoundObject = function(object) {
+	var isValid = false,
+		mimeType = "";
+
+	var parts = getCompoundObjectPart(object, -1) || [];
+
+	// If the compound object has no mime type data, get mime type of first part, use that for compound object mime type
+	if(!object.mime_type || object.mime_type == "") {
+		if(parts && parts.length > 0) {
+			if(parts[0].mime_type || parts[0].type) {
+				mimeType = parts[0].mime_type || parts[0].type;
+			}
+		}
+	}
+
+	// Use the compound object's mime type
+	else {
+		mimeType = object.mime_type;
+	}
+	
+	// Validate the compound object parts' mime types against the compound object's allowed mime types
+	if(config.objectTypes["audio"].includes(mimeType) || config.objectTypes["video"].includes(mimeType)) {
+		isValid = validateCompoundObjectParts(parts || [], ["audio", "video"]);
+	}
+	else if(config.objectTypes["pdf"].includes(mimeType)) {
+		isValid = validateCompoundObjectParts(parts || [], ["pdf"]);
+	}
+	else if(config.objectTypes["still image"].includes(mimeType)) {
+		isValid = validateCompoundObjectParts(parts || [], ["still image"]);
+	}
+	else {
+		console.log("Invalid compound object mime type");
+	}
+
+	return isValid;
+}
+exports.validateCompoundObject = validateCompoundObject;
+
+/**
+ * Validate an array of object parts against a list of object types
+ *
+ * @param {Array.<Object>} parts - Array of part objects
+ * @param {Array.<String>} objectTypes - Array of object type strings
+ * @return {Boolean} - true if combination of parts is valid, false if not
+ */
+var validateCompoundObjectParts = function(parts, objectTypes) {
+	var acceptedMimeTypes = [], 
+		mimeType = "",
+		isValid = false;
+
+	// Build an array of accepted mime types for this compound object
+	for(var type of objectTypes) {
+		acceptedMimeTypes = acceptedMimeTypes.concat(config.objectTypes[type]);
+	}
+
+	// Determine if any of the object's parts are of an unacceptable mimetype
+	if(parts && parts.length > 0) {
+		isValid = true;
+		for(var part of parts) {
+			if(typeof part.object == 'undefined' || !part.object) {
+				isValid = false;
+				break;
+			}
+
+			mimeType = part.mime_type || part.type || "";
+			if(acceptedMimeTypes.includes(mimeType) == false) {
+				isValid = false;
+				break;
+			}
+		}
+	}
+
+	return isValid;
+}
+
+exports.getCompoundObjectItemCount = function(object) {
+	let count = null;
+	if(object[config.displayRecordField].parts && object[config.displayRecordField].parts.length) {
+		count = object[config.displayRecordField].parts.length;
+	}
+	else if(object.compound && object.compound.length) {
+		count = object.compound.length;
+	}
+	else if(object.parts && object.parts.length) {
+		count = object.parts.length;
+	}
+	return count;
 }
 
 var getFileExtensionFromFilePath = function(filename) {
