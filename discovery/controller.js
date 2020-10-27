@@ -209,8 +209,8 @@ exports.getCollectionList = function(req, res) {
 }
 
 /**
- * Renders the object view
- * Retrieves object data for requested object
+ * Retrieve object data for requested object
+ * Render the object view
  * 
  * @param {Object} req - Express.js request object
  * @param {String} req.params.pid - PID of the object to be rendered
@@ -230,7 +230,8 @@ exports.renderObjectView = function(req, res) {
 		transcript: null,
 		root_url: config.rootUrl
 	},
-	pid = req.params.pid || "";
+	pid = req.params.pid || "",
+	part = null;
 	
 	Service.fetchObjectByPid(config.elasticsearchPublicIndex, pid, function(error, response) {
 		if(error) {
@@ -262,6 +263,7 @@ exports.renderObjectView = function(req, res) {
 
 				if(AppHelper.isParentObject(object)) {
 					data.viewer = CompoundViewer.getCompoundObjectViewer(object, page);
+					part = "1";
 				}
 				else {
 					data.viewer = Viewer.getObjectViewer(object);
@@ -280,7 +282,7 @@ exports.renderObjectView = function(req, res) {
 						object.type = Helper.normalizeLabel("Type", object.type || "")
 						data.summary = Metadata.createSummaryDisplayObject(object);
 						data.metadata = Object.assign(data.metadata, Metadata.createMetadataDisplayObject(object, collectionTitles));
-						data.downloads = config.enableFileDownload ? Helper.getFileDownloadLinks(object, AppHelper.getDsType(object.mime_type || "")) : null; // PROD
+						data.downloads = config.enableFileDownload ? Helper.getFileDownloadLinks(object, AppHelper.getDsType(object.mime_type || ""), part) : null; // PROD
 						data.citations = Helper.getCitations(object);
 						res.render('object', data);
 					});

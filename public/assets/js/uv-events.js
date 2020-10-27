@@ -1,5 +1,7 @@
 $( document ).ready(function() {
 	$( "#uv" ).on("uvloaded", function(event, params) {
+
+		//UniversalViewer.initViewer(params):
 			
 		// Add compound object viewer page nave links
 		if(params.pageSize > 0) {
@@ -12,6 +14,8 @@ $( document ).ready(function() {
 
 		// Embed a Kaltura viewer in the universalviewer UI
 		if(params.embedKalturaViewer) {
+			//UniversalViewer.embedKalturaViewer(params):
+
 	  		$( "#uv" ).css("visibility", "hidden");
 	  		$(".mwPlayerContainer").css("display", "none");
 	  		$(".transcriptInterface").css("width", "98%");
@@ -25,13 +29,13 @@ $( document ).ready(function() {
 		  		$("[id^=mep_]").html("");
 		  		$("[id^=mep_]").append(params.viewerContent);
 
-		  		// Add thumbnail click event to load requested Kaltura viewer
+		  		// Handle UV left panel thumbnail click event
 		  		$(".thumb").on("click", function(event) {
 					let part = parseInt($(this)[0].id.replace("thumb", "")) + 1,
 						uri = $(this)[0].baseURI,
 						baseUrl = uri.substring(0, uri.indexOf("/object"));
 
-					// Get the Kaltura viewer content
+					// Get the Kaltura viewer content, add to viewer
 		  			let kalturaViewerUri = baseUrl + "/viewer/kaltura/" + params.objectID + "/" + part;
 		  			$.get(kalturaViewerUri, function(viewerContent, status) {
 					    if(status == "success") {$("[id^=mep_]").html(viewerContent)}
@@ -39,6 +43,8 @@ $( document ).ready(function() {
 					});
 		  		});
 		  	}, 1000);
+
+		  	//UniversalViewer.createTranscriptViewer(params):
 
 			// Add view transcript button, define Kaltura transcript viewer hide/show functionality
 			var uvExpandHeight = $(".uv").height() + 220, // 1020px
@@ -69,6 +75,24 @@ $( document ).ready(function() {
 					$( ".mainPanel" ).css("height", mainPanelCollapseHeight);
 		  		}
 		  	});
+	  	}
+	  	else {
+	  		// Handle UV left panel thumbnail click event
+	  		setTimeout(function(){
+		  		$(".thumb").on("click", function(event) {
+					let pid = params.objectID,
+						part = parseInt($(this)[0].id.replace("thumb", "")) + 1,
+						uri = $(this)[0].baseURI,
+						baseUrl = uri.substring(0, uri.indexOf("/object"));
+
+					console.log("TEST clicked part", part)
+
+					// Get the download url (button value)
+					// Get extension using lastIndexOf(".") substring of current url
+					// Build new download url baseUrl + /datastream/ + pid + extension + part + pid.extension
+					// Assign new url to button value
+		  		});
+	  		}, 1000);
 	  	}
 	});
 });
