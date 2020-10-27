@@ -128,8 +128,10 @@ describe('Special Collections (Selenium) Tests', function() {
           });
         });
 
-        it('Search hockey', function() {
-          return browser.findElement(webdriver.By.name('q[]')).sendKeys('Founders Bell');
+        it('Search for object', function() {
+          browser.findElement(webdriver.By.name('q[]')).sendKeys('Founders Bell');
+          return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[1]/div/div[2]/form/div[3]/button'))
+          .click();
         });
 
         it('Search success test', function() {
@@ -971,7 +973,7 @@ describe('Special Collections (Selenium) Tests', function() {
 
       describe('Collection render tests', function() {
         before(function() {
-          return browser.get('http://localhost:9007/');
+          return browser.get(frontend);
         });
 
         it('Collection thumbnail', function() {
@@ -1003,11 +1005,19 @@ describe('Special Collections (Selenium) Tests', function() {
           .click();
         });
 
-        it('Collection contents', function() {
-          return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[4]/div[2]/div[4]/div/div/dl/a'))
-          .getAttribute('href')
+        it('Collection contents 1st object', function() {
+          return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[4]/div[2]/div[4]/div/div[1]/dl/a/dd/div/h3'))
+          .getAttribute('innerHTML')
           .then(function(text) {
-            expect(text).to.include('http://localhost:9007/datastream/7479257d-3c34-4e87-8358-05460a828ca1/tn');
+            expect(text).to.include('Central High School Class of 1909, 1909');
+          });
+        });
+
+        it('Collection contents 2nd object', function() {
+          return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[4]/div[2]/div[4]/div/div[2]/dl/a/dd/div/h3'))
+          .getAttribute('innerHTML')
+          .then(function(text) {
+            expect(text).to.include('Founders Bell');
           });
         });
       });
