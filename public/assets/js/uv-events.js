@@ -1,5 +1,5 @@
 $( document ).ready(function() {
-	$( "#uv" ).on("uvloaded", function(event, params) {
+	$( "#uv" ).on("uvElementLoaded", function(event, params) {
 
 		//UniversalViewer.initViewer(params):
 			
@@ -42,7 +42,7 @@ $( document ).ready(function() {
 					    else {console.log("Error: Can not retrieve Kaltura content. Status is ", status)}
 					});
 		  		});
-		  	}, 1000);
+		  	}, 500);
 
 		  	//UniversalViewer.createTranscriptViewer(params):
 
@@ -80,17 +80,7 @@ $( document ).ready(function() {
 	  		// Handle UV left panel thumbnail click event
 	  		setTimeout(function(){
 		  		$(".thumb").on("click", function(event) {
-					let pid = params.objectID,
-						part = parseInt($(this)[0].id.replace("thumb", "")) + 1,
-						uri = $(this)[0].baseURI,
-						baseUrl = uri.substring(0, uri.indexOf("/object"));
-
-					console.log("TEST clicked part", part)
-
-					// Get the download url (button value)
-					// Get extension using lastIndexOf(".") substring of current url
-					// Build new download url baseUrl + /datastream/ + pid + extension + part + pid.extension
-					// Assign new url to button value
+		  			//UniversalViewer.updateDownloadUrlsForPart(downloadUrls, baseUrl, pid, part, ext);
 		  		});
 	  		}, 1000);
 	  	}

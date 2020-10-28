@@ -281,6 +281,7 @@ function getIIIFObjectViewer(object, page=null, embedKalturaViewer=false, apikey
 
 	params["embedKalturaViewer"] = embedKalturaViewer;
 	params["objectID"] = pid;
+	params["fileExtension"] = AppHelper.getFileExtensionForMimeType(object.mime_type || null);
 	params["universalViewerMediaElement"] = config.universalViewerMediaElement || "";
 	params["pageSize"] = config.IIIFManifestPageSize || 10;
 
@@ -290,7 +291,8 @@ function getIIIFObjectViewer(object, page=null, embedKalturaViewer=false, apikey
 		params["viewerContent"] = getKalturaViewer(objectData);
 	}
 
-	eventTriggers += '$( "#uv").trigger( "uvloaded", ' + JSON.stringify(params) + ' );';
+	eventTriggers += '$( document ).ready(function() { $( "#uv").trigger( "uvElementLoaded", ' + JSON.stringify(params) + ' );});';
+
 	page = page ? ("/" + page) : "";
 	let viewer = '<div id="uv" class="uv"></div>';
 		viewer += '<script>';
