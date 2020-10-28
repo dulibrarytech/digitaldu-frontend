@@ -1,6 +1,5 @@
 $( document ).ready(function() {
 	$( "#uv" ).on("uvElementLoaded", function(event, params) {
-
 		//UniversalViewer.initViewer(params):
 			
 		// Add compound object viewer page nave links
