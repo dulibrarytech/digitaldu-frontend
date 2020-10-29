@@ -12,6 +12,20 @@ $( document ).ready(function() {
   		Downloader.downloadBatch($(".download-button").prop("value"), Configuration.getSetting('wsUrl'));
 	});
 
+	$(".show-download-options").click(function(event) {
+		let downloadLinkList = $(".download-links");
+			console.log("Download links", downloadLinkList);
+
+		if(downloadLinkList.hasClass("panel-collapsed")) {
+			downloadLinkList.removeClass("panel-collapsed");
+			$(".show-download-options").html("Hide Download Options");
+		}
+		else {
+			downloadLinkList.addClass("panel-collapsed");
+			$(".show-download-options").html("Show Download Options");
+		}
+	});
+
 	$("#copy-manifest-link").click(function(event) {
 		var r = document.createRange();
 		var iiifLink = document.getElementById("copy-manifest-link").previousSibling;

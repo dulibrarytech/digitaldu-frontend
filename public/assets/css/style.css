@@ -1279,10 +1279,30 @@ div.object-options button:focus {
 
 div.download-links {
   margin-top: 30px;
+  text-align: left;
+  background-color: #ffffff;
+  padding: 0.7em;
+}
+
+div.download-links li {
+  margin-top: 0.7em;
 }
 
 div.download-links a {
-  font-size: 0.9em;
+  font-size: 1em;
+  text-decoration: underline;
+}
+
+div.download-links button {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #007bff;
+  text-decoration: underline;
+}
+
+div.download-links button:hover {
+  color: #000;
 }
 
 .disabledbutton {

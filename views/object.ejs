@@ -24,14 +24,17 @@
     </div>
   </div>
 
-  <!-- Collapsed download link section. Disabled until update for multiple download options 6/25/20 -->
-  <!-- <div class="download-links panel-collapsed">
+  <div class="download-links container panel-collapsed">
     <ul>
-      <% for (var link in downloads) { %>
-        <li><a href="<%= downloads[link].uri %>" download><%= downloads[link].filename %></a></li>
+      <% for (var i in downloads) { %>
+        <% if(downloads[i].isBatch) { %>
+          <li><button class="download-button" alt="Download <%= downloads[i].extension %>" value="<%= downloads[i].uri %>">Download ZIP file (all images)</button></li>
+        <% } else { %>
+          <li><a href="<%= downloads[i].uri %>" download="<% downloads[i].filename %>">Download <%= downloads[i].extension.toUpperCase() %></a></li>
+        <% } %>
       <% } %>
     </ul>
-  </div> -->
+  </div>
 </div>
 
 <div id="metadata-section">
@@ -41,13 +44,17 @@
           <% if(citations) { %>
             <button id="view-citations" alt="View Citations" type="button">Cite This Item</button>
           <% } %>
-          <% if(downloads.length > 0) { %> <!-- Loop downloads object here for multiple links for(link of downloads)-->
+
+          <% if(downloads.length == 1) { %>
             <% if(downloads[0].isBatch) { %>
-              <button class="download-button" alt="Download <%= downloads[0].extension %>" value="<%= downloads[0].uri %>">Download <%= downloads[0].extension %></button>
+              <button class="download-button" alt="Download <%= downloads[0].extension %>" value="<%= downloads[0].uri %>">Download ZIP file (all images)</button>
             <% } else { %>
-              <a class="file-download" href="<%= downloads[0].uri %>" download><button class="download-button" alt="Download <%= downloads[0].extension %>">Download <%= downloads[0].extension %></button></a>
+              <a href="<%= downloads[0].uri %>" download="<%= downloads[0].filename %>"><button class="" alt="Download <%= downloads[0].extension %>">Download <%= downloads[0].extension.toUpperCase() %></button></a>
             <% } %>
+          <% } else if(downloads.length > 1) { %>
+            <button class="show-download-options" alt="Show download options">Show Download Options</button>
           <% } %>
+
           <% if(transcript) { %>
             <button id="view-transcript" alt="View Transcript" type="button">View Transcript</button>
           <% } %>
