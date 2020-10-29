@@ -340,38 +340,39 @@ exports.getSortDataArray = function(sort) {
 exports.getFileDownloadLinks = function(object, dsid, part=null) {
   let links = [];
 
-  if(AppHelper.isParentObject(object) && config.enableCompoundObjectBatchDownload == true) {
-    let link = {
-      uri: config.rootUrl + "/download/" + object.pid + "/" + object.pid + ".zip",
-      filename: object.pid + ".zip",
-      extension: "zip",
-      isBatch: true
-    };
-    links.push(link);
+  if(object.object) {
+    let extension = AppHelper.getFileExtensionForMimeType(object.mime_type || "");
+    if(!extension) {
+      let pathExtension = AppHelper.getFileExtensionFromFilePath(object.object);
+      if(AppHelper.isValidExtension(pathExtension)) {
+        extension = pathExtension;
+      }
+    }
+
+    if(extension) {
+      let link = {
+        uri: config.rootUrl + "/datastream/" + object.pid + "/" + dsid + "/" + part + "/" + object.pid + "." + extension,
+        filename: object.pid + "." + extension,
+        extension: extension == "jp2" ? (extension + " (JPEG 2000)") : extension,
+        isBatch: false
+      };
+      links.push(link);
+    }
   }
   else {
-    if(object.object) {
-      let extension = AppHelper.getFileExtensionForMimeType(object.mime_type || "");
-      if(!extension) {
-        let pathExtension = AppHelper.getFileExtensionFromFilePath(object.object);
-        if(AppHelper.isValidExtension(pathExtension)) {
-          extension = pathExtension;
-        }
-      }
-
-      if(extension) {
-        let link = {
-          uri: config.rootUrl + "/datastream/" + object.pid + "/" + dsid + "/" + part + "/" + object.pid + "." + extension,
-          filename: object.pid + "." + extension,
-          extension: extension,
-          isBatch: false
-        };
-        links.push(link);
-      }
-    }
-    else {
-      console.log("Can not create download links for object " + object.pid + ", object path is missing");
-    }
+    console.log("Can not create download links for object " + object.pid + ", object path is missing");
+  }
+  
+  if(AppHelper.isParentObject(object) && 
+    config.enableCompoundObjectBatchDownload == true &&
+    AppHelper.validateCompoundObject(object)) {
+      let link = {
+        uri: config.rootUrl + "/download/" + object.pid + "/" + object.pid + ".zip",
+        filename: object.pid + ".zip",
+        extension: "zip",
+        isBatch: true
+    };
+    links.push(link);
   }
 
   return links;
