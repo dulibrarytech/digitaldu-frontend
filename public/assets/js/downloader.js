@@ -39,7 +39,7 @@ export const Downloader = (function () {
 				  	switch(msg.status) {
 				  		// Begin file transfer
 				  		case "1":
-				  			progressBar.displayMessage("Downloading files, please wait...");
+				  			progressBar.displayMessage("Retrieving files, please wait...");
 				  			progressBar.setMaxValue(msg.itemCount);
 				  			break;
 				  		// Single file was transferred
@@ -49,7 +49,7 @@ export const Downloader = (function () {
 				  			break;
 				  		// File transfer complete
 				  		case "3": 
-				  			//progressBar.displayMessage("Download complete");
+				  			progressBar.displayMessage("Downloading...");
 				  			break;
 				  		// Download complete
 				  		case "4":
