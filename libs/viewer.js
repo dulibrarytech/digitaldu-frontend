@@ -272,18 +272,24 @@ function getIIIFObjectViewer(object, page=null, embedKalturaViewer=false, apikey
 	var params = {},
 		relativePath = "./../..",
 		eventTriggers = "",
-		pid = object.pid;
+		pid = object.pid,
+		mimeType = object.mime_type || null,
+		extension = "";
 
-	// Add page links for compound object viewer
-	if(object.is_compound) {
+	if(AppHelper.isParentObject(object)) {
 		object = AppHelper.getCompoundObjectPart(object, page) || [];
+		extension = AppHelper.getFileExtensionFromFilePath(object.object || "");
+	}
+	else {
+		extension = AppHelper.getFileExtensionForMimeType(mimeType);
 	}
 
-	params["embedKalturaViewer"] = embedKalturaViewer;
+	params["baseUrl"] = config.rootUrl;
 	params["objectID"] = pid;
-	params["fileExtension"] = AppHelper.getFileExtensionForMimeType(object.mime_type || null);
+	params["fileExtension"] = extension;
 	params["universalViewerMediaElement"] = config.universalViewerMediaElement || "";
 	params["pageSize"] = config.IIIFManifestPageSize || 10;
+	params["embedKalturaViewer"] = embedKalturaViewer;
 
 	// Option to embed the Kaltura player into the Universalviewer instance
 	if(embedKalturaViewer) {
@@ -291,6 +297,7 @@ function getIIIFObjectViewer(object, page=null, embedKalturaViewer=false, apikey
 		params["viewerContent"] = getKalturaViewer(objectData);
 	}
 
+	// Trigger the uvElementLoaded event and pass in the parameter data
 	eventTriggers += '$( document ).ready(function() { $( "#uv").trigger( "uvElementLoaded", ' + JSON.stringify(params) + ' );});';
 
 	page = page ? ("/" + page) : "";

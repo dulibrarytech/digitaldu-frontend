@@ -1,7 +1,11 @@
+/*
+ * Universal Viewer view events
+ */
+
 $( document ).ready(function() {
 	$( "#uv" ).on("uvElementLoaded", function(event, params) {
 		//UniversalViewer.initViewer(params):
-			
+
 		// Add compound object viewer page nave links
 		if(params.pageSize > 0) {
 			$("#object-view").append('<div id="sidebar-nav-buttons" style="display: none"></div>');
@@ -33,6 +37,8 @@ $( document ).ready(function() {
 					let part = parseInt($(this)[0].id.replace("thumb", "")) + 1,
 						uri = $(this)[0].baseURI,
 						baseUrl = uri.substring(0, uri.indexOf("/object"));
+
+					updateDownloadUrlsForPart(params.baseUrl, params.objectID, part, params.fileExtension);
 
 					// Get the Kaltura viewer content, add to viewer
 		  			let kalturaViewerUri = baseUrl + "/viewer/kaltura/" + params.objectID + "/" + part;
@@ -78,10 +84,49 @@ $( document ).ready(function() {
 	  	else {
 	  		// Handle UV left panel thumbnail click event
 	  		setTimeout(function(){
-		  		$(".thumb").on("click", function(event) {
-		  			//UniversalViewer.updateDownloadUrlsForPart(downloadUrls, baseUrl, pid, part, ext);
+	  			let part = "1";
+		  		$(".thumb").click(function(event) {
+		  			part = parseInt(event.currentTarget.id.replace("thumb", "") || "1")+1;
+		  			updateDownloadUrlsForPart(params.baseUrl, params.objectID, part, params.fileExtension);
 		  		});
 	  		}, 1000);
 	  	}
 	});
 });
+
+/*
+ *
+ */
+function initViewer(params) {
+
+}
+
+/*
+ *
+ */
+function embedKalturaViewer(params) {
+
+}
+
+/*
+ *
+ */
+function createTranscriptViewer(params) {
+
+}
+
+/*
+ *
+ */
+function updateDownloadUrlsForPart(baseUrl, pid, part, extension) {
+	let url, filename;
+	for(var button of $(".download-button")) {
+		if($("#"+button.id).hasClass("batch-download-button") == false) {
+			url = baseUrl + "/datastream/" + pid + "/" + extension + "/" + part + "/" + pid + "_" + part + "." + extension; 
+			filename = pid + "_" + part + "." + extension;
+
+			$("#"+button.id+" a").prop("href", url);
+			$("#"+button.id+" a").prop("download", filename);
+		}
+	}
+}

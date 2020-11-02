@@ -638,7 +638,8 @@ module.exports = {
         "jpg": ["image/jpg", "image/jpeg"],
         "mp3": ["audio/mp3", "audio/x-wav"],
         "mp4": ["video/mp4"],
-        "pdf": ["application/pdf"]
+        "pdf": ["application/pdf"],
+        "wav": ["audio/wav"]
      },
 
       /*

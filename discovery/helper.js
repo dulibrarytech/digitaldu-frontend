@@ -338,10 +338,27 @@ exports.getSortDataArray = function(sort) {
  * @return {Array.<String>} Array of download link uris
  */
 exports.getFileDownloadLinks = function(object, dsid, part=null) {
-  let links = [];
+  let links = [],
+      pid = object.pid;
+  
+  if(AppHelper.isParentObject(object) && 
+    config.enableCompoundObjectBatchDownload == true &&
+    AppHelper.validateCompoundObject(object)) {
+
+    let link = {
+      uri: config.rootUrl + "/download/" + pid + "/" + pid + ".zip",
+      filename: pid + ".zip",
+      extension: "zip",
+      isBatch: true
+    };
+    links.push(link);
+
+    object = AppHelper.getCompoundObjectPart(object, 1);
+  }
 
   if(object.object) {
-    let extension = AppHelper.getFileExtensionForMimeType(object.mime_type || "");
+    let extension = object.mime_type ? AppHelper.getFileExtensionForMimeType(object.mime_type) : null;
+
     if(!extension) {
       let pathExtension = AppHelper.getFileExtensionFromFilePath(object.object);
       if(AppHelper.isValidExtension(pathExtension)) {
@@ -351,8 +368,8 @@ exports.getFileDownloadLinks = function(object, dsid, part=null) {
 
     if(extension) {
       let link = {
-        uri: config.rootUrl + "/datastream/" + object.pid + "/" + dsid + "/" + part + "/" + object.pid + "." + extension,
-        filename: object.pid + "." + extension,
+        uri: config.rootUrl + "/datastream/" + pid + "/" + dsid + "/" + part + "/" + pid + "." + extension,
+        filename: pid + "." + extension,
         extension: extension == "jp2" ? (extension + " (JPEG 2000)") : extension,
         isBatch: false
       };
@@ -360,19 +377,7 @@ exports.getFileDownloadLinks = function(object, dsid, part=null) {
     }
   }
   else {
-    console.log("Can not create download links for object " + object.pid + ", object path is missing");
-  }
-  
-  if(AppHelper.isParentObject(object) && 
-    config.enableCompoundObjectBatchDownload == true &&
-    AppHelper.validateCompoundObject(object)) {
-      let link = {
-        uri: config.rootUrl + "/download/" + object.pid + "/" + object.pid + ".zip",
-        filename: object.pid + ".zip",
-        extension: "zip",
-        isBatch: true
-    };
-    links.push(link);
+    console.log("Can not create download links for object " + pid + ", object path is missing");
   }
 
   return links;

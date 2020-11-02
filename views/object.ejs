@@ -24,17 +24,17 @@
     </div>
   </div>
 
-  <div class="download-links container panel-collapsed">
+  <!-- <div class="download-links container panel-collapsed">
     <ul>
       <% for (var i in downloads) { %>
         <% if(downloads[i].isBatch) { %>
           <li><button class="download-button" alt="Download <%= downloads[i].extension %>" value="<%= downloads[i].uri %>">Download ZIP file (all images)</button></li>
         <% } else { %>
-          <li><a href="<%= downloads[i].uri %>" download="<% downloads[i].filename %>">Download <%= downloads[i].extension.toUpperCase() %></a></li>
+          <li><a href="<%= downloads[i].uri %>" download="<% downloads[i].filename %>">Download <%= //downloads[i].extension.toUpperCase() %></a></li>
         <% } %>
       <% } %>
     </ul>
-  </div>
+  </div> -->
 </div>
 
 <div id="metadata-section">
@@ -45,14 +45,36 @@
             <button id="view-citations" alt="View Citations" type="button">Cite This Item</button>
           <% } %>
 
+          <!-- Single download option -->
           <% if(downloads.length == 1) { %>
             <% if(downloads[0].isBatch) { %>
-              <button class="download-button" alt="Download <%= downloads[0].extension %>" value="<%= downloads[0].uri %>">Download ZIP file (all images)</button>
+              <button class="download-button batch-download-button" alt="Download <%= downloads[0].extension %> file"><a href="<%= downloads[0].uri %>" download="<%= downloads[0].filename %>" disabled>Download ZIP file (all items)</a></button>
             <% } else { %>
-              <a href="<%= downloads[0].uri %>" download="<%= downloads[0].filename %>"><button class="" alt="Download <%= downloads[0].extension %>">Download <%= downloads[0].extension.toUpperCase() %></button></a>
+              <button class="download-button" alt="Download <%= downloads[0].extension %> file"><a href="<%= downloads[0].uri %>" download="<%= downloads[0].filename %>">Download <%= downloads[0].extension.toUpperCase() %></a></button>
             <% } %>
+
+          <!-- Multiple download options -->
           <% } else if(downloads.length > 1) { %>
-            <button class="show-download-options" alt="Show download options">Show Download Options</button>
+            <span class="download-links">
+                <select>
+                  <% for (var i in downloads) { %>
+                    <% if(downloads[i].isBatch) { %>
+                      <option class="batch-download-option" alt="Download <%= downloads[i].extension %>" value="<%= downloads[i].uri %>">Download ZIP file (all items)</option>
+                    <% } else { %>
+                      <option alt="Download <%= downloads[i].extension %>" value="<%= downloads[i].uri %>">Download <%= downloads[i].extension.toUpperCase() %></option>
+                    <% } %>
+                  <% } %>
+                </select>
+            </span>
+            <span id="submit-download-selection">
+              <% for (var i in downloads) { %>
+                <% if(downloads[i].isBatch) { %>
+                  <button id="download-button__<%= i %>" class="download-button batch-download-button" alt="Download <%= downloads[i].extension %> file" style="display: <%= i == 0 ? 'inline-block' : 'none'; %>"><a href="<%= downloads[i].uri %>" download="<%= downloads[i].filename %>" disabled>Go</a></button>
+                <% } else { %>
+                  <button id="download-button__<%= i %>" class="download-button" alt="Download <%= downloads[i].extension %> file" style="display: <%= i == 0 ? 'inline-block' : 'none'; %>"><a href="<%= downloads[i].uri %>" download="<%= downloads[i].filename %>" disabled>Go</a></button>
+                <% } %>
+              <% } %>
+            </span>
           <% } %>
 
           <% if(transcript) { %>
@@ -125,6 +147,6 @@
 <% } %>
 
 <script src="<%- root_url %>/views/object.events.js" type="module"></script>
-<script src="<%- root_url %>/views/universalviewer.events.js" type="module"></script>
+<script src="<%- root_url %>/views/universalviewer.events.js"></script>
 
 <%- include('partials/footer') -%>

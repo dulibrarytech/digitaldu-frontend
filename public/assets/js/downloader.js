@@ -21,6 +21,7 @@ import { ProgressBar } from './progress-bar.js';
 export const Downloader = (function () {
 
 	let downloadBatch = function(downloadUrl, socketUrl) {
+			console.log("TESt downloadBatch url in", downloadUrl)
 		var progressBar = new ProgressBar("file-download-progress", "100");
 		progressBar.displayMessage("Connecting to server...");
 
@@ -95,7 +96,7 @@ export const Downloader = (function () {
 			// Create virtual anchor to send the browser download request
 			const anchor = document.createElement('a');
 			anchor.style.display = 'none';
-			anchor.href = $(".download-button").prop("value");
+			anchor.href = downloadUrl;
 			anchor.download = '';
 			anchor.click();
 		};

@@ -8,8 +8,15 @@ import { Configuration } from '../config/configuration.js';
 import { Downloader } from '../assets/js/downloader.js';
 
 $( document ).ready(function() {
+	$(".batch-download-button a").off("click");
 	$(".download-button").click(function(event) {
-  		Downloader.downloadBatch($(".download-button").prop("value"), Configuration.getSetting('wsUrl'));
+		if($("#"+event.currentTarget.id).hasClass("batch-download-button")) {
+			Downloader.downloadBatch($(".batch-download-button a").prop("href"), Configuration.getSetting('wsUrl'));
+		}
+	});
+
+	$(".batch-download-button").first().click(function(event) {
+		event.preventDefault();
 	});
 
 	$(".show-download-options").click(function(event) {
@@ -25,6 +32,13 @@ $( document ).ready(function() {
 			$(".show-download-options").html("Show Download Options");
 		}
 	});
+
+	$(".download-links select").change(function(event) {
+		let index = event.target.selectedIndex,
+			buttonId = "download-button__" + index;
+		$(".download-button").css("display", "none");
+		$("#"+buttonId).css("display", "inline-block");
+	})
 
 	$("#copy-manifest-link").click(function(event) {
 		var r = document.createRange();

@@ -1277,6 +1277,13 @@ div.object-options button:focus {
   outline: none;
 }
 
+span.download-links {
+  margin-top: 30px;
+  text-align: left;
+  background-color: #ffffff;
+  padding: 0.7em;
+}
+
 div.download-links {
   margin-top: 30px;
   text-align: left;
