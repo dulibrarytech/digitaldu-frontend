@@ -504,7 +504,7 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
             resourceID: object.pid + config.compoundObjectPartID + parts[key].order || "",
             downloadFileName: parts[key].title,
             resourceUrl: resourceUrl,
-            thumbnailUrl: config.rootUrl + "/datastream/" + object.pid + "/" + AppHelper.getDsType("thumbnail") + "/" + parts[key].order
+            thumbnailUrl: config.rootUrl + "/datastream/" + object.pid + "/tn/" + parts[key].order
           });
         }
 
@@ -529,7 +529,7 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
           type: Helper.getIIIFObjectType(object.mime_type) || "",
           resourceID: object.pid,
           resourceUrl: resourceUrl,
-          thumbnailUrl: config.rootUrl + "/datastream/" + object.pid + "/" + AppHelper.getDsType("thumbnail")
+          thumbnailUrl: config.rootUrl + "/datastream/" + object.pid + "/tn"
         });
 
         IIIF.getManifest(container, children, apikey, function(error, manifest) {

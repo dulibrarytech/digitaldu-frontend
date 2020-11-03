@@ -613,37 +613,23 @@ module.exports = {
         }
     },
 
-    /*
-     * Assign datastream IDs for objects by object mimetype
-     * For dynamic generation of the /datastream uri (internal use only). 
-     * The datastreams listed here will be appended to the uri (/datastream/{PID}/{datastreams key}), and the repository interface will receive the datastream key
-     * Currently, the Duraspace repository interface does not use this data
-     */
-     datastreams: {
-        "tn": "thumbnail",
-        "jpg": ["image/jpeg", "image/jpg"],
-        "jp2": ["image/tiff"],
-        "mp3": ["audio/mp3", "audio/mpeg", "audio/x-wav"],
-        "mp4": ["video/mp4"],
-        "mov": ["video/mov"],
-        "quicktime": ["video/quicktime"],
-        "pdf": ["application/pdf"]
-     },
-
      /*
-      * Cache file extension for mimetype
+      * File extension associated with mimetype values
+      * A downloaded object file will use this file extension based on the object's mime type
       */
      fileExtensions: {
         "jp2": ["image/tiff"],
         "jpg": ["image/jpg", "image/jpeg"],
-        "mp3": ["audio/mp3", "audio/x-wav"],
+        "mp3": ["audio/mp3", "audio/x-wav", "audio/mpeg"],
         "mp4": ["video/mp4"],
         "pdf": ["application/pdf"],
-        "wav": ["audio/wav"]
+        "wav": ["audio/wav"],
+        "quicktime": ["video/quicktime"],
+        "mov": ["video/mov"],
      },
 
       /*
-      * Content type of each file extension, for datatream response 
+      * Value of the http 'Content-Type' header for datastream response 
       */
      contentTypes: {
         "tif": "image/tiff",

@@ -325,7 +325,7 @@ exports.getContentType = getContentType;
  * @return {String} DDU datastream ID
  */
 exports.getDsType = function(mimeType) {
-  let datastreams = config.datastreams,
+  let datastreams = config.fileExtensions,
       datastream = "",
       objectType = null;
 
