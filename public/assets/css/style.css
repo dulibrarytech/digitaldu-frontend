@@ -1300,14 +1300,6 @@ div.download-links-wrapper {
   position: relative;
 }
 
-/* ff */
-@-moz-document url-prefix() { 
-  .download-links {
-    position: relative;
-    bottom: 1px;
-  }
-}
-
 .download-links:after {
   font-family: FontAwesome;
   content: '\f107';
