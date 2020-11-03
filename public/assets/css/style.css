@@ -1259,11 +1259,16 @@ div.object-options span {
   margin-left: 0;
 }
 
+div.object-options select {
+  border: none;
+  background-color: #ffffff;
+}
+
 div.object-options button {
   background-color: white;
   border-style: solid;
   font-family: inherit;
-  padding: 10px;
+  padding: 11px;
   margin-right: 10px;
   color: #353331;
 }
@@ -1277,30 +1282,65 @@ div.object-options button:focus {
   outline: none;
 }
 
-span.download-links {
+span.submit-download-selection button {
+  background-color: #e5e3e1;
+  position: relative;
+  right: 5px;
+}
+
+div.download-links-wrapper {
+  display: table-cell;
+}
+
+.download-links {
   margin-top: 30px;
   text-align: left;
   background-color: #ffffff;
-  padding: 0.7em;
+  padding: 11px 11px 12px 11px;
 }
 
-div.download-links {
-  margin-top: 30px;
-  text-align: left;
-  background-color: #ffffff;
-  padding: 0.7em;
+/* ff */
+@-moz-document url-prefix() { 
+  .download-links {
+    position: relative;
+    bottom: 1px;
+  }
 }
 
-div.download-links li {
+.download-links:after {
+  font-family: FontAwesome;
+  content: '\f107';
+  font-size: 24px;
+  color: #4d4d4d;
+  pointer-events: none;
+  font-weight: bold;
+  position: relative;
+  top: 5px;
+}
+
+.download-links li {
   margin-top: 0.7em;
 }
 
-div.download-links a {
+.download-links a {
   font-size: 1em;
   text-decoration: underline;
 }
 
-div.download-links button {
+.download-links select {
+  -moz-appearance: none; 
+  -webkit-appearance: none; 
+  padding-right: 5px;
+  height: 42px;
+  width: 240px;
+}
+
+.download-links select:hover {
+  cursor: pointer;
+  box-shadow: inset 0 0 3px #00618e !important;
+}
+
+.download-links button {
   background: none;
   border: none;
   padding: 0;
@@ -1308,7 +1348,7 @@ div.download-links button {
   text-decoration: underline;
 }
 
-div.download-links button:hover {
+.download-links button:hover {
   color: #000;
 }
 

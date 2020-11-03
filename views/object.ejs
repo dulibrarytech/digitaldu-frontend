@@ -55,26 +55,28 @@
 
           <!-- Multiple download options -->
           <% } else if(downloads.length > 1) { %>
-            <span class="download-links">
-                <select>
-                  <% for (var i in downloads) { %>
-                    <% if(downloads[i].isBatch) { %>
-                      <option class="batch-download-option" alt="Download <%= downloads[i].extension %>" value="<%= downloads[i].uri %>">Download ZIP file (all items)</option>
-                    <% } else { %>
-                      <option alt="Download <%= downloads[i].extension %>" value="<%= downloads[i].uri %>">Download <%= downloads[i].extension.toUpperCase() %></option>
+            <div class="download-links-wrapper">
+              <span class="download-links">
+                  <select>
+                    <% for (var i in downloads) { %>
+                      <% if(downloads[i].isBatch) { %>
+                        <option class="batch-download-option" alt="Download <%= downloads[i].extension %>" value="<%= downloads[i].uri %>">Download ZIP file (all items)</option>
+                      <% } else { %>
+                        <option alt="Download <%= downloads[i].extension %>" value="<%= downloads[i].uri %>">Download <%= downloads[i].extension.toUpperCase() %></option>
+                      <% } %>
                     <% } %>
+                  </select>
+              </span>
+              <span class="submit-download-selection">
+                <% for (var i in downloads) { %>
+                  <% if(downloads[i].isBatch) { %>
+                    <button id="download-button__<%= i %>" class="download-button batch-download-button" alt="Download <%= downloads[i].extension %> file" style="display: <%= i == 0 ? 'inline-block' : 'none'; %>"><a href="<%= downloads[i].uri %>" download="<%= downloads[i].filename %>" disabled>Go</a></button>
+                  <% } else { %>
+                    <button id="download-button__<%= i %>" class="download-button" alt="Download <%= downloads[i].extension %> file" style="display: <%= i == 0 ? 'inline-block' : 'none'; %>"><a href="<%= downloads[i].uri %>" download="<%= downloads[i].filename %>" disabled>Go</a></button>
                   <% } %>
-                </select>
-            </span>
-            <span id="submit-download-selection">
-              <% for (var i in downloads) { %>
-                <% if(downloads[i].isBatch) { %>
-                  <button id="download-button__<%= i %>" class="download-button batch-download-button" alt="Download <%= downloads[i].extension %> file" style="display: <%= i == 0 ? 'inline-block' : 'none'; %>"><a href="<%= downloads[i].uri %>" download="<%= downloads[i].filename %>" disabled>Go</a></button>
-                <% } else { %>
-                  <button id="download-button__<%= i %>" class="download-button" alt="Download <%= downloads[i].extension %> file" style="display: <%= i == 0 ? 'inline-block' : 'none'; %>"><a href="<%= downloads[i].uri %>" download="<%= downloads[i].filename %>" disabled>Go</a></button>
                 <% } %>
-              <% } %>
-            </span>
+              </span>
+            </div>
           <% } %>
 
           <% if(transcript) { %>
