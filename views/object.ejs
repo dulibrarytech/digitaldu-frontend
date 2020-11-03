@@ -38,6 +38,7 @@
 </div>
 
 <div id="metadata-section">
+<div id="metadata-section">
   <div class="object-options">
     <div class="container">
         <span id="object-view-controls">
@@ -48,9 +49,9 @@
           <!-- Single download option -->
           <% if(downloads.length == 1) { %>
             <% if(downloads[0].isBatch) { %>
-              <button class="download-button batch-download-button" alt="Download <%= downloads[0].extension %> file"><a href="<%= downloads[0].uri %>" download="<%= downloads[0].filename %>" disabled>Download ZIP file (all items)</a></button>
+              <button class="download-button batch-download-button" alt="Download <%= downloads[0].extension %> file" value="<%= downloads[0].uri %>">Download ZIP file (all items)</button>
             <% } else { %>
-              <button class="download-button" alt="Download <%= downloads[0].extension %> file"><a href="<%= downloads[0].uri %>" download="<%= downloads[0].filename %>">Download <%= downloads[0].extension.toUpperCase() %></a></button>
+              <button class="download-button" alt="Download <%= downloads[0].extension %> file" value="<%= downloads[0].uri %>">Download <%= downloads[0].extension.toUpperCase() %></button>
             <% } %>
 
           <!-- Multiple download options -->
@@ -70,9 +71,9 @@
               <span class="submit-download-selection">
                 <% for (var i in downloads) { %>
                   <% if(downloads[i].isBatch) { %>
-                    <button id="download-button__<%= i %>" class="download-button batch-download-button" alt="Download <%= downloads[i].extension %> file" style="display: <%= i == 0 ? 'inline-block' : 'none'; %>"><a href="<%= downloads[i].uri %>" download="<%= downloads[i].filename %>" disabled>Go</a></button>
+                    <button id="download-button__<%= i %>" class="download-button batch-download-button" alt="Download <%= downloads[i].extension %> file" style="display: <%= i == 0 ? 'inline-block' : 'none'; %>" value="<%= downloads[i].uri %>">Go</button>
                   <% } else { %>
-                    <button id="download-button__<%= i %>" class="download-button" alt="Download <%= downloads[i].extension %> file" style="display: <%= i == 0 ? 'inline-block' : 'none'; %>"><a href="<%= downloads[i].uri %>" download="<%= downloads[i].filename %>" disabled>Go</a></button>
+                    <button id="download-button__<%= i %>" class="download-button" alt="Download <%= downloads[i].extension %> file" style="display: <%= i == 0 ? 'inline-block' : 'none'; %>" value="<%= downloads[i].uri %>">Go</button>
                   <% } %>
                 <% } %>
               </span>

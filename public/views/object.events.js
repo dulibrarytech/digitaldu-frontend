@@ -8,15 +8,15 @@ import { Configuration } from '../config/configuration.js';
 import { Downloader } from '../assets/js/downloader.js';
 
 $( document ).ready(function() {
-	$(".batch-download-button a").off("click");
 	$(".download-button").click(function(event) {
-		if($("#"+event.currentTarget.id).hasClass("batch-download-button")) {
-			Downloader.downloadBatch($(".batch-download-button a").prop("href"), Configuration.getSetting('wsUrl'));
+		let id = "#"+event.currentTarget.id,
+			url = $(id).prop("value");
+		if($(id).hasClass("batch-download-button")) {
+			Downloader.downloadBatch(url, Configuration.getSetting('wsUrl'));
 		}
-	});
-
-	$(".batch-download-button").first().click(function(event) {
-		event.preventDefault();
+		else {
+			Downloader.submitLinkRequest(url, "");
+		}
 	});
 
 	$(".show-download-options").click(function(event) {

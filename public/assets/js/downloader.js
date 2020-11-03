@@ -21,7 +21,6 @@ import { ProgressBar } from './progress-bar.js';
 export const Downloader = (function () {
 
 	let downloadBatch = function(downloadUrl, socketUrl) {
-			console.log("TESt downloadBatch url in", downloadUrl)
 		var progressBar = new ProgressBar("file-download-progress", "100");
 		progressBar.displayMessage("Connecting to server...");
 
@@ -61,18 +60,18 @@ export const Downloader = (function () {
 				  		// Error
 				  		case "5":
 				  			progressBar.remove();
-				  			console.log("Error");
+				  			console.log("Socket error");
 				  			socket.close();
 				  			break;
-				  		// Server received abort message
+				  		// Server received abort command
 				  		case "6":
 				  			progressBar.remove();
 				  			console.log("Closing socket");
 				  			socket.close();
 				  			break;
 				  		default:
+				  			console.log("Socket error");
 				  			socket.close();
-				  			console.log("Invalid socket status");
 				  			break;
 				  	}
 
@@ -93,12 +92,7 @@ export const Downloader = (function () {
 				cancelDownload(socket);
 			});
 
-			// Create virtual anchor to send the browser download request
-			const anchor = document.createElement('a');
-			anchor.style.display = 'none';
-			anchor.href = downloadUrl;
-			anchor.download = '';
-			anchor.click();
+			submitLinkRequest(downloadUrl, "");
 		};
 	}
 
@@ -107,9 +101,20 @@ export const Downloader = (function () {
 		socket.send(JSON.stringify({abort: true}));
 	}
 
+	let submitLinkRequest = function(url, filename) {
+		var anchor = document.createElement('a');
+		anchor.style.display = 'none';
+		anchor.href = url;
+		anchor.download = '';
+		anchor.click();
+	}
+
 	return {
 		downloadBatch: function(downloadUrl, socketUrl) {
 			return downloadBatch(downloadUrl, socketUrl);
+		},
+		submitLinkRequest: function(url, filename) {
+			submitLinkRequest(url, filename);
 		}
 	}
 }());	

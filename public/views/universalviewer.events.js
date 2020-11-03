@@ -124,9 +124,7 @@ function updateDownloadUrlsForPart(baseUrl, pid, part, extension) {
 		if($("#"+button.id).hasClass("batch-download-button") == false) {
 			url = baseUrl + "/datastream/" + pid + "/" + extension + "/" + part + "/" + pid + "_" + part + "." + extension; 
 			filename = pid + "_" + part + "." + extension;
-
-			$("#"+button.id+" a").prop("href", url);
-			$("#"+button.id+" a").prop("download", filename);
+			$("#"+button.id).prop("value", url);
 		}
 	}
 }
