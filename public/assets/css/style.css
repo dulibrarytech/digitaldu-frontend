@@ -1251,7 +1251,7 @@ div.object-data p {
 
 div.object-options {
   background-color: #585858;
-  padding: 20px 0 20px 0;
+  padding: 16px 0 16px 0;
   min-height: 80px;
 }
 
@@ -1262,6 +1262,7 @@ div.object-options span {
 div.object-options select {
   border: none;
   background-color: #ffffff;
+  margin: 4px 0;
 }
 
 div.object-options button {
@@ -1269,7 +1270,7 @@ div.object-options button {
   border-style: solid;
   font-family: inherit;
   padding: 11px;
-  margin-right: 10px;
+  margin: 4px 10px 4px 0;
   color: #353331;
 }
 
@@ -1285,7 +1286,8 @@ div.object-options button:focus {
 span.submit-download-selection button {
   background-color: #e5e3e1;
   position: relative;
-  right: 5px;
+  right: 4px;
+  height: 42px;
 }
 
 div.download-links-wrapper {

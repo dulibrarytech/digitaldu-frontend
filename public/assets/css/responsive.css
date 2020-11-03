@@ -94,6 +94,10 @@
   div#collections .row:not(:first-child) {
       border-top-style: none;
   }
+
+  .download-links select {
+    width: 215px;
+  }
 }
 
 @media screen and (max-width: 767px) {
