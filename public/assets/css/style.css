@@ -1290,13 +1290,14 @@ span.submit-download-selection button {
 
 div.download-links-wrapper {
   display: table-cell;
+  position: relative;
 }
 
 .download-links {
   margin-top: 30px;
   text-align: left;
   background-color: #ffffff;
-  padding: 11px 11px 12px 11px;
+  position: relative;
 }
 
 /* ff */
@@ -1314,8 +1315,9 @@ div.download-links-wrapper {
   color: #4d4d4d;
   pointer-events: none;
   font-weight: bold;
-  position: relative;
-  top: 5px;
+  position: absolute;
+  top: -1px;
+  right: 15px;
 }
 
 .download-links li {
@@ -1330,9 +1332,10 @@ div.download-links-wrapper {
 .download-links select {
   -moz-appearance: none; 
   -webkit-appearance: none; 
-  padding-right: 5px;
+  padding: 0 35px 0 12px;
   height: 42px;
-  width: 240px;
+  width: 275px;
+  position: relative;
 }
 
 .download-links select:hover {
