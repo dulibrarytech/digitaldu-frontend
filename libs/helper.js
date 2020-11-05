@@ -337,3 +337,30 @@ exports.getDsType = function(mimeType) {
 
   return datastream;
 }
+
+
+/**
+ * Creates an Elastic 'aggs' query for an Elastic query object 
+ *
+ * @param {Object} facets - DDU facet fields configuration
+ * @return {Object} Elastic DSL aggregations query object
+ */
+exports.getFacetAggregationObject = function(facets) {
+  var facetAggregations = {}, field;
+    for(var key in facets) {
+      field = {};
+      field['field'] = facets[key].path + ".keyword";
+      field['size'] = config.facetLimit;
+      facetAggregations[key] = {
+        "terms": field
+      };
+    }
+
+    // Temp: Add non-keyword facet fields
+    facetAggregations["Compound Object"].terms = {
+      field: "is_compound",
+      size: 200
+    }
+
+    return facetAggregations;
+}

@@ -38,6 +38,7 @@ exports.formatFacetDisplay = function(object, callback) {
   formatTypeFacets(object[config.typeLabel] || []);
   formatDateFacets(object["Date"] || []);
   formatObjectTypeFacets(object["Object Type"] || []);
+  formatCompoundObjectFacets(object["Compound Object"] || []);
   formatCollectionFacets(object["Collection"] || [], function(error) {
     if(error) {
       callback(error, null);
@@ -64,8 +65,13 @@ var formatFacets = function(facets) {
   for(var key in facets) {
     for(var facet of facets[key]) {
       // Replace the quotation characters in the facet data string, which break the dynamically generated link to search the facet
-      facet.facet = facet.facet.replace(/'/g, "\'");
-      facet.facet = facet.facet.replace(/"/g, '\"');
+      if(typeof facet.facet == "string") {
+        facet.facet = facet.facet.replace(/'/g, "\'");
+        facet.facet = facet.facet.replace(/"/g, '\"');
+      }
+      else {
+        facet.facet = facet.facet.toString();
+      }
     }
   }
 }
@@ -160,5 +166,16 @@ var formatObjectTypeFacets = function(facets) {
       facets[key].name = "Item";
     }
     facets[key].name = facets[key].name[0].charAt(0).toUpperCase() + facets[key].name.slice(1);
+  }
+}
+
+var formatCompoundObjectFacets = function(facets) {
+  for(var key in facets) {
+    if(facets[key].name == "0") {
+      facets[key].name = "Single";
+    }
+    else if(facets[key].name == "1") {
+      facets[key].name = "Compound";
+    }
   }
 }

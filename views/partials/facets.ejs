@@ -40,7 +40,6 @@
 
 			searchUrl = updateUrlExpandParams(searchUrl);
 			searchUrl = encodeURI(searchUrl);
-			//return baseUrl + searchUrl;
 			window.location.assign(baseUrl + searchUrl);
 		};
 
@@ -64,10 +63,8 @@
 
 			// Remove the selected facet param from the search querystring
 			searchUrl = searchUrl.replace(facetParam, "");
-			
 			searchUrl = updateUrlExpandParams(searchUrl);
 			searchUrl = encodeURI(searchUrl);
-			//return baseUrl + searchUrl;	
 			window.location.assign(baseUrl + searchUrl);
 		};
 
@@ -77,7 +74,6 @@
 			// Show the spinner
 			document.getElementById("show-facets").innerHTML = "<img src='assets/img/spinner1.gif' height='33' width='33' />";
 			searchUrl = updateUrlExpandParams(searchUrl);
-			//return encodeURI(searchUrl += "&showAll[]=" + facetType);
 			window.location.assign(encodeURI(searchUrl += "&showAll[]=" + facetType));
 		};
 
@@ -85,7 +81,6 @@
 			// Remove the showAll parameter for this facet
 			var url = decodeURIComponent(window.location.href);
 			url = updateUrlExpandParams(url);
-			//return encodeURI(url.replace("&showAll[]=" + facetType, ""));
 			window.location.assign(encodeURI(url.replace("&showAll[]=" + facetType, "")));
 		};
 

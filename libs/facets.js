@@ -76,15 +76,25 @@ exports.create = function(facets, baseUrl, showAll=[], expand=[]) {
  * @return {String} - html string of facet breadcrumb links
  */
 exports.getFacetBreadcrumbObject = function(selectedFacets, dateRange=null, baseUrl) {
-    var facets = [], dates = [], buckets;
-
+    var facets = [], dates = [], buckets,
+        name = "";
+    
     // Create the object to populate the view elements
     for(var key in selectedFacets) {
         buckets = selectedFacets[key];
         for(var index of buckets) {
+            // If the facet value is a boolean type, do not show it in the breadcrumb label
+            if(index.name != "1" &&
+                index.name != "0" &&
+                index.name != "true" &&
+                index.name != "false") {
+                    name = index.name;
+            }
+
+            // Breadcrumb label data
             facets.push({
                 type: key,
-                name: index.name,
+                name: name,
                 facet: index.facet
             });
         }
@@ -195,29 +205,34 @@ exports.getFacetBreadcrumbObject = function(selectedFacets, dateRange=null, base
  * @return {String} - Html string for facet panel content
  */
 function createList(facet, data, baseUrl, showAll, expand) {
-    var html = '';
-
+    var html = '', header = '', list = '';
     if(data.length > 0) {
-        html += expand.includes(facet) ? '<div id="' + facet + '-window" class="panel facet-panel panel-collapsed" style="display: block"><ul>' : '<div id="' + facet + '-window" class="panel facet-panel panel-collapsed"><ul>';
+        header += expand.includes(facet) ? '<div id="' + facet + '-window" class="panel facet-panel panel-collapsed" style="display: block"><ul>' : '<div id="' + facet + '-window" class="panel facet-panel panel-collapsed"><ul>';
 
         // Add the facet list item(s) if facets are present, and not empty
         for (var i = 0; i < data.length; i++) {
             if(data[i].key != "") {
-                html += '<li><span class="facet-name"><a onclick="selectFacet(\'' + facet + '\', \'' + data[i].facet.replace(/'/g, "\\'") + '\', \'' + baseUrl + '\')">' + data[i].name + '</a></span><span class="facet-count">(' + data[i].doc_count + ')</span></li>';                
+                list += '<li><span class="facet-name"><a onclick="selectFacet(\'' + facet + '\', \'' + data[i].facet.replace(/'/g, "\\'") + '\', \'' + baseUrl + '\')">' + data[i].name + '</a></span><span class="facet-count">(' + data[i].doc_count + ')</span></li>';                
             }
         }
 
-        // If there is a length limit on this facet, and the facet list returned has more facets than the length limit, add the show all link
-        if(facet in config.facetLimitsByType && data.length >= config.facetLimitsByType[facet]) {
-            if(showAll.includes(facet)) {
-                html += '<li id="show-facets"><a onclick="showLessFacets(\'' + facet + '\')">Show Less</a></li>';
+        if(list.length > 0) {
+            html += header;
+            html += list;
+
+            // If there is a length limit on this facet, and the facet list returned has more facets than the length limit, add the show all link
+            if(facet in config.facetLimitsByType && data.length >= config.facetLimitsByType[facet]) {
+                if(showAll.includes(facet)) {
+                    html += '<li id="show-facets"><a onclick="showLessFacets(\'' + facet + '\')">Show Less</a></li>';
+                }
+                else if(showAll.includes(facet) === false) {
+                    html += '<li id="show-facets"><a onclick="showAllFacets(\'' + facet + '\')">Show All</a></li>';
+                }
             }
-            else if(showAll.includes(facet) === false) {
-                html += '<li id="show-facets"><a onclick="showAllFacets(\'' + facet + '\')">Show All</a></li>';
-            }
+            html += '</ul></div>';
         }
-        html += '</ul></div>';
     }
+
     return html;
 };
 
@@ -240,15 +255,17 @@ function createList(facet, data, baseUrl, showAll, expand) {
  * @return {String} - View breadcrumb list html string
  */
 function createBreadcrumbTrail(data, dates, baseUrl) {
-    // var html = '<a id="new-search-link" href="' + baseUrl + '">Start Over</a>';
     var html = '';
-
     for (var i = 0; i < data.length; i++) {
-        html += '<span><span aria-label="Limit by ' + data[i].type + ' ' + data[i].name + '">' + data[i].type + '&nbsp&nbsp<strong aria-hidden="true" style="color: green"> > </strong>&nbsp&nbsp' + data[i].name + '<a aria-label="remove facet" title="Remove Facet" onclick="removeFacet(\'' + data[i].type + '\', \'' + data[i].facet.replace(/'/g, "\\'") + '\', \'' + baseUrl + '\')"><strong aria-hidden="true">X</strong></a></span></span>';
+        // Add the '> facet name' to the breadcrumb label only if the name is a non empty string
+        var facetNameLabel = data[i].name.length > 0 ? '&nbsp&nbsp<strong aria-hidden="true" style="color: green"> > </strong>&nbsp&nbsp' + data[i].name : "";
+
+        // Create the breadcrumb element
+        html += '<span><span aria-label="Limit by ' + data[i].type + ' ' + data[i].name + '">' + data[i].type + facetNameLabel + '<a aria-label="remove facet" title="Remove Facet" onclick="removeFacet(\'' + data[i].type + '\', \'' + data[i].facet.replace(/'/g, "\\'") + '\', \'' + baseUrl + '\')"><strong aria-hidden="true">X</strong></a></span></span>';
     }
 
+    // Create a daterange breadcrumb element if a date range is present
     for (i = 0; i < dates.length; i++) {
-        //html += '<span><a aria-label="remove date range" title="remove date range" onclick="removeDateRange(\'' + dates[i].from + '\', \'' + dates[i].to + '\')"><strong>X</strong></a>&nbsp&nbspDate Range&nbsp&nbsp<strong style="color: green"> > </strong>&nbsp&nbsp' + dates[i].from + ' - ' + dates[i].to + '</span>';
         html += '<span><span aria-label="Limit to date range' + dates[i].from + 'to' + dates[i].to + '">Date Range&nbsp&nbsp<strong aria-hidden="true" style="color: green"> > </strong>&nbsp&nbsp' + dates[i].from + '-' + dates[i].to + '<a aria-label="remove date range" title="Remove Date Range" onclick="removeDateRange(\'' + dates[i].from + '\', \'' + dates[i].to + '\')"><strong aria-hidden="true">X</strong></a></span></span>';   // good
     }
     return html;

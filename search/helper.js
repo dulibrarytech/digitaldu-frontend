@@ -23,27 +23,7 @@
 
 'use strict';
 
-var config = require('../config/' + process.env.CONFIGURATION_FILE),
-    appHelper = require('../libs/helper');
-
-/**
- * Creates an Elastic 'aggs' query for an Elastic query object 
- *
- * @param {Object} facets - DDU facet fields configuration
- * @return {Object} Elastic DSL aggregations query object
- */
-exports.getFacetAggregationObject = function(facets) {
-  var facetAggregations = {}, field;
-    for(var key in facets) {
-      field = {};
-      field['field'] = facets[key].path + ".keyword";
-      field['size'] = config.facetLimit;
-      facetAggregations[key] = {
-        "terms": field
-      };
-    }
-    return facetAggregations;
-}
+var config = require('../config/' + process.env.CONFIGURATION_FILE);
 
 /**
  * Removes any facets appearing in 'facets' object from the Elastic response object agregations buckets 

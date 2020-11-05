@@ -141,7 +141,7 @@ var getObjectsInCollection = function(collectionId, page=1, facets=null, sort=nu
       };
 
       // Get facets for this collection
-      var facetAggregations = Helper.getFacetAggregationObject(config.facets);
+      var facetAggregations = AppHelper.getFacetAggregationObject(config.facets);
 
       // Validate repository response
       if(response && response.length > 0) {
@@ -263,18 +263,9 @@ exports.fetchObjectByPid = fetchObjectByPid;
  * @param {Object|null} Elastic aggregations object Null if error
  */
 var getFacets = function (collection=null, callback) {
-
     // Build elasticsearch aggregations object from config facet list
-    var aggs = {}, field;
-    var matchFacetFields = [], restrictions = [];
-    for(var key in config.facets) {
-      field = {};
-      field['field'] = config.facets[key].path + ".keyword";
-      field['size'] = config.facetLimit;
-      aggs[key] = {
-        terms: field
-      };
-    }
+    var field, matchFacetFields = [], restrictions = [];
+    var aggs = AppHelper.getFacetAggregationObject(config.facets);
 
     var searchObj = {
         index: config.elasticsearchPublicIndex,

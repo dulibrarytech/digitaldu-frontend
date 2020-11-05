@@ -25,7 +25,8 @@ const es = require('../config/index'),
       util = require('util'),
       config = require('../config/' + process.env.CONFIGURATION_FILE),
       Repository = require('../libs/repository'),
-      Helper = require("./helper");
+      Helper = require("./helper"),
+      AppHelper = require("../libs/helper.js");
 
 /**
  * Search the index
@@ -318,7 +319,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       }
     }
 
-    var facetAggregations = Helper.getFacetAggregationObject(config.facets);
+    var facetAggregations = AppHelper.getFacetAggregationObject(config.facets);
 
     let sortArr = [];
     if(sort) {

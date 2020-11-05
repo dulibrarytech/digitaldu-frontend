@@ -546,6 +546,9 @@ module.exports = {
         },
         "Object Type": {
             "path": "object_type"
+        },
+        "Compound Object": {
+            "path": "is_compound"
         }
     },
 
