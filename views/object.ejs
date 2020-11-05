@@ -51,7 +51,7 @@
             <% if(downloads[0].isBatch) { %>
               <button class="download-button batch-download-button" alt="Download <%= downloads[0].extension %> file" value="<%= downloads[0].uri %>">Download ZIP file (all items)</button>
             <% } else { %>
-              <button class="download-button" alt="Download <%= downloads[0].extension %> file" value="<%= downloads[0].uri %>">Download <%= downloads[0].extension.toUpperCase() %></button>
+              <button class="download-button" alt="Download <%= downloads[0].extension %> file" value="<%= downloads[0].uri %>">Download <%= downloads[0].extension.toUpperCase() %> (current item)</button>
             <% } %>
 
           <!-- Multiple download options -->
@@ -63,7 +63,7 @@
                       <% if(downloads[i].isBatch) { %>
                         <option class="batch-download-option" alt="Download <%= downloads[i].extension %>" value="<%= downloads[i].uri %>">Download ZIP file (all items)</option>
                       <% } else { %>
-                        <option alt="Download <%= downloads[i].extension %>" value="<%= downloads[i].uri %>">Download <%= downloads[i].extension.toUpperCase() %></option>
+                        <option alt="Download <%= downloads[i].extension %>" value="<%= downloads[i].uri %>">Download <%= downloads[i].extension.toUpperCase() %> (current item)</option>
                       <% } %>
                     <% } %>
                   </select>

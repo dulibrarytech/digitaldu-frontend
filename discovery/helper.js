@@ -175,26 +175,6 @@ function createBreadcrumbLinks(collections) {
 };
 
  /**
- * Creates an Elastic 'aggs' query for an Elastic query object 
- *
- * @param {Object} facets - DDU facet fields configuration
- * @return {Object} Elastic DSL aggregations query object
- */
-exports.getFacetAggregationObject = function(facets) {
-	var facetAggregations = {}, field;
-    for(var key in facets) {
-      field = {};
-      field['field'] = facets[key].path + ".keyword";
-      field['size'] = config.facetLimit;
-      facetAggregations[key] = {
-        "terms": field
-      };
-    }
-
-    return facetAggregations;
-}
-
- /**
  * Finds the IIIF object type that corresponds with an object's mime type
  *
  * @param {String} mimeType - Object mime type (ex "audio/mp3")
@@ -370,7 +350,7 @@ exports.getFileDownloadLinks = function(object, dsid, part=null) {
       let link = {
         uri: config.rootUrl + "/datastream/" + pid + "/" + dsid + "/" + part + "/" + pid + "." + extension,
         filename: pid + "." + extension,
-        extension: extension == "jp2" ? (extension + " (JPEG 2000)") : extension,
+        extension: extension,
         isBatch: false
       };
       links.push(link);
