@@ -662,7 +662,7 @@ describe('Special Collections (Selenium) Tests', function() {
           it('Collections Accordion contents: Test Collection link', function() {
             return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/div[2]/ul/li/span/a'))
             .getAttribute('href').then(function(text) {
-              expect(text).to.equal('http://localhost:9007/object/61ed6a68-618b-48eb-b9bd-3e7484e0590a');
+              expect(text).to.equal(frontend + '/object/61ed6a68-618b-48eb-b9bd-3e7484e0590a');
             });
           });
 
