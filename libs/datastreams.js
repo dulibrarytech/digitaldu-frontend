@@ -85,7 +85,6 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
       }
 
       if(settings.cache == false || Cache.exists('thumbnail', objectID) == false) {
-
         // Get the stream from the repository
         if(settings.source == "repository") {
           Repository.streamData(object, "tn", function(error, stream) {
@@ -143,7 +142,9 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
             }
             else {
               if(status == 200) {
-                if(config.thumbnailImageCacheEnabled == true && settings.streamOption != "index") {
+                if(config.thumbnailImageCacheEnabled == true && 
+                  settings.cache == true && 
+                  settings.streamOption != "index") {
                   Cache.cacheDatastream('thumbnail', objectID, stream, null, function(error) {
                     if(error) {console.error("Could not create thumbnail image for", objectID, error)}
                     else {console.log("Thumbnail image created for", objectID)}
