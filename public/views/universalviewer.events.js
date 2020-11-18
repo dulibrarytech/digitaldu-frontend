@@ -47,7 +47,7 @@ $( document ).ready(function() {
 					    else {console.log("Error: Can not retrieve Kaltura content. Status is ", status)}
 					});
 		  		});
-		  	}, 500);
+		  	}, 1000);
 
 		  	//UniversalViewer.createTranscriptViewer(params):
 
