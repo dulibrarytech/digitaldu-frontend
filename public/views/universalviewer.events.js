@@ -89,7 +89,7 @@ $( document ).ready(function() {
 		  			part = parseInt(event.currentTarget.id.replace("thumb", "") || "1")+1;
 		  			updateDownloadUrlsForPart(params.baseUrl, params.objectID, part, params.fileExtension);
 		  		});
-	  		}, 1000);
+	  		}, 1500);
 	  	}
 	});
 });
