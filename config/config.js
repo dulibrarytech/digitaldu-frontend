@@ -91,7 +91,7 @@ module.exports = {
      * Collection results per page
      */
     defaultHomePageCollectionsCount: 12,
-    defaultCollectionsPerPage: 10,
+    defaultCollectionsPerPage: 12,
 
     /*
      * Max number of page links shown in the page list
@@ -258,7 +258,7 @@ module.exports = {
     thumbnailDefaultImagePath: "files/default/thumbnail/",
     thumbnailFileExtension: "jpg",
     defaultThumbnailImage: "tn-placeholder.jpg",
-    thumbnailImageCacheEnabled: false,
+    thumbnailImageCacheEnabled: true,
     thumbnailImageCacheLocation: "cache/thumbnail",
     objectDerivativeCacheEnabled: false,
     objectDerivativeCacheLocation: "/var/cache/digcoll",
@@ -301,7 +301,7 @@ module.exports = {
                     "streamOption": "iiif",
                     "uri": "", 
                     "source": "repository",
-                    "cache": false
+                    "cache": true
                 },
                 "audio": {
                     "streamOption": "kaltura",
@@ -319,7 +319,7 @@ module.exports = {
                     "streamOption": "iiif",
                     "uri": "", 
                     "source": "remote",
-                    "cache": false
+                    "cache": true
                 },
                 "compound": {
                     "streamOption": "index",
