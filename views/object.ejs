@@ -143,6 +143,12 @@
   </div>
 </div>
 
+<% if(title) { %>
+  <script>
+    document.title = "<%= title %>";
+  </script>
+<% } %>
+
 <% if(typeof logMsg != "undefined") { %>
   <script>
     console.log("<%= logMsg %>");
