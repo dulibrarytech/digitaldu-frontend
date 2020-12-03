@@ -7,3 +7,4 @@ files/default/object/*
 cache/thumbnail/*
 cache/object/*
 config/config.js
+/package-lock.json

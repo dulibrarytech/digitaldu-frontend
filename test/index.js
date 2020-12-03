@@ -112,7 +112,7 @@ describe('Special Collections (Selenium) Tests', function() {
       });
 
 
-
+//
 
 
       //for searching for objects using the search box
@@ -140,362 +140,6 @@ describe('Special Collections (Selenium) Tests', function() {
             expect(text).to.include('Founders Bell, 2008 November 19');
           });
         });
-
-        // describe('Search facet tests', function() {
-        //   describe('Format facet', function() {
-        //     //check the Format facet title
-        //     it('Format Facet title', function() {
-        //       return browser.findElement(webdriver.By.xpath('//*[@id="type-facet"]'))
-        //       .getAttribute('innerHTML').then(function(text) {
-        //         expect(text).to.include('<h4>Format</h4>');
-        //       });
-        //     });
-        //
-        //     it('Format Facet not hidden', function() {
-        //       return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/div[1]'))
-        //       .isDisplayed()
-        //       .then(function(visible) {
-        //         expect(visible).to.equal(true);
-        //       });
-        //     });
-        //
-        //     it('Format Facet caret before click', function() {
-        //       return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/button[1]/i'))
-        //       .getAttribute('class').then(function(text) {
-        //         expect(text).to.include('fa-caret-down');
-        //       });
-        //     });
-        //
-        //     //inserted 3 still test into elasticsearch images, should show 3 in the facet
-        //     it('Format Facet contents: still image count', function() {
-        //       return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/div[1]/ul/li[1]/div/div[3]/div'))
-        //       .getAttribute('innerHTML').then(function(text) {
-        //         expect(text).to.include('3');
-        //       });
-        //     });
-        //
-        //     //used for counting objects of other types
-        //     // it('Format Facet contents: text count', function() {
-        //     //   return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/div[1]/ul/li[2]/div/div[3]/div'))
-        //     //   .getAttribute('innerHTML').then(function(text) {
-        //     //     expect(text).to.include('0');
-        //     //   });
-        //     // });
-        //     //
-        //     // it('Format Facet contents: moving image count', function() {
-        //     //   return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/div[1]/ul/li[3]/div/div[3]/div'))
-        //     //   .getAttribute('innerHTML').then(function(text) {
-        //     //     expect(text).to.include('0');
-        //     //   });
-        //     // });
-        //     //
-        //     // it('Format Facet contents: sound recording count', function() {
-        //     //   return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/div[1]/ul/li[4]/div/div[3]/div'))
-        //     //   .getAttribute('innerHTML').then(function(text) {
-        //     //     expect(text).to.include('0');
-        //     //   });
-        //     // });
-        //
-        //     //click the Format facet
-        //     it('Format Facet 1st click', function() {
-        //       return browser.findElement(webdriver.By.id('type-facet'))
-        //       .click();
-        //     });
-        //
-        //     //currently (correctly )fails due to bug, different caret?
-        //     it('Format Facet hidden', function() {
-        //       return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/div[1]'))
-        //       .isDisplayed()
-        //       .then(function(visible) {
-        //         expect(visible).to.equal(false);
-        //       });
-        //     });
-        //
-        //     it('Format Facet caret after click', function() {
-        //       return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/button[1]/i'))
-        //       .getAttribute('class').then(function(text) {
-        //         expect(text).to.include('a-caret-right');
-        //       });
-        //     });
-        //
-        //     //click the Format facet
-        //     it('Format Facet 2nd click', function() {
-        //       return browser.findElement(webdriver.By.id('type-facet'))
-        //       .click();
-        //     });
-        //
-        //     it('Format Facet not hidden after 2nd click', function() {
-        //       return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/div[1]'))
-        //       .isDisplayed()
-        //       .then(function(visible) {
-        //         expect(visible).to.equal(true);
-        //       });
-        //     });
-        //
-        //     it('Format Facet caret after 2nd click', function() {
-        //       return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/button[1]/i'))
-        //       .getAttribute('class').then(function(text) {
-        //         expect(text).to.include('fa-caret-down');
-        //       });
-        //     });
-        //   });
-        //
-        //
-        //   describe('Collection accordion', function() {
-        //     //check the collection facet title
-        //     it('Collections Accordion title', function() {
-        //       return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/button[2]'))
-        //       .getAttribute('innerHTML')
-        //       .then(function(text) {
-        //         expect(text).to.include('<h4>Collections</h4>');
-        //       });
-        //     });
-        //
-        //     it('Collections Accordion hidden', function() {
-        //       return browser.findElement(webdriver.By.id('collections-window'))
-        //       .isDisplayed()
-        //       .then(function(visible) {
-        //         expect(visible).to.equal(false);
-        //       });
-        //     });
-        //
-        //     it('Collections Accordion caret before click', function() {
-        //       return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/button[2]/i'))
-        //       .getAttribute('class').then(function(text) {
-        //         expect(text).to.include('fa-caret-right');
-        //       });
-        //     });
-        //
-        //     //click the collection accordion
-        //     it('Collections Accordion 1st click', function() {
-        //       return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/button[2]'))
-        //       .click();
-        //     });
-        //
-        //     it('Collections Accordion not hidden', function() {
-        //       return browser.findElement(webdriver.By.id('collections-window'))
-        //       .isDisplayed()
-        //       .then(function(visible) {
-        //         expect(visible).to.equal(true);
-        //       });
-        //     });
-        //
-        //     it('Collections Accordion caret after 1st click', function() {
-        //       return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/button[2]/i'))
-        //       .getAttribute('class').then(function(text) {
-        //         expect(text).to.include('fa-caret-down');
-        //       });
-        //     });
-        //
-        //     it('Collections Accordion contents: Test Collection', function() {
-        //       return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/div[2]/ul/li/span/a'))
-        //       .getAttribute('title').then(function(text) {
-        //         expect(text).to.equal('Test Collection');
-        //       });
-        //     });
-        //
-        //     it('Collections Accordion contents: Test Collection link', function() {
-        //       return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/div[2]/ul/li/span/a'))
-        //       .getAttribute('href').then(function(text) {
-        //         expect(text).to.equal('http://localhost:9007/object/61ed6a68-618b-48eb-b9bd-3e7484e0590a');
-        //       });
-        //     });
-        //
-        //     it('Collections Accordion 2nd click', function() {
-        //       return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/button[2]'))
-        //       .click();
-        //     });
-        //
-        //     it('Collections Accordion hidden', function() {
-        //       return browser.findElement(webdriver.By.id('collections-window'))
-        //       .isDisplayed()
-        //       .then(function(visible) {
-        //         expect(visible).to.equal(false);
-        //       });
-        //     });
-        //
-        //     it('Collections Accordion caret after 2nd click', function() {
-        //       return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/button[2]/i'))
-        //       .getAttribute('class').then(function(text) {
-        //         expect(text).to.include('fa-caret-right');
-        //       });
-        //     });
-        //   });
-        //
-        //
-        //   describe('Creator Accordion', function() {
-        //     //check the creator accordion title
-        //     it('Creator Accordion title', function() {
-        //       return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/button[3]'))
-        //       .getAttribute('innerHTML')
-        //       .then(function(text) {
-        //         expect(text).to.include('Creator');
-        //       });
-        //     });
-        //
-        //     it('Creator Accordion hidden', function() {
-        //       return browser.findElement(webdriver.By.id('Creator-window'))
-        //       .isDisplayed()
-        //       .then(function(visible) {
-        //         expect(visible).to.equal(false);
-        //       });
-        //     });
-        //
-        //     it('Creator Accordion caret before click', function() {
-        //       return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/button[3]/i'))
-        //       .getAttribute('class').then(function(text) {
-        //         expect(text).to.include('fa-caret-right');
-        //       });
-        //     });
-        //
-        //     //click the creator accordion
-        //     it('Creator Accordion 1st click', function() {
-        //       return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/button[3]'))
-        //       .click();
-        //     });
-        //
-        //     it('Creator Accordion not hidden', function() {
-        //       return browser.findElement(webdriver.By.id('Creator-window'))
-        //       .isDisplayed()
-        //       .then(function(visible) {
-        //         expect(visible).to.equal(true);
-        //       });
-        //     });
-        //
-        //     it('Creator Accordion caret after click', function() {
-        //       return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/button[3]/i'))
-        //       .getAttribute('class')
-        //       .then(function(text) {
-        //         expect(text).to.include('fa-caret-down');
-        //       });
-        //     });
-        //
-        //     // author: 'Armstrong, Wayne, 1961-'
-        //     it('Creator Accordion contents: author count', function() {
-        //       return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/div[3]/ul/li[1]/span[2]'))
-        //       .getAttribute('innerHTML')
-        //       .then(function(text) {
-        //         expect(text).to.include(1);
-        //       });
-        //     });
-        //
-        //     // author: 'Armstrong, Wayne, 1961-'
-        //     it('Creator Accordion contents: author name', function() {
-        //       return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/div[3]/ul/li[1]/span[1]/a'))
-        //       .getAttribute('innerHTML')
-        //       .then(function(text) {
-        //         expect(text).to.include('Armstrong, Wayne, 1961-');
-        //       });
-        //     });
-        //
-        //     it('Creator Accordion 2nd click', function() {
-        //       return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/button[3]'))
-        //       .click();
-        //     });
-        //
-        //     it('Creator Accordion hidden', function() {
-        //       return browser.findElement(webdriver.By.id('Creator-window'))
-        //       .isDisplayed()
-        //       .then(function(visible) {
-        //         expect(visible).to.equal(false);
-        //       });
-        //     });
-        //
-        //     it('Creator Accordion caret before click', function() {
-        //       return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/button[3]/i'))
-        //       .getAttribute('class')
-        //       .then(function(text) {
-        //         expect(text).to.include('fa-caret-right');
-        //       });
-        //     });
-        //   });
-        //
-        //
-        //   describe('Subject Accordion', function() {
-        //     //check the Subject accordion title
-        //     it('Subject Accordion title', function() {
-        //       return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/button[4]'))
-        //       .getAttribute('innerHTML')
-        //       .then(function(text) {
-        //         expect(text).to.include('Subject');
-        //       });
-        //     });
-        //
-        //     it('Subject Accordion hidden', function() {
-        //       return browser.findElement(webdriver.By.id('Subject-window'))
-        //       .isDisplayed()
-        //       .then(function(visible) {
-        //         expect(visible).to.equal(false);
-        //       });
-        //     });
-        //
-        //     it('Subject Accordion caret before click', function() {
-        //       return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/button[4]/i'))
-        //       .getAttribute('class').then(function(text) {
-        //         expect(text).to.include('fa-caret-right');
-        //       });
-        //     });
-        //
-        //     //click the Subject accordion
-        //     it('Subject Accordion 1st click', function() {
-        //       return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/button[4]'))
-        //       .click();
-        //     });
-        //
-        //     it('Subject Accordion not hidden', function() {
-        //       return browser.findElement(webdriver.By.id('Subject-window'))
-        //       .isDisplayed()
-        //       .then(function(visible) {
-        //         expect(visible).to.equal(true);
-        //       });
-        //     });
-        //
-        //     it('Subject Accordion caret after click', function() {
-        //       return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/button[4]/i'))
-        //       .getAttribute('class')
-        //       .then(function(text) {
-        //         expect(text).to.include('fa-caret-down');
-        //       });
-        //     });
-        //
-        //     it('Subject Accordion contents: subject count', function() {
-        //       return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/div[4]/ul/li[2]/span[2]'))
-        //       .getAttribute('innerHTML')
-        //       .then(function(text) {
-        //         expect(text).to.include('(1)');
-        //       });
-        //     });
-        //
-        //     it('Subject Accordion contents: subject name', function() {
-        //       return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/div[4]/ul/li[2]/span[1]/a'))
-        //       .getAttribute('innerHTML')
-        //       .then(function(text) {
-        //         expect(text).to.include('Bands (Music)');
-        //       });
-        //     });
-        //
-        //     it('Subject Accordion 2nd click', function() {
-        //       return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/button[4]'))
-        //       .click();
-        //     });
-        //
-        //     it('Subject Accordion hidden', function() {
-        //       return browser.findElement(webdriver.By.id('Subject-window'))
-        //       .isDisplayed()
-        //       .then(function(visible) {
-        //         expect(visible).to.equal(false);
-        //       });
-        //     });
-        //
-        //     it('Subject Accordion caret before click', function() {
-        //       return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/button[4]/i'))
-        //       .getAttribute('class')
-        //       .then(function(text) {
-        //         expect(text).to.include('fa-caret-right');
-        //       });
-        //     });
-        //   });
-        // });
       });
 
 
@@ -567,7 +211,6 @@ describe('Special Collections (Selenium) Tests', function() {
             .click();
           });
 
-          //currently (correctly )fails due to bug, different caret?
           it('Format Facet hidden', function() {
             return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/div[1]'))
             .isDisplayed()
@@ -865,7 +508,7 @@ describe('Special Collections (Selenium) Tests', function() {
 
 
       describe('Object attribute tests', function() {
-        const test_object1 = 'http://localhost:9007/object/7479257d-3c34-4e87-8358-05460a828ca1'
+        const test_object1 = frontend + '/object/7479257d-3c34-4e87-8358-05460a828ca1'
 
         before(function() {
           return browser.get(test_object1);
@@ -980,7 +623,7 @@ describe('Special Collections (Selenium) Tests', function() {
           return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[2]/div/div[3]/div/dl/a/dt/div/img'))
           .getAttribute('src')
           .then(function(text) {
-            expect(text).to.include('http://localhost:9007/datastream/61ed6a68-618b-48eb-b9bd-3e7484e0590a/TN');
+            expect(text).to.include(frontend + '/datastream/61ed6a68-618b-48eb-b9bd-3e7484e0590a/TN');
           });
         });
 
@@ -988,7 +631,7 @@ describe('Special Collections (Selenium) Tests', function() {
           return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[2]/div/div[3]/div/dl/a'))
           .getAttribute('href')
           .then(function(text) {
-            expect(text).to.include('http://localhost:9007/object/61ed6a68-618b-48eb-b9bd-3e7484e0590a')
+            expect(text).to.include(frontend + '/object/61ed6a68-618b-48eb-b9bd-3e7484e0590a')
           });
         });
 
