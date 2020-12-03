@@ -129,9 +129,13 @@ exports.search = function(req, res) {
 			}
 
 			if(daterange) {
-				data.fromDate = daterange.from;
+				data.fromDate = daterange.from ? daterange.from : response.minDate;
 				data.toDate = daterange.to;
 			}
+			else if(response.minDate) {
+				data.fromDate = response.minDate;
+			}
+				//console.log("TESt data", data)
 
 			// Get a normalized list of the facet data returned from the search.  
 			let facetList = Facets.getFacetList(response.facets, showAll);

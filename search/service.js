@@ -378,6 +378,8 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
         var responseData = {};
         responseData['facets'] = Helper.removeEmptyFacetKeys(response.aggregations);
         responseData['count'] = response.hits.total <= config.maxElasticSearchResultCount ? response.hits.total : config.maxElasticSearchResultCount;
+        responseData['minDate'] = Helper.getResultSetMinDate(response.aggregations) || null;
+
         try {
 
           // Create a normalized data object for the search results

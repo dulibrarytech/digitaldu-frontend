@@ -128,21 +128,23 @@ exports.getFacetBreadcrumbObject = function(selectedFacets, dateRange=null, base
  exports.getFacetList = function(esAggregetions, showAll=[]) {
     var list = {};
     for(var key in esAggregetions) {
-      list[key] = [];
-      for(var item of esAggregetions[key].buckets) {
+      if(esAggregetions[key].buckets) {
+        list[key] = [];
+        for(var item of esAggregetions[key].buckets) {
 
-        if(item.key == config.topLevelCollectionPID) {
-            continue;
-        }
+          if(item.key == config.topLevelCollectionPID) {
+              continue;
+          }
 
-        // View data
-        item.type = key;
-        item.facet = item.key;
-        item.name = item.key;
-        list[key].push(item);
+          // View data
+          item.type = key;
+          item.facet = item.key;
+          item.name = item.key;
+          list[key].push(item);
 
-        if(showAll.includes(key) == false && list[key].length >= config.facetLimitsByType[key]) {
-          break;
+          if(showAll.includes(key) == false && list[key].length >= config.facetLimitsByType[key]) {
+            break;
+          }
         }
       }
     }

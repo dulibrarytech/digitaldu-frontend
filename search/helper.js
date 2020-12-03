@@ -360,3 +360,22 @@ exports.formatDateFieldForElasticQuery = function(daterangeQuery) {
 
   return formatted;
 }
+
+/**
+ * Extracts the minimum date of the search result set, using the 'datefieldStats' value. 
+ * If this value does not appear in the aggregations object (facets), null is returned
+ *
+ * @param {Object} facets - Elastic search response aggregations object
+ *
+ * @return {Object} - Updated Elastic search response aggregations object
+ */
+exports.getResultSetMinDate = function(facets) {
+  let minDate = null;
+  if(facets.datefieldStats && facets.datefieldStats.stats) {
+    let minString = facets.datefieldStats.stats.min_as_string || "";
+    if(/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]T[0-9][0-9]:[0-9][0-9]:[0-9][0-9].[0-9][0-9][0-9]Z/g.test(minString)) {
+      minDate = minString.substr(0, 4);
+    }
+  }
+  return minDate;
+}
