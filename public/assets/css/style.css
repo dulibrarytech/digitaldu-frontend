@@ -1279,10 +1279,6 @@ div.object-options button:hover {
   background-color: #e5e3e1;
 }
 
-div.object-options button:focus {
-  outline: none;
-}
-
 span.submit-download-selection button {
   background-color: #e5e3e1;
   position: relative;
