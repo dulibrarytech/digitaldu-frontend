@@ -25,4 +25,18 @@ $( document ).ready(function() {
 		searchUrl += "sort=" + $('#sort-by-select').val();
 		window.location.replace(encodeURI(searchUrl));
 	});
+
+	$('.facet-name > a').keypress(function(e){
+	  if(e.which == 13) {
+        console.log('You pressed enter!', e);
+        e.target.onclick();
+    }
+	});
+
+	$('.remove-facet').keypress(function(e){
+	  if(e.which == 13) {
+        console.log('You pressed enter!', e);
+        e.target.onclick();
+    }
+	});
 });
