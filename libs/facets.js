@@ -209,7 +209,7 @@ exports.getFacetBreadcrumbObject = function(selectedFacets, dateRange=null, base
 function createList(facet, data, baseUrl, showAll, expand) {
     var html = '', header = '', list = '';
     if(data.length > 0) {
-        header += expand.includes(facet) ? '<div id="' + facet + '-window" class="panel facet-panel panel-collapsed" style="display: block"><ul>' : '<div id="' + facet + '-window" class="panel facet-panel panel-collapsed"><ul>';
+        header += expand.includes(facet) ? '<div id="' + facet + '-window" class="panel facet-panel" style="display: block"><ul>' : '<div id="' + facet + '-window" class="panel facet-panel panel-collapsed"><ul>';
 
         // Add the facet list item(s) if facets are present, and not empty
         for (var i = 0; i < data.length; i++) {
