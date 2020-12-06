@@ -58,7 +58,7 @@ $( document ).ready(function() {
 				mainPanelCollapseHeight = $(".uv").height() - 81;  // 719px
 
 			if($("#view-transcript").length < 1) {
-				$("#object-view-controls").append("<button id='view-transcript' type='button'>View Transcript</button>");
+				$("#object-view-controls").append("<button id='view-transcript' alt='view transcript' type='button'>View Transcript</button>");
 			}
 
 			// Remove default click event, add event with Kaltura element resizing
