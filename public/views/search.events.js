@@ -24,16 +24,4 @@ $( document ).ready(function() {
 		$(".sidebar-search input[type='text']").val(DOMPurify.sanitize($(".sidebar-search input[type='text']").val()));
 		$(".sidebar-search form").submit();
 	});
-
-	$('.facet-name > a').keypress(function(e){
-	  if(e.which == 13) {
-        e.target.onclick();
-    }
-	});
-
-	$('.remove-facet').keypress(function(e){
-	  if(e.which == 13) {
-        e.target.onclick();
-    }
-	});
 });
