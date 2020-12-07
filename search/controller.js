@@ -135,7 +135,6 @@ exports.search = function(req, res) {
 			else if(response.minDate) {
 				data.fromDate = response.minDate;
 			}
-				//console.log("TESt data", data)
 
 			// Get a normalized list of the facet data returned from the search.  
 			let facetList = Facets.getFacetList(response.facets, showAll);
