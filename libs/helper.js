@@ -364,16 +364,17 @@ exports.getFacetAggregationObject = function(facets) {
 
     facetAggregations["datefieldStats"] = {
       "nested": {
-      	"path": "display_record.dates"
+      	"path": config.nestedDateField
       },
       "aggs": {
       	"stats": {
       		"extended_stats": {
-      			"field": "display_record.dates.begin"
+      			"field": config.beginDateField
       		}
       	}
       }
     };
-
+    
+    	console.log("TEST aggs", facetAggregations)
     return facetAggregations;
 }
