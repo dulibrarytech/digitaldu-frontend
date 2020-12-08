@@ -375,6 +375,5 @@ exports.getFacetAggregationObject = function(facets) {
       }
     };
     
-    	console.log("TEST aggs", facetAggregations)
     return facetAggregations;
 }

@@ -233,7 +233,7 @@ module.exports = {
      */
     beginDateField: "display_record.dates.begin",
     endDateField: "display_record.dates.end",
-    nestedDateField: true,  // true if date data type is "nested"
+    nestedDateField: "display_record.dates",  // false if date data type is not "nested"
     dateFieldMatchField: "display_record.dates.label",
     dateFieldMatchValue: "creation",
 
@@ -536,11 +536,11 @@ module.exports = {
         "Format": {
             "path": "type",
         },
-        "Date": {
-            "path": "display_record.dates.expression",
-            "matchField": "display_record.dates.label",
-            "matchTerm": "creation"
-        },
+        // "Date": {
+        //     "path": "display_record.dates.expression",
+        //     "matchField": "display_record.dates.label",
+        //     "matchTerm": "creation"
+        // },
         "Collection": {
             "path": "is_member_of_collection"
         },
