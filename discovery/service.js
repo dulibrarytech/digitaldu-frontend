@@ -93,7 +93,7 @@ exports.getTopLevelCollections = function(page=1, callback) {
             }
           }
         }
-        
+
         //Query the index for root collection members
         getObjectsInCollection(config.topLevelCollectionPID, page, null, {"field": "Title", "order": "asc"}, 12, null, function(error, collections) {
           if(error) {
@@ -189,13 +189,13 @@ var getObjectsInCollection = function(collectionId, page=1, facets=null, sort=nu
                 fetchObjectByPid(config.elasticsearchPublicIndex, collectionId, function(error, object) {
                   if(error) {
                     collection.title = "";
-                    callback(error, []);
+                    callback(error + ". Pid: " + collectionId, []);
                   }
                   else if(!object) {
-                    callback("Collection not found ", null);
+                    callback("Collection not found. Pid: " + collectionId, null);
                   }
                   else if(object.object_type != "collection") {
-                    callback("Invalid collection ", []);
+                    callback("Invalid collection. Pid: " + collectionId, []);
                   }
                   else {
                     collection.title = object.title || "No Title";

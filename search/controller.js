@@ -107,7 +107,7 @@ exports.search = function(req, res) {
 			console.error(error);
 			data.error = "Error: There was a problem performing your search";
 			data["logMsg"] = error;
-			return res.render('results', data);
+			return res.render('error', data);
 		}
 		else {
 			data.options["expandFacets"] = expandFacets;
