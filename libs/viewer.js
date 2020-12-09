@@ -30,13 +30,13 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
 	 AppHelper = require("../libs/helper");
 
 /**
- * 
+ * Get object viewer html 
  *
- * @param 
- * @return 
+ * @param {Object} object - index document
+ * @return {String|boolean} - viewer html string, false if viewer can not be rendered
  */
 exports.getObjectViewer = function(object, mimeType="", apikey=null) {
- 	var viewer = "";
+ 	var viewer = false;
  	apikey = apikey ? ("?key=" + apikey) : "";
 
  	if(object == null) {
@@ -58,24 +58,23 @@ exports.getObjectViewer = function(object, mimeType="", apikey=null) {
  	// Get viewer for object mime type:
  	switch(dataType) {
  		case "audio":
- 			viewer += getAudioPlayer(object, mimeType, apikey);
+ 			viewer = getAudioPlayer(object, mimeType, apikey);
  			break;
 
  		case "video":
- 			viewer += getVideoViewer(object, apikey);
+ 			viewer = getVideoViewer(object, apikey);
  			break;
 
  		case "still image":
- 			viewer += getLargeImageViewer(object, apikey);
+ 			viewer = getLargeImageViewer(object, apikey);
  			break;
 
  		case "pdf":
- 			viewer += getPDFViewer(object, apikey);
+ 			viewer = getPDFViewer(object, apikey);
  			break;
 
  		default:
  			console.log("Viewer error: invalid mimetype:", mimeType, "for pid:", object.pid);
- 			viewer = "";
  			break;
  	}
 

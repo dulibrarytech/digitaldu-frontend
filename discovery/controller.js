@@ -228,30 +228,36 @@ exports.renderObjectView = function(req, res) {
 		title: null,
 		summary: null,
 		metadata: {},
-		error: null,
 		citations: null,
 		downloads: null,
 		transcript: null,
-		root_url: config.rootUrl
+		root_url: config.rootUrl,
+		error: null
 	},
 	pid = req.params.pid || "",
 	part = null;
 	
 	Service.fetchObjectByPid(config.elasticsearchPublicIndex, pid, function(error, response) {
 		if(error) {
-			data.error = config.viewerErrorMessage;
-			data["logMsg"] = error;
-			console.error(error);
+			let msg = error + ". Pid: " + pid;
+			data["logMsg"] = msg;
+			console.error(msg);
 			res.status(500);
-			res.render('error', data);
+			res.render('error', {
+				error: config.viewerErrorMessage,
+				root_url: config.rootUrl,
+				logMsg: error
+			});
 		}
 		else if(response == null) {
 			let msg = "Object not found";
-			data.error = msg;
-			data["logMsg"] = msg + pid;
-			console.log(msg + pid);
+			console.log(msg + ". Pid: " + pid);
 			res.status(404);
-			res.render('page-not-found', data);
+			res.render('page-not-found', {
+				error: msg,
+				root_url: config.rootUrl,
+				logMsg: msg + ". Pid: " + pid
+			});
 		}
 		else {
 			if(response.object_type == "collection") {
@@ -261,24 +267,32 @@ exports.renderObjectView = function(req, res) {
 				var object = response,
 				page = req.params.page && isNaN(parseInt(req.params.page)) === false ? req.params.page : null;
 
-				if(object.transcript && object.transcript.length > 0) {
-					data.transcript = object.transcript;
-				}
-
 				if(AppHelper.isParentObject(object)) {
-					data.viewer = CompoundViewer.getCompoundObjectViewer(object, page);
-					part = "1";
+					let viewerContent = CompoundViewer.getCompoundObjectViewer(object, page);
+					if(viewerContent) { 
+						data.viewer = viewerContent;
+						part = "1"; 
+					}
 				}
 				else {
 					data.viewer = Viewer.getObjectViewer(object);
 				}
 
-				if(data.viewer.length <= 0) {
-					data.error = config.viewerErrorMessage;
-					data["logMsg"] = "Object viewer error, can not retrieve viewer content";
-					res.render('error', data);
+				if(data.viewer == false || data.viewer.length <= 0) {
+					let msg = "Object viewer error, can not retrieve viewer content. Pid: " + pid;
+					console.error(msg);
+					res.status(500);
+					res.render('error', {
+						error: config.viewerErrorMessage,
+						root_url: config.rootUrl,
+						logMsg: msg
+					});
 				}
 				else {
+					if(object.transcript && object.transcript.length > 0) {
+						data.transcript = object.transcript;
+					}
+
 					data["returnLink"] = (req.header('Referer') && req.header('Referer').indexOf(config.rootUrl + "/search?") >= 0) ? req.header('Referer') : false;
 					Service.getCollectionHeirarchy(object.is_member_of_collection, function(collectionTitles) {
 						data.id = pid;
@@ -457,7 +471,7 @@ exports.getObjectViewer = function(req, res) {
 		index = config.elasticsearchPublicIndex,
 		key = null,
 		script = "",
-		errors = "";
+		errors = null;
 
 	if(req.query.key && req.query.key == config.apiKey) {
 		index = config.elasticsearchPrivateIndex;
@@ -465,19 +479,23 @@ exports.getObjectViewer = function(req, res) {
 	}
 	Service.fetchObjectByPid(index, pid, function(error, object) {
 		if(error) {
-			console.error(error);
-			errors += "Viewer error";
+			console.error(error + ". Pid: " + pid);
+			errors = "Viewer error";
 			res.status(500);
 		}
 		else if(object == null) {
-			console.log("Object not found: " + pid);
-			errors += "Object not found";
+			console.log("Object not found. Pid:" + pid);
+			errors = "Object not found";
 			res.status(404);
 		}
 		else {
 			var page = req.params.page && isNaN(parseInt(req.params.page)) === false ? req.params.page : "1";
 			if(AppHelper.isParentObject(object)) {
-				viewer += CompoundViewer.getCompoundObjectViewer(object, page, key)
+				let viewerContent = CompoundViewer.getCompoundObjectViewer(object, page, key);
+				if(viewerContent) { viewer += viewerContent }
+				else {
+					errors = "Null viewer content for compound object";
+				}
 			}
 			else {
 				if(page != "1") {
@@ -486,15 +504,15 @@ exports.getObjectViewer = function(req, res) {
 					errors = msg;
 				}
 				else {
-					let objViewer = Viewer.getObjectViewer(object, null, key);
-					if(objViewer.length <= 0) {
-						errors = "Can not get object viewer"
+					let viewerContent = Viewer.getObjectViewer(object, null, key);
+					if(viewerContent && viewerContent.length > 0) { viewer += viewerContent }
+					else { 
+						errors = "Null viewer content for object"; 
 					}
-					else { viewer += objViewer }
 				}
 			}
 
-			if(object.transcript && object.transcript.length > 0) {
+			if(!errors && object.transcript && object.transcript.length > 0) {
 				viewer += "<div id='transcript-view-wrapper' style='display: block;'><div id='transcript-view'>";
 				viewer += object.transcript;
 				viewer += "</div></div>";
@@ -503,12 +521,23 @@ exports.getObjectViewer = function(req, res) {
 			viewer += "</div>";
 		}
 
-		res.render('page', {
-			error: errors,
-			root_url: config.rootUrl,
-			content: viewer,
-			script: script
-		});
+		if(errors) {
+			console.log(errors + ". Pid: " + pid)
+			res.render('error', {
+				error: config.viewerErrorMessage,
+				root_url: config.rootUrl,
+				logMsg: errors + ". Pid: " + pid
+			});
+		}
+
+		else {
+			res.render('page', {
+				error: null,
+				root_url: config.rootUrl,
+				content: viewer,
+				script: script
+			});
+		}
 	});
 }
 
@@ -518,11 +547,11 @@ exports.downloadObjectFile = function(req, res) {
 
 	Service.fetchObjectByPid(config.elasticsearchPublicIndex, pid, function(error, object) {
 		if(error) {
-			console.log(error, pid);
+			console.error(error + ". Pid: " + pid);
 			res.sendStatus(500);
 		}
 		else if(object == null) {
-			console.log("Object not found", pid);
+			console.log("Object not found. Pid: " + pid);
 			res.sendStatus(404);
 		}
 		else {

@@ -32,11 +32,12 @@ const 	config = require('../config/' + process.env.CONFIGURATION_FILE),
  * Get compound object viewer html 
  *
  * @param {Object} object - index document
- * @return {String} - viewer html string
+ * @return {String|boolean} - viewer html string, false if viewer can not be rendered
  */
 exports.getCompoundObjectViewer = function(object, page, apikey=null) {
- 	var viewer = "",
+ 	var viewer = false,
  	    embedKaltura = false; 
+
  	if(config.objectTypes.audio.includes(object.mime_type) || config.objectTypes.video.includes(object.mime_type)) {
  		embedKaltura = config.universalViewerKalturaPlayer;
  	}
@@ -46,17 +47,15 @@ exports.getCompoundObjectViewer = function(object, page, apikey=null) {
  		page = page ? page : "1";
 	 	switch(config.compoundObjectViewer) {
 	 		case "universalviewer":
-	 			viewer += Viewer.getIIIFObjectViewer(object, page, embedKaltura, apikey);
+	 			viewer = Viewer.getIIIFObjectViewer(object, page, embedKaltura, apikey);
 	 			break;
 	 		default:
 	 			console.log("Viewer error: No compound viewer found.  Please check viewer configuration.");
-	 			viewer += "<h3>Sorry, this object can not be displayed. Please contact technical support</h3>";
 	 			break;
 	 	}
  	}
  	else {
  		console.log("Viewer error: Invalid compound object part(s). Pid: " + object.pid);
- 		viewer += "<h3>Sorry, this object can not be displayed. Please contact technical support</h3>";
  	}
 
  	return viewer;
