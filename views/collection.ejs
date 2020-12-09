@@ -18,8 +18,11 @@
 </div>
 
 <div class="row no-side-margin section content results-display">
-	<div class="col-md-3">
-		<% if(error == null) { %>
+	<% if(error) { %>
+	    <br><br>
+  		<h6><%- error %></h6>
+  	<% } else { %>
+		<div class="col-md-3">
 			<div class="sidebar-section">
 				<h4>Search This Collection</h4>
 				<hr>
@@ -33,15 +36,11 @@
 				<%- include('partials/facets') -%>
 				<%- include('partials/daterange-search') -%>
 			</div>
-		<% } %>
-	</div>
+		</div>
 
-	<div class="col-md-9 collections-wrapper">
-		<h2><%= current_collection_title %></h2>
-	    <% if(error) { %>
-	    	<br><br>
-  			<h6><%- error %></h6>
-  		<% } else { %>
+
+		<div class="col-md-9 collections-wrapper">
+			<h2><%= current_collection_title %></h2>
   			<span class="search-results-menu-group">
 	  			<div class="search-results-menu-element">
 			        <select id="results-per-page" class="form-control" title="Select Number of Results per Page">
@@ -66,19 +65,17 @@
 			        </select>
 			    </div>
 			</span>
-		<br/><br/>
-                    <div class="content-message">
-                        <p>
-                        Notice: Our digital collections contain materials that are racist, sexist, and may be painful or traumatizing to researchers.
-                        </p>
-                    </div>
+			<br/><br/>
+            <div class="content-message">
+                <p>
+                Notice: Our digital collections contain materials that are racist, sexist, and may be painful or traumatizing to researchers.
+                </p>
+            </div>
 		    <hr>		    
-
-                    <div class="collection-abstract">
-                        <p>Collection Description: <%= current_collection_abstract.replace(/(<([^>]+)>)/ig,"") %></p>
-                    </div>
+            <div class="collection-abstract">
+                <p>Collection Description: <%= current_collection_abstract.replace(/(<([^>]+)>)/ig,"") %></p>
+            </div>
   			<%- include('partials/paginator') -%>
-
   			<div id="collections">
   				<div class="row">
   					<% if(results.length > 0) { %>
@@ -106,8 +103,8 @@
 	  			</div>
 	    	</div>
 	    	<%- include('partials/paginator') -%>
-	    <% } %>
-	</div>
+		</div>
+	<% } %>
 </div>
 
 <script>

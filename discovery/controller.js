@@ -149,11 +149,18 @@ var renderCollection = function(req, res) {
 		let sortBy = Helper.getSortDataArray(data.sortType);
 		Service.getObjectsInCollection(pid, page, reqFacets, sortBy, pageSize, daterange, function(error, response) {
 			if(error) {
-				console.log(error);
-				data.error = "Could not open collection";
-				data["logMsg"] = error;
-				data.current_collection_title = "Error";
-				return res.render('collection', data);
+				if(response) {
+					console.log(error);
+					data.error = "Could not open collection: " + error;
+					data["logMsg"] = error;
+					return res.render('error', data);
+				}
+				else {
+					console.log(error);
+					data.error = "Could not open collection: " + error;
+					data["logMsg"] = error;
+					return res.render('page-not-found', data);
+				}
 			}
 			else {
 				data.results = response.list;

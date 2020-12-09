@@ -93,7 +93,7 @@ exports.getTopLevelCollections = function(page=1, callback) {
             }
           }
         }
-
+        
         //Query the index for root collection members
         getObjectsInCollection(config.topLevelCollectionPID, page, null, {"field": "Title", "order": "asc"}, 12, null, function(error, collections) {
           if(error) {
@@ -173,7 +173,7 @@ var getObjectsInCollection = function(collectionId, page=1, facets=null, sort=nu
               callback(error, null);
             }
             else if(from > response.hits.total) {
-              callback("Invalid page number", null);
+              callback("Invalid page number ", null);
             }
             else {
               var results = [];
@@ -192,10 +192,10 @@ var getObjectsInCollection = function(collectionId, page=1, facets=null, sort=nu
                     callback(error, []);
                   }
                   else if(!object) {
-                    callback("Object not found: " + collectionId, []);
+                    callback("Collection not found ", null);
                   }
                   else if(object.object_type != "collection") {
-                    callback("Invalid collection: " + object.pid, []);
+                    callback("Invalid collection ", []);
                   }
                   else {
                     collection.title = object.title || "No Title";
