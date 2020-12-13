@@ -242,7 +242,8 @@ exports.renderObjectView = function(req, res) {
 		error: null
 	},
 	pid = req.params.pid || "",
-	part = null;
+	part = null,
+	page = req.params.page && isNaN(parseInt(req.params.page)) === false ? req.params.page : null;
 	
 	Service.fetchObjectByPid(config.elasticsearchPublicIndex, pid, function(error, response) {
 		if(error) {
@@ -271,9 +272,7 @@ exports.renderObjectView = function(req, res) {
 				renderCollection(req, res);
 			}
 			else {
-				var object = response,
-				page = req.params.page && isNaN(parseInt(req.params.page)) === false ? req.params.page : null;
-
+				var object = response;
 				if(AppHelper.isParentObject(object)) {
 					let viewerContent = CompoundViewer.getCompoundObjectViewer(object, page);
 					if(viewerContent) { 
@@ -285,7 +284,7 @@ exports.renderObjectView = function(req, res) {
 					data.viewer = Viewer.getObjectViewer(object);
 				}
 
-				if(data.viewer == false || data.viewer.length <= 0) {
+				if(data.viewer == null || data.viewer.length <= 0) {
 					let msg = "Object viewer error, can not retrieve viewer content. Pid: " + pid;
 					console.error(msg);
 					res.status(500);
@@ -499,7 +498,9 @@ exports.getObjectViewer = function(req, res) {
 			var page = req.params.page && isNaN(parseInt(req.params.page)) === false ? req.params.page : "1";
 			if(AppHelper.isParentObject(object)) {
 				let viewerContent = CompoundViewer.getCompoundObjectViewer(object, page, key);
-				if(viewerContent) { viewer += viewerContent }
+				if(viewerContent) { 
+					viewer += viewerContent 
+				}
 				else {
 					errors = "Null viewer content for compound object";
 				}
@@ -512,7 +513,9 @@ exports.getObjectViewer = function(req, res) {
 				}
 				else {
 					let viewerContent = Viewer.getObjectViewer(object, null, key);
-					if(viewerContent && viewerContent.length > 0) { viewer += viewerContent }
+					if(viewerContent && viewerContent.length > 0) { 
+						viewer += viewerContent 
+					}
 					else { 
 						errors = "Null viewer content for object"; 
 					}
