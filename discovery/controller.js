@@ -472,10 +472,11 @@ exports.advancedSearch = function(req, res) {
  * @return {undefined}
  */
 exports.getObjectViewer = function(req, res) {
-	var viewer = "<div class='embedded-viewer'>",
+	var viewer = "",
 		pid = req.params.pid,
 		index = config.elasticsearchPublicIndex,
 		key = null,
+		transcript = null,
 		script = "",
 		errors = null;
 
@@ -523,12 +524,9 @@ exports.getObjectViewer = function(req, res) {
 			}
 
 			if(!errors && object.transcript && object.transcript.length > 0) {
-				viewer += "<div id='transcript-view-wrapper' style='display: block;'><div id='transcript-view'>";
-				viewer += object.transcript;
-				viewer += "</div></div>";
+				transcript = object.transcript;
 				script = "$('#uv').css('height', '72%')";
 			}
-			viewer += "</div>";
 		}
 
 		if(errors) {
@@ -541,10 +539,11 @@ exports.getObjectViewer = function(req, res) {
 		}
 
 		else {
-			res.render('page', {
+			res.render('viewer-page', {
 				error: null,
 				root_url: config.rootUrl,
 				content: viewer,
+				transcript: transcript,
 				script: script
 			});
 		}
