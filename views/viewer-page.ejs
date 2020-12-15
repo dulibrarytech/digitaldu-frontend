@@ -10,14 +10,22 @@
 	#uv {
 		height: 100vh;
 	}
+
+	#uv > div > div {
+		overflow-y: scroll;
+	}
+
+	#uv .mainPanel {
+		height: 150% !important;
+	}
 </style>
 
 <% if(error) { %>
   <h5><%- error %></h5>
 <% } %>
-<%- content %>
 
 <div class='embedded-viewer'>
+<%- content %>
 <% if(transcript) { %>
 	<div id='transcript-view-wrapper' style='display: block;'><div id='transcript-view'>
 		<%= transcript %>
