@@ -23,7 +23,7 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
  * Write file to backend cache
  */
 exports.cacheDatastream = function(objectType, objectID, stream, extension, callback) {
-	let filepath;
+	let filepath = "";
 	if(objectType == 'thumbnail') {
 		filepath = config.thumbnailImageCacheLocation + "/" + objectID + "." + config.thumbnailFileExtension;
 	}
@@ -45,7 +45,7 @@ exports.cacheDatastream = function(objectType, objectID, stream, extension, call
  * Check if a file exists in the cache
  */
 exports.exists = function(objectType, objectID, extension="") {
-	let filepath;	
+	let filepath = "";	
 	if(objectType == 'thumbnail') {
 		filepath = config.thumbnailImageCacheLocation + "/" + objectID + "." + config.thumbnailFileExtension;
 	}
@@ -59,7 +59,7 @@ exports.exists = function(objectType, objectID, extension="") {
  * Fetch a file stream
  */
 exports.getFileStream = function(objectType, objectID, extension="", callback) {
-	let filepath;	
+	let filepath = "";	
 	if(objectType == 'thumbnail') {
 		filepath = config.thumbnailImageCacheLocation + "/" + objectID + "." + config.thumbnailFileExtension;
 	}
@@ -74,4 +74,42 @@ exports.getFileStream = function(objectType, objectID, extension="", callback) {
 	readStream.on('error', function(err) {
 	    callback(err, null);
 	});
+}
+
+/*
+ * Remove a cached object
+ */
+exports.removeObject = function(objectType, filename, callback) {
+	let filepath = "";
+	if(objectType == 'thumbnail') {
+		filepath = config.thumbnailImageCacheLocation + "/" + filename;
+	}
+	else if(objectType == 'object') {
+		filepath = config.objectDerivativeCacheLocation + "/" + filename;
+	}
+
+	fs.unlink(filepath, function(error) {
+		if(error) {
+			callback("Error removing cache file: " + filename + " " + error, null);
+		}
+		else {
+			callback(null, "Removed cache file: " + filename);
+		}
+	})
+}
+
+/*
+ * Returns an array of cached object IDs 
+ */
+exports.getList = function(objectType) {
+	let list = [];
+
+	if(objectType == 'thumbnail') {
+		list = fs.readdirSync(config.thumbnailImageCacheLocation) || [];
+	}
+	else if(objectType == 'object') {
+		list = fs.readdirSync(config.objectDerivativeCacheLocation) || [];
+	}
+
+	return list;
 }

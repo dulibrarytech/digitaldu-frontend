@@ -20,7 +20,8 @@ Helper = require('../libs/helper'),
 Facets = require('../libs/facets'),
 Paginator = require('../libs/paginator'),
 Metadata = require('../libs/metadata'),
-IIIF = require('../libs/IIIF');
+IIIF = require('../libs/IIIF'),
+Cache = require('../libs/cache');
 
 exports.test_view = function(req, res) {
 	console.log("TEST router req headers", req.headers)
@@ -211,12 +212,6 @@ exports.test_fileDownloader = function(req, res) {
 
 	// Test video
 	let uri = "https://cdnapisec.kaltura.com/p/2357732/sp/0/playManifest/entryId/0_u131t2ex/format/url/protocol/https/flavorParamId/0_40uy2cu1/video.mp4"
-	//let uri = "http://cfvod.kaltura.com/pd/p/2357732/sp/235773200/serveFlavor/entryId/0_u131t2ex/v/2/ev/7/flavorId/0_40uy2cu1/name/a.mp4"
-
-	// Test misc
-	//let uri = "https://www.steppublishers.com/sites/default/files/stepteen2.mov"
-
-		console.log("TEST test_fileDownloader kaltura: uri:", uri)
 
 	// Request
     request(uri, function(error, response, body) {
@@ -230,20 +225,6 @@ exports.test_fileDownloader = function(req, res) {
         res.send(body);
       }
     });
-
-    // Request Stream
-    //  rs.get(uri, {}, function(err, response) {
-	// 	if(err) {
-	//     	console.log("TEST dsfetch req err", err)
-	//   		res.send("Could not open datastream. " + err);
-	// 	}
-	// 	else {
-	//     		console.log("TEST dsstream req ok, returning body", response.headers)
-	//   		//res.setHeader("Content-Type", "video/quicktime");
-	//   		//res.send(response);
-	//   		response.pipe(res);
-	// 	}
-	// });
 }
 
 exports.test_sanitizeHtml = function(req, res) {
@@ -253,8 +234,36 @@ exports.test_sanitizeHtml = function(req, res) {
 	}
 	queryObj.q.push("Test query<script>stealData()</script> string");
 	queryObj.type.push("Test type <script>malware()</script>string");
-	console.log("QObj pre", queryObj);
+	console.log("test_sanitizeHtml QObj pre", queryObj);
 	Helper.sanitizeHttpParamsObject(queryObj);
-	console.log("QObj post", queryObj);
-	res.send("OK");
+	console.log("test_sanitizeHtml QObj post", queryObj);
+	res.send("test_sanitizeHtml OK");
+}
+
+exports.test_cache_cacheDatastream = function(req, res) {
+
+}
+
+exports.test_cache_exists = function(req, res) {
+
+}
+
+exports.test_cache_getList = function(req, res) {
+	let list = Cache.getList('thumbnail');
+	console.log("test_cache_getList() list", list);
+	res.send("test_cache_getList OK");
+}
+
+exports.test_cache_removeObject = function(req, res) {
+	let pid = "00610779-cf59-4479-91ad-796abf95769a.jpg";
+	Cache.removeObject('thumbnail', pid, function(error, response) {
+		if(error) {
+			console.log(error);
+			res.send("test_cache_removeObject Errored");
+		}
+		else {
+			console.log(response);
+			res.send("test_cache_removeObject OK");
+		}
+	});
 }

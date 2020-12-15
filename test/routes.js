@@ -33,5 +33,11 @@ module.exports = function (app) {
 
 	    app.route('/test/sanitizeHtml')
 	    	.get(Test.test_sanitizeHtml)
+
+	    app.route('/test/cache_getList')
+	    	.get(Test.test_cache_getList)
+
+	    app.route('/test/cache_removeObject')
+	    	.get(Test.test_cache_removeObject)
 	}
 };
