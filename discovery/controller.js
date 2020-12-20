@@ -648,3 +648,14 @@ exports.renderHandleErrorPage = function(req, res) {
 	});
 }
 
+exports.purgeInvalidItems = function(req, res) {
+	let cacheName = req.params.cache || null;
+	if(cacheName) {
+		Service.refreshCache(cacheName);
+		res.sendStatus(200);
+	}
+	else {
+		res.sendStatus(400);
+	}
+}
+

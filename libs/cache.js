@@ -79,12 +79,12 @@ exports.getFileStream = function(objectType, objectID, extension="", callback) {
 /*
  * Remove a cached object
  */
-exports.removeObject = function(objectType, filename, callback) {
+exports.removeObject = function(cacheName, filename, callback) {
 	let filepath = "";
-	if(objectType == 'thumbnail') {
+	if(cacheName == 'thumbnail') {
 		filepath = config.thumbnailImageCacheLocation + "/" + filename;
 	}
-	else if(objectType == 'object') {
+	else if(cacheName == 'object') {
 		filepath = config.objectDerivativeCacheLocation + "/" + filename;
 	}
 
@@ -93,7 +93,7 @@ exports.removeObject = function(objectType, filename, callback) {
 			callback("Error removing cache file: " + filename + " " + error, null);
 		}
 		else {
-			callback(null, "Removed cache file: " + filename);
+			callback(null);
 		}
 	})
 }
@@ -101,13 +101,13 @@ exports.removeObject = function(objectType, filename, callback) {
 /*
  * Returns an array of cached object IDs 
  */
-exports.getList = function(objectType) {
+exports.getList = function(cacheName) {
 	let list = [];
 
-	if(objectType == 'thumbnail') {
+	if(cacheName == 'thumbnail') {
 		list = fs.readdirSync(config.thumbnailImageCacheLocation) || [];
 	}
-	else if(objectType == 'object') {
+	else if(cacheName == 'object') {
 		list = fs.readdirSync(config.objectDerivativeCacheLocation) || [];
 	}
 

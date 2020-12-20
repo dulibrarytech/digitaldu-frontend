@@ -33,6 +33,7 @@ const Kaltura = require('../libs/kaltura');
 const IIIF = require("../libs/IIIF");
 const util = require('util');
 const Search = require("../search/service");
+const Cache = require('../libs/cache');
 
 /*
  * TEMP
@@ -542,7 +543,7 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
 exports.getAutocompleteData = function(callback) {
   var data = {};
   getCollectionList(function(error, list) {
-    if(error) {console.log(error)}
+    if(error) {callback(error, data)}
     else {data["collectionData"] = list};
     callback(null, data);
   })
@@ -570,10 +571,48 @@ var getCollectionList = function(callback) {
           pids.push(results[i]._source.pid);
         }
 
-        // Get an array of collection data that correspond with the pids in the pids array
+        // Get an array of collection data that correspond with the pids in the array
         getTitleString(pids, [], function(error, response) {
           callback(null, response);
         });
       }
   });
+}
+
+exports.refreshCache = function(cacheName) {
+  let cacheFiles = Cache.getList(cacheName),
+      pid = "", 
+      url = "";
+
+  console.log("Refreshing " + cacheName + " cache...");
+  for(let file of cacheFiles) {
+    pid = file.substring(0, file.lastIndexOf("."));
+
+    fetchObjectByPid(config.elasticsearchPublicIndex, pid, function (error, object) {
+      if(error) {
+        console.log(error);
+      }
+      // Object not found in index
+      else if(object == null) {
+        Cache.removeObject(cacheName, file, function(error) {
+          if(error) {console.log("Error removing cache file " + file + ": " + error)}
+          else {console.log("Removed " + file + " from " + cacheName + " cache")}
+        });
+      }
+      else {
+        Datastreams.verifyObject(object, "object", function(error, isValid) {
+          if(error) {console.log(error)}
+          // Object index record is present, but is not found (200) in DuraCloud
+          else if(isValid == false) {
+            Cache.removeObject(cacheName, file, function(error) {
+              if(error) {console.log("Error removing cache file " + file + ": " + error)}
+              else {console.log("Removed " + file + " from " + cacheName + " cache")}
+            });
+          }
+        })
+      }
+    });
+  }
+
+  return 0;
 }

@@ -26,6 +26,7 @@
 
 const config = require('../config/' + process.env.CONFIGURATION_FILE),
 	  rs = require('./request-stream'),
+	  request = require('request'),
 	  fs = require('fs');
 
 const domain = config.repositoryDomain,
@@ -125,6 +126,33 @@ exports.streamData = function(object, dsid, callback) {
 				else {
 					callback(null, null);
 				}
+			}
+		});
+	}
+	catch(e) {
+		callback(e, null);
+	}
+}
+
+exports.getStreamStatus = function(object, dsid, callback) {
+	try {
+		if(!object) { throw "Object is null" }
+		var url = getRepositoryUrl();
+
+		if(dsid.toLowerCase() == "tn") {url += "/" + object.thumbnail}
+		else if(dsid.toLowerCase() !== "object") {
+			let objectPath = object.object.substring(0, object.object.length-4);
+			objectPath += ("." + dsid);
+			url += ("/" + objectPath);
+		}
+		else {url += ("/" + object.object)}
+			
+		request.head(url, function (err, res) {
+			if(err) {
+				callback("Could not open datastream. " + err + " Check connection to repository", null);
+			}
+			else {
+				callback(null, res.statusCode);
 			}
 		});
 	}

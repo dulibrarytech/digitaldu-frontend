@@ -372,3 +372,23 @@ var getIndexTnUri = function(uri) {
   return uri;
 }
 
+exports.verifyObject = function(object, datastreamID, callback) {
+  if(datastreamID != "tn" && datastreamID != "object") {
+    datastreamID = "object";
+  }
+
+  Repository.getStreamStatus(object, datastreamID, function(error, status) {
+    if(error) {
+      callback(error, null);
+    }
+    else {
+      if(status == "200") {
+        callback(null, true);
+      }
+      else {
+        callback(null, false);
+      }
+    }
+  });
+}
+
