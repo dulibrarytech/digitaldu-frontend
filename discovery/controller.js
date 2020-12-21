@@ -285,8 +285,8 @@ exports.renderObjectView = function(req, res) {
 				}
 
 				if(data.viewer == null || data.viewer.length <= 0) {
-					let msg = "Object viewer error, can not retrieve viewer content. Pid: " + pid;
-					console.error(msg);
+					let msg = "Object viewer error: Can not retrieve viewer content. Pid: " + pid;
+					console.log(msg);
 					res.status(500);
 					res.render('error', {
 						error: config.viewerErrorMessage,

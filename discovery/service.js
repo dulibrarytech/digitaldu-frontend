@@ -596,7 +596,7 @@ exports.refreshCache = function(cacheName) {
       else if(object == null) {
         Cache.removeObject(cacheName, file, function(error) {
           if(error) {console.log("Error removing cache file " + file + ": " + error)}
-          else {console.log("Removed " + file + " from " + cacheName + " cache")}
+          else {console.log("Removed " + file + ". Object not found in index")}
         });
       }
       else {
@@ -606,7 +606,7 @@ exports.refreshCache = function(cacheName) {
           else if(isValid == false) {
             Cache.removeObject(cacheName, file, function(error) {
               if(error) {console.log("Error removing cache file " + file + ": " + error)}
-              else {console.log("Removed " + file + " from " + cacheName + " cache")}
+              else {console.log("Removed " + file + ". Object not found in repository")}
             });
           }
         })
