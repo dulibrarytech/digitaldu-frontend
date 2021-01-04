@@ -36,7 +36,7 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
  * @return {String|boolean} - viewer html string, false if viewer can not be rendered
  */
 exports.getObjectViewer = function(object, mimeType="", apikey=null) {
- 	var viewer = false;
+ 	var viewer = null;
  	apikey = apikey ? ("?key=" + apikey) : "";
 
  	if(object == null) {
@@ -170,7 +170,7 @@ function getVideoViewer(object, apikey) {
  */
 function getSmallImageViewer(object, apikey) {
 	var viewer = '<div id="small-image-viewer" class="viewer-section">',
-		image = config.rootUrl + "/datastream/" + object.pid + "/jpg" + apikey;
+		image = config.rootUrl + "/datastream/" + object.pid + "/object" + apikey;
 
 	viewer += '<div id="viewer-content-wrapper" class="small-image"><img class="viewer-content" src="' + image + '"/></div>';
 	viewer += '</div>';
@@ -186,22 +186,21 @@ function getSmallImageViewer(object, apikey) {
  * @return 
  */
 function getLargeImageViewer(object, apikey) {
-	var viewer = "";
+	var viewer = null;
 	switch(config.largeImageViewer) {
 		case "browser":
-			viewer += getSmallImageViewer(object, apikey);
+			viewer = getSmallImageViewer(object, apikey);
 			break;
 
 		case "openseadragon":
-			viewer += getOpenSeadragonViewer(object, apikey);
+			viewer = getOpenSeadragonViewer(object, apikey);
 			break;
 
 		case "universalviewer":
-			viewer += getIIIFObjectViewer(object, null, false, apikey);
+			viewer = getIIIFObjectViewer(object, null, false, apikey);
 			break;
 
 		default:
-			viewer += 'Viewer is down temporarily.  Please check configuration';
 			break;
 	}
 

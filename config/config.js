@@ -141,7 +141,8 @@ module.exports = {
 
     /* 
      * Viewer to display large image files (tiff, jp2)
-     * [openseadragon | universalviewer]
+     * [browser | openseadragon | universalviewer]
+     * "browser" viewer will not display .jp2 images
      */
     largeImageViewer: "universalviewer",
 
