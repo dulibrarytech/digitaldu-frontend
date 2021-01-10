@@ -34,6 +34,7 @@ const IIIF = require("../libs/IIIF");
 const util = require('util');
 const Search = require("../search/service");
 const Cache = require('../libs/cache');
+const Pdf = require("../libs/pdfUtils")
 
 /*
  * TEMP
@@ -473,7 +474,8 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
       if(AppHelper.isParentObject(object)) {
         // Add the child objects of the main parent object
         let parts = AppHelper.getCompoundObjectPart(object, -1) || [];
-        // Get the page of object parts
+
+        // Get the page of object parts. Only if IIIF manifest pagination is enabled 
         if(config.IIIFManifestPageSize && page && page > 0) {
           let size = config.IIIFManifestPageSize || 10,
               offset = (page-1) * size;
@@ -486,7 +488,24 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
         }
 
         for(var key in parts) {
+          let pageCount = null;
           resourceUrl = config.rootUrl + "/datastream/" + object.pid + "/" + AppHelper.getDsType(parts[key].type) + "/" + parts[key].order;
+
+          // pdf page count
+          if(AppHelper.getDsType(parts[key].type) == "pdf") {
+
+            let objectID = object.pid + (parts[key].order ? ("_" + parts[key].order) : ""),
+                cacheFileName = objectID + ".pdf",
+                cacheFilePath = config.objectDerivativeCacheLocation;
+
+            if(Cache.exists("object", objectID, "pdf")) {
+              pageCount = Pdf.getPageCountSync(cacheFilePath + "/" + cacheFileName);
+            }
+            else {
+              console.log(cacheFileName + " not found in cache. Generating single page pdf manifest");
+            }
+          }
+
           children.push({
             label: parts[key].title,
             sequence: parts[key].order || key,
@@ -496,7 +515,8 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
             resourceID: object.pid + config.compoundObjectPartID + parts[key].order || "",
             downloadFileName: parts[key].title,
             resourceUrl: resourceUrl,
-            thumbnailUrl: config.rootUrl + "/datastream/" + object.pid + "/tn/" + parts[key].order
+            thumbnailUrl: config.rootUrl + "/datastream/" + object.pid + "/tn/" + parts[key].order,
+            pageCount: pageCount
           });
         }
 
@@ -512,7 +532,24 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
 
       // Single objects
       else {
+        let pageCount = null;
         resourceUrl = config.rootUrl + "/datastream/" + object.pid + "/" + AppHelper.getDsType(object.mime_type);
+
+        // pdf page count
+        if(AppHelper.getDsType(object.mime_type) == "pdf") {
+
+          let objectID = object.pid,
+              cacheFileName = objectID + ".pdf",
+              cacheFilePath = config.objectDerivativeCacheLocation;
+
+          if(Cache.exists("object", objectID, "pdf")) {
+            pageCount = Pdf.getPageCountSync(cacheFilePath + "/" + cacheFileName);
+          }
+          else {
+            console.log(cacheFileName + " not found in cache. Generating single page pdf manifest");
+          }
+        }
+
         children.push({
           label: object.title,
           sequence: "1",
@@ -521,7 +558,8 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
           type: Helper.getIIIFObjectType(object.mime_type) || "",
           resourceID: object.pid,
           resourceUrl: resourceUrl,
-          thumbnailUrl: config.rootUrl + "/datastream/" + object.pid + "/tn"
+          thumbnailUrl: config.rootUrl + "/datastream/" + object.pid + "/tn",
+          pageCount: pageCount
         });
 
         IIIF.getManifest(container, children, apikey, function(error, manifest) {
