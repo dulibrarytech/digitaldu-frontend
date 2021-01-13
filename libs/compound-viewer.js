@@ -44,7 +44,7 @@ exports.getCompoundObjectViewer = function(object, page, apikey=null) {
 
  	apikey = apikey ? ("?key=" + apikey) : "";
  	if(AppHelper.validateCompoundObject(object)) {
- 		page = page ? page : "1";
+ 		//page = page ? page : "1";
 	 	switch(config.compoundObjectViewer) {
 	 		case "universalviewer":
 	 			viewer = Viewer.getIIIFObjectViewer(object, page, embedKaltura, apikey);

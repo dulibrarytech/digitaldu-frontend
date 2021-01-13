@@ -34,8 +34,11 @@ exports.getPageCountSync = function(pdfPath) {
 
   pdf(dataBuffer).then(function(data) {
 		numPages = data.numpages;
+	}, function(error) {
+		console.log(error);
+		numPages = 0;
 	});
-	while(numPages == null) {
+	while(numPages === null) {
 		deasync.runLoopOnce();
 	}
 

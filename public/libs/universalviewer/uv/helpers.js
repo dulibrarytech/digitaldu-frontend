@@ -55,6 +55,14 @@ function createUV(selector, data, dataProvider) {
 
     uv.on('manifestIndexChanged', function(manifestIndex) {
         dataProvider.set('m', manifestIndex);
+
+        setTimeout(function() {
+            if($("#uv").hasClass("pdf-object")) {
+                updateThumbnailImageUrlsWithPageParam();
+                updateDownloadUrlsForPart(manifestIndex+1);
+            }
+        }, 1000);
+
     }, false);
 
     uv.on('sequenceIndexChanged', function(sequenceIndex) {
@@ -62,10 +70,15 @@ function createUV(selector, data, dataProvider) {
     }, false);
 
     uv.on('canvasIndexChanged', function(canvasIndex) {
+        dataProvider.set('cv', canvasIndex);
+
         $(".loading-msg").remove();
         $(".timeout-msg").remove();
-        $(".spinner").css("background-color", "initial")
-        dataProvider.set('cv', canvasIndex);
+        $(".spinner").css("background-color", "initial");
+
+        if($("#uv").hasClass("pdf-object") == false) {
+            updateDownloadUrlsForPart(canvasIndex+1);
+        }
     }, false);
 
     uv.on('rangeChanged', function(rangeId) {
@@ -171,4 +184,27 @@ function getExitFullScreen() {
         return document.webkitExitFullscreen;
     }
     return false;
+}
+
+function updateThumbnailImageUrlsWithPageParam() {
+    let thumbnailImages = $(".wrap img");
+    for(var i=0; i < thumbnailImages.length; i++) {
+        thumbnailImages[i].src = thumbnailImages[i].src.substring(0, thumbnailImages[i].src.indexOf("?t")) + "?page=" + (i+1);
+    }
+}
+
+function updateDownloadUrlsForPart(part) {
+    let url = "",
+        filename = "",
+        baseUrl = window.location.href.substring(0, window.location.href.indexOf("/object")),
+        pid = $("#uv").attr("data-pid") || "",
+        extension = $("#uv").attr("data-file-type") || "";
+
+    for(var button of $(".download-button")) {
+        if($("#"+button.id).hasClass("batch-download-button") == false) {
+            url = baseUrl + "/datastream/" + pid + "/" + extension + "/" + part + "/" + pid + "_" + part + "." + extension; 
+            filename = pid + "_" + part + "." + extension;
+            $("#"+button.id).prop("value", url);
+        }
+    }
 }

@@ -185,6 +185,7 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
         }
       }
     }
+
     var extension = Helper.getFileExtensionForMimeType(mimeType);
     if(!extension) {
       extension = "file";

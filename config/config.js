@@ -196,6 +196,7 @@ module.exports = {
     IIIFUseGenericImageData: true,
     IIIFDefaultCanvasHeight: 1000,
     IIIFDefaultCanvasWidth: 750,
+    IIIFEnablePdfPaging: true,
 
     /*
      * IIIF Object Types
@@ -261,7 +262,7 @@ module.exports = {
     defaultThumbnailImage: "tn-placeholder.jpg",
     thumbnailImageCacheEnabled: true,
     thumbnailImageCacheLocation: "cache/thumbnail",
-    objectDerivativeCacheEnabled: false,
+    objectDerivativeCacheEnabled: true,
     objectDerivativeCacheLocation: "/var/cache/digcoll",
 
     /*

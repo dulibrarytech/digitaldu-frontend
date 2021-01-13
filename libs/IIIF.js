@@ -27,6 +27,15 @@ const 	config = require('../config/' + process.env.CONFIGURATION_FILE),
 	 	request  = require("request"),
 		IIIF = require('../libs/IIIF');
 
+exports.getManifest = function(container, objects, apikey, callback) {
+	if(container.isCompound && container.objectType == "pdf") {
+		getCollectionManifest(container, objects, apikey, callback);
+	}
+	else {
+		getObjectManifest(container, objects, apikey, callback);
+	}
+}
+
 exports.getThumbnailUri = function(objectID, apikey) {
 	apikey = apikey ? (config.IIIFAPiKeyPrefix + apikey) : "";
 	let width = config.IIIFThumbnailWidth || "";
@@ -40,16 +49,14 @@ exports.getThumbnailUri = function(objectID, apikey) {
  * @param 
  * @return 
  */
-exports.getManifest = function(container, objects, apikey, callback) {
+var getObjectManifest = function(container, objects, apikey, callback) {
 	var manifest = {},
 		mediaSequences = [];
 
-	// Define the manifest
 	manifest["@context"] = "http://iiif.io/api/presentation/2/context.json";
 	manifest["@id"] = config.IIIFUrl + "/" + container.resourceID + "/manifest";
 	manifest["@type"] = "sc:Manifest";
 	manifest["label"] = container.title || "No title";
-
 	manifest['metadata'] = [];
 	for(var key in container.metadata) {
 		manifest.metadata.push({
@@ -57,26 +64,15 @@ exports.getManifest = function(container, objects, apikey, callback) {
 			"value": container.metadata[key] || ""
 		});
 	}
-
 	manifest['license'] = "https://creativecommons.org/licenses/by/3.0/"; 
 	manifest['logo'] = "https://www.du.edu/_resources/images/nav/logo2.gif";
-	manifest['sequences'] = [];
-	// manifest['structures'] = [];
-	// manifest['thumbnail'] = {};
 
-	// Define the sequence.  At this time only one sequence can be defined
+	manifest['sequences'] = [];
 	manifest.sequences.push({
 		"@id": config.IIIFUrl + "/" + container.resourceID + "/sequence/s0",
 		"@type": "sc:Sequence",
 		"label": "Sequence s0",
 		"canvases": []
-	});
-
-	mediaSequences.push({
-		"@id" : config.IIIFUrl + "/" + container.resourceID + "/xsequence/s0",  
-		"@type" : "ixif:MediaSequence",
-		"label" : "XSequence 0",
-		"elements": []
 	});
 
 	var object,
@@ -88,77 +84,110 @@ exports.getManifest = function(container, objects, apikey, callback) {
 		element = {},
 		thumbnail;
 
-	// Define the canvas objects.  Create a mediaSequence object if a/v or pdf items are present.  For each of these, insert an element object
 	for(var object of objects) {
 		if(object.type == config.IIIFObjectTypes["still image"]) {
 			images.push(object);
 			canvases.push(getImageCanvas(container, object, apikey));
+
+			if(config.IIIFUseGenericImageData) {
+				for(let canvas of canvases) {
+					if(canvas.images && typeof canvas.images[0].resource.service != "undefined" && canvas.images[0].resource.service.profile != "undefined") {
+						apikey = apikey ? (config.IIIFAPiKeyPrefix + apikey) : "";
+						canvas["height"] = config.IIIFDefaultCanvasHeight || 1000;
+						canvas["width"] = config.IIIFDefaultCanvasWidth || 750;
+						canvas.images[0].resource.service["@context"] = "http://iiif.io/api/image/2/context.json";
+						canvas.images[0].resource.service.profile = "http://iiif.io/api/image/2/level1.json";
+					}
+				}
+				
+				manifest.sequences[0].canvases = canvases;
+			}
+
+			else {
+				// Get the image data for the item from the iiif server, if any images are present in this manifest.
+				getImageData(images, [], apikey, function(error, data) {
+					if(error) {
+						callback(error, manifest);
+					}
+					else {
+						if(images.length > 0) {
+							let imageData;
+							for(let canvas of canvases) {
+								if(canvas.images && typeof canvas.images[0].resource.service != "undefined" && canvas.images[0].resource.service.profile != "undefined") {
+									imageData = data.shift();
+									canvas.height = imageData.height;
+									canvas.width = imageData.width;
+									canvas.images[0].resource["height"] = imageData.height;
+									canvas.images[0].resource["width"] = imageData.width;
+									canvas.images[0].resource.service["@context"] = imageData["@context"];
+									canvas.images[0].resource.service.profile = imageData.profile;
+									canvas.images[0].resource.service.profile = "http://iiif.io/api/image/2/level1.json";
+								}
+							}
+						}
+						manifest.sequences[0].canvases = canvases;
+					}
+				});
+			}
 		}
+
 		else if(object.type == config.IIIFObjectTypes["audio"] || 
 				object.type == config.IIIFObjectTypes["video"]) {
+
 			elements.push(getObjectElement(object, apikey));
 			canvases.push(getThumbnailCanvas(container, object));
+			manifest.sequences[0].canvases = canvases;
 
+			if(elements.length > 0) {
+				mediaSequences.push({
+					"@id" : config.IIIFUrl + "/" + container.resourceID + "/xsequence/s0",  
+					"@type" : "ixif:MediaSequence",
+					"label" : "XSequence 0",
+					"elements": elements
+				});
+			}
+			manifest["mediaSequences"] = mediaSequences;
 		}
+
 		else if(object.type == config.IIIFObjectTypes["pdf"]) {
-			elements.push(getPDFElement(object, apikey));
-			canvases.push(getPDFCanvas(container, object, apikey));
+			let sequenceIndex = parseInt(object.sequence)-1;
+			if(object.pageCount == null) {
+				elements.push(getPDFElement(object, apikey));
+				canvases.push(getPDFCanvas(container, object, apikey));
+			}
+			else {
+				for(let page=1; page <= object.pageCount; page++) {
+					canvases.push(getPDFPageCanvas(container, object, apikey, page.toString()));
+				}
+			}
+
+			// let structure = {
+			// 	"@id": config.IIIFUrl + "/" + container.resourceID + "/range/r-0",
+			// 	"@type": "sc:Range",
+			// 	"label": "Front Cover",
+			// 	"canvases": []
+			// };
+			// structure.canvases.push(canvases[0]["@id"]);
+			// manifest["structures"] = [];
+			// manifest.structures.push(structure);
+
+			if(sequenceIndex == 0) {
+				manifest.sequences[0].canvases = canvases;
+			}
+			else {
+				manifest.sequences.push({
+					"@id": config.IIIFUrl + "/" + container.resourceID + "/sequence/s" + sequenceIndex,
+					"@type": "sc:Sequence",
+					"label": "Sequence s" + sequenceIndex,
+					"canvases": canvases,
+				});
+			}
 		}
 		else {
 			continue;
 		}
 	}
-
-	if(config.IIIFUseGenericImageData) {
-		// Assign generic image data, bypass IIIF server info.json request
-		for(let canvas of canvases) {
-			if(canvas.images && typeof canvas.images[0].resource.service != "undefined" && canvas.images[0].resource.service.profile != "undefined") {
-				apikey = apikey ? (config.IIIFAPiKeyPrefix + apikey) : "";
-				canvas["height"] = config.IIIFDefaultCanvasHeight || 1000;
-				canvas["width"] = config.IIIFDefaultCanvasWidth || 750;
-				canvas.images[0].resource.service["@context"] = "http://iiif.io/api/image/2/context.json";
-				canvas.images[0].resource.service.profile = "http://iiif.io/api/image/2/level1.json";
-			}
-		}
-		manifest.sequences[0].canvases = canvases;
-		if(elements.length > 0) {
-			mediaSequences[0].elements = elements;
-			manifest["mediaSequences"] = mediaSequences;
-		}
-		callback(null, manifest);
-	}
-
-	else {
-		// Get the image data for the item from the iiif server, if any images are present in this manifest.
-		getImageData(images, [], apikey, function(error, data) {
-			if(error) {
-				callback(error, manifest);
-			}
-			else {
-				if(images.length > 0) {
-					let imageData;
-					for(let canvas of canvases) {
-						if(canvas.images && typeof canvas.images[0].resource.service != "undefined" && canvas.images[0].resource.service.profile != "undefined") {
-							imageData = data.shift();
-							canvas.height = imageData.height;
-							canvas.width = imageData.width;
-							canvas.images[0].resource["height"] = imageData.height;
-							canvas.images[0].resource["width"] = imageData.width;
-							canvas.images[0].resource.service["@context"] = imageData["@context"];
-							canvas.images[0].resource.service.profile = imageData.profile;
-							canvas.images[0].resource.service.profile = "http://iiif.io/api/image/2/level1.json";
-						}
-					}
-				}
-				manifest.sequences[0].canvases = canvases;
-				if(elements.length > 0) {
-					mediaSequences[0].elements = elements;
-					manifest["mediaSequences"] = mediaSequences;
-				}
-				callback(null, manifest);
-			}
-		});
-	}
+	callback(null, manifest);
 }
 
 var getImageData = function(objects, data=[], apikey, callback) {
@@ -240,6 +269,40 @@ var getPDFElement = function(object, apikey) {
 	return element;
 }
 
+var getPDFPageCanvas = function(container, object, apikey, page="1") {
+	let canvas = {},
+		image = {},
+		resource = {};
+
+	let apikeyParam = apikey ? ("&" + apikey) : "";
+
+	canvas["@id"] = config.IIIFUrl + "/" + container.resourceID + "/canvas/c" + page;
+	canvas["@type"] = "sc:Canvas";
+	canvas["label"] = "Page " + page;
+	canvas["height"] = 4;	//config.IIIFDefaultCanvasHeight || 1000;
+	canvas["width"] = 3;	//config.IIIFDefaultCanvasWidth || 750;
+	canvas["images"] = [];
+
+	image["@id"] = config.IIIFUrl + "/" + container.resourceID + "/annotation/p" + page;
+	image["@type"] = "oa:Annotation";
+
+	resource["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + "/full/full/0/default.jpg" + "?page=" + page + apikeyParam; // res url w/ page param
+	resource["type"] = "dctypes:Image";
+	resource["format"] = "image/jpeg"; 
+	resource["height"] = 750;
+	resource["width"] = 1000;
+	resource["on"] = canvas["@id"];
+
+	image["resource"] = resource;
+	canvas["images"].push(image);
+
+	// Null page here, so page param is not appended to the thumbnail url for the viewer. This can't be done until the viewer can be updated to not automatically append the '?t' param and timestamp value.
+	canvas["thumbnail"] = getThumbnailObject(container, object, apikey, null);
+	//canvas["thumbnail"] = getThumbnailObject(container, object, apikey, page);
+
+	return canvas;
+}
+
 var getPDFCanvas = function(container, object, apikey) {
 	let canvas = {},
 		content = {},
@@ -258,6 +321,7 @@ var getPDFCanvas = function(container, object, apikey) {
 	};
 	canvas["content"] = [];
 
+	// One per page?
 	content["@id"] = config.IIIFUrl + "/" + container.resourceID + "/annotationpage/ap" + object.sequence;
 	content["@type"] = "AnnotationPage";
 	content["items"] = [];
@@ -309,13 +373,22 @@ var getThumbnailCanvas = function(container, object) {
 	return canvas;
 }
 
-var getThumbnailObject = function(container, object, apikey) {
+var getThumbnailObject = function(container, object, apikey, page=null) {
 	let thumbnail = {},
-	service = {};
-	let apiKeyTmp = apikey ? ("?key=" + apikey) : "";
-	apikey = apikey ? (config.IIIFAPiKeyPrefix + apikey) : "";
+		service = {};
 
-	thumbnail["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + "/full/" + config.IIIFThumbnailWidth + ",/0/default.jpg" + apikey;
+	if(page) {
+		page = page ? ("?page=" + page) : "";
+		apikey = apikey ? ("&key=" + apikey) : "";
+	}
+	else {
+		page = "";
+		apikey = apikey ? ("?key=" + apikey) : "";
+	}
+
+	apikey = apikey ? ("?key=" + apikey) : "";
+
+	thumbnail["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + "/full/" + config.IIIFThumbnailWidth + ",/0/default.jpg" + page + apikey;
 	thumbnail["@type"] = config.IIIFObjectTypes["still image"];
 	if(config.IIIFThumbnailHeight) {thumbnail["height"] = config.IIIFThumbnailHeight}
 	if(config.IIIFThumbnailWidth) {thumbnail["width"] = config.IIIFThumbnailWidth}
@@ -375,4 +448,48 @@ var getImageCanvas = function(container, object, apikey) {
 
 	canvas.images.push(image);
 	return canvas;
+}
+
+/**
+ * 
+ *
+ * @param 
+ * @return 
+ */
+var getCollectionManifest = function(container, objects, apikey, callback) {
+	let manifest = {};
+	manifest["@context"] = "http://iiif.io/api/presentation/2/context.json";
+	manifest["@id"] = config.IIIFUrl + "/" + container.resourceID + "/manifest";
+	manifest["@type"] = "sc:Collection";
+	manifest["label"] = container.title || "No title";
+	manifest['metadata'] = [];
+	for(var key in container.metadata) {
+		manifest.metadata.push({
+			"label": key,
+			"value": container.metadata[key] || ""
+		});
+	}
+	manifest['license'] = "https://creativecommons.org/licenses/by/3.0/"; 
+	manifest['logo'] = "https://www.du.edu/_resources/images/nav/logo2.gif";
+	manifest["service"] = {
+		"@context": "http://universalviewer.io/context.json",
+		"@id": config.rootUrl + "/object/" + container.resourceID,
+		"profile": "http://universalviewer.io/tracking-extensions-profile"
+	};
+	manifest['manifests'] = [];
+
+	let canvases;
+	for(var object of objects) {
+		canvases = [];
+		canvases.push(config.rootUrl + "/iiif/" + object.resourceID + "/canvas/c1");
+
+		manifest.manifests.push({
+			"@id": config.rootUrl + "/iiif/" + object.resourceID + "/manifest",
+			"@type": "sc:Manifest",
+			"label": object.label || "No Title",
+			"canvases": canvases
+		});
+	}
+
+	callback(null, manifest);
 }

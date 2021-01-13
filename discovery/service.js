@@ -449,7 +449,13 @@ var getParentTrace = function(pid, collections, callback) {
  * @param {Object|null} Manifest object (JSON) Null if error
  */
 exports.getManifestObject = function(pid, index, page, apikey, callback) {
-  var object = {}, children = [];
+  var object = {}, children = [], part = null;
+
+  if(pid.indexOf(config.compoundObjectPartID) > 0) {
+    part = pid.substr(pid.indexOf(config.compoundObjectPartID)+1);
+    pid = pid.substr(0, pid.indexOf(config.compoundObjectPartID));
+  }
+
   fetchObjectByPid(index, pid, function(error, response) {
     if(error) {
       callback(error, JSON.stringify({}));
@@ -458,20 +464,49 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
       var object = response;
       var parts = [], resourceUrl;
 
-      var container = {
-        resourceID: object.pid,
-        downloadFileName: object.pid,
-        title: object.title,
-        metadata: {
-          "Title": object.title,
-          "Creator": object.creator,
-          "Description": object.abstract
-        },
-        protocol: /https/.test(config.IIIFUrl) ? "https" : "http"
-      };
+      if(part) {
+        let partData = AppHelper.getCompoundObjectPart(object, part),
+            partObj = {};
+
+        partObj.pid = pid + config.compoundObjectPartID + part;
+        partObj.title = partData.title || "No Title";
+        partObj.abstract = partData.caption || object.abstract || "";
+        partObj.mime_type = partData.type || null;
+
+        var container = {
+          resourceID: partObj.pid,
+          downloadFileName: partObj.pid,
+          title: object.title,
+          metadata: {
+            "Title": partObj.title,
+            "Creator": partObj.creator || object.creator || "",
+            "Description": partObj.abstract || object.abstract || ""
+          },
+          protocol: /https/.test(config.IIIFUrl) ? "https" : "http",
+          objectType: AppHelper.getDsType(object.mime_type),
+          isCompound: false
+        };
+
+        object = partObj;
+      }
+      else {
+        var container = {
+          resourceID: object.pid,
+          downloadFileName: object.pid,
+          title: object.title,
+          metadata: {
+            "Title": object.title,
+            "Creator": object.creator,
+            "Description": object.abstract
+          },
+          protocol: /https/.test(config.IIIFUrl) ? "https" : "http",
+          objectType: AppHelper.getDsType(object.mime_type),
+          isCompound: AppHelper.isParentObject(object)
+        };
+      }
 
       // Compound objects
-      if(AppHelper.isParentObject(object)) {
+      if(container.isCompound) {
         // Add the child objects of the main parent object
         let parts = AppHelper.getCompoundObjectPart(object, -1) || [];
 
@@ -536,7 +571,7 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
         resourceUrl = config.rootUrl + "/datastream/" + object.pid + "/" + AppHelper.getDsType(object.mime_type);
 
         // pdf page count
-        if(AppHelper.getDsType(object.mime_type) == "pdf") {
+        if(config.IIIFEnablePdfPaging && AppHelper.getDsType(object.mime_type) == "pdf") {
 
           let objectID = object.pid,
               cacheFileName = objectID + ".pdf",

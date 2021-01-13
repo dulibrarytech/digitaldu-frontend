@@ -95,6 +95,10 @@ main {
   min-height: 100vh;
 }
 
+/*.thumb .wrap {
+  display: none;
+}*/
+
 .btn-nostyle {
   height: auto;
   border-style: none;

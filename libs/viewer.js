@@ -275,7 +275,7 @@ function getIIIFObjectViewer(object, page=null, embedKalturaViewer=false, apikey
 		extension = "";
 
 	if(AppHelper.isParentObject(object)) {
-		object = AppHelper.getCompoundObjectPart(object, page) || [];
+		object = AppHelper.getCompoundObjectPart(object, page || "1") || [];
 		extension = AppHelper.getFileExtensionFromFilePath(object.object || "");
 	}
 	else {
@@ -299,7 +299,7 @@ function getIIIFObjectViewer(object, page=null, embedKalturaViewer=false, apikey
 	eventTriggers += '$( document ).ready(function() { $( "#uv").trigger( "uvElementLoaded", ' + JSON.stringify(params) + ' );});';
 
 	page = page ? ("/" + page) : "";
-	let viewer = '<div id="uv" class="uv"></div>';
+	let viewer = '<div id="uv" class="uv ' + params.fileExtension + '-object" data-pid="' + pid + '" data-file-type="' + extension + '"></div>';
 		viewer += '<script>';
 		viewer += 'window.addEventListener("uvLoaded", function (e) {';
 		viewer += 'createUV("#uv", {';

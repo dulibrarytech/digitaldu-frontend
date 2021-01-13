@@ -302,6 +302,7 @@ exports.renderObjectView = function(req, res) {
 					data["returnLink"] = (req.header('Referer') && req.header('Referer').indexOf(config.rootUrl + "/search?") >= 0) ? req.header('Referer') : false;
 					Service.getCollectionHeirarchy(object.is_member_of_collection, function(collectionTitles) {
 						data.id = pid;
+						data.fileExtension = AppHelper.getDsType(object.mime_type || "");
 						data.title = object.title || null;
 						object.type = Helper.normalizeLabel("Type", object.type || "")
 						data.summary = Metadata.createSummaryDisplayObject(object);
