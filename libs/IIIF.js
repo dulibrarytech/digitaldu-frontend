@@ -28,7 +28,7 @@ const 	config = require('../config/' + process.env.CONFIGURATION_FILE),
 		IIIF = require('../libs/IIIF');
 
 exports.getManifest = function(container, objects, apikey, callback) {
-	if(container.isCompound && container.objectType == "pdf") {
+	if(config.IIIFEnablePdfPaging && container.objectType == "pdf" && container.isCompound) {
 		getCollectionManifest(container, objects, apikey, callback);
 	}
 	else {
@@ -154,33 +154,34 @@ var getObjectManifest = function(container, objects, apikey, callback) {
 			if(object.pageCount == null) {
 				elements.push(getPDFElement(object, apikey));
 				canvases.push(getPDFCanvas(container, object, apikey));
+				manifest.sequences[0].canvases = canvases;
 			}
 			else {
 				for(let page=1; page <= object.pageCount; page++) {
 					canvases.push(getPDFPageCanvas(container, object, apikey, page.toString()));
 				}
-			}
 
-			// let structure = {
-			// 	"@id": config.IIIFUrl + "/" + container.resourceID + "/range/r-0",
-			// 	"@type": "sc:Range",
-			// 	"label": "Front Cover",
-			// 	"canvases": []
-			// };
-			// structure.canvases.push(canvases[0]["@id"]);
-			// manifest["structures"] = [];
-			// manifest.structures.push(structure);
+				// let structure = {
+				// 	"@id": config.IIIFUrl + "/" + container.resourceID + "/range/r-0",
+				// 	"@type": "sc:Range",
+				// 	"label": "Front Cover",
+				// 	"canvases": []
+				// };
+				// structure.canvases.push(canvases[0]["@id"]);
+				// manifest["structures"] = [];
+				// manifest.structures.push(structure);
 
-			if(sequenceIndex == 0) {
-				manifest.sequences[0].canvases = canvases;
-			}
-			else {
-				manifest.sequences.push({
-					"@id": config.IIIFUrl + "/" + container.resourceID + "/sequence/s" + sequenceIndex,
-					"@type": "sc:Sequence",
-					"label": "Sequence s" + sequenceIndex,
-					"canvases": canvases,
-				});
+				if(sequenceIndex == 0) {
+					manifest.sequences[0].canvases = canvases;
+				}
+				else {
+					manifest.sequences.push({
+						"@id": config.IIIFUrl + "/" + container.resourceID + "/sequence/s" + sequenceIndex,
+						"@type": "sc:Sequence",
+						"label": "Sequence s" + sequenceIndex,
+						"canvases": canvases,
+					});
+				}
 			}
 		}
 		else {

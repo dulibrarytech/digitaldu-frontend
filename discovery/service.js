@@ -527,7 +527,7 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
           resourceUrl = config.rootUrl + "/datastream/" + object.pid + "/" + AppHelper.getDsType(parts[key].type) + "/" + parts[key].order;
 
           // pdf page count
-          if(AppHelper.getDsType(parts[key].type) == "pdf") {
+          if(config.IIIFEnablePdfPaging && AppHelper.getDsType(parts[key].type) == "pdf") {
 
             let objectID = object.pid + (parts[key].order ? ("_" + parts[key].order) : ""),
                 cacheFileName = objectID + ".pdf",
@@ -572,7 +572,6 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
 
         // pdf page count
         if(config.IIIFEnablePdfPaging && AppHelper.getDsType(object.mime_type) == "pdf") {
-
           let objectID = object.pid,
               cacheFileName = objectID + ".pdf",
               cacheFilePath = config.objectDerivativeCacheLocation;
