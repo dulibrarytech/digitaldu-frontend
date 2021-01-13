@@ -33,6 +33,10 @@ function createUV(selector, data, dataProvider) {
         setTimeout(function(){ 
             $(".spinner").append('<div class="loading-msg">Loading, please wait...</div>');
             $(".spinner").append("<div class='timeout-msg' style='display: none'><h6>We're sorry, this is taking longer than expected. To report any problems with accessing this resource, please contact <a href='mailto:archives@du.edu'>archives@du.edu</a></h6></div>")
+        
+            $(".thumbsView").scroll(function(event) {
+                updateThumbnailImageUrlsWithPageParam();
+            });
         }, 1000);
         setTimeout(function(){  
             $(".loading-msg").css("display", "none");
@@ -189,7 +193,9 @@ function getExitFullScreen() {
 function updateThumbnailImageUrlsWithPageParam() {
     let thumbnailImages = $(".wrap img");
     for(var i=0; i < thumbnailImages.length; i++) {
-        thumbnailImages[i].src = thumbnailImages[i].src.substring(0, thumbnailImages[i].src.indexOf("?t")) + "?page=" + (i+1);
+        if(thumbnailImages[i].src.indexOf("?t") >= 0) {
+            thumbnailImages[i].src = thumbnailImages[i].src.substring(0, thumbnailImages[i].src.indexOf("?t")) + "?page=" + (i+1);
+        }
     }
 }
 
