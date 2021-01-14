@@ -232,7 +232,7 @@ var getObjectElement = function(object, apikey) {
 	let rendering = {};
 	rendering['@id'] = object.resourceUrl;
 	rendering['format'] = object.format;
-	rendering['label'] = "Test Label for Download"
+	rendering['label'] = "Test Label for Download";
 
 	let element = {};
 	element["@id"] = object.resourceUrl + apikey;
@@ -308,17 +308,19 @@ var getPDFCanvas = function(container, object, apikey) {
 	let canvas = {},
 		content = {},
 		items = {};
-
+			console.log("TEST cont", container)
 	canvas["@id"] = config.IIIFUrl + "/" + container.resourceID + "/canvas/c" + object.sequence;
 	canvas["@type"] = "sc:Canvas";
-	canvas["label"] = "Placeholder image";
+	canvas["label"] = object.label || (container.title + " Part " + object.sequence) || "No Title";
 	canvas["height"] = config.IIIFDefaultCanvasHeight || 1000;
 	canvas["width"] = config.IIIFDefaultCanvasWidth || 750;
 	canvas["thumbnail"] = getThumbnailObject(container, object, apikey)
 	canvas["rendering"] = {
 		"@id": object.resourceUrl + "/" + container.downloadFileName + ".pdf",
 		"format": "application/pdf",
-		"label": "Download PDF"
+		"label": "Download PDF",
+		"height": 1000,
+		"width": 750
 	};
 	canvas["content"] = [];
 
