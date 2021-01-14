@@ -660,6 +660,11 @@ exports.refreshCache = function(cacheName) {
   for(let file of cacheFiles) {
     pid = file.substring(0, file.lastIndexOf("."));
 
+    // If the parent is found in the index, do not purge the part object from the cache. Only check for the parent object
+    if(pid.indexOf(config.compoundObjectPartID) > 0) {
+      pid = pid.substring(0, pid.indexOf(config.compoundObjectPartID));
+    }
+
     fetchObjectByPid(config.elasticsearchPublicIndex, pid, function (error, object) {
       if(error) {
         console.log(error);
