@@ -39,6 +39,10 @@ const async = require('async'),
 
 var webSocketServer = require("../libs/socket.js");
 webSocketServer.startServer(config.webSocketPort || 9007);
+
+
+
+
 /**
  * Renders the front page
  * Retrieves all objects in the root collection
@@ -650,13 +654,20 @@ exports.renderHandleErrorPage = function(req, res) {
 }
 
 exports.purgeInvalidItems = function(req, res) {
-	let cacheName = req.params.cache || null;
-	if(cacheName) {
-		Service.refreshCache(cacheName);
-		res.sendStatus(200);
+	let key = req.query.key || "",
+		cacheName = req.params.cache || null;
+
+	if(key && key == config.apiKey) {
+		if(cacheName) {
+			Service.refreshCache(cacheName);
+			res.sendStatus(200);
+		}
+		else {
+			res.sendStatus(400);
+		}
 	}
 	else {
-		res.sendStatus(400);
+		res.sendStatus(401);
 	}
 }
 
