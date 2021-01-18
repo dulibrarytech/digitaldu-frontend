@@ -35,7 +35,9 @@ function createUV(selector, data, dataProvider) {
             $(".spinner").append("<div class='timeout-msg' style='display: none'><h6>We're sorry, this is taking longer than expected. To report any problems with accessing this resource, please contact <a href='mailto:archives@du.edu'>archives@du.edu</a></h6></div>")
         
             $(".thumbsView").scroll(function(event) {
-                updateThumbnailImageUrlsWithPageParam();
+                if($("#uv").hasClass("pdf-object")) {
+                    updateThumbnailImageUrlsWithPageParam();
+                }
             });
         }, 1000);
         setTimeout(function(){  
