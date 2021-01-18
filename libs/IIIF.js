@@ -308,7 +308,7 @@ var getPDFCanvas = function(container, object, apikey) {
 	let canvas = {},
 		content = {},
 		items = {};
-			console.log("TEST cont", container)
+
 	canvas["@id"] = config.IIIFUrl + "/" + container.resourceID + "/canvas/c" + object.sequence;
 	canvas["@type"] = "sc:Canvas";
 	canvas["label"] = object.label || (container.title + " Part " + object.sequence) || "No Title";

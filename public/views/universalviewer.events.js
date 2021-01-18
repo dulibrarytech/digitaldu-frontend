@@ -4,9 +4,6 @@
 
 $( document ).ready(function() {
 	$( "#uv" ).on("uvElementLoaded", function(event, params) {
-			console.log("TEST uv element loaded")
-		//UniversalViewer.initViewer(params):
-
 		// Add compound object viewer page nave links
 		// if(params.pageSize > 0) {
 		// 	$("#object-view").append('<div id="sidebar-nav-buttons" style="display: none"></div>');
@@ -35,18 +32,14 @@ $( document ).ready(function() {
 
 	  		// Handle UV left panel thumbnail click event
 	  		$(".thumb").on("click", function(event) {
-					let part = parseInt($(this)[0].id.replace("thumb", "")) + 1;
-					// 	uri = $(this)[0].baseURI,
-					// 	baseUrl = uri.substring(0, uri.indexOf("/object"));
+				let part = parseInt($(this)[0].id.replace("thumb", "")) + 1;
 
-					//updateDownloadUrlsForPart(params.baseUrl, params.objectID, part, params.fileExtension);
-
-						// Get the Kaltura viewer content, add to viewer
-		  			let kalturaViewerUri = params.baseUrl + "/viewer/kaltura/" + params.objectID + "/" + part;
-		  			$.get(kalturaViewerUri, function(viewerContent, status) {
-					    if(status == "success") {$("[id^=mep_]").html(viewerContent)}
-					    else {console.log("Error: Can not retrieve Kaltura content. Status is ", status)}
-					});
+				// Get the Kaltura viewer content, add to viewer
+	  			let kalturaViewerUri = params.baseUrl + "/viewer/kaltura/" + params.objectID + "/" + part;
+	  			$.get(kalturaViewerUri, function(viewerContent, status) {
+				    if(status == "success") {$("[id^=mep_]").html(viewerContent)}
+				    else {console.log("Error: Can not retrieve Kaltura content. Status is ", status)}
+				});
 	  		});
 	  	}, 1000);
 
@@ -82,30 +75,6 @@ $( document ).ready(function() {
 		  		}
 		  	});
 	  	}
-	  	else {
-	  		// Append dom events
-	  		setTimeout(function(){
-	  			// let part = "1";
-		  		// $(".thumb").click(function(event) {
-		  		// 	if($("#uv").hasClass("pdf-object") == false) {
-	  			// 			console.log("TEST t click")
-			  	// 		part = parseInt(event.currentTarget.id.replace("thumb", "") || "1")+1;
-			  	// 			console.log("TEST part is")
-			  	// 		updateDownloadUrlsForPart(params.baseUrl, params.objectID, part, params.fileExtension);
-	  			// 	}
-		  		// });
-
-		  		// $(".tree").click(function(event) {
-		  		// 		console.log("TEST m click")
-		  		// 	part = parseInt(event.currentTarget.id.replace("thumb", "") || "1")+1;
-		  		// 		console.log("TEST part is")
-		  		// 	updateDownloadUrlsForPart(params.baseUrl, params.objectID, part, params.fileExtension);
-		  		// });
-
-		  		// $("#uv").addClass(params.fileExtension + "-object");
-		  		
-	  		}, 1500);
-	  	}
 	});
 });
 
@@ -129,18 +98,3 @@ function embedKalturaViewer(params) {
 function createTranscriptViewer(params) {
 
 }
-
-/*
- *
- */
-// function updateDownloadUrlsForPart(baseUrl, pid, part, extension) {
-// 	let url, filename;
-// 		console.log("TESt updating buttons")
-// 	for(var button of $(".download-button")) {
-// 		if($("#"+button.id).hasClass("batch-download-button") == false) {
-// 			url = baseUrl + "/datastream/" + pid + "/" + extension + "/" + part + "/" + pid + "_" + part + "." + extension; 
-// 			filename = pid + "_" + part + "." + extension;
-// 			$("#"+button.id).prop("value", url);
-// 		}
-// 	}
-// }

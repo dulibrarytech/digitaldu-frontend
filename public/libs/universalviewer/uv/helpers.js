@@ -45,11 +45,20 @@ function createUV(selector, data, dataProvider) {
             $(".spinner").css("background-image", "none !important");
         }, 45000);
         resize();
+
+        // Kludge: the first link in the index tab will not work after any index link is clicked. 
+        // This forces the object to reload whenever the first link in the index is clicked. This object should always be the one in the viewer when the page loads
+        setTimeout(function(){
+            $("a.index").click(function(ev) {
+                $("#tree-link-0-0").click(function(event) {
+                    location.reload();
+                });
+            });
+        }, 1500);
     }, false);
 
     uv.on('created', function(obj) {
        $(".uv-preload-msg").remove();
-       // $("#sidebar-nav-buttons").css("display", "block");
        resize();
     }, false);
 
