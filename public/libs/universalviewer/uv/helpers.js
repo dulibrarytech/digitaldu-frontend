@@ -55,6 +55,13 @@ function createUV(selector, data, dataProvider) {
                 $("#tree-link-0-0").click(function(event) {
                     location.reload();
                 });
+
+                let links = $(".tree a");
+                for(let i=0; i<links.length; i++) {
+                    if((i+1) == $("#uv").attr("data-part")) {
+                        $("#" + links[i].id).addClass("selected");
+                    }
+                }
             });
         }, 1500);
     }, false);
@@ -72,6 +79,8 @@ function createUV(selector, data, dataProvider) {
         dataProvider.set('m', manifestIndex);
 
         setTimeout(function() {
+            $("#uv").attr("data-part", manifestIndex+1);
+
             if($("#uv").hasClass("pdf-object")) {
                 updateThumbnailImageUrlsWithPageParam();
                 updateDownloadUrlsForPart(manifestIndex+1);
