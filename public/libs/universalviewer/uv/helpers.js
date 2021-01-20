@@ -30,6 +30,9 @@ function createUV(selector, data, dataProvider) {
     });
 
     uv.on('create', function(obj) {
+        /*
+         * DU implementation
+         */
         setTimeout(function(){ 
             $(".spinner").append('<div class="loading-msg">Loading, please wait...</div>');
             $(".spinner").append("<div class='timeout-msg' style='display: none'><h6>We're sorry, this is taking longer than expected. To report any problems with accessing this resource, please contact <a href='mailto:archives@du.edu'>archives@du.edu</a></h6></div>")
@@ -46,7 +49,6 @@ function createUV(selector, data, dataProvider) {
             $(".spinner").css("background-color", "black");
             $(".spinner").css("background-image", "none !important");
         }, 45000);
-        resize();
 
         // Kludge: the first link in the index tab will not work after any index link is clicked. 
         // This forces the object to reload whenever the first link in the index is clicked. This object should always be the one in the viewer when the page loads
@@ -64,10 +66,20 @@ function createUV(selector, data, dataProvider) {
                 }
             });
         }, 1500);
+        /*
+         * End DU implementation
+         */
+        resize();
     }, false);
 
     uv.on('created', function(obj) {
+        /*
+         * DU implementation
+         */
        $(".uv-preload-msg").remove();
+       /*
+         * End DU implementation
+         */
        resize();
     }, false);
 
@@ -77,7 +89,9 @@ function createUV(selector, data, dataProvider) {
 
     uv.on('manifestIndexChanged', function(manifestIndex) {
         dataProvider.set('m', manifestIndex);
-
+        /*
+         * DU implementation
+         */
         setTimeout(function() {
             $("#uv").attr("data-part", manifestIndex+1);
 
@@ -86,7 +100,9 @@ function createUV(selector, data, dataProvider) {
                 updateDownloadUrlsForPart(manifestIndex+1);
             }
         }, 1000);
-
+        /*
+         * End DU implementation
+         */
     }, false);
 
     uv.on('sequenceIndexChanged', function(sequenceIndex) {
@@ -95,7 +111,9 @@ function createUV(selector, data, dataProvider) {
 
     uv.on('canvasIndexChanged', function(canvasIndex) {
         dataProvider.set('cv', canvasIndex);
-
+        /*
+         * DU implementation
+         */
         $(".loading-msg").remove();
         $(".timeout-msg").remove();
         $(".spinner").css("background-color", "initial");
@@ -103,6 +121,9 @@ function createUV(selector, data, dataProvider) {
         if($("#uv").hasClass("pdf-object") == false) {
             updateDownloadUrlsForPart(canvasIndex+1);
         }
+        /*
+         * End DU implementation
+         */
     }, false);
 
     uv.on('rangeChanged', function(rangeId) {
@@ -118,9 +139,15 @@ function createUV(selector, data, dataProvider) {
     }, false);
 
     uv.on('openseadragonExtension.currentViewUri', function(data) {
+        /*
+         * DU implementation
+         */
         $(".loading-msg").remove();
         $(".timeout-msg").remove();
         $(".spinner").css("background-color", "initial")
+        /*
+         * End DU implementation
+         */
     }, false);
 
     uv.on('reload', function(data) {
@@ -210,6 +237,9 @@ function getExitFullScreen() {
     return false;
 }
 
+/*
+ * DU implementation
+ */
 function updateThumbnailImageUrlsWithPageParam() {
     let thumbnailImages = $(".wrap img");
     for(var i=0; i < thumbnailImages.length; i++) {
@@ -234,3 +264,6 @@ function updateDownloadUrlsForPart(part) {
         }
     }
 }
+/*
+ * End DU implementation
+ */

@@ -153,6 +153,33 @@ def httpsource_resource_info(options = {})
 
 To serve jp2 files, Cantaloupe must be configured to use a jp2 codec such as Kakadu or OpenJPEG.  See Cantaloupe documentation for installation and configuration instructions
 
+### Upgrading the Universalviewer Library (public/libs/universalviewer)
+
+To upgrade the Universalviewer, the Universalviewer folder in the public/libs folder can be replaced with a newer version. The only file tha tneeds to be updated in the newest version folder is the uv/helpers.js file. There are several code blocks that need to be added to this file. See the current file in public/libs/universalviewer/uv/helpers.js for the code blocks that need to be imported into the latest Universalviewer version's uv/helpers.js file.
+
+Once the code is added, remove the current universalviewer/ folder and rename the folder of the latest Universalviewer folder to "universalviewer"
+
+Some code in the digital-du project that may need to be updated as well (depending on the nature of the changes to UV since the last version) are"
+
+public/views/events.universalviewer.js
+public/assets/css/uv-ddu.css
+
+Also, some of the DU implementation code blocks in helpers.js may need to be updated. Once the latest version is tested, errors that point to required updates and fixes should be investigated.
+
+## Services
+
+### Automated Cache Purge
+
+This service will iterate all of the object files in the cache and check to see if the object still exists in the public index. If the object does not exist, it is assumed to have been removed from the repository, and the cache file is deleted. 
+
+This service is started by issuing a GET request to
+[project domain]/cache/purgeInvalidItems
+
+The name of the cache to purge the nonexistent items from is passed in as a url parameter argument to the "/purgeInvalidItems" endpoint. the current caches are "object" and "thumbnail" so only these arguments are accepted.
+
+This route requires the application api key as defined in the configuration. This key is added to the request as a query value. The key is "key" and the value is the api key.
+Ex. [project domain]/cache/purgeInvalidItems/object?key={api key}
+
 ## Project Documentation
 
 * [v.1.0.0-beta pre release Repository Demo](https://youtu.be/1LGOQYEfz5I)
