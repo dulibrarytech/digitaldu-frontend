@@ -1,50 +1,37 @@
 {
-  "_args": [
-    [
-      {
-        "raw": "universalviewer@beta",
-        "scope": null,
-        "escapedName": "universalviewer",
-        "name": "universalviewer",
-        "rawSpec": "beta",
-        "spec": "beta",
-        "type": "tag"
-      },
-      "/home/jeff/Dev/Projects/digital-du"
-    ]
-  ],
   "_from": "universalviewer@beta",
-  "_hasShrinkwrap": false,
-  "_id": "universalviewer@3.0.25",
-  "_inCache": true,
+  "_id": "universalviewer@3.0.36",
+  "_inBundle": false,
+  "_integrity": "sha512-67bgmxLSpnEImIKxdD3CoqumJ4wz6KB4a805EREYC2zCOVwulQPbohpzPL9F4i+IH3ikYvAc6V7zL+FFnLtpjw==",
   "_location": "/universalviewer",
-  "_nodeVersion": "10.4.0",
-  "_npmOperationalInternal": {
-    "host": "s3://npm-registry-packages",
-    "tmp": "tmp/universalviewer_3.0.25_1534147079603_0.7144120847959516"
+  "_phantomChildren": {
+    "babel-polyfill": "6.23.0",
+    "encoding": "0.1.13",
+    "escape-string-regexp": "1.0.5",
+    "has-ansi": "2.0.0",
+    "inquirer": "3.0.6",
+    "is-stream": "1.1.0",
+    "node-ensure": "0.0.0",
+    "opn": "4.0.2",
+    "strip-ansi": "3.0.1",
+    "worker-loader": "1.1.1"
   },
-  "_npmUser": {
-    "name": "edsilv",
-    "email": "e.silverton@gmail.com"
-  },
-  "_npmVersion": "3.10.8",
-  "_phantomChildren": {},
   "_requested": {
+    "type": "tag",
+    "registry": true,
     "raw": "universalviewer@beta",
-    "scope": null,
-    "escapedName": "universalviewer",
     "name": "universalviewer",
+    "escapedName": "universalviewer",
     "rawSpec": "beta",
-    "spec": "beta",
-    "type": "tag"
+    "saveSpec": null,
+    "fetchSpec": "beta"
   },
   "_requiredBy": [
     "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/universalviewer/-/universalviewer-3.0.25.tgz",
-  "_shasum": "da81f4432b094deae944d15198f46ce27db6d34f",
-  "_shrinkwrap": null,
+  "_resolved": "https://registry.npmjs.org/universalviewer/-/universalviewer-3.0.36.tgz",
+  "_shasum": "210dc9d537143477941131d4a87337d62561f2b9",
   "_spec": "universalviewer@beta",
   "_where": "/home/jeff/Dev/Projects/digital-du",
   "author": {
@@ -53,19 +40,116 @@
   "bugs": {
     "url": "https://github.com/universalviewer/universalviewer/issues"
   },
-  "dependencies": {},
-  "description": "The Universal Viewer is a community-developed open source project on a mission to help you share your content with the world.",
-  "devDependencies": {},
-  "directories": {},
-  "dist": {
-    "shasum": "da81f4432b094deae944d15198f46ce27db6d34f",
-    "tarball": "https://registry.npmjs.org/universalviewer/-/universalviewer-3.0.25.tgz",
-    "integrity": "sha512-pxCvPUxyNvDF0Fm/vDK0LC1oxCT+8EY2MOJnQUL6OOPbzGGui32ys3y3SHe3Qlpzhowz2xzgUhZYmZZqpyAo1g==",
-    "fileCount": 103,
-    "unpackedSize": 8843607,
-    "npm-signature": "-----BEGIN PGP SIGNATURE-----\r\nVersion: OpenPGP.js v3.0.4\r\nComment: https://openpgpjs.org\r\n\r\nwsFcBAEBCAAQBQJbcToICRA9TVsSAnZWagAAm/8P/iCOI96jn7ZitIzvzRwX\nhC76meDsMoTqbVLGbY9uFIh9H6JiVe92hGRdX9d8t/FIxLkLBPDXGFOgaWLv\nLDYMbxHH/Oq206X6aumVztjdZ8w/JAG5fRdiqrdNctHpeQ+wnQwzfa83/Vzx\nBsveRBuqNThTkDpXDjrG9trknY45+5v92Sg99gn8sJGnmwLUEth/SMHrAHb1\nvZkgyE+yLk0sJxd42SpcTitMpbDq2JQw9FxChjtYO3xC16kud6n+WqsGWYLc\nyz/rUpxsru5NoLxx6D7HBzASeBuLPspojlYHfXHCCwWeCs9P5/jqVUuD+Wd7\nMi7025XrX58+dpkHclIYsVC705thItKbgI8Bo4bNpRa/bh3/PkbcbdITVK2d\npXfgZFo9MyeaA1OAD9lEktrCdmp/UGHmEC5Pv32mda/FBqC8r5z3goXNN45r\nXtkl9+Fk1W6TjB0Ss5AVB3hiOIzOp5acTFxJALwZQqbGFaZ0gwXEjHRb6Yl8\nDAJY2BrrGxVWCKIwXySaObiWTgJE82OcgW8CcbL9kjjvDIGfbtSrS+xehKGl\nbpPrh+Fg+Gx7emOtTmeO5EqiKnNVrQN3LBlshh8/oalK61KOjG2/f1xsqVIK\nCV6CJEapw5AgzXaXZuxZSowRlHJwDax908O0vCHIj7RjGkmdfOE9uyOwF3E9\nzsXF\r\n=Tiz6\r\n-----END PGP SIGNATURE-----\r\n"
+  "bundleDependencies": false,
+  "collective": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/universalviewer",
+    "logo": "https://opencollective.com/opencollective/logo.txt"
   },
+  "dependencies": {
+    "@edsilv/exjs": "0.5.1",
+    "@edsilv/http-status-codes": "0.0.12",
+    "@edsilv/jquery-plugins": "1.0.7",
+    "@edsilv/jquery-tiny-pubsub": "0.7.3",
+    "@edsilv/key-codes": "0.0.9",
+    "@edsilv/utils": "0.2.6",
+    "@iiif/base-component": "1.1.4",
+    "@iiif/iiif-av-component": "0.0.87",
+    "@iiif/iiif-gallery-component": "1.1.13",
+    "@iiif/iiif-metadata-component": "1.1.13",
+    "@iiif/iiif-tree-component": "1.1.12",
+    "@iiif/manifold": "1.2.36",
+    "@types/modernizr": "3.2.29",
+    "@types/requirejs": "2.1.28",
+    "@types/three": "0.84.20",
+    "@universalviewer/uv-cy-gb-theme": "1.1.2",
+    "@universalviewer/uv-en-gb-theme": "1.1.2",
+    "core-js": "2.4.1",
+    "dashjs": "2.6.7",
+    "hls.js": "0.9.1",
+    "jquery": "3.3.1",
+    "jquery-binarytransport": "1.0.0",
+    "jquery-ui-dist": "1.12.1",
+    "jquery-ui-touch-punch": "0.2.3",
+    "jsviews": "0.9.83",
+    "manifesto.js": "3.0.9",
+    "mediaelement": "4.0.2",
+    "opencollective": "1.0.3",
+    "openseadragon": "2.2.1",
+    "pdfjs-dist": "2.0.161",
+    "pdfobject": "^2.1.1",
+    "requirejs": "2.2.0",
+    "three": "0.91.0",
+    "virtex3d": "0.3.18",
+    "waveform-data": "2.0.2",
+    "xss": "1.0.3"
+  },
+  "deprecated": false,
+  "description": "The Universal Viewer is a community-developed open source project on a mission to help you share your content with the world.",
+  "devDependencies": {
+    "@types/jest": "^22.2.2",
+    "@types/puppeteer": "^1.9.0",
+    "async": "0.9.0",
+    "chai": "4.1.2",
+    "chalk": "0.5.1",
+    "glob": "7.1.3",
+    "glob-array": "1.0.0",
+    "grunt": "1.0.3",
+    "grunt-cli": "1.3.1",
+    "grunt-contrib-clean": "0.4.0",
+    "grunt-contrib-compress": "1.4.3",
+    "grunt-contrib-concat": "1.0.1",
+    "grunt-contrib-connect": "2.0.0",
+    "grunt-contrib-copy": "0.4.1",
+    "grunt-contrib-uglify": "1.0.1",
+    "grunt-exec": "0.4.2",
+    "grunt-sync": "0.8.0",
+    "grunt-text-replace": "0.3.7",
+    "grunt-ts": "6.0.0-beta.21",
+    "hooker": "0.2.3",
+    "http-server": "^0.11.1",
+    "jest": "^23.6.0",
+    "jest-puppeteer": "^3.5.0",
+    "less": "2.4.0",
+    "lodash": "4.17.11",
+    "ncp": "2.0.0",
+    "puppeteer": "^1.9.0",
+    "serve": "^10.0.2",
+    "ts-jest": "^22.4.2",
+    "typescript": "2.7.2"
+  },
+  "engines": {
+    "node": ">=8.9.1",
+    "npm": ">=3.10.8"
+  },
+  "files": [
+    "dist/"
+  ],
   "homepage": "https://github.com/universalviewer/universalviewer",
+  "jest": {
+    "globals": {
+      "ts-jest": {
+        "enableTsDiagnostics": true
+      }
+    },
+    "preset": "jest-puppeteer",
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/examples"
+    ],
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
+  },
   "keywords": [
     "IIIF",
     "viewer",
@@ -74,22 +158,16 @@
     "PDF"
   ],
   "license": "MIT",
-  "maintainers": [
-    {
-      "name": "edsilv",
-      "email": "e.silverton@gmail.com"
-    }
-  ],
   "name": "universalviewer",
-  "optionalDependencies": {},
-  "readme": "This repo serves the dual function of being the UV examples page hosted on gh-pages and the location of the distribution build of the UV published to npm.",
-  "readmeFilename": "README.md",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/universalviewer/examples.git"
+    "url": "git+https://github.com/universalviewer/universalviewer.git"
   },
   "scripts": {
-    "version": "echo { \"version\": \"%npm_package_version%\" } > ./uv/info.json"
+    "postinstall": "opencollective postinstall",
+    "server": "http-server -p 4444",
+    "test": "npx jest",
+    "version": "echo { \"version\": \"%npm_package_version%\" } > ./dist/info.json && cp ./dist/info.json ./examples/uv"
   },
-  "version": "3.0.25"
+  "version": "3.0.36"
 }
