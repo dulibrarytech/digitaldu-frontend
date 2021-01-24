@@ -9,3 +9,4 @@ cache/object/*
 config/config.js
 /package-lock.json
 public/config/configuration.js
+views/partials/header.ejs
