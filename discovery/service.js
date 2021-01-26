@@ -627,11 +627,12 @@ var getCollectionList = function(callback) {
       type: config.searchIndexType,
       _source: ["pid"],
       body: {
-        query: {
+        "query": {
           "match_phrase": {
             "object_type": "collection"
           }
-        }
+        },
+        "size": 1000
       }
   }, function (error, response) {
       if(error) {
@@ -643,7 +644,6 @@ var getCollectionList = function(callback) {
           pids.push(results[i]._source.pid);
         }
 
-        // Get an array of collection data that correspond with the pids in the array
         getTitleString(pids, [], function(error, response) {
           callback(null, response);
         });
