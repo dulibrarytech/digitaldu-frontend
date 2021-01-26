@@ -5,39 +5,37 @@ $(window).bind("pageshow", function(event) {
 });
 
 // Update the form select box values per selected search field type
-var changeAdvSearchTypeSel = function(element, autocompleteData) {
+var changeAdvancedSearchFieldSelect = function(element, autocompleteData) {
 	let id = element.id,
 		index = id.substring(29),
 		selValue = $("#" + id + " option:selected").text();
 
 	if(selValue == "Call Number") {
 		// Remove 'Contains' option
-		// let typeOpts = $("#advanced-search-type-select-" + index).children().children();
-		// $(typeOpts[0]).remove();
+		// let fieldOpts = $("#advanced-search-type-select-" + index).children().children();
+		// $(fieldOpts[0]).remove();
 	}
 
 	else if(selValue == "Collection") {
 		// Remove 'Contains' option
-		let typeOpts = $("#advanced-search-type-select-" + index).children().children();
-		$(typeOpts[0]).remove();
+		let fieldOpts = $("#advanced-search-type-select-" + index).children().children();
+		$(fieldOpts[0]).remove();
 
-		// Get list of collection names for autocmplete
 		var collectionNames = [];
 		for(var i in autocompleteData.collectionData) {
 			collectionNames.push(autocompleteData.collectionData[i].name);
 		}
 
-		// Init the jquery autocomplete library, with update to only show suggestions that match the current input characters
-	    $( "#advanced-search-box-" + index ).autocomplete({
-	    	source: function(req, responseFn) {
-	        var re = $.ui.autocomplete.escapeRegex(req.term);
-	        var matcher = new RegExp( "^" + re, "i" );
-	        var a = $.grep(collectionNames, function(item,index){
-	            return matcher.test(item);
-	        });
-	        responseFn(a);
-	      }
-	    });
+    $("#advanced-search-box-" + index).autocomplete({
+    	source: function(req, responseFn) {
+        var re = $.ui.autocomplete.escapeRegex(req.term);
+        var matcher = new RegExp( "^" + re, "i" );
+        var a = $.grep(collectionNames, function(item,index){
+            return matcher.test(item);
+        });
+        responseFn(a);
+      }
+    });
 	}
 }
 
@@ -134,4 +132,15 @@ var updateFormFieldValues = function(autocompleteData) {
 			}
 		}
 	}
+}
+
+var submitAdvancedSearch = function() {
+	let element;
+	for(var index in $(".advanced-search-box")) {
+		if(isNaN(index) == false) {
+			element = $(".advanced-search-box")[index];
+			$(element).val(DOMPurify.sanitize($(element).val()));
+		}
+	}
+	$("#advanced-search").submit();
 }

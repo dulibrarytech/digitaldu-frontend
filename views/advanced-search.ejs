@@ -18,7 +18,7 @@
 					</select>
 				</div>
 				<div class="form-group">
-					<select name="field[]" id="advanced-search-field-select-1" class="search-element advanced-search-field-select" title="Select field to search" onchange="onChangeAdvSearchTypeSel(this)">
+					<select name="field[]" id="advanced-search-field-select-1" class="search-element advanced-search-field-select" title="Select field to search" onchange="onChangeAdvancedSearchFieldSelect(this)">
 						<option value="all">All Fields</option>
 						<optgroup label="Specific Fields">
 						  <% for (var i = 0; i < searchFields.length; i++) { %>
@@ -48,41 +48,27 @@
 		    <input type="hidden" name="advancedSearch" value="true">
 		</form>
 		<div class="advanced-search-form-controls">
-			<div><button id="add-query-button" class="clickable icon-link-right btn-nostyle" alt="Add A New Query"><i class="far fa-plus-square"></i>Add another query</button></div>
-			<div><button id="advanced-search-submit" type="button" class=".btn .btn-default .btn-large">Submit</button></div>
+			<div><button id="add-query-button" class="clickable icon-link-right btn-nostyle" alt="Add A New Query" onclick="addFormRow()"><i class="far fa-plus-square"></i>Add another query</button></div>
+			<div><button id="advanced-search-submit" type="button" class=".btn .btn-default .btn-large" onclick="onClickSubmitAdvancedSearch()">Submit</button></div>
 		</div>
 	</div>
 </div>
 
+<script src="<%- root_url %>/assets/js/external/jquery-ui.js"></script>
 <script src="<%- root_url %>/assets/js/advanced-search.js"></script>
 <script>
-	var onChangeAdvSearchTypeSel = function(element) {
+	var onChangeAdvancedSearchFieldSelect = function(element) {
 		let autocompleteData = <%- autocompleteData %>;
-		changeAdvSearchTypeSel(element, autocompleteData);
+		changeAdvancedSearchFieldSelect(element, autocompleteData);
 	}
 
-	$( document ).ready(function() {
-		$("#add-query-button").click(function(event) {
-			addFormRow();
-		});
-		
-		$("#advanced-search-submit").click(function(event) {
-			storeFormData();
-			var autocompleteData = <%- autocompleteData %>;
-			updateFormFieldValues(autocompleteData);
-
-			let element;
-			for(var index in $(".advanced-search-box")) {
-				if(isNaN(index) == false) {
-					element = $(".advanced-search-box")[index];
-					$(element).val(DOMPurify.sanitize($(element).val()));
-				}
-			}
-			$("#advanced-search").submit();
-		});
-	});
+	var onClickSubmitAdvancedSearch = function(event) {
+		storeFormData();
+		var autocompleteData = <%- autocompleteData %>;
+		updateFormFieldValues(autocompleteData);
+		submitAdvancedSearch();
+	}
 </script>
-
 <script src="<%- root_url %>/views/search.events.js" type="module"></script>
 
 <%- include('partials/footer') -%>
