@@ -5,6 +5,46 @@
 	<h3>Advanced Search</h3>
 	<div class="page-form advanced-search-form">
 		<form id="advanced-search" method="get" action="<%= root_url %>/search">
+			<!-- Row template -->
+			<div class="form-inline">
+				<div class="form-group">
+					<select class="search-element advanced-search-bool-select" title="Select boolean operator to search">
+						<optgroup label="Boolean Search Type">
+						  <% for (var i = 0; i < boolFields.length; i++) { %>
+						    <% for (var key in boolFields[i]) { %>
+						      <option value='<%- boolFields[i][key] %>'><%- key %></option>
+						    <% } %>
+						  <% } %>
+						</optgroup>
+					</select>
+				</div>
+				<div class="form-group">
+					<select class="search-element advanced-search-field-select" title="Select field to search" onchange="onChangeAdvancedSearchFieldSelect(this)">
+						<option value="all">All Fields</option>
+						<optgroup label="Specific Fields">
+						  <% for (var i = 0; i < searchFields.length; i++) { %>
+						    <% for (var key in searchFields[i]) { %>
+						      <option value='<%- searchFields[i][key] %>'><%- key %></option>
+						    <% } %>
+						  <% } %>
+						</optgroup>
+					</select>
+				</div>
+				<div class="form-group">
+					<select class="search-element advanced-search-type-select" title="Select search scope">
+						<optgroup label="Search Type">
+						  <% for (var i = 0; i < typeFields.length; i++) { %>
+						    <% for (var key in typeFields[i]) { %>
+						      <option value='<%- typeFields[i][key] %>'><%- key %></option>
+						    <% } %>
+						  <% } %>
+						</optgroup>
+					</select>
+				</div>
+				<div class="form-group search-box">
+			      <input class="search-element advanced-search-box" type="text" title="Keywords" placeholder="Keyword"/>
+			    </div>
+			</div>
 			<div id="advanced-search-query-row-1" class="form-inline">
 				<div class="form-group">
 					<select name="bool[]" id="advanced-search-bool-select-1" class="search-element advanced-search-bool-select" title="Select boolean operator to search">

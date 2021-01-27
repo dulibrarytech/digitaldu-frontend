@@ -19,13 +19,17 @@ var changeAdvancedSearchFieldSelect = function(element, autocompleteData) {
 	else if(selValue == "Collection") {
 		// Remove 'Contains' option
 		let fieldOpts = $("#advanced-search-type-select-" + index).children().children();
-		$(fieldOpts[0]).remove();
+		for(var i=0; i< fieldOpts.length; i++) {
+			if(fieldOpts[i].value == "contains") {
+				$(fieldOpts[i]).remove();
+			}
+		}
 
 		var collectionNames = [];
 		for(var i in autocompleteData.collectionData) {
 			collectionNames.push(autocompleteData.collectionData[i].name);
 		}
-
+			console.log("TEST ac items", collectionNames)
     $("#advanced-search-box-" + index).autocomplete({
     	source: function(req, responseFn) {
         var re = $.ui.autocomplete.escapeRegex(req.term);
@@ -42,7 +46,7 @@ var changeAdvancedSearchFieldSelect = function(element, autocompleteData) {
 var clearForm = function() {
 	var rows = $("#advanced-search .form-inline");
 	for(index in rows) {
-		if(isNaN(index) == false && index != "0" && index != 0) {
+		if(isNaN(index) == false && index != "0" && index != "1" && index > 1) {
 			$(rows[index]).remove();
 		}
 	}
@@ -60,10 +64,16 @@ var addFormRow = function() {
 	$("#advanced-search").append(formRow);
 
 	// Set the form element id values with a row index suffix
-	$("#advanced-search .form-inline:last-child .advanced-search-bool-select").attr("id", "advanced-search-bool-select-" + parseInt($("#advanced-search .form-inline").length));
-	$("#advanced-search .form-inline:last-child .advanced-search-field-select").attr("id", "advanced-search-field-select-" + parseInt($("#advanced-search .form-inline").length));
-	$("#advanced-search .form-inline:last-child .advanced-search-type-select").attr("id", "advanced-search-type-select-" + parseInt($("#advanced-search .form-inline").length));
-	$("#advanced-search .form-inline:last-child .advanced-search-box").attr("id", "advanced-search-box-" + parseInt($("#advanced-search .form-inline").length));
+	let index = parseInt($("#advanced-search .form-inline").length);
+	$("#advanced-search .form-inline:last-child").attr("id", "advanced-search-query-row-" + index);
+	$("#advanced-search .form-inline:last-child .advanced-search-bool-select").attr("id", "advanced-search-bool-select-" + index);
+	$("#advanced-search .form-inline:last-child .advanced-search-field-select").attr("id", "advanced-search-field-select-" + index);
+	$("#advanced-search .form-inline:last-child .advanced-search-type-select").attr("id", "advanced-search-type-select-" + index);
+	$("#advanced-search .form-inline:last-child .advanced-search-box").attr("id", "advanced-search-box-" + index);
+	$("#advanced-search .form-inline:last-child .advanced-search-bool-select").attr("name", "bool[]");
+	$("#advanced-search .form-inline:last-child .advanced-search-field-select").attr("name", "field[]");
+	$("#advanced-search .form-inline:last-child .advanced-search-type-select").attr("name", "type[]");
+	$("#advanced-search .form-inline:last-child .advanced-search-box").attr("name", "q[]");
 }
 
 var storeFormData = function() {
@@ -115,7 +125,7 @@ var restoreFormData = function() {
 var updateFormFieldValues = function(autocompleteData) {
 	var searchFieldInputs = $('.advanced-search-field-select');
 	for(var key in searchFieldInputs) {
-		if(isNaN(key) == false) {
+		if(isNaN(key) == false && key > 0) {
 			let rowIndex = parseInt(key) + 1;
 			// Update form data
 			if($("#" + searchFieldInputs[key].id).val() == "collection") {

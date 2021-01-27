@@ -524,6 +524,10 @@ form#advanced-search .form-inline {
   margin-top: 20px;
 }
 
+form#advanced-search .form-inline:first-child {
+  display: none;
+}
+
 #advanced-search #advanced-search-query-row-1 .form-group:first-child {
   display: none;
 }
