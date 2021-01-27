@@ -29,17 +29,17 @@ var changeAdvancedSearchFieldSelect = function(element, autocompleteData) {
 		for(var i in autocompleteData.collectionData) {
 			collectionNames.push(autocompleteData.collectionData[i].name);
 		}
-			console.log("TEST ac items", collectionNames)
-    $("#advanced-search-box-" + index).autocomplete({
-    	source: function(req, responseFn) {
-        var re = $.ui.autocomplete.escapeRegex(req.term);
-        var matcher = new RegExp( "^" + re, "i" );
-        var a = $.grep(collectionNames, function(item,index){
-            return matcher.test(item);
-        });
-        responseFn(a);
-      }
-    });
+
+	    $("#advanced-search-box-" + index).autocomplete({
+	    	source: function(req, responseFn) {
+	        var re = $.ui.autocomplete.escapeRegex(req.term);
+	        var matcher = new RegExp( "^" + re, "i" );
+	        var a = $.grep(collectionNames, function(item,index){
+	            return matcher.test(item);
+	        });
+	        responseFn(a);
+	      }
+	    });
 	}
 }
 
@@ -54,6 +54,7 @@ var clearForm = function() {
 	$("#advanced-search-field-select-1").val("all");
 	$("#advanced-search-type-select-1").val("contains");
 	$("#advanced-search-box-1").val("");
+	
 	localStorage.setItem("ADVANCED_SEARCH_FORM_STATE", null);
 }
 
@@ -126,13 +127,13 @@ var updateFormFieldValues = function(autocompleteData) {
 	var searchFieldInputs = $('.advanced-search-field-select');
 	for(var key in searchFieldInputs) {
 		if(isNaN(key) == false && key > 0) {
-			let rowIndex = parseInt(key) + 1;
-			// Update form data
+			
+			// Updates for the collection field
 			if($("#" + searchFieldInputs[key].id).val() == "collection") {
-				// Get the pid that corresponds with the selected collection title, replace the input value with the pid
+				let rowIndex = parseInt(key);
 				for(var i in autocompleteData.collectionData) {
 					if(autocompleteData.collectionData[i].name == $("#advanced-search-box-"+rowIndex).val()) {
-
+						// Convert the search box value from collection name to collection pid
 						// TODO: Assign the original title string to a hidden input, before replacing the value with the collection pid
 						// $(#collection-input).val( autocompleteData.collectionData[i].name )
 						// Then add 'IN [collection title string]' to the results for label
