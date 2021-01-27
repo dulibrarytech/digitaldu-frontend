@@ -54,7 +54,7 @@ var clearForm = function() {
 	$("#advanced-search-field-select-1").val("all");
 	$("#advanced-search-type-select-1").val("contains");
 	$("#advanced-search-box-1").val("");
-	
+
 	localStorage.setItem("ADVANCED_SEARCH_FORM_STATE", null);
 }
 
@@ -65,16 +65,17 @@ var addFormRow = function() {
 	$("#advanced-search").append(formRow);
 
 	// Set the form element id values with a row index suffix
-	let index = parseInt($("#advanced-search .form-inline").length);
+	let index = parseInt($("#advanced-search .form-inline").length-1);
 	$("#advanced-search .form-inline:last-child").attr("id", "advanced-search-query-row-" + index);
 	$("#advanced-search .form-inline:last-child .advanced-search-bool-select").attr("id", "advanced-search-bool-select-" + index);
 	$("#advanced-search .form-inline:last-child .advanced-search-field-select").attr("id", "advanced-search-field-select-" + index);
 	$("#advanced-search .form-inline:last-child .advanced-search-type-select").attr("id", "advanced-search-type-select-" + index);
 	$("#advanced-search .form-inline:last-child .advanced-search-box").attr("id", "advanced-search-box-" + index);
+	$("#advanced-search .form-inline:last-child .advanced-search-box-query").attr("id", "advanced-search-box-query-" + index);
 	$("#advanced-search .form-inline:last-child .advanced-search-bool-select").attr("name", "bool[]");
 	$("#advanced-search .form-inline:last-child .advanced-search-field-select").attr("name", "field[]");
 	$("#advanced-search .form-inline:last-child .advanced-search-type-select").attr("name", "type[]");
-	$("#advanced-search .form-inline:last-child .advanced-search-box").attr("name", "q[]");
+	$("#advanced-search .form-inline:last-child .advanced-search-box-query").attr("name", "q[]");
 }
 
 var storeFormData = function() {
@@ -98,10 +99,8 @@ var storeFormData = function() {
 }
 
 var restoreFormData = function() {
-	// Restore, then clear local storage
 	var formState = JSON.parse(localStorage.getItem("ADVANCED_SEARCH_FORM_STATE")) || null
 	if(formState) {
-		// Update rows
 		var row;
 		for(var index in formState) {
 			// Do not add the first row, it is rendered with each page load
@@ -112,8 +111,6 @@ var restoreFormData = function() {
 				}
 			}
 			row = parseInt(index) + 1;
-
-			// Update the form element values
 			$("#advanced-search-bool-select-" + row).val(formState[index].bool_select)
 			$("#advanced-search-field-select-" + row).val(formState[index].field_select);
 			$("#advanced-search-type-select-" + row).val(formState[index].type_select);
@@ -137,7 +134,7 @@ var updateFormFieldValues = function(autocompleteData) {
 						// TODO: Assign the original title string to a hidden input, before replacing the value with the collection pid
 						// $(#collection-input).val( autocompleteData.collectionData[i].name )
 						// Then add 'IN [collection title string]' to the results for label
-						$("#advanced-search-box-"+rowIndex).val(autocompleteData.collectionData[i].pid);
+						$("#advanced-search-box-query-"+rowIndex).val(autocompleteData.collectionData[i].pid);
 					}
 				}
 			}
@@ -147,11 +144,24 @@ var updateFormFieldValues = function(autocompleteData) {
 
 var submitAdvancedSearch = function() {
 	let element;
+	let queryInput, queryField;
 	for(var index in $(".advanced-search-box")) {
 		if(isNaN(index) == false) {
-			element = $(".advanced-search-box")[index];
-			$(element).val(DOMPurify.sanitize($(element).val()));
+			if(index == 0) {
+				continue;
+			}
+
+			queryInput = $(".advanced-search-box")[index];
+			queryField = $(".advanced-search-box-query")[index];
+
+			if($(queryField).val() == "") {
+				$(queryInput).val(DOMPurify.sanitize($(queryInput).val()));
+
+				// Assn value to hidden query field
+				$(queryField).val($(queryInput).val());
+			}
 		}
 	}
+
 	$("#advanced-search").submit();
 }
