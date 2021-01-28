@@ -119,7 +119,8 @@ function createUV(selector, data, dataProvider) {
         $(".timeout-msg").remove();
         $(".spinner").css("background-color", "initial");
 
-        if($("#uv").hasClass("pdf-object") == false) {
+        if($("#uv").hasClass("pdf-object") == false &&
+            $("#uv").hasClass("compound-object")) {
             updateDownloadUrlsForPart(canvasIndex+1);
         }
         /*

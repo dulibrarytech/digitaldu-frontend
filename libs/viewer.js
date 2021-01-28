@@ -272,11 +272,13 @@ function getIIIFObjectViewer(object, page=null, embedKalturaViewer=false, apikey
 		eventTriggers = "",
 		pid = object.pid,
 		mimeType = object.mime_type || null,
-		extension = "";
+		extension = "",
+		isCompound = false;
 
 	if(AppHelper.isParentObject(object)) {
 		object = AppHelper.getCompoundObjectPart(object, page || "1") || [];
 		extension = AppHelper.getFileExtensionFromFilePath(object.object || "");
+		isCompound = true;
 	}
 	else {
 		extension = AppHelper.getFileExtensionForMimeType(mimeType);
@@ -288,6 +290,7 @@ function getIIIFObjectViewer(object, page=null, embedKalturaViewer=false, apikey
 	params["universalViewerMediaElement"] = config.universalViewerMediaElement || "";
 	params["pageSize"] = config.IIIFManifestPageSize || 10;
 	params["embedKalturaViewer"] = embedKalturaViewer;
+	params["isCompound"] = isCompound;
 
 	// Option to embed the Kaltura player into the Universalviewer instance
 	if(embedKalturaViewer) {

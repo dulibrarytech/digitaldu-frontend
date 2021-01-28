@@ -1,17 +1,13 @@
 /*
- * Universal Viewer view events for embedded Kaltura player
+ * Universal Viewer view interface 
+ * Interfaces with viewer.js library 
  */
 
 $( document ).ready(function() {
 	$( "#uv" ).on("uvElementLoaded", function(event, params) {
-		// Add compound object viewer page nave links
-		// if(params.pageSize > 0) {
-		// 	$("#object-view").append('<div id="sidebar-nav-buttons" style="display: none"></div>');
-		// 	$("#sidebar-nav-buttons").append('<a id="prev" href="' + params.prevLink + '" title="View previous items" style="visibility: hidden"><< Previous ' + params.pageSize + '</a>');
-		// 	$("#sidebar-nav-buttons").append('<a id="next" href="' + params.nextLink + '" title="View next items" style="visibility: hidden">Next ' + params.pageSize + ' >></a>');
-		// }
-		// if(params.prevLink) {$("#sidebar-nav-buttons #prev").css("visibility", "visible")}
-		// if(params.nextLink) {$("#sidebar-nav-buttons #next").css("visibility", "visible")}
+		if(params.isCompound) {
+			$("#uv").addClass("compound-object");
+		}
 
 		// Embed a Kaltura viewer in the universalviewer UI
 		if(params.embedKalturaViewer) {
