@@ -84,6 +84,12 @@ module.exports = function (app) {
     });
 
     app.route('/cache/purgeInvalidItems/:cache')
-        .get(Discovery.purgeInvalidItems)
+        .get(Discovery.cachePurgeInvalidItems)
+
+    app.route('/cache/removeItem/:cache/:pid')
+        .get(Discovery.cacheRemoveItem)
+
+    app.route('/cache/addItem/:cache/:pid')
+        .get(Discovery.cacheAddItem)
 };
 

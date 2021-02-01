@@ -177,11 +177,11 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
 
   // Request a non-thumbnail datastream. Streaming from Kaltura has not been implemented
   else {
-    var isCached = false;
+    var cacheEnabled = false;
     for(var type in config.objectTypes) {
       if(config.objectTypes[type].includes(object.mime_type)) {
         if(config.objectDerivativeCacheEnabled && config.cacheTypes.includes(type)) {
-          isCached = true;
+          cacheEnabled = true;
         }
       }
     }
@@ -190,7 +190,7 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
     if(!extension) {
       extension = "file";
     }
-    if(isCached && Cache.exists('object', objectID, extension) == true) {
+    if(cacheEnabled && Cache.exists('object', objectID, extension) == true) {
       Cache.getFileStream('object', objectID, extension, function(error, stream) {
         if(error) {
           callback(error, null);
@@ -225,7 +225,7 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
             callback("Repository stream data error: " + (error || "Path to resource not found. Pid:" + objectID), null);
           }
           else {
-            if(config.objectDerivativeCacheEnabled == true && isCached) {
+            if(config.objectDerivativeCacheEnabled == true && cacheEnabled) {
               Cache.cacheDatastream('object', objectID, stream, extension, function(error) {
                 if(error) { console.error("Could not create object file for", objectID, error) }
                 else { console.log("Object file created for", objectID) }

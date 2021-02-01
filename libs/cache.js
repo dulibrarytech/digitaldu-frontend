@@ -32,9 +32,14 @@ exports.cacheDatastream = function(objectType, objectID, stream, extension, call
 	}
 
 	if(typeof stream == 'object' && stream.statusCode) {
-		stream.pipe(fs.createWriteStream(filepath)).on('close', function() {
-			callback(null);
-		});
+		try {
+			stream.pipe(fs.createWriteStream(filepath)).on('close', function() {
+				callback(null);
+			});
+		}
+		catch(e) {
+			callback(e);
+		}
 	}
 	else {
 		callback("Invalid stream, can not write stream data");
@@ -93,7 +98,7 @@ exports.removeObject = function(cacheName, filename, callback) {
 			callback("Error removing cache file: " + filename + " " + error, null);
 		}
 		else {
-			callback(null);
+			callback(null, filepath);
 		}
 	})
 }

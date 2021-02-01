@@ -36,16 +36,6 @@ const Search = require("../search/service");
 const Cache = require('../libs/cache');
 const Pdf = require("../libs/pdfUtils")
 
-/*
- * TEMP
- * For file functions
- */
-var http = require('http');
-var request = require('request');
-/*
- * 
- */
-
 /**
  * Create a list of the root level collections
  *
@@ -673,7 +663,7 @@ exports.refreshCache = function(cacheName) {
       else if(object == null) {
         Cache.removeObject(cacheName, file, function(error) {
           if(error) {console.log("Error removing cache file " + file + ": " + error)}
-          else {console.log("Removed " + file + ". Object not found in index")}
+          else {console.log("Removed " + file)}
         });
       }
       else {
@@ -692,4 +682,103 @@ exports.refreshCache = function(cacheName) {
   }
 
   return 0;
+}
+
+exports.removeCacheItem = function(objectID, cacheName) {
+  fetchObjectByPid(config.elasticsearchPublicIndex, objectID, function (error, object) {
+    if(error) {
+      console.log(error);
+    }
+    else if (object) {
+      var items = [];
+      if(AppHelper.isParentObject(object)) {
+        items.push({
+          pid: objectID,
+          mimeType: object.mime_type || null
+        });
+        for(var part of AppHelper.getCompoundObjectPart(object, -1)) {
+          items.push({
+            pid: objectID + config.compoundObjectPartID + (part.order || part.sequence || "1"),
+            mimeType: part.type || null
+          });
+        }
+      }
+      else {
+        items.push({
+          pid: objectID,
+          mimeType: object.mime_type || null
+        });
+      }
+
+      for(var item of items) {
+        var extension = (cacheName == "thumbnail") ? config.thumbnailFileExtension : AppHelper.getFileExtensionForMimeType(item.mimeType || null),
+            filename = item.pid + "." + extension;
+        if(Cache.exists(cacheName, item.pid, extension)) {
+          Cache.removeObject(cacheName, filename, function(error, filepath) {
+            if(error) {
+              console.log(error);
+            }
+            else {
+              console.log(filepath + " removed from the " + cacheName + " cache");
+            }
+          });
+        }
+        else {
+          console.log(filename + " does not exist in cache");
+        }
+      }
+    }
+    else {
+      console.log("Object not found. Use '/cache/purgeInvalidItems' to remove cache items that are no longer in the public index");
+    }
+  });
+  return false;
+}
+
+exports.addCacheItem = function(objectID, cacheName) {
+  fetchObjectByPid(config.elasticsearchPublicIndex, objectID, function (error, object) {
+    if(error) {
+      console.log(error);
+    }
+    else {
+      var items = [];
+
+      if(AppHelper.isParentObject(object)) {
+        for(var part of AppHelper.getCompoundObjectPart(object, -1)) {
+          items.push({
+            pid: objectID + config.compoundObjectPartID + (part.order || part.sequence || "1"),
+            mimeType: part.type || null,
+            sequence: (part.order || part.sequence || "1")
+          });
+        }
+      }
+      else if(object) {
+        items.push({
+          pid: objectID,
+          mimeType: object.mime_type || null,
+          sequence: "1"
+        });
+      }
+      else {
+        console.log("Object not found. Only objects that are present in the public index can be cached");
+      }
+
+      for(var item of items) {
+        var extension = (cacheName == "thumbnail") ? config.thumbnailFileExtension : AppHelper.getFileExtensionForMimeType(item.mimeType || null),
+            filename = item.pid + "." + extension;
+        if(Cache.exists(cacheName, item.pid, extension) == false) {
+          if(cacheName == "thumbnail") {cacheName = "tn"}
+          Datastreams.getDatastream(object, objectID, cacheName, item.sequence, null, function(error, stream) {
+            if(error) {
+              console.log(error);
+            }
+          });
+        }
+        else {
+          console.log(filename + " already exists in cache")
+        }
+      }
+    }
+  });
+  return false;
 }
