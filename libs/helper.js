@@ -36,10 +36,17 @@ exports.getDateMonthString = function(monthVal) {
 }
 
 /*
- * 
+ * True if object is a compound object
  */
 exports.isParentObject = function(object) {
   return (object && (object.is_compound == true || object.object_type == "compound" || object.type == "compound"));
+}
+
+/*
+ * True if object is a collection object
+ */
+exports.isCollectionObject = function(object) {
+  return (object && (object.object_type && object.object_type == "collection"));
 }
 
 /*

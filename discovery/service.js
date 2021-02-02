@@ -102,7 +102,7 @@ exports.getTopLevelCollections = function(page=1, callback) {
 /**
  * Get all objects in a collection, including facet data for collection members
  *
- * @param {String} page - Get this page of result objects.  0, return all collections.
+ * @param {String} page - Get this page of result objects.  0, return all objects.
  *
  * @typedef {Object} collection - Collection data
  * @property {String} title - Title of the collection to be displayed in the view
@@ -641,6 +641,33 @@ var getCollectionList = function(callback) {
   });
 }
 
+var getCollectionChildren = function(collectionId, index, callback) {
+  es.search({
+      index: index,
+      type: config.searchIndexType,
+      _source: ["pid"],
+      body: {
+        "query": {
+          "match_phrase": {
+            "is_member_of_collection": collectionId
+          }
+        },
+        "size": 10000
+      }
+  }, function (error, response) {
+      if(error) {
+        callback(error, null);
+      }
+      else {
+        let results = response.hits.hits || [], pids = [];
+        for(let i in results) {
+          pids.push(results[i]._source.pid);
+        }
+        callback(null, pids);
+      }
+  });
+}
+
 exports.refreshCache = function(cacheName) {
   let cacheFiles = Cache.getList(cacheName),
       pid = "", 
@@ -684,7 +711,7 @@ exports.refreshCache = function(cacheName) {
   return 0;
 }
 
-exports.removeCacheItem = function(objectID, cacheName) {
+var removeCacheItem = function(objectID, cacheName) {
   fetchObjectByPid(config.elasticsearchPublicIndex, objectID, function (error, object) {
     if(error) {
       console.log(error);
@@ -734,8 +761,9 @@ exports.removeCacheItem = function(objectID, cacheName) {
   });
   return false;
 }
+exports.removeCacheItem = removeCacheItem;
 
-exports.addCacheItem = function(objectID, cacheName) {
+var addCacheItem = function(objectID, cacheName) {
   fetchObjectByPid(config.elasticsearchPublicIndex, objectID, function (error, object) {
     if(error) {
       console.log(error);
@@ -752,6 +780,14 @@ exports.addCacheItem = function(objectID, cacheName) {
           });
         }
       }
+      else if(AppHelper.isCollectionObject(object)) {
+        getCollectionChildren(objectID, config.elasticsearchPublicIndex, function(error, pids) {
+          for(var i in pids) {
+
+            addCacheItem(pids[i], cacheName);
+          }
+        });
+      }
       else if(object) {
         items.push({
           pid: objectID,
@@ -766,6 +802,7 @@ exports.addCacheItem = function(objectID, cacheName) {
       for(var item of items) {
         var extension = (cacheName == "thumbnail") ? config.thumbnailFileExtension : AppHelper.getFileExtensionForMimeType(item.mimeType || null),
             filename = item.pid + "." + extension;
+
         if(Cache.exists(cacheName, item.pid, extension) == false) {
           if(cacheName == "thumbnail") {cacheName = "tn"}
           Datastreams.getDatastream(object, objectID, cacheName, item.sequence, null, function(error, stream) {
@@ -782,3 +819,4 @@ exports.addCacheItem = function(objectID, cacheName) {
   });
   return false;
 }
+exports.addCacheItem = addCacheItem;
