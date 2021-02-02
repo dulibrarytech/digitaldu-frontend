@@ -803,7 +803,10 @@ var addCacheItem = function(objectID, cacheName) {
         var extension = (cacheName == "thumbnail") ? config.thumbnailFileExtension : AppHelper.getFileExtensionForMimeType(item.mimeType || null),
             filename = item.pid + "." + extension;
 
-        if(Cache.exists(cacheName, item.pid, extension) == false) {
+        if(config.cacheTypes.includes(extension) == false) {
+          console.log("Caching is disabled for " + AppHelper.getObjectType(item.mimeType) + " files. " + filename + " not added to " + cacheName + " cache");
+        }    
+        else if(Cache.exists(cacheName, item.pid, extension) == false) {
           if(cacheName == "thumbnail") {cacheName = "tn"}
           Datastreams.getDatastream(object, objectID, cacheName, item.sequence, null, function(error, stream) {
             if(error) {
