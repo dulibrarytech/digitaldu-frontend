@@ -89,10 +89,11 @@ exports.getObjectViewer = function(object, mimeType="", apikey=null) {
  */
 function getAudioPlayer(object, type, apikey) {
 	var player = '<div id="audio-player" class="viewer-section">', tn, stream;
-	var extension = "mp3";
+	var datastreamID = "object";
+	var extension = AppHelper.getFileExtensionFromFilePath(object.object || "");
 
 	tn = config.rootUrl + "/datastream/" + object.pid + "/tn" + apikey;
-	stream = config.rootUrl + "/datastream/" + object.pid + "/mp3" + apikey;
+	stream = config.rootUrl + "/datastream/" + object.pid + "/" + datastreamID + apikey;
 
 	switch(config.audioPlayer) {
 		case "browser":
@@ -124,23 +125,16 @@ function getAudioPlayer(object, type, apikey) {
  */
 function getVideoViewer(object, apikey) {
 	var viewer = '<div id="video-viewer" class="viewer-section">', tn, stream, url;
-	var extension = "", datastreamID = "";
+	var datastreamID = "object";
+	var extension = AppHelper.getFileExtensionFromFilePath(object.object || "");
 
 	tn = config.rootUrl + "/datastream/" + object.pid + "/tn" + apikey;
-	if(object.mime_type == "video/mp4") {
-		extension = "mp4";
-		datastreamID = "mp4";
-	}
-	else if(object.mime_type == "video/quicktime") {
-		extension = "mov";
-		datastreamID = "mov";
-	}
-	else {
-		console.log("Error: Incorrect object mime type for object: " + object.pid);
-	}
 	stream = config.rootUrl + "/datastream/" + object.pid + "/" + datastreamID + apikey;
 
 	switch(config.videoViewer) {
+		case "browser":
+			viewer += getHTMLVideoPlayer(tn, stream, object.mime_type);
+			break;
 		case "videojs":
 			viewer += getVideojsViewer(tn, stream, object.mime_type);
 			break;
@@ -234,11 +228,15 @@ function getPDFViewer(object, apikey) {
 }
 
 function getHTMLAudioPlayer(thumbnailUrl, streamUrl, mimeType) {
-	return '<div id="viewer-content-wrapper"><audio controlsList="nodownload" controls><source src="' + streamUrl + '" type="' + mimeType + '"></audio></div>';
+	return '<div id="viewer-content-wrapper"><audio controlsList="nodownload" height="' + config.defaultViewerHeight + '" width="' + config.defaultViewerWidth + '" controls><source src="' + streamUrl + '" type="' + mimeType + '"></audio></div>';
+}
+
+function getHTMLVideoPlayer(thumbnailUrl, streamUrl, mimeType) {
+	return '<div id="viewer-content-wrapper"><video controlsList="nodownload" height="' + config.defaultViewerHeight + '" width="' + config.defaultViewerWidth + '" controls><source src="' + streamUrl + '" type="' + mimeType + '"></video></div>';
 }
 
 function getVideojsViewer(thumbnailUrl, streamUrl, mimeType) {
-	return '<video id="my-video" class="video-js" controls preload="auto" width="640" height="264" poster="' + thumbnailUrl + '" data-setup="{}"><source src="' + streamUrl + '" type="video/mp4"><p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that<a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p></video>';
+	return '<video id="my-video" class="video-js" height="' + config.defaultViewerHeight + '" width="' + config.defaultViewerWidth + '" controls preload="auto" width="640" height="264" poster="' + thumbnailUrl + '" data-setup="{}"><source src="' + streamUrl + '" type="video/mp4"><p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that<a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p></video>';
 }
 
 function getJWPlayer(thumbnailUrl, streamUrl, fileExtension, jwPlayerPath) {
@@ -250,8 +248,8 @@ function getJWPlayer(thumbnailUrl, streamUrl, fileExtension, jwPlayerPath) {
 	player += '<script>jwplayer("mediaplayer").setup({'
 	player +=     'file: "' + streamUrl + '",'
 	player +=     'image: "' +  thumbnailUrl + '",'
-	player +=     'width: 500,'
-	player +=     'height: 300,'
+	player +=     'width: ' + config.defaultViewerWidth + ','
+	player +=     'height: ' + config.defaultViewerHeight + ','
 	player +=     'aspectratio: "16:9",'
 	player +=     'primary: "flash",'
 	player +=     'androidhls: "true"'

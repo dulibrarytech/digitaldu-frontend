@@ -52,8 +52,7 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
 
   // If there is a part value, retrieve the part data.  Redefine the object data with the part data
   if(Helper.isParentObject(object) && part) {
-    var sequence;
-        fileType = "compound";
+    var fileType = "compound";
 
     // Get the data from the part object, set as object for datastream request. If part is not found, part will be ignored and input object will be used to stream data
     let objectPart = Helper.getCompoundObjectPart(object, part);
@@ -61,12 +60,8 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
       objectPart["object_type"] = "object";
       objectPart["mime_type"] = objectPart.type ? objectPart.type : (objectPart.mime_type || null);
       object = objectPart;
-      sequence = config.compoundObjectPartID + part;
-      objectID = objectID + sequence;
+      objectID = objectID + (config.compoundObjectPartID + part);
     }
-  }
-  else {
-    sequence = "";
   }
 
   if(datastreamID == "tn") {
@@ -186,10 +181,15 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
       }
     }
 
-    var extension = Helper.getFileExtensionForMimeType(mimeType);
-    if(!extension) {
-      extension = "file";
+    var extension = null;
+    if(datastreamID == "object") {
+      extension = object.object ? Helper.getFileExtensionFromFilePath(object.object) : Helper.getFileExtensionForMimeType(mimeType);
     }
+    else {
+      extension = datastreamID;
+    }
+    if(!extension) {extension = "file"}
+
     if(cacheEnabled && Cache.exists('object', objectID, extension) == true) {
       Cache.getFileStream('object', objectID, extension, function(error, stream) {
         if(error) {
@@ -200,25 +200,26 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
         }
       })
     }
+    else if(mimeType) {
+      let objectType = Helper.getObjectType(mimeType),
+          viewerId = object.entry_id || object.kaltura_id || null;
 
-    else {
-      // Stream data from Kaltura server, if this is an a/v object with an entry_id value
-      let viewerId = object.entry_id || object.kaltura_id || null;
-      if(object.mime_type && 
-        (config.objectTypes["audio"].includes(object.mime_type)) || (object.mime_type && config.objectTypes["video"].includes(object.mime_type)) &&
-        viewerId) {
-
-          let kalturaStreamUri = Kaltura.getStreamingMediaUrl(viewerId, extension);
-          streamKalturaData(kalturaStreamUri, function(error, status, stream) {
-            if(error) { callback(error, null) }
-            else { 
-              let str = stream ? "not null" : "null"
-              callback(null, stream) 
+      if(config.streamSource[objectType] == "kaltura" && viewerId) {
+        let kalturaStreamUri = Kaltura.getStreamingMediaUrl(viewerId, extension);
+        streamKalturaData(kalturaStreamUri, function(error, status, stream) {
+          if(error) { callback(error, null) }
+          else { 
+            if(config.objectDerivativeCacheEnabled == true && cacheEnabled) {
+              Cache.cacheDatastream('object', objectID, stream, extension, function(error) {
+                if(error) { console.error("Could not create object file for", objectID, error) }
+                else { console.log("Object file created for", objectID) }
+              });
             }
-          });
+            callback(null, stream) 
+          }
+        });
       }
 
-      // Stream data from the repository
       else {
         Repository.streamData(object, datastreamID, function(error, stream) {
           if(error || !stream) {
@@ -235,6 +236,9 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
           }
         });
       }
+    }
+    else {
+      console.log("Can't stream data, invalid mimetype for " + objectID);
     }
   }
 }
@@ -286,7 +290,6 @@ var streamKalturaData = function(uri, callback) {
           streamRemoteData(kalturaDownloadUri, function(error, status, stream) {
             if(error) { callback(error, 500, null) }
             else { 
-              let str = stream ? "not null" : "null"
               callback(null, status, stream) 
             }
           });

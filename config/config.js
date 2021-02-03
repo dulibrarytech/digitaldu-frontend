@@ -140,6 +140,12 @@ module.exports = {
     pdfViewer: "universalviewer",
 
     /* 
+     * Viewer dimensions, if none are set by the viewer configuration
+     */
+    defaultViewerHeight: "600",
+    defaultViewerWidth: "1000",
+
+    /* 
      * Viewer to display large image files (tiff, jp2)
      * [browser | openseadragon | universalviewer]
      * "browser" viewer will not display .jp2 images
@@ -254,6 +260,17 @@ module.exports = {
     },
 
     /*
+     * Object stream source
+     * ["repository" | "kaltura"]
+     */
+    streamSource: {
+        "audio": "repository",
+        "video": "kaltura",
+        "still image": "repository",
+        "pdf": "repository"
+    },
+
+    /*
      * Image to display if no thumbnail image exists in the repository
      * Before a thumbnail is rendered, this location is checked for a source file before requesting it from the repository
      */
@@ -267,13 +284,14 @@ module.exports = {
 
     /*
      * Object types to cache
-     * Add to array
-     * ["audio" | "video" | "still image" | "pdf"]
+     * Add to array to enable
+     * Must be an object type defined in 'objectTypes' configuration field 
      */
     cacheTypes: ["pdf"],
 
     /*
      * Object specific default thumbnail images
+     * If the file listed can not be accessed the DU sheld placeholder wil be used
      * { "object type" : "image filename" }
      */
     thumbnailPlaceholderImages: {

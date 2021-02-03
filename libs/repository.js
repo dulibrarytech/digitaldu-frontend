@@ -113,7 +113,9 @@ exports.streamData = function(object, dsid, callback) {
 			objectPath += ("." + dsid);
 			url += ("/" + objectPath);
 		}
-		else {url += ("/" + object.object)}
+		else {
+			url += ("/" + object.object);
+		}
 
 		rs(url, {}, function(err, res) {
 			if(err) {
