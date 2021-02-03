@@ -514,7 +514,7 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
 
         for(var key in parts) {
           let pageCount = null;
-          resourceUrl = config.rootUrl + "/datastream/" + object.pid + "/" + AppHelper.getDsType(parts[key].type) + "/" + parts[key].order;
+          resourceUrl = config.rootUrl + "/datastream/" + object.pid + "/" + AppHelper.getFileExtensionFromFilePath(parts[key].object || "undefined") + "/" + parts[key].order;
 
           // pdf page count
           if(config.IIIFEnablePdfPaging && AppHelper.getDsType(parts[key].type) == "pdf") {
