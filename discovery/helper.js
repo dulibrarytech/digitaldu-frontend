@@ -337,15 +337,20 @@ exports.getFileDownloadLinks = function(object, dsid, part=null) {
   }
 
   if(object.object) {
-    let extension = object.mime_type ? AppHelper.getFileExtensionForMimeType(object.mime_type) : null;
-
-    if(!extension) {
-      let pathExtension = AppHelper.getFileExtensionFromFilePath(object.object);
-      if(AppHelper.isValidExtension(pathExtension)) {
-        extension = pathExtension;
+    // TODO Add condition for download options when available (1. Multiple filetypes are available from repository B. Multiple object fields are present in array)
+    // 'extension' variable will be array of extensions
+    let extension = null;
+    if(object.mime_type) {
+      extension = AppHelper.getFileExtensionForMimeType(object.mime_type)
+    }
+    else if(object.object) {
+      extension = AppHelper.getFileExtensionFromFilePath(object.object);
+      if(AppHelper.isValidExtension(extension) == false) {
+        extension = null;
       }
     }
-
+      
+    // TODO if 'extension' is an array loop and add all elements
     if(extension) {
       let link = {
         uri: config.rootUrl + "/datastream/" + pid + "/" + dsid + "/" + part + "/" + pid + "." + extension,

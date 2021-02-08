@@ -365,8 +365,8 @@ var streamDefaultThumbnail = function(object, callback) {
 
   // Create the thumbnail stream
   getFileStream(path, function(error, thumbnail) {
-    if(error) {callback(error, null);}
-    else{callback(null, thumbnail);}
+    if(error) {callback("Error fetching default thumbnail image: " + error, null);}
+    else{callback(null, thumbnail)}
   });
 }
 
