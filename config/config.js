@@ -644,11 +644,9 @@ module.exports = {
         "jp2": ["image/tiff"],
         "jpg": ["image/jpg", "image/jpeg"],
         "mp3": ["audio/mp3", "audio/x-wav", "audio/mpeg"],
-        "mp4": ["video/mp4"],
+        "mp4": ["video/mp4", "video/quicktime", "video/mov"],
         "pdf": ["application/pdf"],
-        "wav": ["audio/wav"],
-        "quicktime": ["video/quicktime"],
-        "mov": ["video/mov"],
+        "wav": ["audio/wav"]
      },
 
       /*
