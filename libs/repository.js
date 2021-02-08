@@ -117,11 +117,13 @@ exports.streamData = function(object, dsid, callback) {
 			url += ("/" + object.object);
 		}
 
+		if(config.nodeEnv == "devlog") {console.log("Repository fetching url:", url)}
 		rs(url, {}, function(err, res) {
 			if(err) {
 				callback("Could not open datastream. " + err + " Check connection to repository", null);
 			}
 			else {
+				if(config.nodeEnv == "devlog") {console.log("Repository fetching url receive status of:", res.statusCode)}
 				if(res.statusCode == 200) {
 					callback(null, res);
 				} 

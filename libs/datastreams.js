@@ -71,7 +71,6 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
       }
     }
 
-    // Get the thumbnail configuration settings
     var settings = config.thumbnails[object.object_type] || null;
     if(!object.mime_type && object.object_type != "collection") {settings = null}
     if(settings) {
@@ -80,7 +79,6 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
       }
 
       if(settings.cache == false || Cache.exists('thumbnail', objectID) == false) {
-        // Get the stream from the repository
         if(settings.source == "repository") {
           Repository.streamData(object, "tn", function(error, stream) {
             if(error) {
@@ -117,25 +115,28 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
             case "external":
               break;
             case "index":
-              uri = getIndexTnUri(object.thumbnail || uri);
+              uri = getIndexTnUri(object.pid, object.thumbnail || uri);
               break;
             default:
               callback("Error retrieving datastream for " + objectID + ", object type " + object.object_type + "is invalid", null);
               break;
           }
+          if(config.nodeEnv == "devlog") {console.log("Thumbnail image stream uri:", uri)}
+          if(uri == null || uri == "") {
+            console.log("Could not construct uri for datastream request. uri field is null");
+          }
 
           streamRemoteData(uri, function(error, status, stream) {
             if(error) {
-              if(config.nodeEnv == "devlog") {
-                console.log(error);
-              }
+              if(config.nodeEnv == "devlog") {console.log(error)}
               streamDefaultThumbnail(object, callback);
             }
             else if(stream == null) {
-              console.log("Datastream error: Can not fetch datastream", objectID);
+              console.log("Datastream error: Can not fetch datastream for object ", objectID);
               streamDefaultThumbnail(object, callback);
             }
             else {
+              if(config.nodeEnv == "devlog") {console.log("Thumbnail stream response status is", status)}
               if(status == 200) {
                 if(config.thumbnailImageCacheEnabled == true && 
                   settings.cache == true && 
@@ -149,6 +150,7 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
               }
               else {
                 console.log("Datastream error: " + uri + " returns a status of " + status);
+                console.log("Using default thumbnail for object " + objectID);
                 streamDefaultThumbnail(object, callback);
               }
             }
@@ -206,6 +208,7 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
 
       if(config.streamSource[objectType] == "kaltura" && viewerId) {
         let kalturaStreamUri = Kaltura.getStreamingMediaUrl(viewerId, extension);
+        if(config.nodeEnv == "devlog") {console.log("Kaltura stream uri:", kalturaStreamUri)}
         streamKalturaData(kalturaStreamUri, function(error, status, stream) {
           if(error) { callback(error, null) }
           else { 
@@ -367,10 +370,10 @@ var streamDefaultThumbnail = function(object, callback) {
   });
 }
 
-var getIndexTnUri = function(uri) {
-  // Thumbnail value is assumed to be an object pid
+var getIndexTnUri = function(objectID, uri) {
+  // Thumbnail value is assumed to be an object pid. If thumbnail pid == this object, do not use it (infinite loop)
   if(uri && uri.indexOf("http") < 0) {
-    uri = config.rootUrl + "/datastream/" + uri + "/tn";
+    uri = (objectID == uri) ? null : config.rootUrl + "/datastream/" + uri + "/tn";
   }
 
   return uri;
