@@ -7,9 +7,9 @@
 	<h5><%- error %></h5>
 </div>
 
-<% if (typeof logMsg != "undefined") { %>
+<% if (logMsg) { %>
 	<script>
-		console.log('<% logMsg %>')
+		console.log('<%= logMsg %>')
 	</script>
 <% } %>
 
