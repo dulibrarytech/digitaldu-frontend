@@ -87,11 +87,12 @@ exports.getTopLevelCollections = function(page=1, callback) {
         }
 
         //Query the index for root collection members
-        getObjectsInCollection(config.topLevelCollectionPID, page, null, {"field": "Title", "order": "asc"}, 12, null, function(error, collections) {
+        getObjectsInCollection(config.topLevelCollectionPID, page, null, {"field": "Title", "order": "asc"}, 10000, null, function(error, collections) {
           if(error) {
             callback(error, null);
           }
           else {
+
             callback(null, collections);
           }
         });
@@ -153,6 +154,7 @@ var getObjectsInCollection = function(collectionId, page=1, facets=null, sort=nu
         });
 
         pageSize = pageSize || config.defaultCollectionsPerPage || 10;
+          console.log("TEST pageSize", pageSize)
         var from = (page - 1) * pageSize;
         Search.searchIndex(queryData, facets, collectionId, page, pageSize, daterange, sort, null, function(error, response) {
           if(error) {
