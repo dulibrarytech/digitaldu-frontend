@@ -339,6 +339,7 @@ exports.getFileDownloadLinks = function(object, dsid, part=null) {
   if(object.object) {
     // TODO Add condition for download options when available (1. Multiple filetypes are available from repository B. Multiple object fields are present in array)
     // 'extension' variable will be array of extensions
+    // extension will have an array of download options (file types) in the configuration. Add one link per download option
     let extension = null;
     if(object.mime_type) {
       extension = AppHelper.getFileExtensionForMimeType(object.mime_type)
@@ -350,8 +351,20 @@ exports.getFileDownloadLinks = function(object, dsid, part=null) {
       }
     }
       
-    // TODO if 'extension' is an array loop and add all elements
     if(extension) {
+      // TODO get the download options array, loop it and add one link per element
+
+      // TEMP add a tif option for each jp2 object
+      if(extension == "jp2") {
+        let link = {
+          uri: config.rootUrl + "/datastream/" + pid + "/" + "tif" + "/" + part + "/" + pid + "." + "tif",
+          filename: pid + "." + "tiff",
+          extension: "tif",
+          isBatch: false
+        };
+        links.push(link);
+      } 
+
       let link = {
         uri: config.rootUrl + "/datastream/" + pid + "/" + dsid + "/" + part + "/" + pid + "." + extension,
         filename: pid + "." + extension,
