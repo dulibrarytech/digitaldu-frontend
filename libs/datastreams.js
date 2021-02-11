@@ -47,7 +47,6 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
  * @return {undefined}
  */
 exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, callback) {
-    console.log("TEST ds")
   var mimeType = object.mime_type || object.type || null,
       fileType = "default";
 
@@ -184,19 +183,13 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
       }
     }
 
-    var extension = null;
+    var extension = "file";
     if(datastreamID == "object") {
       extension = object.object ? Helper.getFileExtensionFromFilePath(object.object) : Helper.getFileExtensionForMimeType(mimeType);
     }
     else {
       extension = datastreamID;
     }
-    if(!extension) {extension = "file"}
-
-
-        console.log("TEST ds req extension is", extension)
-        console.log("TEST ext fr mt", Helper.getFileExtensionForMimeType(mimeType))
-
 
     if(cacheEnabled && Cache.exists('object', objectID, extension) == true) {
       Cache.getFileStream('object', objectID, extension, function(error, stream) {
@@ -248,7 +241,6 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
             callback(msg, null);
           }
           else {
-              console.log("TEST rx Cantaloupe stream, status is", status)
             if(status == 200) {
               callback(null, stream);
             }

@@ -350,11 +350,10 @@ exports.getFileDownloadLinks = function(object, dsid, part=null) {
         extension = null;
       }
     }
-      console.log("TEST extension is", extension)
+
     if(extension) {
       if(config.downloadFiletypes[extension]) {
         for(var filetype of config.downloadFiletypes[extension]) {
-            console.log("TEST filetype", filetype)
           let link = {
             uri: config.rootUrl + "/datastream/" + pid + "/" + filetype.extension + "/" + part + "/" + pid + "." + filetype.extension,
             filename: pid + "." + filetype.extension,
@@ -363,10 +362,7 @@ exports.getFileDownloadLinks = function(object, dsid, part=null) {
             isBatch: false
           };
           links.push(link);
-
         }
-          console.log("TEST links", links)
-
       }
       else {
         let link = {

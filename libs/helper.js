@@ -384,3 +384,7 @@ exports.getFacetAggregationObject = function(facets) {
     
     return facetAggregations;
 }
+
+exports.sanitizePid = function() {
+	
+}
