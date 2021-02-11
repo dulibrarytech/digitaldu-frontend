@@ -47,6 +47,7 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
  * @return {undefined}
  */
 exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, callback) {
+    console.log("TEST ds")
   var mimeType = object.mime_type || object.type || null,
       fileType = "default";
 
@@ -121,9 +122,9 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
               callback("Error retrieving datastream for " + objectID + ", object type " + object.object_type + "is invalid", null);
               break;
           }
-          if(config.nodeEnv == "devlog") {console.log("Thumbnail image stream uri:", uri)}
+          if(config.nodeEnv == "devlog") {console.log("Thumbnail image stream uri:", uri || "null")}
           if(uri == null || uri == "") {
-            console.log("Could not construct uri for datastream request. uri field is null");
+            console.log("Could not construct uri for datastream request. uri field is null. Stream option: " + (settings.streamOption || "null") + " Pid: " + objectID);
           }
 
           streamRemoteData(uri, function(error, status, stream) {
@@ -192,6 +193,11 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
     }
     if(!extension) {extension = "file"}
 
+
+        console.log("TEST ds req extension is", extension)
+        console.log("TEST ext fr mt", Helper.getFileExtensionForMimeType(mimeType))
+
+
     if(cacheEnabled && Cache.exists('object', objectID, extension) == true) {
       Cache.getFileStream('object', objectID, extension, function(error, stream) {
         if(error) {
@@ -206,6 +212,7 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
       let objectType = Helper.getObjectType(mimeType),
           viewerId = object.entry_id || object.kaltura_id || null;
 
+      // Stream from Kaltura api
       if(config.streamSource[objectType] == "kaltura" && viewerId) {
         let kalturaStreamUri = Kaltura.getStreamingMediaUrl(viewerId, extension);
         if(config.nodeEnv == "devlog") {console.log("Kaltura stream uri:", kalturaStreamUri)}
@@ -219,6 +226,37 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
               });
             }
             callback(null, stream) 
+          }
+        });
+      }
+
+      // Get jpg
+      else if(extension == "jpg" &&
+              extension != Helper.getFileExtensionForMimeType(mimeType) &&
+              Helper.getObjectType(mimeType) == "still image") {
+
+        // Build uri to cantaloupe iiif api for full jpg
+        let uri = config.IIIFServerUrl + "/iiif/2/" + objectID + "/full/!1024,1024/0/default.jpg";
+        streamRemoteData(uri, function(error, status, stream) {
+          if(error) {
+            if(config.nodeEnv == "devlog") {console.log(error)}
+            callback(error, null);
+          }
+          else if(stream == null) {
+            let msg = "Datastream error: Can not fetch Cantaloupe derivative for object/uri ", objectID, uri;
+            console.log(msg);
+            callback(msg, null);
+          }
+          else {
+              console.log("TEST rx Cantaloupe stream, status is", status)
+            if(status == 200) {
+              callback(null, stream);
+            }
+            else {
+              let msg = "Cantaloupe source error: " + uri + " returns a status of " + status;
+              console.log(msg);
+              callback(msg, null);
+            }
           }
         });
       }
