@@ -189,6 +189,13 @@ module.exports = {
     enableFileDownload: true,
     enableCompoundObjectBatchDownload: true,
     batchFileDownloadTemporaryFolder: "./cache/download/temporary-download",
+    downloadFiletypes: {
+        "jpg": [{extension: "jpg", label: "jpeg"}],
+        "jp2": [{extension: "jpg", label: "jpeg"}, {extension: "tif", label: "tiff"}, {extension: "jp2", label: "jp2"}],
+        "mp3": [{extension: "mp3", label: "mp3"}],
+        "mp4": [{extension: "mp4", label: "mp4"}],
+        "pdf": [{extension: "pdf", label: "pdf"}]
+    },
 
     /*
      * IIIF API 
@@ -643,10 +650,9 @@ module.exports = {
      fileExtensions: {
         "jp2": ["image/tiff"],
         "jpg": ["image/jpg", "image/jpeg"],
-        "mp3": ["audio/mp3", "audio/x-wav", "audio/mpeg"],
+        "mp3": ["audio/mp3", "audio/wav", "audio/x-wav", "audio/mpeg"],
         "mp4": ["video/mp4", "video/quicktime", "video/mov"],
-        "pdf": ["application/pdf"],
-        "wav": ["audio/wav"]
+        "pdf": ["application/pdf"]
      },
 
       /*

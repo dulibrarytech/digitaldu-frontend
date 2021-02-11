@@ -5,7 +5,7 @@
   <% if(error) { %>
     <h5><%- error %></h5>
   <% } %>
-	<br/>
+  <br/>
   <div class="content-message">Notice: Our digital collections contain materials that are racist, sexist, and may be painful or traumatizing to researchers.</div>
   <br/>
 
@@ -50,7 +50,7 @@
             <% if(downloads[0].isBatch) { %>
               <button id="download-button__1" class="download-button batch-download-button" alt="Download <%= downloads[0].extension %> file" value="<%= downloads[0].uri %>">Download ZIP file (all items)</button>
             <% } else { %>
-              <button id="download-button__1" class="download-button" alt="Download <%= downloads[0].extension %> file" value="<%= downloads[0].uri %>">Download <%= downloads[0].extension.toUpperCase() %></button>
+              <button id="download-button__1" class="download-button" alt="Download <%= downloads[0].extension %> file" value="<%= downloads[0].uri %>">Download <%= downloads[0].label.toUpperCase() %></button>
             <% } %>
 
           <!-- Multiple download options -->
@@ -60,9 +60,9 @@
                   <select>
                     <% for (var i in downloads) { %>
                       <% if(downloads[i].isBatch) { %>
-                        <option class="batch-download-option" alt="Download <%= downloads[i].extension %>" value="<%= downloads[i].uri %>">Download ZIP file (all items)</option>
+                        <option class="batch-download-option" alt="Download zip file of all items" value="<%= downloads[i].uri %>">Download ZIP file (all items)</option>
                       <% } else { %>
-                        <option alt="Download <%= downloads[i].extension %>" value="<%= downloads[i].uri %>">Download <%= downloads[i].extension.toUpperCase() %> (current item)</option>
+                        <option alt="Download <%= downloads[i].extension %>" value="<%= downloads[i].uri %>">Download <%= downloads[i].label.toUpperCase() %></option>
                       <% } %>
                     <% } %>
                   </select>
@@ -70,9 +70,9 @@
               <span class="submit-download-selection">
                 <% for (var i in downloads) { %>
                   <% if(downloads[i].isBatch) { %>
-                    <button id="download-button__<%= i %>" class="download-button batch-download-button" alt="Download <%= downloads[i].extension %> file" style="display: <%= i == 0 ? 'inline-block' : 'none'; %>" value="<%= downloads[i].uri %>">Go</button>
+                    <button id="download-button__<%= i %>" class="download-button batch-download-button" alt="Download <%= downloads[i].extension %> file" style="display: <%= i == 0 ? 'inline-block' : 'none'; %>" value="<%= downloads[i].uri %>" data-file-type="<%= downloads[i].extension %>">Go</button>
                   <% } else { %>
-                    <button id="download-button__<%= i %>" class="download-button" alt="Download <%= downloads[i].extension %> file" style="display: <%= i == 0 ? 'inline-block' : 'none'; %>" value="<%= downloads[i].uri %>">Go</button>
+                    <button id="download-button__<%= i %>" class="download-button" alt="Download <%= downloads[i].extension %> file" style="display: <%= i == 0 ? 'inline-block' : 'none'; %>" value="<%= downloads[i].uri %>" data-file-type="<%= downloads[i].extension %>">Go</button>
                   <% } %>
                 <% } %>
               </span>

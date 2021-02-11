@@ -116,23 +116,23 @@ exports.normalizeLabel = function(field, label) {
  * Not in use
  */
 exports.sortSearchResultObjects = function(objects) {
-	var titles = [], sorted = [];
+  var titles = [], sorted = [];
 
-	// Sort the titles alphabetically
-	for(var object of objects) {
-		titles.push(object.title[0]);
-	}
-	titles.sort();
-	
-	// Sort the objects based on the sorted titles.
-	for(var title of titles) {
-		for(object of objects) {
-			if(object.title[0] == title) {
-				sorted.push(object);
-			}
-		}
-	}
-	return sorted;
+  // Sort the titles alphabetically
+  for(var object of objects) {
+    titles.push(object.title[0]);
+  }
+  titles.sort();
+  
+  // Sort the objects based on the sorted titles.
+  for(var title of titles) {
+    for(object of objects) {
+      if(object.title[0] == title) {
+        sorted.push(object);
+      }
+    }
+  }
+  return sorted;
 }
 
  /**
@@ -166,9 +166,9 @@ exports.getCollectionBreadcrumbObject = function(collections) {
 function createBreadcrumbLinks(collections) {
     var html = "";
     for (var i = 0; i < collections.length; i++) {
-    	if(i>0) {
-    		html += '&nbsp&nbsp<span>></span>&nbsp&nbsp';
-    	}
+      if(i>0) {
+        html += '&nbsp&nbsp<span>></span>&nbsp&nbsp';
+      }
         html += '<a class="collection-link" href="' + collections[i].url + '">' + collections[i].name + '</a>';
     }
     return collections.length > 0 ? html : null;
@@ -350,28 +350,34 @@ exports.getFileDownloadLinks = function(object, dsid, part=null) {
         extension = null;
       }
     }
-      
+      console.log("TEST extension is", extension)
     if(extension) {
-      // TODO get the download options array, loop it and add one link per element
+      if(config.downloadFiletypes[extension]) {
+        for(var filetype of config.downloadFiletypes[extension]) {
+            console.log("TEST filetype", filetype)
+          let link = {
+            uri: config.rootUrl + "/datastream/" + pid + "/" + filetype.extension + "/" + part + "/" + pid + "." + filetype.extension,
+            filename: pid + "." + filetype.extension,
+            extension: filetype.extension,
+            label: filetype.label,
+            isBatch: false
+          };
+          links.push(link);
 
-      // TEMP add a tif option for each jp2 object
-      if(extension == "jp2") {
+        }
+          console.log("TEST links", links)
+
+      }
+      else {
         let link = {
-          uri: config.rootUrl + "/datastream/" + pid + "/" + "tif" + "/" + part + "/" + pid + "." + "tif",
-          filename: pid + "." + "tiff",
-          extension: "tif",
+          uri: config.rootUrl + "/datastream/" + pid + "/" + dsid + "/" + part + "/" + pid + "." + extension,
+          filename: pid + "." + extension,
+          extension: extension,
+          label: extension,
           isBatch: false
         };
         links.push(link);
-      } 
-
-      let link = {
-        uri: config.rootUrl + "/datastream/" + pid + "/" + dsid + "/" + part + "/" + pid + "." + extension,
-        filename: pid + "." + extension,
-        extension: extension,
-        isBatch: false
-      };
-      links.push(link);
+      }
     }
   }
   else {

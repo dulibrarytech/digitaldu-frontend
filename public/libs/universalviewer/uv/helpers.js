@@ -271,9 +271,10 @@ function updateDownloadUrlsForPart(part) {
         filename = "",
         baseUrl = window.location.href.substring(0, window.location.href.indexOf("/object")),
         pid = $("#uv").attr("data-pid") || "",
-        extension = $("#uv").attr("data-file-type") || "";
+        extension = "file";
 
     for(var button of $(".download-button")) {
+        extension = $("#"+button.id).attr("data-file-type");
         if($("#"+button.id).hasClass("batch-download-button") == false) {
             url = baseUrl + "/datastream/" + pid + "/" + extension + "/" + part + "/" + pid + "_" + part + "." + extension; 
             filename = pid + "_" + part + "." + extension;
