@@ -317,9 +317,9 @@ exports.getSortDataArray = function(sort) {
  * @param {Object} object - DDU Elastic index doc
  * @return {Array.<String>} Array of download link uris
  */
-exports.getFileDownloadLinks = function(object, dsid, part=null) {
+exports.getFileDownloadLinks = function(object, part=null) {
   let links = [],
-      pid = object.pid;
+      pid = object.pid || "";
   
   if(AppHelper.isParentObject(object) && 
     config.enableCompoundObjectBatchDownload == true &&
@@ -337,18 +337,9 @@ exports.getFileDownloadLinks = function(object, dsid, part=null) {
   }
 
   if(object.object) {
-    // TODO Add condition for download options when available (1. Multiple filetypes are available from repository B. Multiple object fields are present in array)
-    // 'extension' variable will be array of extensions
-    // extension will have an array of download options (file types) in the configuration. Add one link per download option
     let extension = null;
-    if(object.mime_type) {
-      extension = AppHelper.getFileExtensionForMimeType(object.mime_type)
-    }
-    else if(object.object) {
+    if(object.object) {
       extension = AppHelper.getFileExtensionFromFilePath(object.object);
-      if(AppHelper.isValidExtension(extension) == false) {
-        extension = null;
-      }
     }
 
     if(extension) {
@@ -366,7 +357,7 @@ exports.getFileDownloadLinks = function(object, dsid, part=null) {
       }
       else {
         let link = {
-          uri: config.rootUrl + "/datastream/" + pid + "/" + dsid + "/" + part + "/" + pid + "." + extension,
+          uri: config.rootUrl + "/datastream/" + pid + "/" + extension + "/" + part + "/" + pid + "." + extension,
           filename: pid + "." + extension,
           extension: extension,
           label: extension,
@@ -375,9 +366,10 @@ exports.getFileDownloadLinks = function(object, dsid, part=null) {
         links.push(link);
       }
     }
+    else {console.log("Can not determine download file type(s) for object " + pid)}
   }
   else {
-    console.log("Can not create download links for object " + pid + ", object path is missing");
+    console.log("Can not create download links for object " + pid + ", file extension can not be determined");
   }
 
   return links;

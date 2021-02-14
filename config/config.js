@@ -650,7 +650,7 @@ module.exports = {
      fileExtensions: {
         "jp2": ["image/tiff"],
         "jpg": ["image/jpg", "image/jpeg"],
-        "mp3": ["audio/mp3", "audio/wav", "audio/x-wav", "audio/mpeg"],
+        "mp3": ["audio/mp3", "audio/x-wav", "audio/mpeg"],
         "mp4": ["video/mp4", "video/quicktime", "video/mov"],
         "pdf": ["application/pdf"]
      },

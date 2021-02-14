@@ -48,9 +48,9 @@
           <!-- Single download option -->
           <% if(downloads.length == 1) { %>
             <% if(downloads[0].isBatch) { %>
-              <button id="download-button__1" class="download-button batch-download-button" alt="Download <%= downloads[0].extension %> file" value="<%= downloads[0].uri %>">Download ZIP file (all items)</button>
+              <button id="download-button__1" class="download-button batch-download-button" alt="Download <%= downloads[0].extension %> file" value="<%= downloads[0].uri %>" data-file-type="<%= downloads[i].extension %>">Download ZIP file (all items)</button>
             <% } else { %>
-              <button id="download-button__1" class="download-button" alt="Download <%= downloads[0].extension %> file" value="<%= downloads[0].uri %>">Download <%= downloads[0].label.toUpperCase() %></button>
+              <button id="download-button__1" class="download-button" alt="Download <%= downloads[0].extension %> file" value="<%= downloads[0].uri %>" data-file-type="<%= downloads[i].extension %>">Download <%= downloads[0].label.toUpperCase() %></button>
             <% } %>
 
           <!-- Multiple download options -->

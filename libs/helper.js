@@ -235,8 +235,13 @@ exports.getCompoundObjectItemCount = function(object) {
 }
 
 var getFileExtensionFromFilePath = function(filename) {
-  let extIndex = filename.lastIndexOf("."),
-      extension = filename.substring(extIndex+1);
+  let extension = null, 
+  	  extIndex = filename.lastIndexOf("."),
+      pathExtension = filename.substring(extIndex);
+
+	if(/\.\w\w\w\w?$/g.test(pathExtension)) {
+		extension = pathExtension.substring(1);
+	}
   return extension;
 }
 exports.getFileExtensionFromFilePath = getFileExtensionFromFilePath;
