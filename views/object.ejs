@@ -57,7 +57,7 @@
           <% } else if(downloads.length > 1) { %>
             <div class="download-links-wrapper">
               <span class="download-links">
-                  <select>
+                  <select id="download-links-select">
                     <% for (var i in downloads) { %>
                       <% if(downloads[i].isBatch) { %>
                         <option class="batch-download-option" alt="Download zip file of all items" value="<%= downloads[i].uri %>">Download ZIP file (all items)</option>

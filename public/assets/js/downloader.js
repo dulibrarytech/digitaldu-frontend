@@ -20,7 +20,7 @@ import { ProgressBar } from './progress-bar.js';
 
 export const Downloader = (function () {
 
-	let downloadBatch = function(downloadUrl, socketUrl) {
+	var downloadBatch = function(downloadUrl, socketUrl) {
 		var progressBar = new ProgressBar("file-download-progress", "100");
 		progressBar.displayMessage("Connecting to server...");
 
@@ -29,7 +29,8 @@ export const Downloader = (function () {
   		button.innerHTML = "Cancel";
   		button.disabled = true;
   		document.getElementById("file-download-progress").appendChild(button);
-
+  		disableDownloadControls(true);
+  		
 		var socket = new WebSocket(socketUrl);
 		socket.onopen = function(event) {
 		  	console.log("Connection to socket established.");
@@ -56,22 +57,26 @@ export const Downloader = (function () {
 				  			progressBar.remove();
 				  			console.log("Closing socket");
 				  			socket.close();
+				  			disableDownloadControls(false);
 				  			break;
 				  		// Error
 				  		case "5":
 				  			progressBar.remove();
 				  			console.log("Socket error");
 				  			socket.close();
+				  			disableDownloadControls(false);
 				  			break;
 				  		// Server received abort command
 				  		case "6":
 				  			progressBar.remove();
 				  			console.log("Closing socket");
 				  			socket.close();
+				  			disableDownloadControls(false);
 				  			break;
 				  		default:
 				  			console.log("Socket error");
 				  			socket.close();
+				  			disableDownloadControls(false);
 				  			break;
 				  	}
 
@@ -96,17 +101,24 @@ export const Downloader = (function () {
 		};
 	}
 
-	let cancelDownload = function(socket) {
+	var cancelDownload = function(socket) {
 		console.log("Cancelling download");
 		socket.send(JSON.stringify({abort: true}));
 	}
 
-	let submitLinkRequest = function(url, filename) {
+	var submitLinkRequest = function(url, filename) {
 		var anchor = document.createElement('a');
 		anchor.style.display = 'none';
 		anchor.href = url;
 		anchor.download = '';
 		anchor.click();
+	}
+
+	var disableDownloadControls = function(disable=true) {
+		for(var downloadButton of document.getElementsByClassName("batch-download-button")) {
+  			downloadButton.disabled = disable;
+  		}
+  		document.getElementById("download-links-select").disabled = disable;
 	}
 
 	return {
