@@ -256,12 +256,15 @@ function getExitFullScreen() {
 
 /*
  * DU implementation
+ * Remove the 't' parameter (added by uv) from the thumbnail images in the left panel, and re-add the pdf page parameter
  */
 function updateThumbnailImageUrlsWithPageParam() {
-    let thumbnailImages = $(".wrap img");
+    let thumbnailImages = $(".wrap img"), thumbIndex;
+
     for(var i=0; i < thumbnailImages.length; i++) {
+        thumbIndex = thumbnailImages[i].parentElement.parentElement.id.replace("thumb", "");
         if(thumbnailImages[i].src.indexOf("?t") >= 0) {
-            thumbnailImages[i].src = thumbnailImages[i].src.substring(0, thumbnailImages[i].src.indexOf("?t")) + "?page=" + (i+1);
+            thumbnailImages[i].src = thumbnailImages[i].src.substring(0, thumbnailImages[i].src.indexOf("?t")) + "?page=" + (parseInt(thumbIndex)+1);
         }
     }
 }
