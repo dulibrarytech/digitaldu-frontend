@@ -117,11 +117,6 @@ module.exports = {
             },
             "Topics": {
                 "field": [
-                    // {
-                    //     "path": "subjects.terms.term",
-                    //     "excludeField": "type",
-                    //     "excludeValue": "['geographic', 'genre_form']"
-                    // },
                     {
                         "path": "subjects.title",
                         "excludeField": "terms.type",
@@ -170,10 +165,16 @@ module.exports = {
             "Notes": {
                 "field": {
                     "path": "notes.content",
+                    "truncateText": "200",
+                    "excludeField": "terms.type",
+                    "excludeValue": ['userestrict', 'accessrestrict', 'abstract']
+                }
+            },
+            "Copyright": {
+                "field": {
+                    "path": "notes.content",
                     "matchField": "type",
-                    "matchValue": "abstract",
-                    "condition": "false",
-                    "truncateText": "200"
+                    "matchValue": "userestrict"
                 }
             }
         },
@@ -186,7 +187,7 @@ module.exports = {
     },
 
     collectionDisplays: {
-        "codu:root": "default",
+        "root": "default",
         "codu:111359": "digital_pioneers"
     }
 }
