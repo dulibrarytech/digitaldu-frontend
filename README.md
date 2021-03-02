@@ -168,9 +168,27 @@ Also, some of the DU implementation code blocks in helpers.js may need to be upd
 
 ## Services
 
-### Automated Cache Purge
+### Cache
 
-This service will iterate all of the object files in the cache and check to see if the object still exists in the public index. If the object does not exist, it is assumed to have been removed from the repository, and the cache file is deleted. 
+#### Add Object(s) to Cache
+
+##### /cache/addItem/{cache name}/{object ID}
+
+Will add object derivative file from the {cache name} cache for object {object ID}. If the object is a collection, a derivative file will be added to the cache for all of the objects in the collection.
+
+Caches available for {Cache name} are 'thumbnail' or 'object'
+
+#### Remove Object(s) from Cache
+
+##### /cache/removeItem/{cache name}/{object ID}
+
+Removes the derivative file from the {cache name} cache for object {object ID} 
+
+Caches available for {Cache name} are 'thumbnail' or 'object'
+
+#### Automated Cache Purge
+
+This service will check all of the files in the cache and check to see if the object still exists in the public index. If the object does not exist, it is assumed to have been removed from the repository, and the cache file will be removed. 
 
 This service is started by issuing a GET request to
 [project domain]/cache/purgeInvalidItems
