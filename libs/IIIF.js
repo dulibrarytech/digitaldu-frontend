@@ -286,15 +286,17 @@ var getPDFPageCanvas = function(container, object, apikey, page="1") {
 
 	image["@id"] = config.IIIFUrl + "/" + container.resourceID + "/annotation/p" + page;
 	image["@type"] = "oa:Annotation";
+	image["motivation"] = "sc:painting";
 
 	resource["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + "/full/full/0/default.jpg" + "?page=" + page + apikeyParam; // res url w/ page param
-	resource["type"] = "dctypes:Image";
+	resource["@type"] = "dctypes:Image";
 	resource["format"] = "image/jpeg"; 
 	resource["height"] = 750;
 	resource["width"] = 1000;
 	resource["on"] = canvas["@id"];
 
 	image["resource"] = resource;
+	image["on"] = canvas["@id"];
 	canvas["images"].push(image);
 
 	// Null page here, so page param is not appended to the thumbnail url for the viewer. This can't be done until the viewer can be updated to not automatically append the '?t' param and timestamp value.
