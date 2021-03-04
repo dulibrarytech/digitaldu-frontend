@@ -56,6 +56,7 @@ const Pdf = require("../libs/pdfUtils")
  * @param {collections|null} Null if error
  */
 exports.getTopLevelCollections = function(page=1, callback) {
+    console.log("TEST getTopLevelCollections")
   Repository.getRootCollections().catch(error => {
     callback(error, null);
   })
@@ -87,12 +88,12 @@ exports.getTopLevelCollections = function(page=1, callback) {
         }
 
         //Query the index for root collection members
-        getObjectsInCollection(config.topLevelCollectionPID, page, null, {"field": "Title", "order": "asc"}, 10000, null, function(error, collections) {
+        getObjectsInCollection(config.topLevelCollectionPID, page, null, {"field": "Title", "order": "asc"}, config.defaultHomePageCollectionsCount, null, function(error, collections) {
           if(error) {
+            console.log("Error retrieving collections: ", error);
             callback(error, null);
           }
           else {
-
             callback(null, collections);
           }
         });
