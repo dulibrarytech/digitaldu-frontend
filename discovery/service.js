@@ -714,6 +714,14 @@ var removeCacheItem = function(objectID, cacheName) {
           });
         }
       }
+      else if(AppHelper.isCollectionObject(object)) {
+        getCollectionChildren(objectID, config.elasticsearchPublicIndex, function(error, pids) {
+          for(var i in pids) {
+
+            removeCacheItem(pids[i], cacheName);
+          }
+        });
+      }
       else {
         items.push({
           pid: objectID,
