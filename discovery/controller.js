@@ -76,11 +76,8 @@ exports.renderRootCollection = function(req, res) {
 		}
 		else {
 			data.collectionFacets = response.list;
-				console.log("TEST collection list pre trunc", response.list)
 			let offset = config.defaultHomePageCollectionsCount * (page-1)
-				console.log("TEST offset", offset)
 			response.list = response.list.slice(offset, (offset + config.defaultHomePageCollectionsCount))
-				console.log("TEST collection list post trunc", response.list)
 
 			data.collections = response.list;
 			data.searchFields = config.searchFields;
@@ -317,13 +314,7 @@ exports.renderObjectView = function(req, res) {
 
 					}
 
-					// data["returnLink"] = {
-					// 	href: (req.header('Referer') && req.header('Referer').indexOf(config.rootUrl + "/search?") >= 0) ? req.header('Referer') : false,
-					// 	label: 
-					// };
-						data["returnLink"] = (req.header('Referer') && req.header('Referer').indexOf(config.rootUrl + "/search?") >= 0) ? req.header('Referer') : false;
-						console.log("TEST obj", object)
-
+					data["returnLink"] = (req.header('Referer') && req.header('Referer').indexOf(config.rootUrl + "/search?") >= 0) ? req.header('Referer') : false;
 					Service.getCollectionHeirarchy(object.is_member_of_collection, function(collectionTitles) {
 						data.id = pid;
 						data.fileExtension = AppHelper.getDsType(object.mime_type || "");

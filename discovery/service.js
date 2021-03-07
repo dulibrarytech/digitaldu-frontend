@@ -56,7 +56,6 @@ const Pdf = require("../libs/pdfUtils")
  * @param {collections|null} Null if error
  */
 exports.getTopLevelCollections = function(page=1, callback) {
-    console.log("TEST getTopLevelCollections")
   Repository.getRootCollections().catch(error => {
     callback(error, null);
   })
