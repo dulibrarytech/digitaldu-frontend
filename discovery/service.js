@@ -71,24 +71,7 @@ exports.getTopLevelCollections = function(page=1, callback) {
         callback(null, collections);
       }
       else {
-
-        // If there are no results from the Repository, use the index to retrieve the top-level collection objects
-        var data = {  
-          index: config.elasticsearchPublicIndex,
-          type: 'data',
-          body: {
-            from: 0,
-            size: 1000,
-            query: {
-                "match": {
-                  "is_member_of_collection": config.topLevelCollectionPID
-                }
-            }
-          }
-        }
-
-        //Query the index for root collection members
-        getObjectsInCollection(config.topLevelCollectionPID, page, null, {"field": "Title", "order": "asc"}, config.defaultHomePageCollectionsCount, null, function(error, collections) {
+        getObjectsInCollection(config.topLevelCollectionPID, page, null, {"field": "Title", "order": "asc"}, 1000, null, function(error, collections) {
           if(error) {
             console.log("Error retrieving collections: ", error);
             callback(error, null);

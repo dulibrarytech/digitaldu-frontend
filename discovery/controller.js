@@ -65,16 +65,23 @@ exports.renderRootCollection = function(req, res) {
 		root_url: config.rootUrl,
 		options: {}
 	},
-	page = req.query.page || 1,
+	page = parseInt(req.query.page) || 1,
 	path = config.rootUrl + req._parsedOriginalUrl.path;
 
-	Service.getTopLevelCollections(page, function(error, response) {
+	Service.getTopLevelCollections(1, function(error, response) {
 		if(error) {
 			data["logMsg"] = error;
 			data.error = "Error: could not retrieve collections.";
 			res.render('collections', data);
 		}
 		else {
+			data.collectionFacets = response.list;
+				console.log("TEST collection list pre trunc", response.list)
+			let offset = config.defaultHomePageCollectionsCount * (page-1)
+				console.log("TEST offset", offset)
+			response.list = response.list.slice(offset, (offset + config.defaultHomePageCollectionsCount))
+				console.log("TEST collection list post trunc", response.list)
+
 			data.collections = response.list;
 			data.searchFields = config.searchFields;
 			data.options["perPageCountOptions"] = config.defaultHomePageCollectionsCount;
@@ -303,7 +310,20 @@ exports.renderObjectView = function(req, res) {
 						data.transcript = object.transcript;
 					}
 
-					data["returnLink"] = (req.header('Referer') && req.header('Referer').indexOf(config.rootUrl + "/search?") >= 0) ? req.header('Referer') : false;
+					if(req.header('Referer') && req.header('Referer').indexOf(config.rootUrl + "/search?") >= 0) {
+
+					}
+					else if(req.header('Referer') && req.header('Referer').indexOf(config.rootUrl + "/search?") >= 0) {
+
+					}
+
+					// data["returnLink"] = {
+					// 	href: (req.header('Referer') && req.header('Referer').indexOf(config.rootUrl + "/search?") >= 0) ? req.header('Referer') : false,
+					// 	label: 
+					// };
+						data["returnLink"] = (req.header('Referer') && req.header('Referer').indexOf(config.rootUrl + "/search?") >= 0) ? req.header('Referer') : false;
+						console.log("TEST obj", object)
+
 					Service.getCollectionHeirarchy(object.is_member_of_collection, function(collectionTitles) {
 						data.id = pid;
 						data.fileExtension = AppHelper.getDsType(object.mime_type || "");
