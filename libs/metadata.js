@@ -16,7 +16,7 @@
 
  /**
  * @file 
- * Version 1.1.0
+ * Version 1.2.0
  *
  * Digital-DU index object (json) parse functions
  * @summary Generate data for the object template metadata displays

@@ -80,9 +80,11 @@ module.exports = {
     metadataDisplay: {
         "default": {
             "Title": {
-                "field": {
-                    "path": "title"
-                }
+                "field": [
+                    {
+                        "path": "title"
+                    }
+                ]
             },
             "Creator": {
                 "field": {
@@ -171,11 +173,18 @@ module.exports = {
                 }
             },
             "Copyright": {
-                "field": {
-                    "path": "notes.content",
-                    "matchField": "type",
-                    "matchValue": "userestrict"
-                }
+                "field": [
+                    {
+                        "path": "notes.content",
+                        "matchField": "type",
+                        "matchValue": "userestrict"
+                    },
+                    {
+                        "path": "notes.content",
+                        "matchField": "type",
+                        "matchValue": "accessrestrict"
+                    }
+                ]
             }
         },
 
