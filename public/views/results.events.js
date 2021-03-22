@@ -42,9 +42,4 @@ $( document ).ready(function() {
 	  $('.form-control').css("color", "black");
 	  $(".form-validation-error-message").remove();
 	});
-
-	$('#slider > span').mousedown(function(e){
-	  $('.form-control').css("color", "black");
-	  $(".form-validation-error-message").remove();
-	});
 });
