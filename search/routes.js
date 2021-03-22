@@ -32,6 +32,15 @@ module.exports = function (app) {
       next()
     })
 
+    app.use(function (req, res, next) {
+      if(Helper.validateDateParameters(req.query)) {
+        next()
+      }
+      else {
+        res.sendStatus(400)
+      }
+    })
+
     app.route('/search')
         .get(Search.search)
 };

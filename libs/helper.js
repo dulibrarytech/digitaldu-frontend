@@ -390,6 +390,25 @@ exports.getFacetAggregationObject = function(facets) {
     return facetAggregations;
 }
 
+exports.validateDateParameters = function(query) {
+  var isValid = true;
+  const	year = /^[0-9][0-9][0-9][0-9]$/;
+
+  if(query.from) {
+  	if(query.from.match(year) == null) {
+  		isValid = false;
+  	}
+  }
+
+  if(isValid && query.to) {
+  	if(query.to.match(year) == null) {
+  		isValid = false;
+  	}
+  }
+
+  return isValid;
+}
+
 exports.sanitizePid = function() {
 	
 }
