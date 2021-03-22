@@ -21,12 +21,39 @@
 <% } %>
 
 <script type="text/javascript">
+	var validateDaterangeForm = function() {
+		var isValid = true;
+		var from = $("#date-from").val();
+		var to = $("#date-to").val();
+		const year = /^[0-9][0-9][0-9][0-9]$/;
+
+		if(from.match(year) == null){
+			$("#date-from").css("color", "red");
+			$("#date-from").parent().append("<span class='form-validation-error-message' style='color: red'>Please use YYYY format for date</span>");
+			isValid = false;
+		}
+
+		if(to.match(year) == null) {
+			$("#date-to").css("color", "red");
+			$("#date-to").parent().append("<span class='form-validation-error-message' style='color: red'>Please use YYYY format for date</span>");
+			isValid = false;
+		}
+
+		if(to <= from) {
+			$("#date-to").css("color", "red");
+			$("#date-to").parent().append("<span class='form-validation-error-message' style='color: red'>To date must be greater than From date</span>");
+			isValid = false;
+		}
+		return isValid;
+	}
 	function submitDateRange() {
-		var decoded = decodeURIComponent(window.location.href);
-		var queryPrefix = decoded.indexOf("?") >= 0 ? "&" : "?";
-		var url = decoded.replace(/[&?]from=[0-9]+&to=[0-9]+/g, "") + queryPrefix + $("#daterange-form").serialize();
-		url = url.replace(/page=[1234567890]*/g, ""); // Reset results to page 1
-		window.location.assign(encodeURI(url));
+		if(validateDaterangeForm()) {
+			var decoded = decodeURIComponent(window.location.href);
+			var queryPrefix = decoded.indexOf("?") >= 0 ? "&" : "?";
+			var url = decoded.replace(/[&?]from=[0-9]+&to=[0-9]+/g, "") + queryPrefix + $("#daterange-form").serialize();
+			url = url.replace(/page=[1234567890]*/g, ""); // Reset results to page 1
+			window.location.assign(encodeURI(url));
+		}
 	}
 	function removeDateRange(from, to) {
 		var searchUrl = decodeURIComponent(window.location.href);

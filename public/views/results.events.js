@@ -28,13 +28,23 @@ $( document ).ready(function() {
 
 	$('.facet-name > a').keypress(function(e){
 	  if(e.which == 13) {
-        e.target.onclick();
+      e.target.onclick();
     }
 	});
 
 	$('.remove-facet').keypress(function(e){
 	  if(e.which == 13) {
-        e.target.onclick();
+      e.target.onclick();
     }
+	});
+
+	$('.form-control').focus(function(e){
+	  $('.form-control').css("color", "black");
+	  $(".form-validation-error-message").remove();
+	});
+
+	$('#slider > span').mousedown(function(e){
+	  $('.form-control').css("color", "black");
+	  $(".form-validation-error-message").remove();
 	});
 });
