@@ -14,6 +14,16 @@ function initDaterangeSlider(fromDate, toDate) {
             }
         }
     });
+
+    $("input.sliderValue").change(function() {
+        var $this = $(this);
+        $("#slider").slider("values", $this.data("index"), $this.val());
+    });
+
+	$('#slider > span').mousedown(function(e){
+	  $('.form-control').css("color", "black");
+	  $(".form-validation-error-message").remove();
+	});
 }
 
 var validateDaterangeForm = function() {
@@ -56,15 +66,3 @@ var removeDateRange = function(from, to) {
 	var searchUrl = decodeURIComponent(window.location.href);
 	window.location.assign(encodeURI(searchUrl.replace(/&{0,1}from=[0-9]+&to=[0-9]+/g, "")));
 }
-
-$( document ).ready(function() {
-    $("input.sliderValue").change(function() {
-        var $this = $(this);
-        $("#slider").slider("values", $this.data("index"), $this.val());
-    });
-
-	$('#slider > span').mousedown(function(e){
-	  $('.form-control').css("color", "black");
-	  $(".form-validation-error-message").remove();
-	});
-});
