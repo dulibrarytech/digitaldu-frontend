@@ -202,6 +202,8 @@ module.exports = {
      */
     IIIFServerUrl: process.env.IIIF_IMAGE_SERVER_URL + process.env.IIIF_IMAGE_SERVER_PATH,
     IIIFServerDomain: process.env.IIIF_IMAGE_SERVER_URL,
+    IIIFTiffServerUrl: process.env.IIIF_TIFF_IMAGE_SERVER_URL + process.env.IIIF_TIFF_IMAGE_SERVER_PATH,
+    IIIFTiffServerDomain: process.env.IIIF_TIFF_IMAGE_SERVER_URL,
     IIIFDomain: process.env.IIIF_DOMAIN,
     IIIFUrl: process.env.IIIF_DOMAIN + process.env.IIIF_PATH,
     IIIFAPiKeyPrefix: "__",
