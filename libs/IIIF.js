@@ -437,8 +437,11 @@ var getImageCanvas = function(container, object, apikey) {
 	image["@type"] =  "oa:Annotation";
 	image["motivation"] = "sc:painting";
 
-	resource["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + "/full/!1024,1024/0/default.jpg" + apikey;
-	//resource["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + apikey + "/full/full/0/default.jpg";
+	let imageServerUrl = (object.extension == "tif" || object.extension == "tiff") ? config.IIIFTiffServerUrl : config.IIIFServerUrl;
+		console.log("TEST iiif: extension is", object.extension)
+		console.log("TEST iiif: image server url is", imageServerUrl)
+	resource["@id"] = imageServerUrl + "/iiif/2/" + object.resourceID + "/full/!1024,1024/0/default.jpg" + apikey;
+
 	resource["@type"] = object.type; 
 	resource["format"] = object.format; 
 

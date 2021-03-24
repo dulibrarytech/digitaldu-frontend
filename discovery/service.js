@@ -525,7 +525,8 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
             downloadFileName: parts[key].title,
             resourceUrl: resourceUrl,
             thumbnailUrl: config.rootUrl + "/datastream/" + object.pid + "/tn/" + parts[key].order,
-            pageCount: pageCount
+            pageCount: pageCount,
+            extension: AppHelper.getFileExtensionFromFilePath(parts[key].object)
           });
         }
 
@@ -567,7 +568,8 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
           resourceID: object.pid,
           resourceUrl: resourceUrl,
           thumbnailUrl: config.rootUrl + "/datastream/" + object.pid + "/tn",
-          pageCount: pageCount
+          pageCount: pageCount,
+          extension: AppHelper.getFileExtensionFromFilePath(object.object)
         });
 
         IIIF.getManifest(container, children, apikey, function(error, manifest) {
