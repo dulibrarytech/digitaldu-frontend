@@ -664,7 +664,7 @@ module.exports = {
         "tif": "image/tiff",
         "tiff": "image/tiff",
         "jp2": "image/jp2",
-        "jpg": "image/jpg",
+        "jpg": "image/jpeg",
         "mp3": "audio/mp3",
         "mp4": "video/mp4",
         "pdf": "application/pdf"
