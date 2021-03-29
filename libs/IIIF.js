@@ -393,13 +393,14 @@ var getThumbnailObject = function(container, object, apikey, page=null) {
 
 	apikey = apikey ? ("?key=" + apikey) : "";
 
-	thumbnail["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + "/full/" + config.IIIFThumbnailWidth + ",/0/default.jpg" + page + apikey;
+	let imageServerUrl = (object.extension == "tif" || object.extension == "tiff") ? config.IIIFTiffServerUrl : config.IIIFServerUrl;
+	thumbnail["@id"] = imageServerUrl + "/iiif/2/" + object.resourceID + "/full/" + config.IIIFThumbnailWidth + ",/0/default.jpg" + page + apikey;
 	thumbnail["@type"] = config.IIIFObjectTypes["still image"];
 	if(config.IIIFThumbnailHeight) {thumbnail["height"] = config.IIIFThumbnailHeight}
 	if(config.IIIFThumbnailWidth) {thumbnail["width"] = config.IIIFThumbnailWidth}
 
 	service["@context"] = "http://iiif.io/api/image/2/context.json";
-	service["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + apikey;
+	service["@id"] = imageServerUrl + "/iiif/2/" + object.resourceID + apikey;
 	service["protocol"] = "http://iiif.io/api/image";
 
 	if(config.IIIFThumbnailHeight) {service["height"] = config.IIIFThumbnailHeight}
@@ -423,13 +424,6 @@ var getImageCanvas = function(container, object, apikey) {
 	canvas["@id"] = config.IIIFUrl + "/" + container.resourceID + "/canvas/c" + object.sequence;
 	canvas["@type"] = "sc:Canvas";
 	canvas["label"] = object.label;
-
-	//canvas["thumbnail"] = getThumbnailObject(container, object);
-	// canvas["rendering"] = {
-	// 	"@id": object.resourceUrl + "/" + object.downloadFileName,
-	// 	"format": object.format,
-	// 	"label": "Download Image"
-	// }
 	canvas["thumbnail"] = getThumbnailObject(container, object, apikey);
 	canvas['images'] = [];
 
@@ -438,16 +432,13 @@ var getImageCanvas = function(container, object, apikey) {
 	image["motivation"] = "sc:painting";
 
 	let imageServerUrl = (object.extension == "tif" || object.extension == "tiff") ? config.IIIFTiffServerUrl : config.IIIFServerUrl;
-		console.log("TEST iiif: extension is", object.extension)
-		console.log("TEST iiif: image server url is", imageServerUrl)
 	resource["@id"] = imageServerUrl + "/iiif/2/" + object.resourceID + "/full/!1024,1024/0/default.jpg" + apikey;
 
 	resource["@type"] = object.type; 
 	resource["format"] = object.format; 
 
 	service["@context"] = "";
-	service["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + apikey;	// cantaloupe
-	service["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + apikey
+	service["@id"] = imageServerUrl + "/iiif/2/" + object.resourceID + apikey
 
 	resource["service"] = service;
 

@@ -65,7 +65,9 @@ All other content is released under [CC-BY-4.0](https://creativecommons.org/lice
         REPOSITORY_PWD={repository password}
         PDF_JS_VIEWER_PORT={port}
         IIIF_IMAGE_SERVER_URL={cantaloupe api domain}
-        IIIF_IMAGE_SERVER_PATH={relative path to cantaloupe endpoint, if any}
+        IIIF_IMAGE_SERVER_PATH={relative path to cantaloupe endpoint, blank if none}
+        IIIF_TIFF_IMAGE_SERVER_URL{cantaloupe api domain, option for second image server to render tiff files. Keep blank if using one server for all images}
+        IIIF_TIFF_IMAGE_SERVER_PATH{relative path to cantaloupe tiff server endpoint, blank if none}
         IIIF_DOMAIN={iiif api domain}
         IIIF_PATH={relative path to iiif, should be '/iiif'}
 
