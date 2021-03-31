@@ -52,7 +52,7 @@ exports.getThumbnailUri = function(objectID, apikey) {
 var getObjectManifest = function(container, objects, apikey, callback) {
 	var manifest = {},
 		mediaSequences = [];
-
+			console.log("TEST iiif getM() key in", apikey)
 	manifest["@context"] = "http://iiif.io/api/presentation/2/context.json";
 	manifest["@id"] = config.IIIFUrl + "/" + container.resourceID + "/manifest";
 	manifest["@type"] = "sc:Manifest";
@@ -275,7 +275,9 @@ var getPDFPageCanvas = function(container, object, apikey, page="1") {
 		image = {},
 		resource = {};
 
-	let apikeyParam = apikey ? ("&" + apikey) : "";
+	let apikeyParam = apikey ? ("&key=" + apikey) : "";
+
+	apikey = apikey ? (config.IIIFAPiKeyPrefix + apikey) : "";
 
 	canvas["@id"] = config.IIIFUrl + "/" + container.resourceID + "/canvas/c" + page;
 	canvas["@type"] = "sc:Canvas";
@@ -287,8 +289,8 @@ var getPDFPageCanvas = function(container, object, apikey, page="1") {
 	image["@id"] = config.IIIFUrl + "/" + container.resourceID + "/annotation/p" + page;
 	image["@type"] = "oa:Annotation";
 	image["motivation"] = "sc:painting";
-
-	resource["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + "/full/full/0/default.jpg" + "?page=" + page + apikeyParam; // res url w/ page param
+		
+	resource["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + apikey + "/full/full/0/default.jpg" + "?page=" + page;
 	resource["@type"] = "dctypes:Image";
 	resource["format"] = "image/jpeg"; 
 	resource["height"] = 750;
@@ -301,6 +303,7 @@ var getPDFPageCanvas = function(container, object, apikey, page="1") {
 
 	// Null page here, so page param is not appended to the thumbnail url for the viewer. This can't be done until the viewer can be updated to not automatically append the '?t' param and timestamp value.
 	canvas["thumbnail"] = getThumbnailObject(container, object, apikey, null);
+		console.log("TEST tn is", canvas["thumbnail"])
 	//canvas["thumbnail"] = getThumbnailObject(container, object, apikey, page);
 
 	return canvas;
@@ -381,20 +384,20 @@ var getThumbnailCanvas = function(container, object) {
 var getThumbnailObject = function(container, object, apikey, page=null) {
 	let thumbnail = {},
 		service = {};
-
+			console.log("TEST tn apikey in", apikey, page)
 	if(page) {
 		page = page ? ("?page=" + page) : "";
 		apikey = apikey ? ("&key=" + apikey) : "";
 	}
 	else {
 		page = "";
-		apikey = apikey ? ("?key=" + apikey) : "";
+		apikey = apikey ? apikey : "";
 	}
 
-	apikey = apikey ? ("?key=" + apikey) : "";
+	apikey = apikey ? apikey : "";
 
 	let imageServerUrl = (object.extension == "tif" || object.extension == "tiff") ? config.IIIFTiffServerUrl : config.IIIFServerUrl;
-	thumbnail["@id"] = imageServerUrl + "/iiif/2/" + object.resourceID + "/full/" + config.IIIFThumbnailWidth + ",/0/default.jpg" + page + apikey;
+	thumbnail["@id"] = imageServerUrl + "/iiif/2/" + object.resourceID + apikey + "/full/" + config.IIIFThumbnailWidth + ",/0/default.jpg" + page;
 	thumbnail["@type"] = config.IIIFObjectTypes["still image"];
 	if(config.IIIFThumbnailHeight) {thumbnail["height"] = config.IIIFThumbnailHeight}
 	if(config.IIIFThumbnailWidth) {thumbnail["width"] = config.IIIFThumbnailWidth}
