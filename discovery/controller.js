@@ -500,6 +500,7 @@ exports.getObjectViewer = function(req, res) {
 		index = config.elasticsearchPrivateIndex;
 		key = req.query.key;
 	}
+
 	Service.fetchObjectByPid(index, pid, function(error, object) {
 		if(error) {
 			console.error(error + ". Pid: " + pid);
@@ -507,7 +508,7 @@ exports.getObjectViewer = function(req, res) {
 			res.status(500);
 		}
 		else if(object == null) {
-			console.log("Object not found. Pid:" + pid);
+			console.log("Object not found. Pid: " + pid);
 			errors = "Object not found";
 			res.status(404);
 		}

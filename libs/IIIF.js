@@ -50,9 +50,10 @@ exports.getThumbnailUri = function(objectID, apikey) {
  * @return 
  */
 var getObjectManifest = function(container, objects, apikey, callback) {
+		console.log("IIIF key in", apikey)
 	var manifest = {},
 		mediaSequences = [];
-			console.log("TEST iiif getM() key in", apikey)
+
 	manifest["@context"] = "http://iiif.io/api/presentation/2/context.json";
 	manifest["@id"] = config.IIIFUrl + "/" + container.resourceID + "/manifest";
 	manifest["@type"] = "sc:Manifest";
@@ -275,8 +276,6 @@ var getPDFPageCanvas = function(container, object, apikey, page="1") {
 		image = {},
 		resource = {};
 
-	let apikeyParam = apikey ? ("&key=" + apikey) : "";
-
 	apikey = apikey ? (config.IIIFAPiKeyPrefix + apikey) : "";
 
 	canvas["@id"] = config.IIIFUrl + "/" + container.resourceID + "/canvas/c" + page;
@@ -300,11 +299,7 @@ var getPDFPageCanvas = function(container, object, apikey, page="1") {
 	image["resource"] = resource;
 	image["on"] = canvas["@id"];
 	canvas["images"].push(image);
-
-	// Null page here, so page param is not appended to the thumbnail url for the viewer. This can't be done until the viewer can be updated to not automatically append the '?t' param and timestamp value.
 	canvas["thumbnail"] = getThumbnailObject(container, object, apikey, null);
-		console.log("TEST tn is", canvas["thumbnail"])
-	//canvas["thumbnail"] = getThumbnailObject(container, object, apikey, page);
 
 	return canvas;
 }
@@ -319,9 +314,12 @@ var getPDFCanvas = function(container, object, apikey) {
 	canvas["label"] = object.label || (container.title + " Part " + object.sequence) || "No Title";
 	canvas["height"] = config.IIIFDefaultCanvasHeight || 1000;
 	canvas["width"] = config.IIIFDefaultCanvasWidth || 750;
-	canvas["thumbnail"] = getThumbnailObject(container, object, apikey)
+	let thumbnailApiKey = apikey ? (config.IIIFAPiKeyPrefix + apikey) : "";
+	canvas["thumbnail"] = getThumbnailObject(container, object, thumbnailApiKey)
+
+	apikey = apikey ? ("?key=" + apikey) : "";
 	canvas["rendering"] = {
-		"@id": object.resourceUrl + "/" + container.downloadFileName + ".pdf",
+		"@id": object.resourceUrl + "/" + container.downloadFileName + ".pdf" + apikey,
 		"format": "application/pdf",
 		"label": "Download PDF",
 		"height": 1000,
@@ -338,7 +336,7 @@ var getPDFCanvas = function(container, object, apikey) {
 	items["@type"] = "Annotation";
 	items["motivation"] = "sc:painting";
 	items["body"] = {
-		id: object.resourceUrl,
+		id: object.resourceUrl + apikey,
 		type: "PDF",
 		format: object.format,
 		label: object.label
@@ -383,8 +381,9 @@ var getThumbnailCanvas = function(container, object) {
 
 var getThumbnailObject = function(container, object, apikey, page=null) {
 	let thumbnail = {},
-		service = {};
-			console.log("TEST tn apikey in", apikey, page)
+		service = {},
+		imageServerUrl = (object.extension == "tif" || object.extension == "tiff") ? config.IIIFTiffServerUrl : config.IIIFServerUrl;
+
 	if(page) {
 		page = page ? ("?page=" + page) : "";
 		apikey = apikey ? ("&key=" + apikey) : "";
@@ -394,9 +393,6 @@ var getThumbnailObject = function(container, object, apikey, page=null) {
 		apikey = apikey ? apikey : "";
 	}
 
-	apikey = apikey ? apikey : "";
-
-	let imageServerUrl = (object.extension == "tif" || object.extension == "tiff") ? config.IIIFTiffServerUrl : config.IIIFServerUrl;
 	thumbnail["@id"] = imageServerUrl + "/iiif/2/" + object.resourceID + apikey + "/full/" + config.IIIFThumbnailWidth + ",/0/default.jpg" + page;
 	thumbnail["@type"] = config.IIIFObjectTypes["still image"];
 	if(config.IIIFThumbnailHeight) {thumbnail["height"] = config.IIIFThumbnailHeight}
