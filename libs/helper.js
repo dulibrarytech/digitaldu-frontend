@@ -314,7 +314,7 @@ var getContentType = function(datastream, object, part, mimeType) {
   }
   // Thumbnail datastream, use specified file type
   if(datastream.toLowerCase() == "tn") {
-    contentType = "image/" + config.thumbnailFileExtension || "jpg";
+    contentType = "image/" + config.thumbnailFileExtension || "jpeg";
   }
   // File type specific datasreeam (mp3, jpg, etc)
   else if(datastream.toLowerCase() != "object") {
