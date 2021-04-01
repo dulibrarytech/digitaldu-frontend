@@ -265,6 +265,7 @@ function getJWPlayer(thumbnailUrl, streamUrl, fileExtension, jwPlayerPath) {
  * @return 
  */
 function getIIIFObjectViewer(object, page=null, embedKalturaViewer=false, apikey="") {
+		console.log("HERE")
 	var params = {},
 		relativePath = "./../..",
 		eventTriggers = "",

@@ -302,10 +302,9 @@ exports.isValidExtension = isValidExtension;
  * Returns the HTTP response "content-type" for an object, based on its object file extension TODO: move to AH
  *
  * @param {String} datastream - Object datastream ID
- * @param {String} mimeType - Object mime type (ex "audio/mp3")
  * @return {String} HTTP content type
  */
-var getContentType = function(datastream, object, part, mimeType) {
+var getContentType = function(datastream, object, part) {
   // Default content type
   var contentType = "application/octet-stream";
   if(part && object.display_record.parts) {

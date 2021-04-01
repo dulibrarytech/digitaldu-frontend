@@ -47,10 +47,8 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
  * @return {undefined}
  */
 exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, callback) {
-  var mimeType = object.mime_type || object.type || null,
-      fileType = "default";
-
   // If there is a part value, retrieve the part data.  Redefine the object data with the part data
+  var fileType = "default";
   if(Helper.isParentObject(object) && part) {
     var fileType = "compound";
 
@@ -183,14 +181,15 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
       }
     }
 
-    var extension = "file";
+    let extension = "file";
     if(datastreamID == "object") {
-      extension = object.object ? Helper.getFileExtensionFromFilePath(object.object) : Helper.getFileExtensionForMimeType(mimeType);
+      extension = object.object ? Helper.getFileExtensionFromFilePath(object.object) : Helper.getFileExtensionForMimeType(object.mime_type || null);
     }
     else {
       extension = datastreamID;
     }
 
+    let mimeType = Helper.getContentType("object", object);
     if(cacheEnabled && Cache.exists('object', objectID, extension) == true) {
       Cache.getFileStream('object', objectID, extension, function(error, stream) {
         if(error) {

@@ -50,7 +50,6 @@ exports.getThumbnailUri = function(objectID, apikey) {
  * @return 
  */
 var getObjectManifest = function(container, objects, apikey, callback) {
-		console.log("IIIF key in", apikey)
 	var manifest = {},
 		mediaSequences = [];
 
