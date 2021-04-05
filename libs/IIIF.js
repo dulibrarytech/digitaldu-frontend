@@ -475,13 +475,15 @@ var getCollectionManifest = function(container, objects, apikey, callback) {
 	};
 	manifest['manifests'] = [];
 
+	apikey = apikey ? ("?key=" + apikey) : "";
+
 	let canvases;
 	for(var object of objects) {
 		canvases = [];
 		canvases.push(config.rootUrl + "/iiif/" + object.resourceID + "/canvas/c1");
 
 		manifest.manifests.push({
-			"@id": config.rootUrl + "/iiif/" + object.resourceID + "/manifest",
+			"@id": config.rootUrl + "/iiif/" + object.resourceID + "/manifest" + apikey,
 			"@type": "sc:Manifest",
 			"label": object.label || "No Title",
 			"canvases": canvases
