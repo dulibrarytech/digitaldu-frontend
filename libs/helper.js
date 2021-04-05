@@ -235,6 +235,7 @@ exports.getCompoundObjectItemCount = function(object) {
 }
 
 var getFileExtensionFromFilePath = function(filename) {
+  filename = filename ? filename : "";	
   let extension = null, 
   	  extIndex = filename.lastIndexOf("."),
       pathExtension = filename.substring(extIndex);
