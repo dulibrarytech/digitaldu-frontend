@@ -76,7 +76,6 @@ exports.getTopLevelCollections = function(page=1, callback) {
             callback(error, null);
           }
           else {
-              console.log("TEST svc toplevel data", collections.list)
             callback(null, collections);
           }
         });
@@ -144,7 +143,6 @@ var getObjectsInCollection = function(collectionId, page=1, facets=null, sort=nu
             callback(error, null);
           }
           else {
-              console.log("TEST goic resp", response)
             var responseData = {};
             response = response.elasticResponse;
             if (error){
@@ -205,10 +203,8 @@ exports.getObjectsInCollection = getObjectsInCollection;
  * @param {Object|null} Elastic result data for the Object (index document source data) Null if error
  */
 var fetchObjectByPid = function(index, pid, callback) {
-    console.log("TEST fobjbypid index/pid", index, pid)
   es.search({
       index: index,
-      // type: config.searchIndexType,
       body: {
         query: {
           "bool": {
@@ -219,11 +215,10 @@ var fetchObjectByPid = function(index, pid, callback) {
         }
       }
   }, function (error, response) {
-      console.log("TEST fobjbypid resp", response.hits.hits)
       if(error) {
         callback(error, null);
       }
-      else if(response.hits.total > 0) {
+      else if(response.hits.total.value > 0) {
         callback(null, response.hits.hits[0]._source);
       }
       else {
@@ -243,17 +238,14 @@ exports.fetchObjectByPid = fetchObjectByPid;
  * @param {Object|null} Elastic aggregations object Null if error
  */
 var getFacets = function (collection=null, callback) {
-    // Build elasticsearch aggregations object from config facet list
     var field, matchFacetFields = [], restrictions = [];
     var aggs = AppHelper.getFacetAggregationObject(config.facets);
 
     var searchObj = {
         index: config.elasticsearchPublicIndex,
-        type: config.searchIndexType,
         body: {
             "size": 0,
-            "aggregations": aggs,
-            "query": {}
+            "aggregations": aggs
         }
     };
 
@@ -297,7 +289,6 @@ exports.getFacets = getFacets;
  * @param {Object|null} Data stream Null if error
  */
 exports.getDatastream = function(indexName, objectID, datastreamID, part, authKey, callback) {
-    console.log("TEST getDs() datastreamID", datastreamID)
   fetchObjectByPid(indexName, objectID, function(error, object) {
     if(object) {
       let contentType = AppHelper.getContentType(datastreamID, object, part);
@@ -605,7 +596,6 @@ exports.getAutocompleteData = function(callback) {
 var getCollectionList = function(callback) {
   es.search({
       index: config.elasticsearchPublicIndex,
-      type: config.searchIndexType,
       _source: ["pid"],
       body: {
         "query": {
@@ -635,7 +625,6 @@ var getCollectionList = function(callback) {
 var getCollectionChildren = function(collectionId, index, callback) {
   es.search({
       index: index,
-      type: config.searchIndexType,
       _source: ["pid"],
       body: {
         "query": {
@@ -654,6 +643,7 @@ var getCollectionChildren = function(collectionId, index, callback) {
         for(let i in results) {
           pids.push(results[i]._source.pid);
         }
+
         callback(null, pids);
       }
   });

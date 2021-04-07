@@ -100,7 +100,7 @@ exports.renderRootCollection = function(req, res) {
 							delete facetList[key];
 						}
 					}
-					
+
 					data.facets = Facets.create(facetList, config.rootUrl);
 					data.typeList = Helper.getTypeDisplayList(facets);
 				}

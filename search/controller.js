@@ -110,7 +110,6 @@ exports.search = function(req, res) {
 			return res.render('error', data);
 		}
 		else {
-				console.log("TEST C search rx cb")
 			data.options["expandFacets"] = expandFacets;
 			data.options["perPageCountOptions"] = config.resultCountOptions || [];
 			data.options["resultsViewOptions"] = config.resultsViewOptions || [];
@@ -143,7 +142,6 @@ exports.search = function(req, res) {
 				Format.formatFacetBreadcrumbs(facets, function(error, facets) {
 					data.facets = Facets.create(facetList, config.rootUrl, showAll, expandFacets);
 					data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(facets, daterange, config.rootUrl);
-						console.log("TEST C search pag data", data.pagination)	
 					return res.render('results', data);
 				});
 			});
