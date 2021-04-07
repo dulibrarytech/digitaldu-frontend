@@ -72,20 +72,26 @@ exports.renderRootCollection = function(req, res) {
 		if(error) {
 			data["logMsg"] = error;
 			data.error = "Error: could not retrieve collections.";
-			res.render('collections', data);
+			res.render('error', data);
 		}
 		else {
 			data.collectionFacets = response.list;
+
 			let offset = config.defaultHomePageCollectionsCount * (page-1)
 			response.list = response.list.slice(offset, (offset + config.defaultHomePageCollectionsCount))
-
 			data.collections = response.list;
+			if(data.collections.length == 0) {
+				data.error = "No collections found";
+			}
+
 			data.searchFields = config.searchFields;
 			data.options["perPageCountOptions"] = config.defaultHomePageCollectionsCount;
+			data.pagination = Paginator.create(data.collections, page, config.defaultHomePageCollectionsCount, response.count, path);
+			data.pagination["anchor"] = "#collections";
 
 			Service.getFacets(null, function(error, facets) {
 				if(error) {
-					data["logMsg"] = error;
+					data["logMsg"] = "Elastic search error: " + error;
 				}
 				else {
 					var facetList = Facets.getFacetList(facets, []);
@@ -94,11 +100,9 @@ exports.renderRootCollection = function(req, res) {
 							delete facetList[key];
 						}
 					}
-
+					
 					data.facets = Facets.create(facetList, config.rootUrl);
 					data.typeList = Helper.getTypeDisplayList(facets);
-					data.pagination = Paginator.create(data.collections, page, config.defaultHomePageCollectionsCount, response.count, path);
-					data.pagination["anchor"] = "#collections";
 				}
 				res.render('collections', data);
 			});

@@ -66,6 +66,7 @@ const es = require('../config/index'),
  * @param {Array.<searchResults>|null} Search results object, Null if error
  */
 exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=1, pageSize=10, daterange=null, sort=null, isAdvanced=false, callback) {
+    console.log("TEST searchIndex qdata in", queryData, collection)
     var queryFields = [],
         results = [], 
         restrictions = [],
@@ -290,14 +291,14 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
     });
 
     // Querystring and facet search.  Add the filter query object if any filters are present
-    var queryObj = {}, 
-    filter = filters.length > 0 ? filters : {};
+    var queryObj = {};
+    //filter = filters.length > 0 ? filters : {};
     if(queryData[0].terms != "" || facets) {
       queryObj = {
         "bool": {
           "must": booleanQuery,
           "must_not": restrictions,
-          "filter": filter
+          "filter": filters
         }
       }
     }
@@ -314,7 +315,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
         "bool": {
           "must": booleanQuery,
           "must_not": restrictions,
-          "filter": filter
+          "filter": filters
         }
       }
     }
@@ -353,7 +354,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
     // Create elasticsearch data object
     var data = {  
       index: config.elasticsearchPublicIndex,
-      type: config.searchIndexType,
+      // type: config.searchIndexType,
       body: {
         from : (pageNum - 1) * pageSize, 
         size : pageSize,
@@ -379,7 +380,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
         responseData['facets'] = Helper.removeEmptyFacetKeys(response.aggregations);
         responseData['count'] = response.hits.total <= config.maxElasticSearchResultCount ? response.hits.total : config.maxElasticSearchResultCount;
         responseData['minDate'] = Helper.getResultSetMinDate(response.aggregations) || null;
-
+          console.log("TEST ES results", response.hits)
         try {
 
           // Create a normalized data object for the search results
@@ -408,6 +409,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
           // Add the results array, send the response
           responseData['results'] = results;
           responseData['elasticResponse'] = response;
+            console.log("TEST cb here")
           callback(null, responseData);
         }
         catch(error) {

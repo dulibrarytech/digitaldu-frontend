@@ -76,6 +76,7 @@ exports.getTopLevelCollections = function(page=1, callback) {
             callback(error, null);
           }
           else {
+              console.log("TEST svc toplevel data", collections.list)
             callback(null, collections);
           }
         });
@@ -143,6 +144,7 @@ var getObjectsInCollection = function(collectionId, page=1, facets=null, sort=nu
             callback(error, null);
           }
           else {
+              console.log("TEST goic resp", response)
             var responseData = {};
             response = response.elasticResponse;
             if (error){
@@ -203,9 +205,10 @@ exports.getObjectsInCollection = getObjectsInCollection;
  * @param {Object|null} Elastic result data for the Object (index document source data) Null if error
  */
 var fetchObjectByPid = function(index, pid, callback) {
+    console.log("TEST fobjbypid index/pid", index, pid)
   es.search({
       index: index,
-      type: config.searchIndexType,
+      // type: config.searchIndexType,
       body: {
         query: {
           "bool": {
@@ -216,6 +219,7 @@ var fetchObjectByPid = function(index, pid, callback) {
         }
       }
   }, function (error, response) {
+      console.log("TEST fobjbypid resp", response.hits.hits)
       if(error) {
         callback(error, null);
       }
@@ -293,6 +297,7 @@ exports.getFacets = getFacets;
  * @param {Object|null} Data stream Null if error
  */
 exports.getDatastream = function(indexName, objectID, datastreamID, part, authKey, callback) {
+    console.log("TEST getDs() datastreamID", datastreamID)
   fetchObjectByPid(indexName, objectID, function(error, object) {
     if(object) {
       let contentType = AppHelper.getContentType(datastreamID, object, part);
