@@ -409,7 +409,7 @@ module.exports = {
         {"label": "Creator", "id": "creator", "field": "creator", "boost": "3"},
         {"label": "Subject", "id": "subject", "field": "f_subjects", "boost": "2"},
         {"label": "Topic", "id": "topic", "field": "display_record.subjects.terms.term", "matchField": "display_record.subjects.terms.type", "matchTerm": "topical"},
-        {"label": "Format", "id": "type", "field": "type", "boost": "3"},
+        {"label": "Format", "id": "format", "field": "type", "boost": "3"},
         {"label": "Description", "id": "description", "field": "abstract", "boost": "4"},
         {"label": "Language", "id": "language", "field": "display_record.t_language.text", "boost": "1"},
         {"label": "Creation Date", "id": "create_date", "field": "display_record.dates.expression", "isNestedType": "true", "matchField": "display_record.dates.label", "matchTerm": "creation"},
@@ -537,7 +537,7 @@ module.exports = {
     /*
      * Fuzz factor: number of fuzzy characters in the search terms
      */
-    searchTermFuzziness: "1",
+    searchTermFuzziness: "AUTO",
 
     /*
      * Label to use for the object "type" facet panels

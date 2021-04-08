@@ -146,6 +146,19 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
             }
             fieldObj[field.field] = keywordObj;
           }
+
+          else if(queryType == "wildcard") {
+            keywordObj = {
+              "value": terms
+            };
+
+            // Add the field boost value if it is set
+            if(field.boost) {
+              keywordObj["boost"] = field.boost;
+            }
+            fieldObj[field.field] = keywordObj;
+          }
+
           else {
             fieldObj[field.field] = terms;
           }
@@ -379,7 +392,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
         responseData['facets'] = Helper.removeEmptyFacetKeys(response.aggregations);
         responseData['count'] = response.hits.total.value <= config.maxElasticSearchResultCount ? response.hits.total.value : config.maxElasticSearchResultCount;
         responseData['minDate'] = Helper.getResultSetMinDate(response.aggregations) || null;
-
+          console.log("TEST response.hits.hits", response.hits.total.value)
         try {
           // Build the response data object
           var results = [], tn, resultData, resultObj;
