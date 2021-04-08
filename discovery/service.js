@@ -148,7 +148,7 @@ var getObjectsInCollection = function(collectionId, page=1, facets=null, sort=nu
             if (error){
               callback(error, null);
             }
-            else if(from > response.hits.total) {
+            else if(from > response.hits.total.value) {
               callback("Invalid page number ", null);
             }
             else {
@@ -159,7 +159,7 @@ var getObjectsInCollection = function(collectionId, page=1, facets=null, sort=nu
 
               collection.list = Helper.getObjectLinkDisplayList(results);
               collection.facets = response.aggregations;
-              collection.count = response.hits.total;
+              collection.count = response.hits.total.value;
 
               if(collectionId != config.topLevelCollectionPID) {
                 fetchObjectByPid(config.elasticsearchPublicIndex, collectionId, function(error, object) {

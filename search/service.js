@@ -230,7 +230,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
           let query = {};
           count++;
 
-          // Get the facet config
+          // Get the facet configuration
           facetData = config.facets[facet];
 
           // Add facet to filters
@@ -258,7 +258,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       }
     }
 
-    //If a date range is present, add the date range query to the must match array
+    // If a date range is present, add the date range query to the must match array
     if(daterange && daterange.from && daterange.to) {
       let fullDate = Helper.formatDateFieldForElasticQuery(daterange);
       filters.push(Helper.getDateRangeQuery(fullDate));
@@ -289,9 +289,8 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       }
     });
 
-    // Querystring and facet search.  Add the filter query object if any filters are present
+    // Build main query object
     var queryObj = {};
-    //filter = filters.length > 0 ? filters : {};
     if(queryData[0].terms != "" || facets) {
       queryObj = {
         "bool": {
@@ -321,6 +320,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
 
     var facetAggregations = AppHelper.getFacetAggregationObject(config.facets);
 
+    // Build sort query
     let sortArr = [];
     if(sort) {
       let data = {},
@@ -350,7 +350,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       sortArr.push(data);
     }
 
-    // Create elasticsearch data object
+    // Create elastic search request data object
     var data = {  
       index: config.elasticsearchPublicIndex,
       // type: config.searchIndexType,
@@ -373,20 +373,18 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       else {
         // Remove selected facet from the facet panel list.  The list should not show a facet option if the facet has already been selected
         Helper.removeSelectedFacets(facets, response);
-        
-        // Return the aggregation results for the facet display
+
+        // Aggs data
         var responseData = {};
         responseData['facets'] = Helper.removeEmptyFacetKeys(response.aggregations);
-        responseData['count'] = response.hits.total <= config.maxElasticSearchResultCount ? response.hits.total : config.maxElasticSearchResultCount;
+        responseData['count'] = response.hits.total.value <= config.maxElasticSearchResultCount ? response.hits.total.value : config.maxElasticSearchResultCount;
         responseData['minDate'] = Helper.getResultSetMinDate(response.aggregations) || null;
-        try {
 
-          // Create a normalized data object for the search results
+        try {
+          // Build the response data object
           var results = [], tn, resultData, resultObj;
           for(var result of response.hits.hits) {
             tn = config.rootUrl + "/datastream/" + result._source.pid.replace('_', ':') + "/tn";
-              
-            // Push a new result object to the results data array
             resultObj = {
               title: result._source.title || "No Title",
               tn: tn,
