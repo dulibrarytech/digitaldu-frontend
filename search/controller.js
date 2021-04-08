@@ -141,7 +141,7 @@ exports.search = function(req, res) {
 			Format.formatFacetDisplay(facetList, function(error, facetList) {
 				Format.formatFacetBreadcrumbs(facets, function(error, facets) {
 					data.facets = Facets.create(facetList, config.rootUrl, showAll, expandFacets);
-					data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(facets, daterange, config.rootUrl);		
+					data.facet_breadcrumb_trail = Facets.getFacetBreadcrumbObject(facets, daterange, config.rootUrl);
 					return res.render('results', data);
 				});
 			});

@@ -148,7 +148,7 @@ var getObjectsInCollection = function(collectionId, page=1, facets=null, sort=nu
             if (error){
               callback(error, null);
             }
-            else if(from > response.hits.total) {
+            else if(from > response.hits.total.value) {
               callback("Invalid page number ", null);
             }
             else {
@@ -159,7 +159,7 @@ var getObjectsInCollection = function(collectionId, page=1, facets=null, sort=nu
 
               collection.list = Helper.getObjectLinkDisplayList(results);
               collection.facets = response.aggregations;
-              collection.count = response.hits.total;
+              collection.count = response.hits.total.value;
 
               if(collectionId != config.topLevelCollectionPID) {
                 fetchObjectByPid(config.elasticsearchPublicIndex, collectionId, function(error, object) {
@@ -205,7 +205,6 @@ exports.getObjectsInCollection = getObjectsInCollection;
 var fetchObjectByPid = function(index, pid, callback) {
   es.search({
       index: index,
-      type: config.searchIndexType,
       body: {
         query: {
           "bool": {
@@ -219,7 +218,7 @@ var fetchObjectByPid = function(index, pid, callback) {
       if(error) {
         callback(error, null);
       }
-      else if(response.hits.total > 0) {
+      else if(response.hits.total.value > 0) {
         callback(null, response.hits.hits[0]._source);
       }
       else {
@@ -239,17 +238,14 @@ exports.fetchObjectByPid = fetchObjectByPid;
  * @param {Object|null} Elastic aggregations object Null if error
  */
 var getFacets = function (collection=null, callback) {
-    // Build elasticsearch aggregations object from config facet list
     var field, matchFacetFields = [], restrictions = [];
     var aggs = AppHelper.getFacetAggregationObject(config.facets);
 
     var searchObj = {
         index: config.elasticsearchPublicIndex,
-        type: config.searchIndexType,
         body: {
             "size": 0,
-            "aggregations": aggs,
-            "query": {}
+            "aggregations": aggs
         }
     };
 
@@ -600,7 +596,6 @@ exports.getAutocompleteData = function(callback) {
 var getCollectionList = function(callback) {
   es.search({
       index: config.elasticsearchPublicIndex,
-      type: config.searchIndexType,
       _source: ["pid"],
       body: {
         "query": {
@@ -630,7 +625,6 @@ var getCollectionList = function(callback) {
 var getCollectionChildren = function(collectionId, index, callback) {
   es.search({
       index: index,
-      type: config.searchIndexType,
       _source: ["pid"],
       body: {
         "query": {
@@ -649,6 +643,7 @@ var getCollectionChildren = function(collectionId, index, callback) {
         for(let i in results) {
           pids.push(results[i]._source.pid);
         }
+
         callback(null, pids);
       }
   });

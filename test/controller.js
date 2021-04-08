@@ -25,13 +25,36 @@ Cache = require('../libs/cache');
 
 exports.test_view = function(req, res) {
 	console.log("TEST router req headers", req.headers)
+
+	function generalizedGCD(num, arr)
+	{
+	    // WRITE YOUR CODE HERE
+	    var curDivisor, curInt, maxDivisor = 0, count;
+	    for(var i=0; i<num; i++) {
+	        curDivisor = arr[i];
+	        count = 0;
+	        for(var j=0; j<arr.length; j++) {
+	            curInt = arr[j];
+	            if(curInt % curDivisor != 0) {
+	                break;
+	            }
+	            count++;
+	            if(count == arr.length) {
+	            	maxDivisor = curDivisor;
+	            }
+	        }
+	    }
+	    return maxDivisor;
+	}
+
+	console.log(generalizedGCD(5, [1,3,5,7,13]))
+
 	res.render('test');
 }
 
 exports.test_es_request = function(req, res) {
 	var data = {  
       index: config.elasticsearchPublicIndex,
-      type: config.searchIndexType,
       body: {
         from : (pageNum - 1) * pageSize, 
         size : pageSize,
