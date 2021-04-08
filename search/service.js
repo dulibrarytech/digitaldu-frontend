@@ -392,7 +392,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
         responseData['facets'] = Helper.removeEmptyFacetKeys(response.aggregations);
         responseData['count'] = response.hits.total.value <= config.maxElasticSearchResultCount ? response.hits.total.value : config.maxElasticSearchResultCount;
         responseData['minDate'] = Helper.getResultSetMinDate(response.aggregations) || null;
-          console.log("TEST response.hits.hits", response.hits.total.value)
+
         try {
           // Build the response data object
           var results = [], tn, resultData, resultObj;
