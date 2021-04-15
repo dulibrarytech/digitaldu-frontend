@@ -404,13 +404,13 @@ module.exports = {
      *          {"label": "Subject", "id": "subject", "field": "subjects.terms", "matchField": "subjects.terms.type", "matchTerm": "topic", "isNestedType": "true"} 
      */ 
     searchAllFields: [
-        {"label": "Title", "id": "title", "field": "title", "boost": "5"},
-        {"label": "Collection", "id": "collection", "field": "is_member_of_collection", "boost": "6"},
-        {"label": "Creator", "id": "creator", "field": "creator", "boost": "3"},
-        {"label": "Subject", "id": "subject", "field": "f_subjects", "boost": "2"},
+        {"label": "Title", "id": "title", "field": "title", "boost": "10"},
+        {"label": "Collection", "id": "collection", "field": "is_member_of_collection", "boost": "10"},
+        {"label": "Creator", "id": "creator", "field": "creator", "boost": "8"},
+        {"label": "Subject", "id": "subject", "field": "f_subjects", "boost": "4"},
         {"label": "Topic", "id": "topic", "field": "display_record.subjects.terms.term", "matchField": "display_record.subjects.terms.type", "matchTerm": "topical"},
         {"label": "Format", "id": "format", "field": "type", "boost": "3"},
-        {"label": "Description", "id": "description", "field": "abstract", "boost": "4"},
+        {"label": "Description", "id": "description", "field": "abstract", "boost": "6"},
         {"label": "Language", "id": "language", "field": "display_record.t_language.text", "boost": "1"},
         {"label": "Creation Date", "id": "create_date", "field": "display_record.dates.expression", "isNestedType": "true", "matchField": "display_record.dates.label", "matchTerm": "creation"},
         {"label": "Archival Identifier", "id": "call_number", "field": "display_record.identifiers.identifier", "isNestedType": "true", "matchField": "display_record.identifiers.type", "matchTerm": "local"},
@@ -428,6 +428,12 @@ module.exports = {
         {"Format": "type"},
         {"Description": "description"}
     ],
+
+    /*
+     * Search fields to apply fuzzy value
+     * List by searchAllFields.field 
+     */
+    fuzzyFields: ["title", "creator"],
 
     /*
      * Selectable search fields for the advanced search
@@ -520,6 +526,11 @@ module.exports = {
         "Archival Identifier (a to z)": "Archival Identifier,asc", 
         "Archival Identifier (z to a)": "Archival Identifier,desc"
     },
+
+    /*
+     * How to combine multiple terms in querystring
+     */
+    searchTermBoolean: "and",
 
     /*
      * Advanced Search query options
