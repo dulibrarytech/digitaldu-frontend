@@ -67,6 +67,7 @@ const es = require('../config/index'),
  */
 exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=1, pageSize=10, daterange=null, sort=null, isAdvanced=false, callback) {
     var queryFields = [],
+        fuzzQueryFields = [],
         results = [], 
         restrictions = [],
         filters = [],
@@ -103,6 +104,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
     for(var index in queryData.reverse()) {
       queryFields = [];
       currentQuery = {};
+      fuzzQueryFields = [];
 
       // Handle special query cases for searching specific search fields
       queryData[index].terms = Helper.updateQueryTermsForField(queryData[index].terms, queryData[index].field, queryData[index].type, queryData[index].bool);
@@ -126,21 +128,12 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
           nestedQuery = {};
           nestedQueryObj = {};
 
-          // Add additional parameters to "match" queries
           if(queryType == "match") {
             keywordObj = {
               "query": terms,
-              "operator": "and"
+              "operator": config.searchTermBoolean
             };
 
-            // Add fuzz factor if this is not an advanced search, and there are no numeric terms.  Numeric terms must match index data exactly
-            if(isAdvanced == false 
-              && /[0-9]+/.test(terms) === false
-              && terms.indexOf("*") < 0) {
-              keywordObj["fuzziness"] = config.searchTermFuzziness;
-            }
-
-            // Add the field boost value if it is set
             if(field.boost) {
               keywordObj["boost"] = field.boost;
             }
@@ -152,7 +145,6 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
               "value": terms
             };
 
-            // Add the field boost value if it is set
             if(field.boost) {
               keywordObj["boost"] = field.boost;
             }
@@ -163,7 +155,6 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
             fieldObj[field.field] = terms;
           }
 
-          // Create the elastic query object
           queryObj[queryType] = fieldObj;
 
           // If field specifies a 'match field' create a must array to match the field exactly on a specified term, as well as on the main query fields/terms
@@ -195,8 +186,32 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
           else {
             queryFields.push(queryObj);
           }
+
+          if(isAdvanced == false 
+            && queryType == "match"
+            && config.fuzzyFields.includes(field.field)) {
+              console.log("TEST addfuzzy", field.field)
+            //keywordObj["fuzziness"] = config.searchTermFuzziness;
+            let fuzzQueryObj = {
+              "fuzzy": {}
+            };
+            fuzzQueryObj.fuzzy[field.field] = {
+              "value": terms,
+              "fuzziness": config.searchTermFuzziness
+            };
+            fuzzQueryFields.push(fuzzQueryObj);
+          }
         }
       }
+
+      if(fuzzQueryFields.length > 0) {
+        queryFields.push({
+          "bool": {
+            "should": fuzzQueryFields
+          }
+        })
+      }
+        
       currentQuery = queryFields;
 
       /*
