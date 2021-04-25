@@ -134,7 +134,6 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
               streamDefaultThumbnail(object, callback);
             }
             else {
-              if(config.nodeEnv == "devlog") {console.log("Thumbnail stream response status is", status)}
               if(status == 200) {
                 if(config.thumbnailImageCacheEnabled == true && 
                   settings.cache == true && 

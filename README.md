@@ -130,10 +130,27 @@ HttpSource.lookup_strategy = ScriptLookupStrategy
 
 ##### "delegates.rb" updates 
 
+To test for a local image file in specified location. Cantaloupe will use local FS source of image if the file is found. If it is not, HttpSource will be used to fetch the image remotely from DuraCloud via the frontend /datastream route:
+
+ def source(options = {})
+      puts "source() script checking for local image file..."
+      filename = "/path/to/images/".concat(context['identifier']).concat(".jpg")
+
+      if(File.exist?(filename))
+        puts filename.concat(" found. Using FilesystemSource")
+        str = "FilesystemSource"
+      else
+        puts filename.concat(" not found. Using HttpSource")
+        str = "HttpSource"
+      end
+  end
+
 Implement the following hook to detect an api key in the incoming request, and append it to the DigitalCollections /datastream route request.  This will create the path to the resource in DigitalCollections for Cantaloupe, appending an api key if present in the initial iiif request to Cantaloupe:
 
 def httpsource_resource_info(options = {})
     request_uri = context['request_uri']
+    puts "http_resource_info() Object ID: ".concat(context['identifier'])
+    puts "http_resource_info() Request uri: ".concat(request_uri)
     key = ''
     str = 'http://localhost:9006/datastream/'
     
@@ -149,6 +166,8 @@ def httpsource_resource_info(options = {})
 
     str.concat('/object')
     str.concat(key)
+    puts "http_resource_info() derived resource url: ".concat(str)
+    return str
   end
 
 ##### Additional configuration
