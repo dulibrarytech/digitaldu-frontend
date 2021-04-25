@@ -190,8 +190,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
           if(isAdvanced == false 
             && queryType == "match"
             && config.fuzzyFields.includes(field.field)) {
-              console.log("TEST addfuzzy", field.field)
-            //keywordObj["fuzziness"] = config.searchTermFuzziness;
+
             let fuzzQueryObj = {
               "fuzzy": {}
             };
