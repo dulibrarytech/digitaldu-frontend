@@ -194,7 +194,8 @@ module.exports = {
         "jp2": [{extension: "jpg", label: "jpeg"}, {extension: "tif", label: "tiff"}, {extension: "jp2", label: "jp2"}],
         "mp3": [{extension: "mp3", label: "mp3"}],
         "mp4": [{extension: "mp4", label: "mp4"}],
-        "pdf": [{extension: "pdf", label: "pdf"}]
+        "pdf": [{extension: "pdf", label: "pdf"}],
+        "tif": [{extension: "jpg", label: "jpeg"}, {extension: "tif", label: "tiff"}]
     },
 
     /*

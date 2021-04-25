@@ -369,7 +369,7 @@ exports.getFileDownloadLinks = function(object, part=null) {
     else {console.log("Can not determine download file type(s) for object " + pid)}
   }
   else {
-    console.log("Can not create download links for object " + pid + ", file extension can not be determined");
+    console.log("Can not create download links for object " + pid + ", object path does not exist");
   }
 
   return links;
