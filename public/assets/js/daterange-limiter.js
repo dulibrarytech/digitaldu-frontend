@@ -71,5 +71,6 @@ var submitDateRange = function() {
 
 var removeDateRange = function(from, to) {
 	var searchUrl = decodeURIComponent(window.location.href);
-	window.location.assign(encodeURI(searchUrl.replace(/[?&]{0,1}from=[0-9]+&to=[0-9]+/g, "")));
+	searchUrl = searchUrl.replace(/[&]{0,1}from=[0-9]+&to=[0-9]+/g, "").replace(/\?$/, "");
+	window.location.assign(encodeURI(searchUrl));
 }

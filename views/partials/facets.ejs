@@ -63,7 +63,7 @@
 
 			// Remove the selected facet param from the search querystring
 			searchUrl = searchUrl.replace(facetParam, "");
-			searchUrl = updateUrlExpandParams(searchUrl);
+			searchUrl = updateUrlExpandParams(searchUrl).replace(/\?$/, "");
 			searchUrl = encodeURI(searchUrl);
 			window.location.assign(baseUrl + searchUrl);
 		};
