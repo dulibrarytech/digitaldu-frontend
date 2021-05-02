@@ -55,14 +55,21 @@ var validateDaterangeForm = function() {
 var submitDateRange = function() {
 	if(validateDaterangeForm()) {
 		var decoded = decodeURIComponent(window.location.href);
-		var queryPrefix = decoded.indexOf("?") >= 0 ? "&" : "?";
-		var url = decoded.replace(/[&?]from=[0-9]+&to=[0-9]+/g, "") + queryPrefix + $("#daterange-form").serialize();
-		url = url.replace(/page=[1234567890]*/g, ""); // Reset results to page 1
+		var url, queryPrefix = decoded.indexOf("?") >= 0 ? "&" : "?";
+
+		if(decoded.match(/[?&]from=[0-9]+&to=[0-9]+/g)) {
+			url = decoded.replace(/from=[0-9]+&to=[0-9]+/g, $("#daterange-form").serialize());
+		}
+		else {
+			url = decoded + queryPrefix + $("#daterange-form").serialize();
+		}
+
+		url = url.replace(/page=[1234567890]*/g, "");
 		window.location.assign(encodeURI(url));
 	}
 }
 
 var removeDateRange = function(from, to) {
 	var searchUrl = decodeURIComponent(window.location.href);
-	window.location.assign(encodeURI(searchUrl.replace(/&{0,1}from=[0-9]+&to=[0-9]+/g, "")));
+	window.location.assign(encodeURI(searchUrl.replace(/[?&]{0,1}from=[0-9]+&to=[0-9]+/g, "")));
 }
