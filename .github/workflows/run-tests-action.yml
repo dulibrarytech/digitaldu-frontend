@@ -25,7 +25,7 @@ jobs:
 
       - uses: getong/elasticsearch-action@v1.2
         with:
-          elasticsearch version: '7.10.2'
+          elasticsearch version: '7.6.1'
           host port: 9200
           container port: 9200
           host node port: 9300
@@ -35,24 +35,34 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
 
-      # Copy test .env file and append secret values
-      # - run: mv test/.env.public .env
-      # - run: mv test/cache .
-      # - run: echo "" >> .env 
-      # - run: echo "API_KEY="${{ secrets.API_KEY }} >> .env
-
+      # Decrypt test .env file
       - run: |
           cd test
-          openssl aes-256-cbc -K ${{ secrets.TEST_ENV_KEY }} -iv ${{ secrets.TEST_ENV_INITIAL_VECTOR }} -in .env.enc -out .env -d
+          openssl enc -aes-256-cbc -d -in .env.enc -out .env -k ${{ secrets.CBC_ENC_PWD }}
           cd ..
           mv test/.env .
           mv test/cache .
 
-      # Deploy app and run mocha tests
+      # Install frontend node dependencies, install Java jdk for Elastic
       - run: |
           npm install
           sudo apt update
           sudo apt install openjdk-8-jdk
+
+      # Start Elastic server, post test data
+      - run: |
+          sudo service elasticsearch start
+          sleep 10
+          curl -XPUT http://localhost:9200/repo_test_mocha -d @test/index_schema.json
+          curl -XPOST http://localhost:9200/repo_test_mocha/_doc/61ed6a68-618b-48eb-b9bd-3e7484e0590a -d @test/test-collection.json
+          curl -XPOST http://localhost:9200/repo_test_mocha/_doc/7479257d-3c34-4e87-8358-05460a828ca1 -d @test/test-object1.json
+          curl -XPOST http://localhost:9200/repo_test_mocha/_doc/81c733ec-b597-48d1-9488-90f2a67627ed -d @test/test-object2.json
+          curl -XPOST http://localhost:9200/repo_test_mocha/_doc/d3dcaa18-d441-4396-9f0a-887e1277b279 -d @test/test-object3.json
+          curl -v http://localhost:9200/
+          curl -v http://localhost:9200/repo_test_mocha
+
+      # Start app and run mocha tests
+      - run: |
           node discovery.js &
           sleep 10
           npm test
