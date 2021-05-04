@@ -51,8 +51,6 @@ jobs:
 
       # Start Elastic server, post test data
       - run: |
-          sudo service elasticsearch start
-          sleep 10
           curl -XPUT http://localhost:9200/repo_test_mocha -d @test/index_schema.json
           curl -XPOST http://localhost:9200/repo_test_mocha/_doc/61ed6a68-618b-48eb-b9bd-3e7484e0590a -d @test/test-collection.json
           curl -XPOST http://localhost:9200/repo_test_mocha/_doc/7479257d-3c34-4e87-8358-05460a828ca1 -d @test/test-object1.json
