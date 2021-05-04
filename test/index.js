@@ -105,15 +105,11 @@ describe('Special Collections (Selenium) Tests', function() {
         return browser.get(frontend);
       });
 
-      it('Tab title test', function() {
-        return browser.getTitle().then(function(title) {
-          expect(title).to.equal('Digital Collections @ DU');
-        });
-      });
-
-
-//
-
+//       it('Tab title test', function() {
+//         return browser.getTitle().then(function(title) {
+//           expect(title).to.equal('Digital Collections @ DU');
+//         });
+//       });
 
       //for searching for objects using the search box
       describe('Search object tests', function() {
