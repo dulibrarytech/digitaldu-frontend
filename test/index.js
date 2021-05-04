@@ -59,6 +59,7 @@ describe('GET special collections search with keyword term test', function() {
     });
 });
 
+//this still returns 200 if the object isn't found, should change?
 describe('GET special collections object details', function() {
     it('responds with HTML 200 response', function(done) {
         request(frontend)  // <-- pass in domain
@@ -294,19 +295,19 @@ describe('Special Collections (Selenium) Tests', function() {
             });
           });
 
-          it('Collections Accordion contents: Test Collections present', function() {
+          it('Collections Accordion contents: Test Collection', function() {
             return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/div[2]/ul/li/span/a'))
-            // .getAttribute('title').then(function(text) {
-            //   expect(text).to.equal('Test Collection');
-            // });
+            .getAttribute('title').then(function(text) {
+              expect(text).to.equal('Test Collection');
+            });
           });
 
-          // it('Collections Accordion contents: Test Collection link', function() {
-          //   return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/div[2]/ul/li/span/a'))
-          //   .getAttribute('href').then(function(text) {
-          //     expect(text).to.equal(frontend + '/object/61ed6a68-618b-48eb-b9bd-3e7484e0590a');
-          //   });
-          // });
+          it('Collections Accordion contents: Test Collection link', function() {
+            return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/div[2]/ul/li/span/a'))
+            .getAttribute('href').then(function(text) {
+              expect(text).to.equal(frontend + '/object/61ed6a68-618b-48eb-b9bd-3e7484e0590a');
+            });
+          });
 
           it('Collections Accordion 2nd click', function() {
             return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/button[2]'))
@@ -378,22 +379,22 @@ describe('Special Collections (Selenium) Tests', function() {
           });
 
           // author: 'Armstrong, Wayne, 1961-'
-          // it('Creator Accordion contents: author count', function() {
-          //   return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/div[3]/ul/li[1]/span[2]'))
-          //   .getAttribute('innerHTML')
-          //   .then(function(text) {
-          //     expect(text).to.include(1);
-          //   });
-          // });
+          it('Creator Accordion contents: author count', function() {
+            return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/div[3]/ul/li[1]/span[2]'))
+            .getAttribute('innerHTML')
+            .then(function(text) {
+              expect(text).to.include(1);
+            });
+          });
 
           // author: 'Armstrong, Wayne, 1961-'
-          // it('Creator Accordion contents: author name', function() {
-          //   return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/div[3]/ul/li[1]/span[1]/a'))
-          //   .getAttribute('innerHTML')
-          //   .then(function(text) {
-          //     expect(text).to.include('Armstrong, Wayne, 1961-');
-          //   });
-          // });
+          it('Creator Accordion contents: author name', function() {
+            return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/div[3]/ul/li[1]/span[1]/a'))
+            .getAttribute('innerHTML')
+            .then(function(text) {
+              expect(text).to.include('Armstrong, Wayne, 1961-');
+            });
+          });
 
           it('Creator Accordion 2nd click', function() {
             return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/button[3]'))
@@ -465,21 +466,21 @@ describe('Special Collections (Selenium) Tests', function() {
             });
           });
 
-          // it('Subject Accordion contents: subject count', function() {
-          //   return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/div[4]/ul/li[2]/span[2]'))
-          //   .getAttribute('innerHTML')
-          //   .then(function(text) {
-          //     expect(text).to.include('(1)');
-          //   });
-          // });
+          it('Subject Accordion contents: subject count', function() {
+            return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/div[4]/ul/li[2]/span[2]'))
+            .getAttribute('innerHTML')
+            .then(function(text) {
+              expect(text).to.include('(1)');
+            });
+          });
 
-          // it('Subject Accordion contents: subject name', function() {
-          //   return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/div[4]/ul/li[2]/span[1]/a'))
-          //   .getAttribute('innerHTML')
-          //   .then(function(text) {
-          //     expect(text).to.include('Bands (Music)');
-          //   });
-          // });
+          it('Subject Accordion contents: subject name', function() {
+            return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/div[4]/ul/li[2]/span[1]/a'))
+            .getAttribute('innerHTML')
+            .then(function(text) {
+              expect(text).to.include('Bands (Music)');
+            });
+          });
 
           it('Subject Accordion 2nd click', function() {
             return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[1]/div/button[4]'))
@@ -506,163 +507,172 @@ describe('Special Collections (Selenium) Tests', function() {
 
 
 
-      // describe('Object attribute tests', function() {
-      //   const test_object1 = frontend + '/object/7479257d-3c34-4e87-8358-05460a828ca1'
+      describe('Object attribute tests', function() {
+        const test_object1 = frontend + '/object/7479257d-3c34-4e87-8358-05460a828ca1'
 
-      //   before(function() {
-      //     return browser.get(test_object1);
-      //   });
+        before(function() {
+          return browser.get(test_object1);
+        });
 
-      //   //tests if the collection linked goes to the right collection
-      //   it('In Collections link test', function() {
-      //     return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[3]/div[3]/div/table/tbody/tr[2]/td[2]/p/a'))
-      //     .getAttribute('href')
-      //     .then(function(text) {
-      //       expect(text).to.include('/object/61ed6a68-618b-48eb-b9bd-3e7484e0590a');
-      //     });
-      //   });
+        //tests if the collection linked goes to the right collection
+        it('In Collections link test', function() {
+            //return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[3]/div[3]/div/table/tbody/tr[2]/td[2]/p/a'))
+          return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[3]/div[4]/div/table/tbody/tr[2]/td[2]/p/a'))
+          .getAttribute('href')
+          .then(function(text) {
+            expect(text).to.include('/object/61ed6a68-618b-48eb-b9bd-3e7484e0590a');
+          });
+        });
 
-      //   it('In Collections title test', function() {
-      //     return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[3]/div[3]/div/table/tbody/tr[2]/td[2]/p/a'))
-      //     .getAttribute('innerHTML')
-      //     .then(function(text) {
-      //       expect(text).to.equal('Test Collection');
-      //     });
-      //   });
+        it('In Collections title test', function() {
+            //return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[3]/div[3]/div/table/tbody/tr[2]/td[2]/p/a'))
+          return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[3]/div[4]/div/table/tbody/tr[2]/td[2]/p/a'))
+          .getAttribute('innerHTML')
+          .then(function(text) {
+            expect(text).to.equal('Test Collection');
+          });
+        });
 
-      //   it('title test', function() {
-      //     return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[3]/div[3]/div/table/tbody/tr[5]/td[2]/p'))
-      //     .getAttribute('innerHTML')
-      //     .then(function(text) {
-      //       expect(text).to.equal('Founders Bell, 2008 November 19');
-      //     });
-      //   });
+        it('title test', function() {
+            //return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[3]/div[3]/div/table/tbody/tr[5]/td[2]/p'))
+          return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[3]/div[4]/div/table/tbody/tr[5]/td[2]/p'))
+          .getAttribute('innerHTML')
+          .then(function(text) {
+            expect(text).to.equal('Founders Bell, 2008 November 19');
+          });
+        });
 
-      //   it('creator test', function() {
-      //     return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[3]/div[3]/div/table/tbody/tr[6]/td[2]/p'))
-      //     .getAttribute('innerHTML')
-      //     .then(function(text) {
-      //       expect(text).to.equal('Armstrong, Wayne, 1961-');
-      //     });
-      //   });
+        it('creator test', function() {
+            //return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[3]/div[3]/div/table/tbody/tr[6]/td[2]/p'))
+          return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[3]/div[4]/div/table/tbody/tr[6]/td[2]/p'))
+          .getAttribute('innerHTML')
+          .then(function(text) {
+            expect(text).to.equal('Armstrong, Wayne, 1961-');
+          });
+        });
 
-      //   it('creation date test', function() {
-      //     return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[3]/div[3]/div/table/tbody/tr[7]/td[2]/p'))
-      //     .getAttribute('innerHTML')
-      //     .then(function(text) {
-      //       expect(text).to.equal('2008 November 19');
-      //     });
-      //   });
+        it('creation date test', function() {
+            //return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[3]/div[3]/div/table/tbody/tr[7]/td[2]/p'))
+          return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[3]/div[4]/div/table/tbody/tr[7]/td[2]/p'))
+          .getAttribute('innerHTML')
+          .then(function(text) {
+            expect(text).to.equal('2008 November 19');
+          });
+        });
 
-      //   it('abstract test', function() {
-      //     return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[3]/div[3]/div/table/tbody/tr[8]/td[2]/p'))
-      //     .getAttribute('innerHTML')
-      //     .then(function(text) {
-      //       //not checking the whole abstract text, just making sure part is included and assuming the rest is
-      //       expect(text).to.include('The Founders Bell, situated in front of the alumni center at the time this photo was taken.');
-      //     });
-      //   });
+        it('abstract test', function() {
+            //return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[3]/div[3]/div/table/tbody/tr[8]/td[2]/p'))
+          return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[3]/div[4]/div/table/tbody/tr[8]/td[2]/p'))
+          .getAttribute('innerHTML')
+          .then(function(text) {
+            //not checking the whole abstract text, just making sure part is included and assuming the rest is
+            expect(text).to.include('The Founders Bell, situated in front of the alumni center at the time this photo was taken.');
+          });
+        });
 
-      //   it('subject title test', function() {
-      //     return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[3]/div[3]/div/table/tbody/tr[9]/td[2]/p[1]/a'))
-      //     .getAttribute('innerHTML')
-      //     .then(function(text) {
-      //       expect(text).to.include('Universities and colleges');
-      //     });
-      //   });
+        it('subject title test', function() {
+          //return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[3]/div[3]/div/table/tbody/tr[9]/td[2]/p[1]/a'))
+          return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[3]/div[4]/div/table/tbody/tr[9]/td[2]/p[1]/a'))
+          .getAttribute('innerHTML')
+          .then(function(text) {
+            expect(text).to.include('Universities and colleges');
+          });
+        });
 
-      //   it('subject link test', function() {
-      //     return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[3]/div[3]/div/table/tbody/tr[9]/td[2]/p[1]/a'))
-      //     .getAttribute('href')
-      //     .then(function(text) {
-      //       expect(text).to.include('[Subject][]=Universities%20and%20colleges');
-      //     });
-      //   });
+        it('subject link test', function() {
+          //return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[3]/div[4]/div/table/tbody/tr[9]/td[2]/p[1]/a'))
+          return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[3]/div[4]/div/table/tbody/tr[9]/td[2]/p[1]/a'))
+          .getAttribute('href')
+          .then(function(text) {
+            expect(text).to.include('[Subject][]=Universities%20and%20colleges');
+          });
+        });
 
-      //   //cite item and download file
-      //   it('cite item title test', function() {
-      //     return browser.findElement(webdriver.By.xpath('//*[@id="view-citations"]'))
-      //     .getAttribute('innerHTML')
-      //     .then(function(text) {
-      //       expect(text).to.include('Cite This Item');
-      //     });
-      //   });
+        //cite item and download file
+        it('cite item title test', function() {
+          return browser.findElement(webdriver.By.xpath('//*[@id="view-citations"]'))
+          .getAttribute('innerHTML')
+          .then(function(text) {
+            expect(text).to.include('Cite This Item');
+          });
+        });
 
-      //   it('cite item click test', function() {
-      //     return browser.findElement(webdriver.By.xpath('//*[@id="view-citations"]'))
-      //     .click();
-      //   });
+        it('cite item click test', function() {
+          return browser.findElement(webdriver.By.xpath('//*[@id="view-citations"]'))
+          .click();
+        });
 
-      //   it('cite item title after click test', function() {
-      //     return browser.findElement(webdriver.By.xpath('//*[@id="view-citations"]'))
-      //     .getAttribute('innerHTML')
-      //     .then(function(text) {
-      //       expect(text).to.include('Hide Citations');
-      //     });
-      //   });
+        it('cite item title after click test', function() {
+          return browser.findElement(webdriver.By.xpath('//*[@id="view-citations"]'))
+          .getAttribute('innerHTML')
+          .then(function(text) {
+            expect(text).to.include('Hide Citations');
+          });
+        });
 
-      //   it('citation container visible test', function() {
-      //     return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[3]/div[2]'))
-      //     .isDisplayed()
-      //     .then(function(visible) {
-      //       expect(visible).to.equal(true);
-      //     });
-      //   });
-      // });
+        it('citation container visible test', function() {
+          //return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[3]/div[2]'))
+          return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[3]/div[1]/div'))
+          .isDisplayed()
+          .then(function(visible) {
+            expect(visible).to.equal(true);
+          });
+        });
+      });
 
 
 
 
-      // describe('Collection render tests', function() {
-      //   before(function() {
-      //     return browser.get(frontend);
-      //   });
+      describe('Collection render tests', function() {
+        before(function() {
+          return browser.get(frontend);
+        });
 
-      //   it('Collection thumbnail', function() {
-      //     return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[2]/div/div[3]/div/dl/a/dt/div/img'))
-      //     .getAttribute('src')
-      //     .then(function(text) {
-      //       expect(text).to.include(frontend + '/datastream/61ed6a68-618b-48eb-b9bd-3e7484e0590a/TN');
-      //     });
-      //   });
+        it('Collection thumbnail', function() {
+          return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[2]/div/div[3]/div/dl/a/dt/div/img'))
+          .getAttribute('src')
+          .then(function(text) {
+            expect(text).to.include(frontend + '/datastream/61ed6a68-618b-48eb-b9bd-3e7484e0590a/TN');
+          });
+        });
 
-      //   it('Collection thumbnail link', function() {
-      //     return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[2]/div/div[3]/div/dl/a'))
-      //     .getAttribute('href')
-      //     .then(function(text) {
-      //       expect(text).to.include(frontend + '/object/61ed6a68-618b-48eb-b9bd-3e7484e0590a')
-      //     });
-      //   });
+        it('Collection thumbnail link', function() {
+          return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[2]/div/div[3]/div/dl/a'))
+          .getAttribute('href')
+          .then(function(text) {
+            expect(text).to.include(frontend + '/object/61ed6a68-618b-48eb-b9bd-3e7484e0590a')
+          });
+        });
 
-      //   it('Collection title', function() {
-      //     return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[2]/div/div[3]/div/dl/a/dd/div/h4'))
-      //     .getAttribute('innerHTML')
-      //     .then(function(text) {
-      //       expect(text).to.include('Test Collection');
-      //     });
-      //   });
+        it('Collection title', function() {
+          return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[2]/div/div[3]/div/dl/a/dd/div/h4'))
+          .getAttribute('innerHTML')
+          .then(function(text) {
+            expect(text).to.include('Test Collection');
+          });
+        });
 
-      //   it('collection click', function() {
-      //     return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[2]/div/div[3]/div/dl/a'))
-      //     .click();
-      //   });
+        it('collection click', function() {
+          return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[2]/div[2]/div/div[3]/div/dl/a'))
+          .click();
+        });
 
-      //   it('Collection contents 1st object', function() {
-      //     return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[4]/div[2]/div[4]/div/div[1]/dl/a/dd/div/h3'))
-      //     .getAttribute('innerHTML')
-      //     .then(function(text) {
-      //       expect(text).to.include('Central High School Class of 1909, 1909');
-      //     });
-      //   });
+        it('Collection contents 1st object', function() {
+          return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[4]/div[2]/div[4]/div/div[1]/dl/a/dd/div/h3'))
+          .getAttribute('innerHTML')
+          .then(function(text) {
+            expect(text).to.include('Central High School Class of 1909, 1909');
+          });
+        });
 
-      //   it('Collection contents 2nd object', function() {
-      //     return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[4]/div[2]/div[4]/div/div[2]/dl/a/dd/div/h3'))
-      //     .getAttribute('innerHTML')
-      //     .then(function(text) {
-      //       expect(text).to.include('Founders Bell');
-      //     });
-      //   });
-      // });
+        it('Collection contents 2nd object', function() {
+          return browser.findElement(webdriver.By.xpath('/html/body/div/main/div/div[4]/div[2]/div[4]/div/div[2]/dl/a/dd/div/h3'))
+          .getAttribute('innerHTML')
+          .then(function(text) {
+            expect(text).to.include('Founders Bell');
+          });
+        });
+      });
 
 
       //TODO
