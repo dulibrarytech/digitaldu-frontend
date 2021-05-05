@@ -92,17 +92,19 @@ describe('Special Collections (Selenium) Tests', function() {
         withCapabilities(webdriver.Capabilities.chrome()).setChromeOptions(opts).build();
         // withCapabilities(webdriver.Capabilities.safari()).
         // withCapabilities(webdriver.Capabilities.firefox()).
+        console.log("TEST before() browser", browser.getCurrentUrl())
     });
 
     //closes the browser when done
     after(function() {
-      console.log("TEST browser", browser.getCurrentUrl())
+      console.log("TEST after() browser", browser.getCurrentUrl())
       console.log('quitting');
       return browser.quit();
     });
 
     describe('UI Tests', function () {
       before(function() {
+        console.log("TEST UITests browser", browser.getCurrentUrl())
         return browser.get(frontend);
       });
 
