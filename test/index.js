@@ -117,6 +117,7 @@ describe('Special Collections (Selenium) Tests', function() {
       //for searching for objects using the search box
       describe('Search object tests', function() {
         before(function() {
+          console.log("TEST Search object test browser", browser.getCurrentUrl())
           return browser.get(frontend);
         });
 
@@ -146,6 +147,7 @@ describe('Special Collections (Selenium) Tests', function() {
       describe('Facet tests (frontpage)', function() {
         //navigate to the frontapge
         before(function() {
+          console.log("TEST Facet test browser", browser.getCurrentUrl())
           return browser.get(frontend);
         });
 
