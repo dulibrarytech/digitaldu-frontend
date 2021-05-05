@@ -99,7 +99,9 @@ describe('Special Collections (Selenium) Tests', function() {
       console.log('quitting');
       return browser.quit();
     });
-
+    
+    console.log("TEST browser", browser.getCurrentUrl())
+    
     describe('UI Tests', function () {
       before(function() {
         return browser.get(frontend);
