@@ -246,6 +246,8 @@ describe('Special Collections (Selenium) Tests', function() {
             });
           });
         });
+          
+      }); // DEV section end
 
 
       //   describe('Collection accordion', function() {
