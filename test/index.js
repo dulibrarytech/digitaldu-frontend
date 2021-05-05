@@ -101,9 +101,9 @@ describe('Special Collections (Selenium) Tests', function() {
     });
 
     describe('UI Tests', function () {
-            console.log("FE:", frontend)
       before(function() {
         return browser.get(frontend);
+          done();
       });
 
 //       it('Tab title test', function() {
