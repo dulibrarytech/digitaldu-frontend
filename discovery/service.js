@@ -297,7 +297,7 @@ exports.getDatastream = function(indexName, objectID, datastreamID, part, authKe
       });
     }
     else {
-      callback("Object not found, can not stream data: " + objectID, null);
+      callback(null, null);
     }
   });
 }
