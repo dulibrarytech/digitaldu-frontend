@@ -118,9 +118,9 @@ elastic-index-mapping.json
 
 ### External Services Setup
 
-#### Cantaloupe Image Server (v4)
+#### Cantaloupe Image Server (v4.1.7)
 
-Download and install the Cantaloupe image server (https://cantaloupe-project.github.io/), update the frontend .env file with the Cantaloupe port and url.  Alternatively, another IIIF image server can be used.
+Download and install the Cantaloupe image server (https://cantaloupe-project.github.io/), update the frontend .env file with the Cantaloupe port and url.  ***Alternatively, another IIIF image server can be used***.
 
 ##### "Cantaloupe.properties" updates
 
@@ -128,22 +128,64 @@ delegate_script.enabled = true
 
 HttpSource.lookup_strategy = ScriptLookupStrategy
 
-##### "delegates.rb" updates 
+##### "delegates.rb" updates (Implement the following hooks)
 
-To test for a local image file in specified location. Cantaloupe will use local FS source of image if the file is found. If it is not, HttpSource will be used to fetch the image remotely from DuraCloud via the frontend /datastream route:
+To test for a local image file in specified location. Cantaloupe will use image from local folder (path) if the file is found. If it is not, HttpSource will be used to fetch the image remotely from DuraCloud via the frontend /datastream route:
 
  def source(options = {})
-      puts "source() script checking for local image file..."
-      filename = "/path/to/images/".concat(context['identifier']).concat(".jpg")
-
-      if(File.exist?(filename))
-        puts filename.concat(" found. Using FilesystemSource")
-        str = "FilesystemSource"
-      else
-        puts filename.concat(" not found. Using HttpSource")
-        str = "HttpSource"
+  puts "source() script checking for local image file..."
+  path = "{location of source images use trailing slash}"
+  puts "Current image location is: ".concat(path)
+  if context['identifier'].include? '_'
+    parts = context['identifier'].split('_')
+    filePattern = parts[0].concat("-*").concat("_{p,P,pg,PG,Pg}").concat("{,0,00,000}").concat(parts[1]).concat(".jpg")
+    Dir.chdir(path)
+    files = Dir[filePattern]
+    if files.empty?
+      puts "No matching files found"
+      filename = "Image file"
+      filepath = path;
+    else
+      if files.length() > 1
+        puts files.length().to_s.concat(" filenames found that match current file pattern '").concat(filePattern).concat("'")
+        puts "Filenames: ".concat(files.join(', '))
+        puts "Using first file..."
       end
+      filename = files[0]
+      filepath = path.concat(files[0]) 
+    end
+  else
+    filename = context['identifier']
+    filepath = path.concat(filename).concat(".jpg")
   end
+
+  if(File.exist?(filepath))
+    puts filename.concat(" found. Using FilesystemSource option")
+    str = "FilesystemSource"
+  else
+    puts filename.concat(" not found. Using HttpSource option")
+    str = "HttpSource"
+  end
+
+  return str;
+end
+
+Test if file is present. This function is required to return the source uri with the filename that matches the current Cantaloupe request id. If file is not fount, will return a generic image filename consisting of the object pid and jpg extension. If the above source() method does find a file, and FileSystemSourceis selected to run the below function, the file will be found. This 'double checking' for the file is necessary because the default prefix-pid-suffix filename structure in the cantaloupe properties file can not be used on filenames that do not fit that structure. The source() and filesystemsource_pathname() hooks allow a file to be found that does not match the default structure
+
+def filesystemsource_pathname(options = {})
+    path = "{location of source images use trailing slash}"
+    if context['identifier'].include? '_'
+      parts = context['identifier'].split('_')
+      filePattern = parts[0].concat("-*").concat("_{p,P,pg,PG,Pg}").concat("{,0,00,000}").concat(parts[1]).concat(".jpg")
+      Dir.chdir(path)
+      files = Dir[filePattern]
+      filepath = path.concat(files[0]) 
+    else
+      filename = context['identifier']
+      filepath = path.concat(filename).concat(".jpg")
+    end
+    return filepath
+end
 
 Implement the following hook to detect an api key in the incoming request, and append it to the DigitalCollections /datastream route request.  This will create the path to the resource in DigitalCollections for Cantaloupe, appending an api key if present in the initial iiif request to Cantaloupe:
 
@@ -152,7 +194,7 @@ def httpsource_resource_info(options = {})
     puts "http_resource_info() Object ID: ".concat(context['identifier'])
     puts "http_resource_info() Request uri: ".concat(request_uri)
     key = ''
-    str = 'http://localhost:9006/datastream/'
+    str = '{Application domain}/datastream/'
     
     if context['identifier'].include? '__'
       puts "__ present"
