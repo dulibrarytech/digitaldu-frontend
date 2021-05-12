@@ -132,7 +132,7 @@ class CustomDelegate
         files = Dir[filePattern]
         if files.empty?
           puts "No matching files found"
-          filename = "Image file"
+          filename = ""
           filepath = path;
         else
           if files.length() > 1
@@ -185,7 +185,13 @@ class CustomDelegate
       filePattern = parts[0].concat("-*").concat("_{p,P,pg,PG,Pg}").concat("{,0,00,000}").concat(parts[1]).concat(".jpg")
       Dir.chdir(path)
       files = Dir[filePattern]
-      filepath = path.concat(files[0]) 
+      if files.empty?
+        puts "No matching files found"
+        filename = ""
+        filepath = path;
+      else
+        filepath = path.concat(files[0]) 
+      end
     else
       filename = context['identifier']
       filepath = path.concat(filename).concat(".jpg")
