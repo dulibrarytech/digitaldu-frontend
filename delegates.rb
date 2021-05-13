@@ -123,7 +123,7 @@ class CustomDelegate
   #
   def source(options = {})
       puts "source() script checking for local image file matching identifier '".concat(context['identifier']).concat("'...")
-      path = "/home/jeff/Dev/TEST/cantaloupe-images/"
+      path = ""
       puts "Current image location is: ".concat(path)
       if context['identifier'].include? '_'
         parts = context['identifier'].split('_')
@@ -184,7 +184,7 @@ class CustomDelegate
   #
   def filesystemsource_pathname(options = {})
       puts "Fetching image file path..."
-      path = "/home/jeff/Dev/TEST/cantaloupe-images/"
+      path = ""
       puts "Current image location is: ".concat(path)
       if context['identifier'].include? '_'
         parts = context['identifier'].split('_')
