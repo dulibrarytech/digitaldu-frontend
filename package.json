@@ -35,7 +35,7 @@
     "node-fetch": "^2.6.1",
     "pdf-page-counter": "^1.0.3",
     "request-stream": "^1.2.2",
-    "sanitize-html": "^1.23.0",
+    "sanitize-html": "^2.4.0",
     "stringify-object": "^3.3.0",
     "write": "^2.0.0",
     "ws": "^7.3.1",
