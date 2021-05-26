@@ -187,7 +187,7 @@ module.exports = {
      * Download options
      */
     enableFileDownload: true,
-    enableCompoundObjectBatchDownload: true,
+    enableCompoundObjectBatchDownload: true, // Requires a websocket service. The websocket address is set in /public/config/configuration.js
     batchFileDownloadTemporaryFolder: "./cache/download/temporary-download",
     downloadFiletypes: {
         "jpg": [{extension: "jpg", label: "jpeg"}],

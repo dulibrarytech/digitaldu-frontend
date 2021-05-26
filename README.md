@@ -33,7 +33,7 @@ All other content is released under [CC-BY-4.0](https://creativecommons.org/lice
 @freyesdulib, @kimpham54, @jackflaps, @josephlabrecque
 
 
-### Local Development Setup
+### Local Setup and Configuration
 
  - Steps to configure Digital Collections app locally...
     1. Clone the application files from Git repository(https://github.com/dulibrarytech/digitaldu-frontend.git") 
@@ -79,10 +79,10 @@ All other content is released under [CC-BY-4.0](https://creativecommons.org/lice
     6. IIIF_URL can be localhost, as the service is included with DigitalCollections.  Make sure the port listed here is the port that DigitalCollections is running on.
     
     7. Setup a local instance of Cantaloupe image server and update the CANTALOUPE_URL field in .env
-    
-    8. Run the app by using "node discovery.js" or "nodejs discovery.js" from the app root folder.
 
-    #### Index required fields
+    8. Update the settings file in /public/confog/configuration.js
+    
+    9. Run the app by using "node discovery.js" or "nodejs discovery.js" from the app root folder.
 
 ##### Index Document Required Fields for Each Object 
 
