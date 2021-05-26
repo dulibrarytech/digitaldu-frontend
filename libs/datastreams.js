@@ -169,7 +169,7 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
     }
   }
 
-  // Request a non-thumbnail datastream. Streaming from Kaltura has not been implemented
+  // Request a non-thumbnail datastream
   else {
     var cacheEnabled = false;
     for(var type in config.objectTypes) {
@@ -226,8 +226,10 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
               extension != Helper.getFileExtensionForMimeType(mimeType) &&
               Helper.getObjectType(mimeType) == "still image") {
 
-        // Build uri to cantaloupe iiif api for full jpg
-        let uri = config.IIIFServerUrl + "/iiif/2/" + objectID + "/full/!1024,1024/0/default.jpg";
+        // Get cantaloupe uri for jpg
+        let server = Helper.getFileExtensionFromFilePath(object.object) == "tif" ? config.IIIFTiffServerUrl : config.IIIFServerUrl,
+            uri = server + "/iiif/2/" + objectID + "/full/!1024,1024/0/default.jpg";
+
         streamRemoteData(uri, function(error, status, stream) {
           if(error) {
             if(config.nodeEnv == "devlog") {console.log(error)}
