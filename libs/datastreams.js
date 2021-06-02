@@ -46,20 +46,14 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
  *
  * @return {undefined}
  */
-exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, callback) {
-  // If there is a part value, retrieve the part data.  Redefine the object data with the part data
+exports.getDatastream = function(object, objectID, datastreamID, objectPart, apiKey, callback) {
   var fileType = "default";
-  if(Helper.isParentObject(object) && part) {
-    var fileType = "compound";
-
-    // Get the data from the part object, set as object for datastream request. If part is not found, part will be ignored and input object will be used to stream data
-    let objectPart = Helper.getCompoundObjectPart(object, part);
-    if(objectPart) {
-      objectPart["object_type"] = "object";
-      objectPart["mime_type"] = objectPart.type ? objectPart.type : (objectPart.mime_type || null);
-      object = objectPart;
-      objectID = objectID + (config.compoundObjectPartID + part);
-    }
+  if(Helper.isParentObject(object) && objectPart) {
+    fileType = "compound";
+    objectPart["object_type"] = "object";
+    objectPart["mime_type"] = objectPart.type ? objectPart.type : (objectPart.mime_type || null);
+    object = objectPart;
+    objectID = objectID + (config.compoundObjectPartID + objectPart.order);
   }
 
   if(datastreamID == "tn") {
@@ -256,7 +250,7 @@ exports.getDatastream = function(object, objectID, datastreamID, part, apiKey, c
       else {
         Repository.streamData(object, datastreamID, function(error, stream) {
           if(error || !stream) {
-            callback("Repository stream data error: " + (error || "Path to resource not found. Pid:" + objectID), null);
+            callback("Repository stream data error: " + (error || "Path to resource not found. Pid: " + objectID), null);
           }
           else {
             if(config.objectDerivativeCacheEnabled == true && cacheEnabled) {

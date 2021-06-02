@@ -367,15 +367,11 @@ exports.getDatastream = function(req, res) {
 
 	Service.getDatastream(index, pid, ds, part, key, function(error, stream, contentType=null) {
 		if(error) {
-			if(config.nodeEnv == "devlog") {
-				console.log(error);
-			}
+			console.log(error);
 			res.sendStatus(500);
 		}
 		else if(!stream) {
-			if(config.nodeEnv == "devlog") {
-				console.log("Can not retrieve datastream");
-			}
+			console.log("Datastream source not found. Pid: " + pid);
 			res.sendStatus(404);
 		}
 		else {

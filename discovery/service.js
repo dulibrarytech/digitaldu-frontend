@@ -291,12 +291,16 @@ exports.getFacets = getFacets;
 exports.getDatastream = function(indexName, objectID, datastreamID, part, authKey, callback) {
   fetchObjectByPid(indexName, objectID, function(error, object) {
     if(object) {
-      if(part && AppHelper.isParentObject(object) == false) {
+      let objectPart = AppHelper.getCompoundObjectPart(object, part)
+      if(part && ((AppHelper.isParentObject(object) == false) || !objectPart)) {
+        callback(null, null);
+      }
+      else if(AppHelper.isParentObject(object) && !part) {
         callback(null, null);
       }
       else {
         let contentType = AppHelper.getContentType(datastreamID, object, part);
-        Datastreams.getDatastream(object, objectID, datastreamID, part, authKey, function(error, stream) {    
+        Datastreams.getDatastream(object, objectID, datastreamID, objectPart, authKey, function(error, stream) {    
           callback(error, stream, contentType);
         });
       }
@@ -802,7 +806,9 @@ var addCacheItem = function(objectID, cacheName) {
         }    
         else if(Cache.exists(cacheName, item.pid, extension) == false) {
           if(cacheName == "thumbnail") {cacheName = "tn"}
-          Datastreams.getDatastream(object, objectID, cacheName, item.sequence, null, function(error, stream) {
+
+          let objectPart = Helper.getCompoundObjectPart(object, item.sequence)  
+          Datastreams.getDatastream(object, objectID, cacheName, objectPart, null, function(error, stream) {
             if(error) {
               console.log(error);
             }
