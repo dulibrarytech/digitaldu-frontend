@@ -76,7 +76,6 @@ exports.renderRootCollection = function(req, res) {
 		}
 		else {
 			data.collectionFacets = response.list;
-
 			let offset = config.defaultHomePageCollectionsCount * (page-1)
 			response.list = response.list.slice(offset, (offset + config.defaultHomePageCollectionsCount))
 			data.collections = response.list;

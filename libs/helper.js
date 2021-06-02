@@ -307,7 +307,9 @@ exports.isValidExtension = isValidExtension;
  */
 var getContentType = function(datastream, object, part) {
   // Default content type
-  var contentType = "application/octet-stream";
+  var contentType = "application/octet-stream",
+  	  pid = object.pid || "";
+
   if(part && object.display_record.parts) {
     part = parseInt(part);
     object = object.display_record.parts[part-1] || null;
@@ -325,6 +327,9 @@ var getContentType = function(datastream, object, part) {
     let ext = getFileExtensionFromFilePath(object.object);
     contentType = config.contentTypes[ext] || "";
 
+  }
+  else {
+  	console.log("Invalid compound object data. Object ID: " + pid)
   }
   return contentType;
 }

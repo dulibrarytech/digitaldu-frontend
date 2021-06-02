@@ -291,10 +291,15 @@ exports.getFacets = getFacets;
 exports.getDatastream = function(indexName, objectID, datastreamID, part, authKey, callback) {
   fetchObjectByPid(indexName, objectID, function(error, object) {
     if(object) {
-      let contentType = AppHelper.getContentType(datastreamID, object, part);
-      Datastreams.getDatastream(object, objectID, datastreamID, part, authKey, function(error, stream) {    
-        callback(error, stream, contentType);
-      });
+      if(part && AppHelper.isParentObject(object) == false) {
+        callback(null, null);
+      }
+      else {
+        let contentType = AppHelper.getContentType(datastreamID, object, part);
+        Datastreams.getDatastream(object, objectID, datastreamID, part, authKey, function(error, stream) {    
+          callback(error, stream, contentType);
+        });
+      }
     }
     else {
       callback(null, null);
