@@ -435,13 +435,13 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
     pid = pid.substr(0, pid.indexOf(config.compoundObjectPartID));
   }
 
-  fetchObjectByPid(index, pid, function(error, response) {
+  fetchObjectByPid(index, pid, function(error, object) {
     if(error) {
       callback(error, JSON.stringify({}));
     }
-    else if(response) {
-      var object = response;
-      var parts = [], resourceUrl;
+    else if(object) {
+      var parts = [],
+          resourceUrl;
 
       if(part) {
         let partData = AppHelper.getCompoundObjectPart(object, part),
@@ -502,12 +502,11 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
         }
 
         for(var key in parts) {
-          let pageCount = null;
-          resourceUrl = config.rootUrl + "/datastream/" + object.pid + "/" + AppHelper.getFileExtensionFromFilePath(parts[key].object || "undefined") + "/" + parts[key].order;
+          let pageCount = null,
+              filename = config.IIIFUseLocalFilesource ? AppHelper.getDuracloudFilenameFromObjectPath(object) : null;
 
           // pdf page count
           if(config.IIIFEnablePdfPaging && AppHelper.getDsType(parts[key].type) == "pdf") {
-
             let objectID = object.pid + (parts[key].order ? ("_" + parts[key].order) : ""),
                 cacheFileName = objectID + ".pdf",
                 cacheFilePath = config.objectDerivativeCacheLocation;
@@ -526,9 +525,9 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
             description: parts[key].caption,
             format: Helper.getIIIFFormat(parts[key].type),
             type: Helper.getIIIFObjectType(parts[key].type) || "",
-            resourceID: object.pid + config.compoundObjectPartID + parts[key].order || "",
+            resourceID: object.pid + config.compoundObjectPartID + (parts[key].order || "") + (filename ? config.IIIFFilesourceImageFilenamePrefix + filename : ""),
             downloadFileName: parts[key].title,
-            resourceUrl: resourceUrl,
+            resourceUrl: config.rootUrl + "/datastream/" + object.pid + "/" + AppHelper.getFileExtensionFromFilePath(parts[key].object || "undefined") + "/" + parts[key].order,
             thumbnailUrl: config.rootUrl + "/datastream/" + object.pid + "/tn/" + parts[key].order,
             pageCount: pageCount,
             extension: AppHelper.getFileExtensionFromFilePath(parts[key].object)
@@ -547,8 +546,8 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
 
       // Single objects
       else {
-        let pageCount = null;
-        resourceUrl = config.rootUrl + "/datastream/" + object.pid + "/" + AppHelper.getDsType(object.mime_type);
+        let pageCount = null,
+            filename = config.IIIFUseLocalFilesource ? AppHelper.getDuracloudFilenameFromObjectPath(object) : null;
 
         // pdf page count
         if(config.IIIFEnablePdfPaging && AppHelper.getDsType(object.mime_type) == "pdf") {
@@ -570,8 +569,8 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
           description: object.abstract,
           format: Helper.getIIIFFormat(object.mime_type),
           type: Helper.getIIIFObjectType(object.mime_type) || "",
-          resourceID: object.pid,
-          resourceUrl: resourceUrl,
+          resourceID: object.pid + (filename ? config.IIIFFilesourceImageFilenamePrefix + filename : ""),
+          resourceUrl: config.rootUrl + "/datastream/" + object.pid + "/" + AppHelper.getDsType(object.mime_type),
           thumbnailUrl: config.rootUrl + "/datastream/" + object.pid + "/tn",
           pageCount: pageCount,
           extension: AppHelper.getFileExtensionFromFilePath(object.object)

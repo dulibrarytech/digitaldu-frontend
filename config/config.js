@@ -213,6 +213,8 @@ module.exports = {
     IIIFDefaultCanvasHeight: 1000,
     IIIFDefaultCanvasWidth: 750,
     IIIFEnablePdfPaging: true,
+    IIIFUseLocalFilesource: true,
+    IIIFFilesourceImageFilenamePrefix: "___", 
 
     /*
      * IIIF Object Types

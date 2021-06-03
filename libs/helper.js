@@ -414,6 +414,10 @@ exports.validateDateParameters = function(query) {
   return isValid;
 }
 
-exports.sanitizePid = function() {
-	
+exports.getDuracloudFilenameFromObjectPath = function(object) {
+	let filename = null;
+	if(object.object) {
+		filename = object.object.substring(object.object.lastIndexOf("/")+1, object.object.lastIndexOf("."));
+	}
+	return filename;
 }

@@ -354,7 +354,8 @@ exports.getDatastream = function(req, res) {
 		key = null;
 
 	let pidElements;
-	part = part == "0" ? null : part;
+	part = (part == "0" || part == "null") ? null : part;
+
 	if(part == null && pid.indexOf(config.compoundObjectPartID) > 0) {
 		part = pid.substring(pid.indexOf(config.compoundObjectPartID)+1, pid.length);	
 		pid = pid.split(config.compoundObjectPartID,1)[0];
