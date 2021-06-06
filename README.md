@@ -132,85 +132,88 @@ HttpSource.lookup_strategy = ScriptLookupStrategy
 
 To test for a local image file in specified location. Cantaloupe will use image from local folder (path) if the file is found. If it is not, HttpSource will be used to fetch the image remotely from DuraCloud via the frontend /datastream route:
 
- def source(options = {})
-  puts "source() script checking for local image file..."
-  path = "{location of source images use trailing slash}"
-  puts "Current image location is: ".concat(path)
-  if context['identifier'].include? '_'
-    parts = context['identifier'].split('_')
-    filePattern = parts[0].concat("-*").concat("_{p,P,pg,PG,Pg}").concat("{,0,00,000}").concat(parts[1]).concat(".jpg")
-    Dir.chdir(path)
-    files = Dir[filePattern]
-    if files.empty?
-      puts "No matching files found"
-      filename = "Image file"
-      filepath = path;
-    else
-      if files.length() > 1
-        puts files.length().to_s.concat(" filenames found that match current file pattern '").concat(filePattern).concat("'")
-        puts "Filenames: ".concat(files.join(', '))
-        puts "Using first file..."
+def source(options = {})
+  str = "HttpSource"
+    if context['identifier'].include? '___'
+      parts = context['identifier'].split('___')
+      filePattern = parts[1]
+      filename = filePattern.concat(".jpg")
+
+      puts "source() script checking for local image file '".concat(filename).concat("'...")
+      path = "{path to images}"
+      puts "Current image location is: ".concat(path)
+
+      Dir.chdir(path)
+      files = Dir[filePattern]
+      if files.empty?
+          puts "No matching files found. Using HttpSource"
+          str = "HttpSource"
+      else
+        if files.length() > 1
+          puts files.length().to_s.concat(" filenames found that match current file pattern '").concat(filePattern).concat("'")
+          puts "Filenames: ".concat(files.join(', '))
+          puts "Using first file..."
+        end
+
+        filename = files[0]
+        filepath = path.concat(files[0]) 
+        if(File.exist?(filepath))
+          puts "Found image file ".concat(filename).concat(". Using FilesystemSource option")
+          str = "FilesystemSource"
+        else
+          puts filename.concat(" not found. Using HttpSource option")
+          str = "HttpSource"
+        end
       end
-      filename = files[0]
-      filepath = path.concat(files[0]) 
-    end
-  else
-    filename = context['identifier']
-    filepath = path.concat(filename).concat(".jpg")
-  end
-
-  if(File.exist?(filepath))
-    puts filename.concat(" found. Using FilesystemSource option")
-    str = "FilesystemSource"
-  else
-    puts filename.concat(" not found. Using HttpSource option")
-    str = "HttpSource"
-  end
-
-  return str;
+    end 
+    return str;
 end
 
 Test if file is present. This function is required to return the source uri with the filename that matches the current Cantaloupe request id. If file is not fount, will return a generic image filename consisting of the object pid and jpg extension. If the above source() method does find a file, and FileSystemSourceis selected to run the below function, the file will be found. This 'double checking' for the file is necessary because the default prefix-pid-suffix filename structure in the cantaloupe properties file can not be used on filenames that do not fit that structure. The source() and filesystemsource_pathname() hooks allow a file to be found that does not match the default structure
 
 def filesystemsource_pathname(options = {})
-    path = "{location of source images use trailing slash}"
-    if context['identifier'].include? '_'
-      parts = context['identifier'].split('_')
-      filePattern = parts[0].concat("-*").concat("_{p,P,pg,PG,Pg}").concat("{,0,00,000}").concat(parts[1]).concat(".jpg")
-      Dir.chdir(path)
-      files = Dir[filePattern]
-      filepath = path.concat(files[0]) 
-    else
-      filename = context['identifier']
-      filepath = path.concat(filename).concat(".jpg")
-    end
-    return filepath
+  filepath = "{path to images}"
+  if context['identifier'].include? '___'
+    parts = context['identifier'].split('___')
+    filepath = filepath.concat(parts[1]).concat(".jpg")
+    puts "filesystemsource_pathname returning pathname: ".concat(filepath)
+  else 
+    puts "Error: filename not found in request uri"
+  end
+  return filepath;
 end
 
 Implement the following hook to detect an api key in the incoming request, and append it to the DigitalCollections /datastream route request.  This will create the path to the resource in DigitalCollections for Cantaloupe, appending an api key if present in the initial iiif request to Cantaloupe:
 
 def httpsource_resource_info(options = {})
-    request_uri = context['request_uri']
-    puts "http_resource_info() Object ID: ".concat(context['identifier'])
-    puts "http_resource_info() Request uri: ".concat(request_uri)
-    key = ''
-    str = '{Application domain}/datastream/'
-    
-    if context['identifier'].include? '__'
-      puts "__ present"
-      parts = context['identifier'].split('__')
-      key = '?key='
-      key.concat(parts[1])
-      str.concat(parts[0])
-    else
-      str.concat(context['identifier'])
-    end
+  pid = context['identifier']
+  request_uri = context['request_uri']
+  puts "http_resource_info() Object ID: ".concat(pid)
+  puts "http_resource_info() Request uri: ".concat(request_uri)
+  key = ''
+  str = '{url to frontend application}'
 
-    str.concat('/object')
-    str.concat(key)
-    puts "http_resource_info() derived resource url: ".concat(str)
-    return str
+  # remove filename
+  if pid.include? '___'
+    parts = pid.split('___')
+    pid = parts[0]
+    puts "http_resource_info() Removed file name from ID string. Object ID: ".concat(pid)
   end
+  
+  if pid.include? '__'
+    parts = pid.split('__')
+    key = '?key='
+    key.concat(parts[1])
+    str.concat(parts[0])
+  else
+    str.concat(pid)
+  end
+
+  str.concat('/object')
+  str.concat(key)
+  puts "http_resource_info() derived resource url: ".concat(str)
+  return str  
+end
 
 ##### Additional configuration
 

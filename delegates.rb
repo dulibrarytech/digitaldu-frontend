@@ -122,44 +122,39 @@ class CustomDelegate
   # @return [String] Source name.
   #
   def source(options = {})
-    puts "source() script checking for local image file matching identifier '".concat(context['identifier']).concat("'...")
-    path = "{path to images}"
-    puts "Current image location is: ".concat(path)
-    if context['identifier'].include? '_'
-      parts = context['identifier'].split('_')
-      if parts[1].nil?
-        puts "Part id not found in compound object identifier string"
-        filePattern = context['identifier']
+    str = "HttpSource"
+    if context['identifier'].include? '___'
+      parts = context['identifier'].split('___')
+      filePattern = parts[1]
+      filename = filePattern.concat(".jpg")
+
+      puts "source() script checking for local image file '".concat(filename).concat("'...")
+      path = "{path to images}"
+      puts "Current image location is: ".concat(path)
+
+      Dir.chdir(path)
+      files = Dir[filePattern]
+      if files.empty?
+          puts "No matching files found. Using HttpSource"
+          str = "HttpSource"
       else
-        filePattern = parts[0].concat("-*").concat("_{p,P,pg,PG,Pg}").concat("{,0,00,000}").concat(parts[1]).concat(".jpg")
-      end
-    else
-      filePattern = context['identifier'].concat("-*").concat(".jpg")
-    end
+        if files.length() > 1
+          puts files.length().to_s.concat(" filenames found that match current file pattern '").concat(filePattern).concat("'")
+          puts "Filenames: ".concat(files.join(', '))
+          puts "Using first file..."
+        end
 
-    Dir.chdir(path)
-    files = Dir[filePattern]
-    if files.empty?
-        puts "No matching files found. Using HttpSource"
-        str = "HttpSource"
-    else
-      if files.length() > 1
-        puts files.length().to_s.concat(" filenames found that match current file pattern '").concat(filePattern).concat("'")
-        puts "Filenames: ".concat(files.join(', '))
-        puts "Using first file..."
+        filename = files[0]
+        filepath = path.concat(files[0]) 
+        if(File.exist?(filepath))
+          puts "Found image file ".concat(filename).concat(". Using FilesystemSource option")
+          str = "FilesystemSource"
+        else
+          puts filename.concat(" not found. Using HttpSource option")
+          str = "HttpSource"
+        end
       end
-
-      filename = files[0]
-      filepath = path.concat(files[0]) 
-      if(File.exist?(filepath))
-        puts "Found image file ".concat(filename).concat(". Using FilesystemSource option")
-        str = "FilesystemSource"
-      else
-        puts filename.concat(" not found. Using HttpSource option")
-        str = "HttpSource"
-      end
-    end
-
+    end 
     return str;
   end
 
@@ -183,38 +178,14 @@ class CustomDelegate
   #                      given identifier, or nil if not found.
   #
   def filesystemsource_pathname(options = {})
-    puts "Fetching image file path..."
-    path = "{path to images}"
-    puts "Current image location is: ".concat(path)
-    if context['identifier'].include? '_'
-      parts = context['identifier'].split('_')
-      if parts[1].nil?
-        puts "Part id not found in compound object identifier string"
-        filePattern = context['identifier']
-      else
-        filePattern = parts[0].concat("-*").concat("_{p,P,pg,PG,Pg}").concat("{,0,00,000}").concat(parts[1]).concat(".jpg")
-      end
-    else
-      filePattern = context['identifier'].concat("-*").concat(".jpg")
+    filepath = "{path to images}"
+    if context['identifier'].include? '___'
+      parts = context['identifier'].split('___')
+      filepath = filepath.concat(parts[1]).concat(".jpg")
+      puts "filesystemsource_pathname returning pathname: ".concat(filepath)
+    else 
+      puts "Error: filename not found in request uri"
     end
-
-    Dir.chdir(path)
-    files = Dir[filePattern]
-    if files.empty?
-        puts "No matching files found. Using HttpSource"
-        str = "HttpSource"
-    else
-      if files.length() > 1
-        puts files.length().to_s.concat(" filenames found that match current file pattern '").concat(filePattern).concat("'")
-        puts "Filenames: ".concat(files.join(', '))
-        puts "Using first file..."
-      end
-
-      filename = files[0]
-      filepath = path.concat(files[0]) 
-      puts "Image path is ".concat(filepath)
-    end
-
     return filepath;
   end
 
@@ -236,19 +207,27 @@ class CustomDelegate
   # @return See above.
   #
   def httpsource_resource_info(options = {})
+    pid = context['identifier']
     request_uri = context['request_uri']
-    puts "http_resource_info() Object ID: ".concat(context['identifier'])
+    puts "http_resource_info() Object ID: ".concat(pid)
     puts "http_resource_info() Request uri: ".concat(request_uri)
     key = ''
-    str = 'http://localhost:9006/datastream/'
+    str = '{url to frontend application}'
+
+    # remove filename
+    if pid.include? '___'
+      parts = pid.split('___')
+      pid = parts[0]
+      puts "http_resource_info() Removed file name from ID string. Object ID: ".concat(pid)
+    end
     
-    if context['identifier'].include? '__'
-      parts = context['identifier'].split('__')
+    if pid.include? '__'
+      parts = pid.split('__')
       key = '?key='
       key.concat(parts[1])
       str.concat(parts[0])
     else
-      str.concat(context['identifier'])
+      str.concat(pid)
     end
 
     str.concat('/object')
