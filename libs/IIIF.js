@@ -416,7 +416,9 @@ var getImageCanvas = function(container, object, apikey) {
 	let canvas = {},
 	image = {},
 	resource = {},
-	service = {};
+	service = {},
+	filename = object.filename ? (config.IIIFFilesourceImageFilenamePrefix + object.filename) : "";
+	
 	apikey = apikey ? (config.IIIFAPiKeyPrefix + apikey) : "";
 
 	canvas["@id"] = config.IIIFUrl + "/" + container.resourceID + "/canvas/c" + object.sequence;
@@ -430,7 +432,7 @@ var getImageCanvas = function(container, object, apikey) {
 	image["motivation"] = "sc:painting";
 
 	let imageServerUrl = (object.extension == "tif" || object.extension == "tiff") ? config.IIIFTiffServerUrl : config.IIIFServerUrl;
-	resource["@id"] = imageServerUrl + "/iiif/2/" + object.resourceID + "/full/!1024,1024/0/default.jpg" + apikey;
+	resource["@id"] = imageServerUrl + "/iiif/2/" + object.resourceID + apikey + filename + "/full/!1024,1024/0/default.jpg";
 
 	resource["@type"] = object.type; 
 	resource["format"] = object.format; 

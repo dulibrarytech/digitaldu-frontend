@@ -530,7 +530,8 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
             resourceUrl: config.rootUrl + "/datastream/" + object.pid + "/" + AppHelper.getFileExtensionFromFilePath(parts[key].object || "undefined") + "/" + parts[key].order,
             thumbnailUrl: config.rootUrl + "/datastream/" + object.pid + "/tn/" + parts[key].order,
             pageCount: pageCount,
-            extension: AppHelper.getFileExtensionFromFilePath(parts[key].object)
+            extension: AppHelper.getFileExtensionFromFilePath(parts[key].object),
+            filename: filename
           });
         }
 
@@ -569,11 +570,12 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
           description: object.abstract,
           format: Helper.getIIIFFormat(object.mime_type),
           type: Helper.getIIIFObjectType(object.mime_type) || "",
-          resourceID: object.pid + (filename ? config.IIIFFilesourceImageFilenamePrefix + filename : ""),
+          resourceID: object.pid,
           resourceUrl: config.rootUrl + "/datastream/" + object.pid + "/" + AppHelper.getDsType(object.mime_type),
           thumbnailUrl: config.rootUrl + "/datastream/" + object.pid + "/tn",
           pageCount: pageCount,
-          extension: AppHelper.getFileExtensionFromFilePath(object.object)
+          extension: AppHelper.getFileExtensionFromFilePath(object.object),
+          filename: filename
         });
 
         IIIF.getManifest(container, children, apikey, function(error, manifest) {
