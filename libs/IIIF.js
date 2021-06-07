@@ -414,10 +414,9 @@ var getThumbnailObject = function(container, object, apikey, page=null) {
  */
 var getImageCanvas = function(container, object, apikey) {
 	let canvas = {},
-	image = {},
-	resource = {},
-	service = {},
-	filename = object.filename ? (config.IIIFFilesourceImageFilenamePrefix + object.filename) : "";
+		image = {},
+		resource = {},
+		service = {};
 	
 	apikey = apikey ? (config.IIIFAPiKeyPrefix + apikey) : "";
 
@@ -432,13 +431,13 @@ var getImageCanvas = function(container, object, apikey) {
 	image["motivation"] = "sc:painting";
 
 	let imageServerUrl = (object.extension == "tif" || object.extension == "tiff") ? config.IIIFTiffServerUrl : config.IIIFServerUrl;
-	resource["@id"] = imageServerUrl + "/iiif/2/" + object.resourceID + apikey + filename + "/full/!1024,1024/0/default.jpg";
+	resource["@id"] = imageServerUrl + "/iiif/2/" + object.resourceID + apikey + object.filename + "/full/!1024,1024/0/default.jpg";
 
 	resource["@type"] = object.type; 
 	resource["format"] = object.format; 
 
 	service["@context"] = "";
-	service["@id"] = imageServerUrl + "/iiif/2/" + object.resourceID + apikey
+	service["@id"] = imageServerUrl + "/iiif/2/" + object.resourceID + apikey + object.filename;
 
 	resource["service"] = service;
 

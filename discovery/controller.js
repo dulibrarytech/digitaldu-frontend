@@ -509,12 +509,10 @@ exports.getObjectViewer = function(req, res) {
 
 	Service.fetchObjectByPid(index, pid, function(error, object) {
 		if(error) {
-			console.error(error + ". Pid: " + pid);
-			errors = "Viewer error";
+			errors = "Viewer error: " + error + " Pid: " + pid;
 			res.status(500);
 		}
 		else if(object == null) {
-			console.log("Object not found. Pid: " + pid);
 			errors = "Object not found";
 			res.status(404);
 		}
