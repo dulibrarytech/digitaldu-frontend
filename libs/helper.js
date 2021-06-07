@@ -310,26 +310,34 @@ var getContentType = function(datastream, object, part) {
   var contentType = "application/octet-stream",
   	  pid = object.pid || "";
 
+  // Get the compound object part if specified
   if(part && object.display_record.parts) {
     part = parseInt(part);
     object = object.display_record.parts[part-1] || null;
   }
-  // Thumbnail datastream, use specified file type
+
+  // Thumbnail datastream, use tn file extension
   if(datastream.toLowerCase() == "tn") {
     contentType = "image/" + config.thumbnailFileExtension || "jpeg";
   }
-  // File type specific datastream (mp3, jpg, etc)
+
+  // Datastream request by Id (/jpg /mp3 etc) Get content type assigned to the datastream type
   else if(datastream.toLowerCase() != "object") {
     contentType = config.contentTypes[datastream] || "";
   }
+
   // Determine the file type via the object path file extension
   else if(object && object.object) {
     let ext = getFileExtensionFromFilePath(object.object);
-    contentType = config.contentTypes[ext] || "";
-
+    if(ext) {
+    	contentType = config.contentTypes[ext] || "";
+    }
+    else {
+    	contentType = getFileExtensionForMimeType(object.mime_type || "")
+    }
   }
   else {
-  	console.log("Invalid compound object data. Object ID: " + pid)
+  	console.log("Missing or invalid object path. Object ID: " + pid)
   }
   return contentType;
 }
