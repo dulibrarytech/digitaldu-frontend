@@ -291,16 +291,22 @@ exports.getFacets = getFacets;
 exports.getDatastream = function(indexName, objectID, datastreamID, part, authKey, callback) {
   fetchObjectByPid(indexName, objectID, function(error, object) {
     if(object) {
-      let objectPart = AppHelper.getCompoundObjectPart(object, part)
-      if(part && ((AppHelper.isParentObject(object) == false) || !objectPart)) {
-        callback(null, null);
+      let contentType = AppHelper.getContentType(datastreamID, object, part);
+      if(AppHelper.isParentObject(object) && part) {
+        let objectPart = AppHelper.getCompoundObjectPart(object, part || 1)
+        if(objectPart) {
+          objectPart["object_type"] = "object";
+          objectPart["mime_type"] = objectPart.type ? objectPart.type : (objectPart.mime_type || null);
+          object = objectPart;
+          objectID = objectID + (config.compoundObjectPartID + objectPart.order);
+        }
+        Datastreams.getDatastream(object, objectID, datastreamID, part, authKey, function(error, stream) {    
+          callback(error, stream, contentType);
+        });
       }
-      else if(AppHelper.isParentObject(object) && !part) {
-        callback(null, null);
-      }
+
       else {
-        let contentType = AppHelper.getContentType(datastreamID, object, part);
-        Datastreams.getDatastream(object, objectID, datastreamID, objectPart, authKey, function(error, stream) {    
+        Datastreams.getDatastream(object, objectID, datastreamID, part, authKey, function(error, stream) {    
           callback(error, stream, contentType);
         });
       }
@@ -775,7 +781,8 @@ var addCacheItem = function(objectID, cacheName) {
           items.push({
             pid: objectID + config.compoundObjectPartID + (part.order || part.sequence || "1"),
             mimeType: part.type || null,
-            sequence: (part.order || part.sequence || "1")
+            sequence: (part.order || part.sequence || "1"),
+            object: part
           });
         }
       }
@@ -807,9 +814,7 @@ var addCacheItem = function(objectID, cacheName) {
         }    
         else if(Cache.exists(cacheName, item.pid, extension) == false) {
           if(cacheName == "thumbnail") {cacheName = "tn"}
-
-          let objectPart = Helper.getCompoundObjectPart(object, item.sequence)  
-          Datastreams.getDatastream(object, objectID, cacheName, objectPart, null, function(error, stream) {
+          Datastreams.getDatastream(item.object, objectID, cacheName, item.sequence, null, function(error, stream) {
             if(error) {
               console.log(error);
             }

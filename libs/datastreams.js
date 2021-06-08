@@ -46,14 +46,10 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
  *
  * @return {undefined}
  */
-exports.getDatastream = function(object, objectID, datastreamID, objectPart, apiKey, callback) {
+exports.getDatastream = function(object, objectID, datastreamID, partIndex=null, apiKey, callback) {
   var fileType = "default";
-  if(Helper.isParentObject(object) && objectPart) {
-    fileType = "compound";
-    objectPart["object_type"] = "object";
-    objectPart["mime_type"] = objectPart.type ? objectPart.type : (objectPart.mime_type || null);
-    object = objectPart;
-    objectID = objectID + (config.compoundObjectPartID + objectPart.order);
+  if(Helper.isParentObject(object)) {
+     fileType = "compound";
   }
 
   if(datastreamID == "tn") {
@@ -193,7 +189,7 @@ exports.getDatastream = function(object, objectID, datastreamID, objectPart, api
         }
       })
     }
-    else if(mimeType) {
+    else if(object.object) {
       let objectType = Helper.getObjectType(mimeType),
           viewerId = object.entry_id || object.kaltura_id || null;
 
@@ -265,7 +261,8 @@ exports.getDatastream = function(object, objectID, datastreamID, objectPart, api
       }
     }
     else {
-      console.log("Can't stream data, invalid mimetype for " + objectID);
+      console.log("'object' path not found in index. Pid: " + objectID);
+      callback(null, null);
     }
   }
 }

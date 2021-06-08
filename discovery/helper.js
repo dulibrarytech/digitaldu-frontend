@@ -371,7 +371,6 @@ exports.getFileDownloadLinks = function(object, part=null) {
   else {
     console.log("Can not create download links for object " + pid + ", object path does not exist");
   }
-
   return links;
 }
 

@@ -271,7 +271,7 @@ exports.getFileExtensionForMimeType = getFileExtensionForMimeType;
  * @param {String} mimeType - Object mime type (ex "audio/mp3")
  * @return {String} DDU object type
  */
-var getObjectType = function(mimeType) {
+var getObjectType = function(mimeType="") {
   let type = "";
   for(var key in config.objectTypes) {
     if(config.objectTypes[key].includes(mimeType)) {
