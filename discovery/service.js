@@ -798,7 +798,8 @@ var addCacheItem = function(objectID, cacheName) {
         items.push({
           pid: objectID,
           mimeType: object.mime_type || null,
-          sequence: "1"
+          sequence: "1",
+          object: object
         });
       }
       else {
