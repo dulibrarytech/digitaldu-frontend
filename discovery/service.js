@@ -453,10 +453,15 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
         let partData = AppHelper.getCompoundObjectPart(object, part),
             partObj = {};
 
-        partObj.pid = pid + config.compoundObjectPartID + part;
-        partObj.title = partData.title || "No Title";
-        partObj.abstract = partData.caption || object.abstract || "";
-        partObj.mime_type = partData.type || null;
+        if(partData) {
+          partObj.pid = pid + config.compoundObjectPartID + part;
+          partObj.title = partData.title || "No Title";
+          partObj.abstract = partData.caption || object.abstract || "";
+          partObj.mime_type = partData.type || null;
+        }
+        else {
+          partObj = object;
+        }
 
         var container = {
           resourceID: partObj.pid,
@@ -471,7 +476,6 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
           objectType: AppHelper.getDsType(object.mime_type),
           isCompound: false
         };
-
         object = partObj;
       }
       else {
