@@ -265,7 +265,7 @@ module.exports = {
      * Define object types here, associte with object mime types
      */
     objectTypes: {
-        "audio": ["audio/mpeg", "audio/x-wav", "audio/mp3"],
+        "audio": ["audio/mpeg", "audio/x-wav", "audio/mp3", "audio/wav"],
         "video": ["video/mp4", "video/quicktime", "video/mov"],
         "still image": ["image/png", "image/jpg", "image/jpeg", "image/tiff", "image/jp2"],
         "pdf": ["application/pdf"]
@@ -276,7 +276,7 @@ module.exports = {
      * ["repository" | "kaltura"]
      */
     streamSource: {
-        "audio": "repository",
+        "audio": "kaltura",
         "video": "kaltura",
         "still image": "repository",
         "pdf": "repository"
@@ -681,6 +681,7 @@ module.exports = {
         "jpg": "image/jpeg",
         "mp3": "audio/mp3",
         "mp4": "video/mp4",
-        "pdf": "application/pdf"
+        "pdf": "application/pdf",
+        "wav": "audio/wav"
      }
 };
