@@ -62,8 +62,8 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
     var settings = config.thumbnails[object.object_type] || null;
     if(!object.mime_type && object.object_type != "collection") {settings = null}
     if(settings) {
-      if(settings.type) {
-        settings = settings.type[fileType] || null;
+      if(settings.type && settings.type[fileType]) {
+        settings = settings.type[fileType];
       }
 
       if(settings.cache == false || Cache.exists('thumbnail', objectID) == false) {
@@ -179,6 +179,7 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
     }
 
     let mimeType = Helper.getContentType("object", object);
+      console.log("TEST MIMETYPE", mimeType)
     if(cacheEnabled && Cache.exists('object', objectID, extension) == true) {
       Cache.getFileStream('object', objectID, extension, function(error, stream) {
         if(error) {
@@ -194,6 +195,10 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
           viewerId = object.entry_id || object.kaltura_id || null;
 
       // Stream from Kaltura api
+        console.log("TEST mime type", mimeType)
+        console.log("TEST obj type", objectType)
+        console.log("TEST viewerId", viewerId)
+        console.log("TEST stream src", config.streamSource[objectType])
       if(config.streamSource[objectType] == "kaltura" && viewerId) {
         let kalturaStreamUri = Kaltura.getStreamingMediaUrl(viewerId, extension);
         if(config.nodeEnv == "devlog") {console.log("Kaltura stream uri:", kalturaStreamUri)}
