@@ -292,17 +292,21 @@ exports.getDatastream = function(indexName, objectID, datastreamID, part, authKe
   fetchObjectByPid(indexName, objectID, function(error, object) {
     if(object) {
       let contentType = AppHelper.getContentType(datastreamID, object, part);
-      if(AppHelper.isParentObject(object) && part) {
-        let objectPart = AppHelper.getCompoundObjectPart(object, part || 1)
+      if(AppHelper.isParentObject(object) || part) {
+        let objectPart = AppHelper.getCompoundObjectPart(object, part || "1")
         if(objectPart) {
           objectPart["object_type"] = "object";
           objectPart["mime_type"] = objectPart.type ? objectPart.type : (objectPart.mime_type || null);
           object = objectPart;
           objectID = objectID + (config.compoundObjectPartID + objectPart.order);
+          
+          Datastreams.getDatastream(object, objectID, datastreamID, part, authKey, function(error, stream) {    
+            callback(error, stream, contentType);
+          });
         }
-        Datastreams.getDatastream(object, objectID, datastreamID, part, authKey, function(error, stream) {    
-          callback(error, stream, contentType);
-        });
+        else {
+          callback(null, null);
+        }
       }
 
       else {

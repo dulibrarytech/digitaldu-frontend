@@ -370,7 +370,7 @@ exports.getDatastream = function(req, res) {
 			res.sendStatus(500);
 		}
 		else if(!stream) {
-			console.log("Datastream source not found. Pid: " + pid);
+			console.log("Object or datastream source not found. Pid: " + pid + " Part ID: " + part);
 			res.sendStatus(404);
 		}
 		else {
