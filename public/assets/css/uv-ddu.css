@@ -61,7 +61,7 @@
 }
 
 #uv .mainPanel .main {
-  margin-top: 30px;
+  margin-top: 15px;
   padding-left: 12px;
   /*height:auto !important;*/
 }
@@ -192,13 +192,13 @@
 }
 
 #uv .iiif-gallery-component .main .thumbs .thumb {
-    max-height: 270px;
-    margin-bottom: 27px;
+    max-height: 260px;
+    margin-bottom: 45px;
 }
 
 #uv .thumb .wrap {
   width: 200px !important;
-  max-height: 270px;
+  max-height: 260px;
 }
 
 #uv .galleryView .header {
