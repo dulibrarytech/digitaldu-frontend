@@ -45,8 +45,10 @@ function createUV(selector, data, dataProvider) {
             });
 
             $("#uv button.gallery").click(function(event) {
-                $("#uv .thumb .wrap").attr("style", "width: 200px")
-                updateGridThumbnailImageUrlsWithPageParam();
+                $("#uv .thumb .wrap").attr("style", "width: 200px");
+                if($("#uv").hasClass("pdf-object")) {
+                    updateGridThumbnailImageUrlsWithPageParam();
+                }
             });
         }, 1000);
         setTimeout(function(){  
