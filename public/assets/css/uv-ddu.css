@@ -191,6 +191,20 @@
   text-decoration: underline;
 }
 
+#uv .iiif-gallery-component .main .thumbs .thumb {
+    max-height: 270px;
+    margin-bottom: 27px;
+}
+
+#uv .thumb .wrap {
+  width: 200px !important;
+  max-height: 270px;
+}
+
+#uv .galleryView .header {
+  display: none;
+}
+
 @media screen and (max-width: 800px) {
   #sidebar-nav-buttons {
     display: none !important;

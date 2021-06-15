@@ -43,6 +43,11 @@ function createUV(selector, data, dataProvider) {
                     updateThumbnailImageUrlsWithPageParam();
                 }
             });
+
+            $("#uv button.gallery").click(function(event) {
+                $("#uv .thumb .wrap").attr("style", "width: 200px")
+                updateGridThumbnailImageUrlsWithPageParam();
+            });
         }, 1000);
         setTimeout(function(){  
             $(".loading-msg").css("display", "none");
@@ -259,14 +264,31 @@ function getExitFullScreen() {
  * Remove the 't' parameter (added by uv) from the thumbnail images in the left panel, and re-add the pdf page parameter
  */
 function updateThumbnailImageUrlsWithPageParam() {
+    setTimeout(function() {
     let thumbnailImages = $(".wrap img"), thumbIndex;
-
     for(var i=0; i < thumbnailImages.length; i++) {
         thumbIndex = thumbnailImages[i].parentElement.parentElement.id.replace("thumb", "");
         if(thumbnailImages[i].src.indexOf("?t") >= 0) {
             thumbnailImages[i].src = thumbnailImages[i].src.substring(0, thumbnailImages[i].src.indexOf("?t")) + "?page=" + (parseInt(thumbIndex)+1);
         }
     }
+    }, 250);
+}
+
+/*
+ * DU implementation
+ * Remove the 't' parameter (added by uv) from the thumbnail images in the left panel, and re-add the pdf page parameter
+ */
+function updateGridThumbnailImageUrlsWithPageParam() {
+    setTimeout(function() {
+        let thumbnailImages = $(".wrap .thumbImage"), thumbIndex;
+        for(var i=0; i < thumbnailImages.length; i++) {
+            thumbIndex = parseInt(thumbnailImages[i].parentElement.parentElement.getAttribute("data-index"))+1;
+            if(thumbnailImages[i].src.indexOf("?page=") < 0) {
+                thumbnailImages[i].src += ("?page=" + thumbIndex.toString());
+            }
+        }
+    }, 500);
 }
 
 function updateDownloadUrlsForPart(part) {
