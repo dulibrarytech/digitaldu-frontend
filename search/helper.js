@@ -24,6 +24,7 @@
 'use strict';
 
 var config = require('../config/' + process.env.CONFIGURATION_FILE);
+var pluralize = require('pluralize');
 
 /**
  * Removes any facets appearing in 'facets' object from the Elastic response object agregations buckets 
@@ -273,7 +274,7 @@ exports.getSortDataArray = function(sort) {
     if(sort[0].toLowerCase() != "relevance") {
       sortData = {
         field: sort[0],
-        order: sort[1]
+        order: sort[1].replace(/\W/g, '')
       }
     }
   }
@@ -378,4 +379,21 @@ exports.getResultSetMinDate = function(facets) {
     }
   }
   return minDate;
+}
+
+/**
+ * Singularizes all of the words in a string
+ *
+ * @param {string} string - A string
+ *
+ * @return {string} - String with all words in singular form
+ */
+exports.singularizeSearchStringTerms = function(string) {
+  let termsArray = string.split(" ");
+  string = "";
+  for(var term of termsArray) {
+    string += (pluralize.singular(term) + " ");
+  }
+
+  return string.trim();
 }
