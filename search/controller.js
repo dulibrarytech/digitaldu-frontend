@@ -56,13 +56,14 @@ const async = require('async'),
  * @return {undefined}
  */
 exports.search = function(req, res) {
+		console.log("TEST page field in", req.query.page)
 	var query = req.query.q || [""],
 		field = req.query.field || ["all"], 
 		type = req.query.type || ["contains"],
 		bool = req.query.bool || ["or"],
 		facets = req.query.f || null,
-		page = req.query.page || 1,
-		pageSize = req.query.resultsPerPage || config.maxResultsPerPage,
+		page = parseInt(req.query.page) || 1,
+		pageSize = parseInt(req.query.resultsPerPage) || parseInt(config.maxResultsPerPage),
 		sort = req.query.sort || null,
 		collection = req.query.collection || null,
 		showAll = req.query.showAll || [],
@@ -72,7 +73,7 @@ exports.search = function(req, res) {
 			from: req.query.from || config.defaultDaterangeFromDate,
 			to: req.query.to || new Date().getFullYear()
 		} : null;
-
+			
 	var data = {
 		error: null,
 		facets: {},
@@ -81,7 +82,7 @@ exports.search = function(req, res) {
 		fromDate: config.defaultDaterangeFromDate,
 		toDate: new Date().getFullYear(),
 		pageData: null,
-		page: req.query.page || 1,
+		page: parseInt(req.query.page) || 1,
 		root_url: config.rootUrl,
 		query: Helper.getResultsLabel(query, facets, bool, field),
 		view: req.query.view || config.defaultSearchResultsView || "list",
@@ -91,8 +92,9 @@ exports.search = function(req, res) {
 		options: {}
 	};
 
-	page = parseInt(page);
-	pageSize = parseInt(pageSize);
+	console.log("TEST page after parseInt()", page)
+	console.log("TEST data.page after parseInt()", data.page)
+
 	let maxPages = config.maxElasticSearchResultCount / pageSize;
 	if(page > maxPages) {
 		let msg = "Search results are limited to " + config.maxElasticSearchResultCount + ". Please select a page from 1 to " + maxPages;
