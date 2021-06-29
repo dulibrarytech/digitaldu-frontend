@@ -303,7 +303,7 @@ exports.getSortDataArray = function(sort) {
     if(sort[0].toLowerCase() != "relevance") {
       sortData = {
         field: sort[0],
-        order: sort[1] || null
+        order: sort[1].replace(/\W/g, '') || null
       }
     }
   }

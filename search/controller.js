@@ -91,10 +91,6 @@ exports.search = function(req, res) {
 		options: {}
 	};
 
-
-    console.log("TEST pagenum", page)
-    console.log("TEST pageSize", pageSize)
-
 	let maxPages = config.maxElasticSearchResultCount / pageSize;
 	if(page > maxPages) {
 		let msg = "Search results are limited to " + config.maxElasticSearchResultCount + ". Please select a page from 1 to " + maxPages;
