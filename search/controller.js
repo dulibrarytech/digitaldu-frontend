@@ -56,7 +56,6 @@ const async = require('async'),
  * @return {undefined}
  */
 exports.search = function(req, res) {
-		console.log("TEST page field in", req.query.page)
 	var query = req.query.q || [""],
 		field = req.query.field || ["all"], 
 		type = req.query.type || ["contains"],
@@ -91,9 +90,6 @@ exports.search = function(req, res) {
 		pagination: null,
 		options: {}
 	};
-
-	console.log("TEST page after parseInt()", page)
-	console.log("TEST data.page after parseInt()", data.page)
 
 	let maxPages = config.maxElasticSearchResultCount / pageSize;
 	if(page > maxPages) {

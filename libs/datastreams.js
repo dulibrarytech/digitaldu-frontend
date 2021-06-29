@@ -94,7 +94,7 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
         else {
           let uri = settings.uri || null;
           switch(settings.streamOption || "") {
-            case "iiif":
+            case "iiify":
               uri = IIIF.getThumbnailUri(objectID, apiKey);
               break;
             case "kaltura":
@@ -106,7 +106,7 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
               uri = getIndexTnUri(object.pid, object.thumbnail || uri);
               break;
             default:
-              callback("Error retrieving datastream for " + objectID + ", object type " + object.object_type + "is invalid", null);
+              console.log("Error retrieving datastream for", objectID);
               break;
           }
           if(config.nodeEnv == "devlog") {console.log("Thumbnail image stream uri:", uri || "null")}
