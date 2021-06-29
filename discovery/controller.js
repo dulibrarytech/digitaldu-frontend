@@ -140,8 +140,8 @@ var renderCollection = function(req, res) {
 		};
 			
 		var	pid = req.params.pid || "",
-			page = req.query.page || 1,
-			pageSize = req.query.resultsPerPage || config.defaultCollectionsPerPage || 12,
+			page = Math.abs(parseInt(req.query.page)) || 1,
+			pageSize = Math.abs(parseInt(req.query.resultsPerPage)) || config.defaultCollectionsPerPage || 12,
 			path = config.rootUrl + req._parsedOriginalUrl.path,
 			reqFacets = req.query.f || null,
 			showAll = req.query.showAll || [],

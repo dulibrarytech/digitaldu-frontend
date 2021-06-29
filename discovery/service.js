@@ -797,7 +797,6 @@ var addCacheItem = function(objectID, cacheName) {
       else if(AppHelper.isCollectionObject(object)) {
         getCollectionChildren(objectID, config.elasticsearchPublicIndex, function(error, pids) {
           for(var i in pids) {
-
             addCacheItem(pids[i], cacheName);
           }
         });

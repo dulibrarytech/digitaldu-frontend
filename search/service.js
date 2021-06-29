@@ -88,6 +88,10 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
     // Search data for each query
     var field, fields, type, terms, bool;
 
+    // Prevents Elastic crash if negative values are present
+    pageNum = Math.abs(pageNum);
+    pageSize = Math.abs(pageSize);
+
     // Elastic boolean objects
     var shouldArray = [], 
         mustBoolean = {
@@ -390,7 +394,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       }
     }
 
-    if(config.nodeEnv == "devlog") {console.log("DEV query object:", util.inspect(data, {showHidden: false, depth: null}));}
+    if(config.nodeEnv == "devlogsearch") {console.log("DEVLOG: Search query object:", util.inspect(data, {showHidden: false, depth: null}));}
 
     // Query the index
     es.search(data, function (error, response, status) {

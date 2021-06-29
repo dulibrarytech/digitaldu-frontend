@@ -61,8 +61,8 @@ exports.search = function(req, res) {
 		type = req.query.type || ["contains"],
 		bool = req.query.bool || ["or"],
 		facets = req.query.f || null,
-		page = parseInt(req.query.page) || 1,
-		pageSize = parseInt(req.query.resultsPerPage) || parseInt(config.maxResultsPerPage),
+		page = Math.abs(parseInt(req.query.page)) || 1,
+		pageSize = Math.abs(parseInt(req.query.resultsPerPage)) || parseInt(config.maxResultsPerPage),
 		sort = req.query.sort || null,
 		collection = req.query.collection || null,
 		showAll = req.query.showAll || [],
@@ -81,7 +81,7 @@ exports.search = function(req, res) {
 		fromDate: config.defaultDaterangeFromDate,
 		toDate: new Date().getFullYear(),
 		pageData: null,
-		page: parseInt(req.query.page) || 1,
+		page: page,
 		root_url: config.rootUrl,
 		query: Helper.getResultsLabel(query, facets, bool, field),
 		view: req.query.view || config.defaultSearchResultsView || "list",
@@ -90,6 +90,10 @@ exports.search = function(req, res) {
 		pagination: null,
 		options: {}
 	};
+
+
+    console.log("TEST pagenum", page)
+    console.log("TEST pageSize", pageSize)
 
 	let maxPages = config.maxElasticSearchResultCount / pageSize;
 	if(page > maxPages) {
@@ -121,7 +125,7 @@ exports.search = function(req, res) {
 
 			// Create paginator data object, add it to the view data
 			let path = config.rootUrl + req.url.substring(req.url.indexOf('search')-1);
-			data.pagination = Paginator.create(data.results, data.page, pageSize, response.count, path);
+			data.pagination = Paginator.create(data.results, page, pageSize, response.count, path);
 			if(facets) {
 				facets = Facets.getSearchFacetObject(facets);
 			}
