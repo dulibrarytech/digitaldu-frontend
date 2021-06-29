@@ -299,7 +299,7 @@ module.exports = {
      * Add to array to enable
      * Must be an object type defined in 'objectTypes' configuration field 
      */
-    cacheTypes: ["pdf"],
+    cacheTypes: ["jpg", "pdf"],
 
     /*
      * Object specific default thumbnail images
