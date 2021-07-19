@@ -17,6 +17,7 @@
 const config = require('../config/' + process.env.CONFIGURATION_FILE);
 const Kaltura = require('../libs/kaltura');
 const sanitizeHtml = require('sanitize-html');
+const linkifyHtml = require('linkifyjs/html');
 
 /*
  * 
@@ -428,4 +429,12 @@ exports.getDuracloudFilenameFromObjectPath = function(object) {
 		filename = object.object.substring(object.object.lastIndexOf("/")+1, object.object.lastIndexOf("."));
 	}
 	return filename;
+}
+
+exports.addHyperlinks = function(strings) {
+	for(var index in strings) {
+		if(typeof strings[index] == "string") {
+			strings[index] = linkifyHtml(strings[index]);
+		}
+	}
 }
