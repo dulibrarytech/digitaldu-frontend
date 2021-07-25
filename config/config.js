@@ -291,7 +291,7 @@ module.exports = {
     defaultThumbnailImage: "tn-placeholder.jpg",
     thumbnailImageCacheEnabled: true,
     thumbnailImageCacheLocation: "cache/thumbnail",
-    objectDerivativeCacheEnabled: true,
+    objectDerivativeCacheEnabled: false,
     objectDerivativeCacheLocation: "/var/cache/digcoll",
 
     /*
@@ -664,8 +664,7 @@ module.exports = {
       * A downloaded object file will use this file extension based on the object's mime type
       */
      fileExtensions: {
-        "jp2": ["image/tiff"],
-        "jpg": ["image/jpg", "image/jpeg"],
+        "jpg": ["image/jpg", "image/jpeg", "image/tiff"],
         "mp3": ["audio/mp3", "audio/x-wav", "audio/mpeg"],
         "mp4": ["video/mp4", "video/quicktime", "video/mov"],
         "pdf": ["application/pdf"]

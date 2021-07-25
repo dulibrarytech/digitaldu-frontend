@@ -48,12 +48,13 @@ exports.downloadCompoundObjectFiles = function(object, callbackC, websocket=null
       files = [],
       metadata = {},
       pid = object.pid || "",
-      parts = Helper.getCompoundObjectPart(object, -1);
+      parts = Helper.getCompoundObjectPart(object, -1),
+      extension = Helper.getFileExtensionForMimeType(object.mime_type || "");
 
   let uri, part;
   for(var index in parts) {
     part = parseInt(parts[index].order) || index;
-    uri = config.rootUrl + "/datastream/" + pid + "/object/" + part + "/" + pid + "_" + part + "." + Helper.getFileExtensionForMimeType(object.mime_type || "");
+    uri = `${config.rootUrl}/datastream/${pid}/${extension}/${part}/${pid}_${part}.${extension}`;
     files[part-1] = uri;
   }
 
