@@ -292,7 +292,7 @@ exports.getDatastream = function(indexName, objectID, datastreamID, part, authKe
   fetchObjectByPid(indexName, objectID, function(error, object) {
     if(object) {
       let contentType = AppHelper.getContentType(datastreamID, object, part);
-      if(AppHelper.isParentObject(object) || part) {
+      if(AppHelper.isParentObject(object)) {
         let objectPart = AppHelper.getCompoundObjectPart(object, part || "1")
         if(objectPart) {
           objectPart["object_type"] = "object";
@@ -310,7 +310,7 @@ exports.getDatastream = function(indexName, objectID, datastreamID, part, authKe
       }
 
       else {
-        Datastreams.getDatastream(object, objectID, datastreamID, part, authKey, function(error, stream) {    
+        Datastreams.getDatastream(object, objectID, datastreamID, null, authKey, function(error, stream) {    
           callback(error, stream, contentType);
         });
       }
