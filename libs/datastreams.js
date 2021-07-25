@@ -213,7 +213,7 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
 
       // Get jpg
       else if(extension == "jpg" &&
-              extension != Helper.getFileExtensionForMimeType(mimeType) &&
+              // extension != Helper.getFileExtensionForMimeType(mimeType) &&
               Helper.getObjectType(mimeType) == "still image") {
 
         // Get cantaloupe uri for jpg
