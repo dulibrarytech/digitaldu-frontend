@@ -283,7 +283,15 @@ Ex. [project domain]/cache/purgeInvalidItems/object?key={api key}
 ## Releases
 * v1.0.0-beta [release]() [notes]()
 
+### v1.1.0 6/10/2021
 
+Updates to iiif manifest error handling
+Updates to search request error handling
+Updates to datastream request error handling
+Implemented UniversalViewer thumbnail grid view for pdf objects
+Removed remoute source of jquery and video-js css files
+Continued jpg object file related updates
+Updated object file download function to create jpg files for compound object zip archives
 
 ## Contact
 

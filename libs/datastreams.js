@@ -94,7 +94,7 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
         else {
           let uri = settings.uri || null;
           switch(settings.streamOption || "") {
-            case "iiify":
+            case "iiif":
               uri = IIIF.getThumbnailUri(objectID, apiKey);
               break;
             case "kaltura":
