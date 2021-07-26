@@ -283,7 +283,7 @@ Ex. [project domain]/cache/purgeInvalidItems/object?key={api key}
 ## Releases
 * v1.0.0-beta [release]() [notes]()
 
-### v1.1.0 6/10/2021
+### v1.1.1 6/10/2021
 
 Updates to iiif manifest error handling
 Updates to search request error handling
