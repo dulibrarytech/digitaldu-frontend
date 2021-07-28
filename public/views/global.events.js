@@ -7,6 +7,7 @@
 import { Configuration } from '../config/configuration.js';
 
 $( document ).ready(function() {
+
 	var accordions = document.getElementsByClassName("collapsible");
 	for (var i = 0; i < accordions.length; i++) {
 	    accordions[i].addEventListener("click", function() {
@@ -19,4 +20,9 @@ $( document ).ready(function() {
 	        }
 	    });
 	}
+
+	$("#home-search #search-options select").click(function(event) {
+		let selected = $(this).children().children("option:selected").val();
+		$("#home-search #search-options button").html(selected);
+	});
 });

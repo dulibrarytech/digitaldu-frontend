@@ -2,6 +2,10 @@
   <h4>This site is a database of photographs, yearbooks, oral histories, manuscripts, streaming video, and more.</h4>
   <form id="home-search" class="form-inline" method="get" action="<%= root_url %>/search">
     <div id="search-options" class="form-group">
+      <button type="button" tabindex="-1">
+        All
+        <i class="fa fa-caret-down" aria-hidden="true"></i>
+      </button>
       <select name="field[]" class="search-element" title="Select field to search">
         <option value="all">All</option>
         <optgroup label="Specific Fields">

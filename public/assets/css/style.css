@@ -501,7 +501,7 @@ div.searchform form {
   overflow: hidden;
 }
 
-.searchform button i {
+.searchform button.search-element i {
   color: #e5e3e1;
   font-size: 20px;
   padding-bottom:40px;
@@ -609,6 +609,26 @@ div.sidebar-search .search-element {
 
 #home-search .search-box {
   width: 60%;
+}
+
+#home-search #search-options button {
+  position: relative;
+  top: 20px;
+  z-index: 10;
+  height: 40px;
+  pointer-events: none;
+  background-color: #c5c3c1;
+  color: #000;
+}
+
+#home-search select.search-element {
+  position: relative;
+  bottom: 20px;
+}
+
+#home-search #search-options button i {
+  position: relative;
+  left: 50px;
 }
 
 div.left-float-anchor-list {
