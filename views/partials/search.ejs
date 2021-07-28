@@ -3,11 +3,11 @@
   <form id="home-search" class="form-inline" method="get" action="<%= root_url %>/search">
     <div id="search-options" class="form-group">
       <button type="button" tabindex="-1">
-        All
+        <span>All</span>
         <i class="fa fa-caret-down" aria-hidden="true"></i>
       </button>
       <select name="field[]" class="search-element" title="Select field to search">
-        <option value="all">All</option>
+        <option value="All">All</option>
         <optgroup label="Specific Fields">
           <% for (var i = 0; i < searchFields.length; i++) { %>
             <% for (var key in searchFields[i]) { %>

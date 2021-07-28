@@ -21,8 +21,11 @@ $( document ).ready(function() {
 	    });
 	}
 
-	$("#home-search #search-options select").click(function(event) {
+	$("#home-search #search-options select").change(function(event) {
 		let selected = $(this).children().children("option:selected").val();
-		$("#home-search #search-options button").html(selected);
+		if(typeof selected == 'undefined') {
+			selected = $(this).children("option:selected").val();
+		}
+		$("#home-search #search-options button span").html(selected);
 	});
 });

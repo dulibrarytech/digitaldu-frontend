@@ -627,8 +627,7 @@ div.sidebar-search .search-element {
 }
 
 #home-search #search-options button i {
-  position: relative;
-  left: 50px;
+  float: right;
 }
 
 div.left-float-anchor-list {
