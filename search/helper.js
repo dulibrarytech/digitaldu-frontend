@@ -382,13 +382,27 @@ exports.getResultSetMinDate = function(facets) {
 }
 
 /**
+ * Manual updates to search terms here
+ *
+ * @param {string} queryString - The search query string
+ *
+ * @return {string} - Updated terms
+ */
+exports.getSearchTerms = function(queryString) {
+  let terms = "";
+  terms = queryString.toLowerCase().replace(/"/g, '') || "";
+  //terms = singularizeSearchStringTerms(terms);
+  return terms;
+}
+
+/**
  * Singularizes all of the words in a string
  *
  * @param {string} string - A string
  *
  * @return {string} - String with all words in singular form
  */
-exports.singularizeSearchStringTerms = function(string) {
+var singularizeSearchStringTerms = function(string) {
   let termsArray = string.split(" ");
   string = "";
   for(var term of termsArray) {
@@ -397,3 +411,4 @@ exports.singularizeSearchStringTerms = function(string) {
 
   return string.trim();
 }
+exports.singularizeSearchStringTerms = singularizeSearchStringTerms;

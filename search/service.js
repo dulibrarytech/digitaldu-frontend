@@ -113,17 +113,16 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       // Handle special query cases for searching specific search fields
       queryData[index].terms = Helper.updateQueryTermsForField(queryData[index].terms, queryData[index].field, queryData[index].type, queryData[index].bool);
 
-      // Get the Elastic query type to use for this query
+      // Get the query data for Elastic request
       queryType = Helper.getQueryType(queryData[index]);
-
-      // Get the query data from the current data object, or use default data
-      terms = queryData[index].terms.toLowerCase().replace(/"/g, '') || "";
       field = queryData[index].field || "all";
       type = queryData[index].type || "contains";
       bool = queryData[index].bool || "or";
-
+      terms = Helper.getSearchTerms(queryData[index].terms);
       fields = Helper.getSearchFields(field);
+
       if(Array.isArray(fields)) {
+
         let fieldObj, keywordObj, queryObj, nestedQuery, nestedQueryObj;
         for(var field of fields) {
           fieldObj = {};
@@ -220,7 +219,6 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       /*
        * Add the query to the boolean object
        */
-      // Add to the 'should' array
       if(bool == "or") {
         shouldArray = shouldArray.concat(currentQuery);
       }
@@ -253,7 +251,6 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
     /*
      * Add facets and filters:
      */
-    // If facets are present, apply filters to the search
     if(facets) {
       let facetData, count=0;
       for(let facet in facets) {
@@ -289,7 +286,6 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       }
     }
 
-    // If a date range is present, add the date range query to the must match array
     if(daterange && daterange.from && daterange.to) {
       let fullDate = Helper.formatDateFieldForElasticQuery(daterange);
       filters.push(Helper.getDateRangeQuery(fullDate));
