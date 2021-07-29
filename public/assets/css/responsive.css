@@ -198,6 +198,10 @@
   div#metadata-section .container {
     width: 95%;
   }
+
+  #home-search #search-options button i {
+    float: none;
+  }
 }
 
 /* Small devices (phones, up to 575px) */

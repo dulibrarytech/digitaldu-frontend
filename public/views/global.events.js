@@ -26,6 +26,6 @@ $( document ).ready(function() {
 		if(typeof selected == 'undefined') {
 			selected = $(this).children("option:selected").val();
 		}
-		$("#home-search #search-options button span").html(selected);
+		$("#home-search #search-options button div").html(selected);
 	});
 });

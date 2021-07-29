@@ -510,7 +510,8 @@ div.searchform form {
 .searchform span a {
   position: relative;
   float: right;
-  top: 10px;
+  /*top: 10px;*/
+  bottom: 6px;
   right: 0;
   color: white;
   text-decoration: underline;
@@ -600,7 +601,7 @@ div.sidebar-search .search-element {
 }
 
 #home-search {
-  margin-top: 15px;
+  /*margin-top: 15px;*/
 }
 
 #home-search .form-group {
@@ -628,6 +629,12 @@ div.sidebar-search .search-element {
 
 #home-search #search-options button i {
   float: right;
+}
+
+#home-search #search-options button div {
+  max-width: 80%;
+  overflow: hidden;
+  display: inline-flex;
 }
 
 div.left-float-anchor-list {
