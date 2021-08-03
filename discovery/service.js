@@ -450,40 +450,38 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
       callback(error, JSON.stringify({}));
     }
     else if(object) {
-      var parts = [],
+      var container = null,
+          parts = [],
           resourceUrl;
 
       if(part) {
-        let partData = AppHelper.getCompoundObjectPart(object, part),
-            partObj = {};
-
+        let partData = AppHelper.getCompoundObjectPart(object, part);
         if(partData) {
+          let partObj = {};
           partObj.pid = pid + config.compoundObjectPartID + part;
           partObj.title = partData.title || "No Title";
           partObj.abstract = partData.caption || object.abstract || "";
           partObj.mime_type = partData.type || null;
-        }
-        else {
-          partObj = object;
-        }
 
-        var container = {
-          resourceID: partObj.pid,
-          downloadFileName: partObj.pid,
-          title: object.title,
-          metadata: {
-            "Title": partObj.title,
-            "Creator": partObj.creator || object.creator || "",
-            "Description": partObj.abstract || object.abstract || ""
-          },
-          protocol: /https/.test(config.IIIFUrl) ? "https" : "http",
-          objectType: AppHelper.getDsType(object.mime_type),
-          isCompound: false
-        };
-        object = partObj;
+          container = {
+            resourceID: partObj.pid,
+            downloadFileName: partObj.pid,
+            title: object.title,
+            metadata: {
+              "Title": partObj.title,
+              "Creator": partObj.creator || object.creator || "",
+              "Description": partObj.abstract || object.abstract || ""
+            },
+            protocol: /https/.test(config.IIIFUrl) ? "https" : "http",
+            objectType: AppHelper.getDsType(object.mime_type),
+            isCompound: false
+          };
+
+          object = partObj;
+        }
       }
       else {
-        var container = {
+        container = {
           resourceID: object.pid,
           downloadFileName: object.pid,
           title: object.title,
@@ -498,12 +496,15 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
         };
       }
 
+      if(!container) {
+        callback(null, null);
+      }
+
       // Compound objects
-      if(container.isCompound) {
-        // Add the child objects of the main parent object
+      else if(container.isCompound) {
         let parts = AppHelper.getCompoundObjectPart(object, -1) || [];
 
-        // Not in use 
+        // Manifest paging - this option is defunct 
         if(config.IIIFManifestPageSize && page && page > 0) {
           let size = config.IIIFManifestPageSize || 10,
               offset = (page-1) * size;
