@@ -18,10 +18,12 @@ $(document).ready(function() {
 			if(caret.classList.contains("fa-caret-right")) {
 				caret.classList.remove("fa-caret-right");
 				caret.classList.add("fa-caret-down");
+				caret.setAttribute("aria-label", "Click to close panel")
 			}
 			else {
 				caret.classList.remove("fa-caret-down");
 				caret.classList.add("fa-caret-right");
+				caret.setAttribute("aria-label", "Click to expand")
 			}
 
 			// Toggle the facet panel visibility and alignment

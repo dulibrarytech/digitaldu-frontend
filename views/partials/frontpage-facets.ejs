@@ -1,8 +1,8 @@
 <div class="facets home-facets">
 
   <!-- Object type list -->
-  <button id="type-facet" class="accordion active">
-    <h4><%= typeLabel %></h4><i class="fas fa-caret-down facet-caret"></i>
+  <button id="type-facet" class="accordion active" alt="<%= typeLabel %>" title="<%= typeLabel %>">
+    <h4><%= typeLabel %></h4><i class="fas fa-caret-down facet-caret" aria-label="Click to close panel"></i>
   </button>
   <div class="static-facets panel" style="display: block;">
     <ul class="list-group">
@@ -23,8 +23,8 @@
   </div>
 
   <!-- Collection list -->
-  <button class="accordion" alt="Collections">
-    <h4>Collections</h4><i class="fas fa-caret-right facet-caret"></i>
+  <button class="accordion" alt="Collections" title="Collections">
+    <h4>Collections</h4><i class="fas fa-caret-right facet-caret" aria-label="Click to expand"></i>
   </button>
   <div id="collections-window" class="panel facet-panel panel-collapsed">
     <ul>
@@ -37,8 +37,8 @@
   <!-- Other facets -->
   <% for(var key in facets) { %>
     <% if(key != typeLabel) { %>
-      <button class="accordion" alt="<%= key %>">
-        <h4><%= key %></h4><i class="fas fa-caret-right facet-caret"></i>
+      <button class="accordion" alt="<%= key %>" title="<%= key %>">
+        <h4><%= key %></h4><i class="fas fa-caret-right facet-caret" aria-label="Click to expand"></i>
       </button>
       <%- facets[key] %>
     <% } %>

@@ -4,11 +4,11 @@
 	<% for(var key in facets) { %>	
 	  <% if(facets[key] != "") { %>
 	  	<% if(options.expandFacets.includes(key)) { %>
-	  	  <button class="accordion active" alt="<%= key %>" name="<%= key %>_collapsible">
-	  	  	<h4><%= key %></h4><i class="fas fa-caret-down facet-caret"></i>
+	  	  <button class="accordion active" alt="<%= key %>" name="<%= key %>_collapsible" title="<%= key %>">
+	  	  	<h4><%= key %></h4><i class="fas fa-caret-down facet-caret" aria-label="Click to expand"></i>
 	  	<% } else { %>
-	  	  <button class="accordion" alt="<%= key %>" name="<%= key %>_collapsible">
-	  	  	<h4><%= key %></h4><i class="fas fa-caret-right facet-caret"></i>
+	  	  <button class="accordion" alt="<%= key %>" name="<%= key %>_collapsible" title="<%= key %>">
+	  	  	<h4><%= key %></h4><i class="fas fa-caret-right facet-caret" aria-label="Click to expand"></i>
 	  	<% } %>
 	    </button>
 		<%- facets[key] %>
