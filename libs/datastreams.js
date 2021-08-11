@@ -161,16 +161,11 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
 
   // Request a non-thumbnail datastream
   else {
-    var cacheEnabled = false;
-    for(var type in config.objectTypes) {
-      if(config.objectTypes[type].includes(object.mime_type)) {
-        if(config.objectDerivativeCacheEnabled && config.cacheTypes.includes(type)) {
-          cacheEnabled = true;
-        }
-      }
-    }
+    let extension = "file",
+        mimeType = Helper.getContentType("object", object),
+        cacheEnabled = false; 
 
-    let extension = "file";
+    // Get the file extension to use for the object
     if(datastreamID == "object") {
       extension = object.object ? Helper.getFileExtensionFromFilePath(object.object) : Helper.getFileExtensionForMimeType(object.mime_type || null);
     }
@@ -178,7 +173,11 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
       extension = datastreamID;
     }
 
-    let mimeType = Helper.getContentType("object", object);
+    if(config.objectDerivativeCacheEnabled && config.cacheTypes.includes(extension)) {
+      cacheEnabled = true;
+    }
+
+    // Stream from the cache
     if(cacheEnabled && Cache.exists('object', objectID, extension) == true) {
       Cache.getFileStream('object', objectID, extension, function(error, stream) {
         if(error) {
@@ -189,6 +188,7 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
         }
       })
     }
+
     else if(object.object) {
       let objectType = Helper.getObjectType(mimeType),
           viewerId = object.entry_id || object.kaltura_id || null;
@@ -197,9 +197,11 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
       if(config.streamSource[objectType] == "kaltura" && viewerId) {
         let kalturaStreamUri = Kaltura.getStreamingMediaUrl(viewerId, extension);
         if(config.nodeEnv == "devlog") {console.log("Kaltura stream uri:", kalturaStreamUri)}
+
         streamKalturaData(kalturaStreamUri, function(error, status, stream) {
           if(error) { callback(error, null) }
           else { 
+            // Cache the datastream if cache is enabled for this object type
             if(config.objectDerivativeCacheEnabled == true && cacheEnabled) {
               Cache.cacheDatastream('object', objectID, stream, extension, function(error) {
                 if(error) { console.error("Could not create object file for", objectID, error) }
@@ -212,9 +214,7 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
       }
 
       // Get jpg
-      else if(extension == "jpg" &&
-              // extension != Helper.getFileExtensionForMimeType(mimeType) &&
-              Helper.getObjectType(mimeType) == "still image") {
+      else if(extension == "jpg" && Helper.getObjectType(mimeType) == "still image") {
 
         // Get cantaloupe uri for jpg
         let server = Helper.getFileExtensionFromFilePath(object.object) == "tif" ? config.IIIFTiffServerUrl : config.IIIFServerUrl,
@@ -232,6 +232,13 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
           }
           else {
             if(status == 200) {
+              // Cache the datastream if cache is enabled for this object type
+              if(config.objectDerivativeCacheEnabled == true && cacheEnabled) {
+              Cache.cacheDatastream('object', objectID, stream, extension, function(error) {
+                  if(error) { console.error("Could not create object file for", objectID, error) }
+                  else { console.log("Object file created for", objectID) }
+                });
+              }
               callback(null, stream);
             }
             else {
@@ -246,9 +253,11 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
       else {
         Repository.streamData(object, datastreamID, function(error, stream) {
           if(error || !stream) {
-            callback("Repository stream data error: " + (error || "Path to resource not found. Pid: " + objectID), null);
+            console.log("Repository stream data error: " + (error || "Path to resource not found. Pid: " + objectID));
+            callback(null, null);
           }
           else {
+            // Cache the datastream if cache is enabled for this object type
             if(config.objectDerivativeCacheEnabled == true && cacheEnabled) {
               Cache.cacheDatastream('object', objectID, stream, extension, function(error) {
                 if(error) { console.error("Could not create object file for", objectID, error) }
