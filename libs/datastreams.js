@@ -198,19 +198,24 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
         let kalturaStreamUri = Kaltura.getStreamingMediaUrl(viewerId, extension);
         if(config.nodeEnv == "devlog") {console.log("Kaltura stream uri:", kalturaStreamUri)}
 
-        streamKalturaData(kalturaStreamUri, function(error, status, stream) {
-          if(error) { callback(error, null) }
-          else { 
-            // Cache the datastream if cache is enabled for this object type
-            if(config.objectDerivativeCacheEnabled == true && cacheEnabled) {
-              Cache.cacheDatastream('object', objectID, stream, extension, function(error) {
-                if(error) { console.error("Could not create object file for", objectID, error) }
-                else { console.log("Object file created for", objectID) }
-              });
+        if(datastreamID == "object" || datastreamID == Helper.getFileExtensionFromFilePath(object.object)) {
+          streamKalturaData(kalturaStreamUri, function(error, status, stream) {
+            if(error) { callback(error, null) }
+            else { 
+              // Cache the datastream if cache is enabled for this object type
+              if(config.objectDerivativeCacheEnabled == true && cacheEnabled) {
+                Cache.cacheDatastream('object', objectID, stream, extension, function(error) {
+                  if(error) { console.error("Could not create object file for", objectID, error) }
+                  else { console.log("Object file created for", objectID) }
+                });
+              }
+              callback(null, stream) 
             }
-            callback(null, stream) 
-          }
-        });
+          });
+        }
+        else {
+          callback(null, null);
+        }
       }
 
       // Get jpg
