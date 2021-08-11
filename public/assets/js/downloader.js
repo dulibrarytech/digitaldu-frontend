@@ -111,7 +111,9 @@ export const Downloader = (function () {
 		anchor.style.display = 'none';
 		anchor.href = url;
 		anchor.download = '';
+		document.body.appendChild(anchor);
 		anchor.click();
+		anchor.remove();
 	}
 
 	var disableDownloadControls = function(disable=true) {

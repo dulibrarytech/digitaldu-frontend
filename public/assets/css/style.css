@@ -1299,7 +1299,8 @@ div.object-options select {
   margin: 4px 0;
 }
 
-div.object-options button {
+div.object-options button,
+div.object-options a {
   background-color: white;
   border-style: solid;
   font-family: inherit;
@@ -1308,12 +1309,14 @@ div.object-options button {
   color: #353331;
 }
 
-div.object-options button:hover {
+div.object-options button:hover,
+div.object-options a:hover {
   cursor: pointer;
   background-color: #e5e3e1;
 }
 
-span.submit-download-selection button {
+span.submit-download-selection button,
+span.submit-download-selection a {
   background-color: #e5e3e1;
   position: relative;
   right: 4px;
