@@ -113,7 +113,6 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
           if(uri == null || uri == "") {
             console.log("Could not construct uri for datastream request. uri field is null. Stream option: " + (settings.streamOption || "null") + " Pid: " + objectID);
           }
-
           streamRemoteData(uri, function(error, status, stream) {
             if(error) {
               if(config.nodeEnv == "devlog") {console.log(error)}
@@ -219,7 +218,9 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
       }
 
       // Get jpg
-      else if(extension == "jpg" && Helper.getObjectType(mimeType) == "still image") {
+      else if(Helper.getObjectType(mimeType) == "still image" &&
+              extension == "jpg" &&
+              datastreamID != "object") {
 
         // Get cantaloupe uri for jpg
         let server = Helper.getFileExtensionFromFilePath(object.object) == "tif" ? config.IIIFTiffServerUrl : config.IIIFServerUrl,
