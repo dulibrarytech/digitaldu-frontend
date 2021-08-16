@@ -620,7 +620,7 @@ div.sidebar-search .search-element {
 
 #home-search #search-options button {
   position: relative;
-  top: 20px;
+  bottom: 20px;
   z-index: 10;
   height: 40px;
   pointer-events: none;
@@ -630,7 +630,7 @@ div.sidebar-search .search-element {
 
 #home-search select.search-element {
   position: relative;
-  bottom: 20px;
+  top: 20px;
   width: 100%;
 }
 
@@ -642,6 +642,17 @@ div.sidebar-search .search-element {
   max-width: 80%;
   overflow: hidden;
   display: inline-flex;
+}
+
+#home-search select:focus {
+  box-shadow: none;
+}
+
+#home-search button:focus,
+#home-search select:focus ~ button,
+#home-search #searchbox:focus {
+  outline: 3px auto -webkit-focus-ring-color;
+  outline: #000 solid 3px;
 }
 
 div.left-float-anchor-list {
@@ -1544,4 +1555,13 @@ footer .footer-column {
 
 .footer-link-list ul li {
   padding: 7px 0;
+}
+
+@-moz-document url-prefix() {
+  button:focus,
+  dl.item:focus > dt,
+  dl.item:focus > dd,
+  a:focus {
+    outline: #000 solid 3px;
+  }
 }
