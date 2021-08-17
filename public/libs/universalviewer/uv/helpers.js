@@ -85,6 +85,12 @@ function createUV(selector, data, dataProvider) {
          * DU implementation
          */
         $(".uv-preload-msg").remove();
+
+        // Remove tabstops
+        $(".uv #top").remove();
+        $("#uv .uv").attr("tabindex", "-1");
+        $("#uv .openseadragon-canvas").attr("tabindex", "-1");  // Image viewer
+        $("#uv .mejs__container").attr("tabindex", "-1"); // A/V Kaltura viewer
         /*
          * End DU implementation
          */
