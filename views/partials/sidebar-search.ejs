@@ -1,7 +1,7 @@
 <div class="sidebar-search">
   <form class="form-inline" method="get" action="<%= root_url %>/search">
     <div id="search-options" class="form-group">
-      <select name="field[]" class="search-element" title="Search fields">
+      <select name="field[]" class="search-element form-control" title="Search fields">
         <option value="all">All</option>
         <% for (var i = 0; i < searchFields.length; i++) { %>
           <% for (var key in searchFields[i]) { %>

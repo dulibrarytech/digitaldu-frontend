@@ -577,6 +577,10 @@ div.sidebar-search .search-element {
   height: 30px;
 }
 
+div.sidebar-search select {
+  padding: 0;
+}
+
 .welcomeBox {
   text-align: center;
 }
