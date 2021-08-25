@@ -754,6 +754,12 @@ div.facet-panel ul {
   margin-bottom: 0;
 }
 
+@-moz-document url-prefix() {
+    div.facet-panel ul {
+      padding-left: 10px;
+    }
+}
+
 div.facet-panel li > a {
   position: relative;
   top: 10px;
