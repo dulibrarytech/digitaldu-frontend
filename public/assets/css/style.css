@@ -748,17 +748,32 @@ div.facets .panel {
   border-top-style:none;
   max-height: 327px;
   overflow-y: scroll;
-  padding: 10px 10px 10px 0;
+  padding: 15px;
+}
+
+div.static-facets {
+  padding: 10px 10px 10px 0 !important;
 }
 
 div.facet-panel ul {
   margin-bottom: 0;
+  display: table;
+  table-layout: fixed;
+  width: 100%;
+  padding-left: 0;
+  list-style: none;
 }
 
 @-moz-document url-prefix() {
     div.facet-panel ul {
       padding-left: 10px;
     }
+}
+
+div.facet-panel li
+{
+  display: table-row;
+  line-height: 1.5em; 
 }
 
 div.facet-panel li > a {
@@ -768,13 +783,17 @@ div.facet-panel li > a {
 }
 
 div.facets .panel span {
-  display: inline-block;
+  display: table-cell;
 }
 
 div.facets .panel span.facet-name {
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
+  word-break: normal;
+  hyphens: none;
+  padding-right: 1em;
+  text-indent: -15px;
+  padding-left: 15px;
+  padding-bottom: 6px;
+  overflow-wrap: break-word;
 }
 
 div.facets ul {
@@ -791,11 +810,6 @@ div.facets .static-facets {
   color: #8b2332;
 }
 
-.facet-name,
-.facet-count {
-  padding-top: 5px;
-}
-
 .facet-thumbnail > img {
   width: 27px;
   height: 25px;
@@ -803,7 +817,7 @@ div.facets .static-facets {
 }
 
 .facet-name {
-  width: 71%;
+  width: 88%;
 }
 
 .facet-name a {
@@ -814,7 +828,9 @@ div.facets .static-facets {
 
 .facet-count {
   color: #757371;
-  float: right;
+  width: 16px;
+  vertical-align: top;
+  text-align: right;
 }
 
 .fixed-facets .facet-count {
