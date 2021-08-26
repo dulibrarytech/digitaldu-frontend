@@ -678,6 +678,7 @@ div.paginator a {
 
 div.paginator-nav {
   padding-left: 0;
+  margin-right: 80px;
 }
 
 div.paginator > span {

@@ -1,6 +1,6 @@
 <div class="paginator row">
 
-	<div class="paginator-nav col-lg-5 col-md-6">
+	<div class="paginator-nav">
 		<% if(pagination.buttons.first > 0) { %><< <a href="<%= pagination.path.first %><%= pagination.anchor %>" title="First Page">First</a>&nbsp;&nbsp;&nbsp;&nbsp;<% } %>
 	  	<% if(pagination.buttons.prev > 0) { %>< <a href="<%= pagination.path.prev %><%= pagination.anchor %>" title="Previous Page">Previous</a> | <% } %>
 
@@ -12,7 +12,7 @@
 	  	<% if(pagination.buttons.last > 0) { %>&nbsp;&nbsp;&nbsp;&nbsp;<a href="<%= pagination.path.last %><%= pagination.anchor %>" title="Last Page">Last</a> >><% } %>
   	</div>
 
-  	<div class="paginator-pages col-lg-5 col-md-6">
+  	<div class="paginator-pages">
 		<% if(pagination.firstPageLink > 0) { %>
 				<% for(var i=pagination.firstPageLink; i<=pagination.lastPageLink; i++) { %>
 					<a aria-label="Page <%= i %>" href="<%= pagination.path.current %>page=<%= i %><%= pagination.anchor %>" title="Go to Page <%= i %>"> 
