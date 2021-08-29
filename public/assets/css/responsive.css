@@ -143,6 +143,10 @@
     border-top-width: 1px;
     border-top-color: #e5e3e1;
   }
+
+  div.facet-breadcrumbs > span, div.facet-breadcrumbs .col-md-12 > span {
+  	margin-top: 8px;
+  }
 }
 
 @media screen and (max-width: 991px) {
