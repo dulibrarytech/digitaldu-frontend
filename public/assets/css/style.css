@@ -1447,6 +1447,14 @@ div.mods-display {
   transition: opacity 600ms, visibility 600ms;
 }
 
+.mods-display table {
+  table-layout: fixed;
+}
+
+.mods-display td {
+  word-break: break-word;
+}
+
 div.metadata-content {
   padding: 0;
   overflow: hidden;
