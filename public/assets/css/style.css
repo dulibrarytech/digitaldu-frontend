@@ -1529,6 +1529,10 @@ div#transcript-view {
   margin-bottom: 5px;
 }
 
+.uv .centerPanel .title {
+  white-space: initial !important;
+}
+
 footer {
   background: #8b2332;
   padding: 50px 0 25px 0;
