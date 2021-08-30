@@ -116,10 +116,6 @@
       width: 79%;
   }
 
-  div#title-banner {
-    height: 180px;
-  }
-
   div#search-results-wrapper {
     margin-top: 45px;
   }
@@ -144,8 +140,8 @@
     border-top-color: #e5e3e1;
   }
 
-  div.facet-breadcrumbs > span, div.facet-breadcrumbs .col-md-12 > span {
-  	margin-top: 8px;
+  .results-display {
+	  margin-top: 10px;
   }
 }
 
@@ -178,11 +174,7 @@
   div.banner-search > form {
       width: 90%;
   }
-
-  div#title-banner {
-      height: 160px;
-  }
-
+  
   div#uv, div.uv {
     height: 500px;
   }
