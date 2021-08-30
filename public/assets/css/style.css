@@ -95,10 +95,6 @@ main {
   min-height: 100vh;
 }
 
-/*.thumb .wrap {
-  display: none;
-}*/
-
 .btn-nostyle {
   height: auto;
   border-style: none;
@@ -188,8 +184,9 @@ main {
   margin: 0;
 }
 
-.table-label {
-
+#viewer-section .content-message {
+  margin: 0 auto;
+  width: 75%;
 }
 
 .title {

@@ -143,6 +143,10 @@
   .results-display {
 	  margin-top: 10px;
   }
+
+  div.facet-breadcrumbs > span, div.facet-breadcrumbs .col-md-12 > span {
+  	margin-top: 8px;
+  }
 }
 
 @media screen and (max-width: 991px) {
@@ -174,7 +178,7 @@
   div.banner-search > form {
       width: 90%;
   }
-  
+
   div#uv, div.uv {
     height: 500px;
   }
