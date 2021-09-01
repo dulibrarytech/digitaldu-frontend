@@ -337,10 +337,10 @@ exports.addResultMetadataDisplays = function(resultArray) {
 	return resultArray;
 }
 
-var getMetadataFieldValues = function(object) {
+var getMetadataFieldValues = function(object, display=null) {
 		var dataObj = {},
 			displayRecord = object[ config.displayRecordField ] || {},
-			displayID = metadataConfig.collectionDisplays[ "root" ] || "default",
+			displayID = display ? display : metadataConfig.collectionDisplays[ "root" ] || "default",
 			metadataDisplay = metadataConfig.metadataDisplay[ displayID ] || {},
 			pathArray = [], 
 			fields = [], 

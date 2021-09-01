@@ -188,6 +188,40 @@ module.exports = {
             }
         },
 
+        "universalviewer": {
+            "Title": {
+                "field": {
+                    "path": "title"
+                }
+            },
+            "Creator": {
+                "field": {
+                    "path": "creator"
+                }
+            },
+            "Description": {
+                "field": {
+                    "path": "notes.content",
+                    "matchField": "type",
+                    "matchValue": "abstract"
+                }
+            },
+            "License": {
+                "field": [
+                    {
+                        "path": "notes.content",
+                        "matchField": "type",
+                        "matchValue": "userestrict"
+                    },
+                    {
+                        "path": "notes.content",
+                        "matchField": "type",
+                        "matchValue": "accessrestrict"
+                    }
+                ]
+            }
+        },
+
         "digital_pioneers" : {
             "Digital Pioneers display Title": {
                 "path": "title"

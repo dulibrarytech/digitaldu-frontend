@@ -453,18 +453,14 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
     else if(object) {
       var container = null,
           parts = [],
+          metadata = {},
           resourceUrl;
 
-      // Get display record values
-      let values = [], paths = [];
-
-      // Copyright data
-      paths = "notes.content".split(".");
-      Metadata.extractValues(paths, object[config.displayRecordField], "type", "userestrict", null, null, "true", values);
-      Metadata.extractValues(paths, object[config.displayRecordField], "type", "accessrestrict", null, null, "true", values);
-      AppHelper.addHyperlinks(values);
-      let license = values.join("\n\n");
-
+      metadata = Metadata.getMetadataFieldValues(object, "universalviewer");
+      if(metadata["License"]) {
+        AppHelper.addHyperlinks(metadata["License"]);
+      }
+      
       if(part) {
         let partData = AppHelper.getCompoundObjectPart(object, part);
         if(partData) {
@@ -478,12 +474,7 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
             resourceID: partObj.pid,
             downloadFileName: partObj.pid,
             title: object.title,
-            metadata: {
-              "Title": partObj.title,
-              "Creator": partObj.creator || object.creator || "",
-              "Description": partObj.abstract || object.abstract || "",
-              "License": license
-            },
+            metadata: metadata,
             protocol: /https/.test(config.IIIFUrl) ? "https" : "http",
             objectType: AppHelper.getDsType(object.mime_type),
             isCompound: false
@@ -497,12 +488,7 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
           resourceID: object.pid,
           downloadFileName: object.pid,
           title: object.title,
-          metadata: {
-            "Title": object.title,
-            "Creator": object.creator,
-            "Description": object.abstract,
-            "License": license
-          },
+          metadata: metadata,
           protocol: /https/.test(config.IIIFUrl) ? "https" : "http",
           objectType: AppHelper.getDsType(object.mime_type),
           isCompound: AppHelper.isParentObject(object)
