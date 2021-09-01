@@ -189,7 +189,6 @@ exports.createMetadataDisplayObject = function(result, collections=[]) {
 	// Add the fields and values to the display, apply config options and formatting to the field values
 	// "path" can be an array with multiple path mappings to various data in the index. If it is an array, loop all tha paths, retrieving data from each location in the index. 
 	let pathArray, fields = [], values = [];
-		Helper.addHyperlinks(['This is a test string with http://hyperlink.in.it to test the new algorithm http://hyperlink.in.it again']);
 	for(var key in metadataDisplay) {
 		values = [];
 		fields = [];

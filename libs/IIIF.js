@@ -64,7 +64,6 @@ var getObjectManifest = function(container, objects, apikey, callback) {
 			"value": container.metadata[key] || ""
 		});
 	}
-	manifest['license'] = "https://creativecommons.org/licenses/by/3.0/"; 
 	manifest['logo'] = "https://www.du.edu/_resources/images/nav/logo2.gif";
 
 	manifest['sequences'] = [];
@@ -465,7 +464,6 @@ var getCollectionManifest = function(container, objects, apikey, callback) {
 			"value": container.metadata[key] || ""
 		});
 	}
-	manifest['license'] = "https://creativecommons.org/licenses/by/3.0/"; 
 	manifest['logo'] = "https://www.du.edu/_resources/images/nav/logo2.gif";
 	manifest["service"] = {
 		"@context": "http://universalviewer.io/context.json",

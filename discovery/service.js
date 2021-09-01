@@ -34,7 +34,8 @@ const IIIF = require("../libs/IIIF");
 const util = require('util');
 const Search = require("../search/service");
 const Cache = require('../libs/cache');
-const Pdf = require("../libs/pdfUtils")
+const Pdf = require("../libs/pdfUtils");
+const Metadata = require("../libs/metadata");
 
 /**
  * Create a list of the root level collections
@@ -454,6 +455,16 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
           parts = [],
           resourceUrl;
 
+      // Get display record values
+      let values = [], paths = [];
+
+      // Copyright data
+      paths = "notes.content".split(".");
+      Metadata.extractValues(paths, object[config.displayRecordField], "type", "userestrict", null, null, "true", values);
+      Metadata.extractValues(paths, object[config.displayRecordField], "type", "accessrestrict", null, null, "true", values);
+      AppHelper.addHyperlinks(values);
+      let license = values.join("\n\n");
+
       if(part) {
         let partData = AppHelper.getCompoundObjectPart(object, part);
         if(partData) {
@@ -470,7 +481,8 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
             metadata: {
               "Title": partObj.title,
               "Creator": partObj.creator || object.creator || "",
-              "Description": partObj.abstract || object.abstract || ""
+              "Description": partObj.abstract || object.abstract || "",
+              "License": license
             },
             protocol: /https/.test(config.IIIFUrl) ? "https" : "http",
             objectType: AppHelper.getDsType(object.mime_type),
@@ -488,7 +500,8 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
           metadata: {
             "Title": object.title,
             "Creator": object.creator,
-            "Description": object.abstract
+            "Description": object.abstract,
+            "License": license
           },
           protocol: /https/.test(config.IIIFUrl) ? "https" : "http",
           objectType: AppHelper.getDsType(object.mime_type),
