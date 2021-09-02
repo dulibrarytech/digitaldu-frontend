@@ -206,7 +206,7 @@ module.exports = {
                     "matchValue": "abstract"
                 }
             },
-            "License": {
+            "Rights and Usage Statement": {
                 "field": [
                     {
                         "path": "notes.content",
