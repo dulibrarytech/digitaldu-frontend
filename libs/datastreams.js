@@ -1,21 +1,3 @@
- /**
- * @file 
- *
- * Object Datastream Access Functions
- */
-
-'use strict';
-
-const config = require('../config/' + process.env.CONFIGURATION_FILE),
-  rs = require('request-stream'),
-  request = require("request"),
-  fetch = require('node-fetch'),
-  fs = require('fs'),
-  Repository = require('../libs/repository'),
-  Helper = require('../libs/helper'),
-  Kaltura = require('../libs/kaltura'),
-  Cache = require('../libs/cache'),
-  IIIF = require('../libs/IIIF');
   /**
     Copyright 2019 University of Denver
 
@@ -31,6 +13,19 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
     See the License for the specific language governing permissions and
     limitations under the License.
  */
+
+'use strict';
+
+const config = require('../config/' + process.env.CONFIGURATION_FILE),
+  rs = require('request-stream'),
+  request = require("request"),
+  fetch = require('node-fetch'),
+  fs = require('fs'),
+  Repository = require('../libs/repository'),
+  Helper = require('../libs/helper'),
+  Kaltura = require('../libs/kaltura'),
+  Cache = require('../libs/cache'),
+  IIIF = require('../libs/IIIF');
 
 /**
  * Get a datastream for an object
@@ -342,25 +337,6 @@ var streamKalturaData = function(uri, callback) {
   else {
      callback(null, 404, null);
   }
-}
-
-/**
- * Request data from uri
- *
- * @param {String} uri - Uri of data source
- *
- * @callback callback
- * @param {String|null} - Error message or null
- * @param {http status code|null} - Response status code, Null if error
- * @param {response|null} Response data, Null if error
- *
- * @return {undefined}
- */
-var fetchRemoteData = function(uri, callback) {
-    request(uri, function(error, response, body) {
-      if(error) {callback(error, null)}
-      else {callback(null, response)}
-    });
 }
 
 /**
