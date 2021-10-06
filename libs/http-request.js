@@ -1,5 +1,5 @@
   /**
-    Copyright 2019 University of Denver
+    Copyright 2021 University of Denver
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -17,14 +17,53 @@
 'use strict'
 
 const fetch = require("node-fetch");
+const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
-exports.get = async function(url, callback) {
+exports.head = async function(url, callback) {
     let response,
         body = null, 
         error = null;
 
     try {
-        response = await fetch(url);
+        response = await fetch(url, {method: "HEAD"});
+    }
+    catch(e) {
+        error = e;
+    }
+
+    if(error) {
+        callback(error, 500, null)
+    }
+    else {
+        if(response.ok == false) {
+            error = response.statusText;
+        }
+        else if(response.status == 200) {
+            body = response.body;
+        }
+        callback(error, response.status, body)
+    }
+}
+
+exports.get = async function(url, data, callback) {
+    let response,
+        body = null, 
+        error = null;
+
+    if(Object.keys(data).length !== 0) {
+        let qstring = "?", count = 0;
+        for(var key in data) {
+            count++;
+            if(count > 1) {
+                qstring += "&";
+            }
+            qstring += (key + "=" + data[key]); 
+        }
+        url += qstring;
+    }
+
+    try {
+        response = await fetch(url, {method: "GET"});
     }
     catch(e) {
         error = e;
