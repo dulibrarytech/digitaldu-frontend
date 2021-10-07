@@ -63,7 +63,7 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
 
       if(settings.cache == false || Cache.exists('thumbnail', objectID) == false) {
         if(settings.source == "repository") {
-          Repository.streamData(object, "tn", function(error, stream) {
+          Repository.streamData(object, "tn", function(error, stream, headers) {
             if(error) {
               console.error(error);
               streamDefaultThumbnail(object, callback);
@@ -76,7 +76,7 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
                     else {console.log("Thumbnail image created for", objectID)}
                   });
                 }
-                callback(null, stream);
+                callback(null, stream, headers);
               }
               else {
                 streamDefaultThumbnail(object, callback);
@@ -252,7 +252,7 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
       }
 
       else {
-        Repository.streamData(object, datastreamID, function(error, stream) {
+        Repository.streamData(object, datastreamID, function(error, stream, headers) {
           if(error || !stream) {
             console.log("Repository stream data error: " + (error || "Path to resource not found. Pid: " + objectID));
             callback(null, null);
@@ -265,7 +265,8 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
                 else { console.log("Object file created for", objectID) }
               });
             }
-            callback(null, stream);
+
+            callback(null, stream, headers);
           }
         });
       }

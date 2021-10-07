@@ -38,10 +38,7 @@ exports.head = async function(url, callback) {
         if(response.ok == false) {
             error = response.statusText;
         }
-        else if(response.status == 200) {
-            body = response.body;
-        }
-        callback(error, response.status, body)
+        callback(error, response.status, response.headers.raw())
     }
 }
 
@@ -70,7 +67,7 @@ exports.get = async function(url, data, callback) {
     }
 
     if(error) {
-        callback(error, 500, null)
+        callback(error, 500, null, null)
     }
     else {
         if(response.ok == false) {
@@ -79,6 +76,6 @@ exports.get = async function(url, data, callback) {
         else if(response.status == 200) {
             body = response.body;
         }
-        callback(error, response.status, body)
+        callback(error, response.status, body, response.headers.raw())
     }
 }

@@ -27,7 +27,7 @@
 const config = require('../config/' + process.env.CONFIGURATION_FILE),
 	  rs = require('./request-stream'),
 	  request = require('request'),
-	  fs = require('fs');
+	  HttpRequest = require("./http-request.js");
 
 const domain = config.repositoryDomain,
 	  path = config.repositoryPath,
@@ -103,6 +103,7 @@ exports.getDatastreamUrl = function(dsid, object) {
  * @return {undefined}
  */
 exports.streamData = function(object, dsid, callback) {
+		console.log("TESt repo stream data f().")
 	try {
 		if(!object) { throw "Object is null" }
 		var url = getRepositoryUrl();
@@ -116,22 +117,50 @@ exports.streamData = function(object, dsid, callback) {
 		else {
 			url += ("/" + object.object);
 		}
-
 		if(config.nodeEnv == "devlog") {console.log("Repository fetching url:", url)}
-		rs(url, {}, function(err, res) {
-			if(err) {
-				callback("Could not open datastream. " + err + " Check connection to repository", null);
+
+			console.log("TEST repo stream data url:", url)
+
+		// implement fetch api:
+		HttpRequest.get(url, {}, function(error, status, body, headers) {
+			if(error) {
+				callback("Could not open datastream. " + error + " Check connection to repository", null, null);
 			}
 			else {
-				if(config.nodeEnv == "devlog") {console.log("Repository fetching url receive status of:", res.statusCode)}
-				if(res.statusCode == 200) {
-					callback(null, res);
+				let streamHeaders = null;
+				if(config.nodeEnv == "devlog") {console.log("Repository fetching url receive status of:", status)}
+					
+				if(headers) {
+					streamHeaders = {};
+					for(var key in headers) {
+						streamHeaders[key] = headers[key];
+					}
+				}
+
+				if(status == 200) {
+					callback(null, body, streamHeaders);
 				} 
 				else {
-					callback(null, null);
+					console.log("Received status of " + status + " wnen requesting resource file from repository")
+					callback(null, null, null);
 				}
 			}
 		});
+		// rs(url, {}, function(err, res) {
+		// 	if(err) {
+		// 		callback("Could not open datastream. " + err + " Check connection to repository", null);
+		// 	}
+		// 	else {
+		// 		if(config.nodeEnv == "devlog") {console.log("Repository fetching url receive status of:", res.statusCode)}
+		// 		if(res.statusCode == 200) {
+		// 			callback(null, res);
+		// 		} 
+		// 		else {
+		// 			console.log("Received status of " + res.statusCode + " wnen requesting resource file from repository")
+		// 			callback(null, null);
+		// 		}
+		// 	}
+		// });
 	}
 	catch(e) {
 		callback(e, null);
@@ -151,16 +180,33 @@ exports.getStreamStatus = function(object, dsid, callback) {
 		}
 		else {url += ("/" + object.object)}
 			
-		request.head(url, function (err, res) {
-			if(err) {
+		// implement fetch api:
+		HttpRequest.head(url, function(error, status, headers) {
+			if(error) {
 				callback("Could not open datastream. " + err + " Check connection to repository", null);
 			}
 			else {
-				callback(null, res.statusCode);
+				callback(null, status);
 			}
 		});
+		// request.head(url, function (err, res) {
+		// 	if(err) {
+		// 		callback("Could not open datastream. " + err + " Check connection to repository", null);
+		// 	}
+		// 	else {
+		// 		callback(null, res.statusCode);
+		// 	}
+		// });
 	}
 	catch(e) {
 		callback(e, null);
 	}
 }
+
+// exports.getObjectFile = async function(object, callback) {
+// 	let url = getRepositoryUrl() + "/" + (object.object || "");
+// 		console.log("TEST Repo: url is", url)
+
+// 	let file = await fetch(url);
+// 	callback(file.body);
+// }

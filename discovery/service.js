@@ -301,8 +301,8 @@ exports.getDatastream = function(indexName, objectID, datastreamID, part, authKe
           object = objectPart;
           objectID = objectID + (config.compoundObjectPartID + objectPart.order);
           
-          Datastreams.getDatastream(object, objectID, datastreamID, part, authKey, function(error, stream) {    
-            callback(error, stream, contentType);
+          Datastreams.getDatastream(object, objectID, datastreamID, part, authKey, function(error, stream, headers) {    
+            callback(error, stream, contentType, headers);
           });
         }
         else {
@@ -311,8 +311,8 @@ exports.getDatastream = function(indexName, objectID, datastreamID, part, authKe
       }
 
       else {
-        Datastreams.getDatastream(object, objectID, datastreamID, null, authKey, function(error, stream) {    
-          callback(error, stream, contentType);
+        Datastreams.getDatastream(object, objectID, datastreamID, null, authKey, function(error, stream, headers) {    
+          callback(error, stream, contentType, headers);
         });
       }
     }

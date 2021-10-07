@@ -364,7 +364,7 @@ exports.getDatastream = function(req, res) {
 		key = req.query.key;
 	}
 
-	Service.getDatastream(index, pid, ds, part, key, function(error, stream, contentType=null) {
+	Service.getDatastream(index, pid, ds, part, key, function(error, stream, contentType=null, headers=null) {
 		if(error) {
 			console.log(error);
 			res.sendStatus(500);
@@ -378,9 +378,22 @@ exports.getDatastream = function(req, res) {
 			if(contentType) {
 				res.set('Content-Type', contentType);
 			}
-			else if(stream.headers && stream.headers["content-type"]) {
+			else if(headers && headers["content-type"]) {
 				res.set('Content-Type', stream.headers["content-type"]);
 			}
+
+			// Add all headers:
+			// 1. all, without content type
+			// 2. Pick individually
+				console.log("TEST headers from repo:", headers)
+				console.log("TEST response headers:", res.header())
+			for(var key in headers) {
+					console.log("TEST header/type:", headers)
+				if(key.toLowerCase() != "content-type") {
+					res.set(key, headers[key][0]);
+				}
+			}
+
 			stream.pipe(res);
 		}
 	});
