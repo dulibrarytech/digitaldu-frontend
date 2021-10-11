@@ -374,7 +374,6 @@ exports.getDatastream = function(req, res) {
 			res.sendStatus(404);
 		}
 		else {
-			res.set('Accept-Ranges', 'bytes');
 			if(contentType) {
 				res.set('Content-Type', contentType);
 			}
