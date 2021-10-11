@@ -199,7 +199,7 @@ class CustomDelegate
       filename = filePattern.concat(".jpg")
 
       puts "source() script checking for local image file '".concat(filename).concat("'...")
-      path = "/home/appuser/digitaldu-backend-convert-service/storage/"
+      path = "{path to images}"
       puts "Current image location is: ".concat(path)
 
       Dir.chdir(path)
@@ -248,7 +248,7 @@ class CustomDelegate
   #                      given identifier, or nil if not found.
   #
   def filesystemsource_pathname(options = {})
-    filepath = "/home/appuser/digitaldu-backend-convert-service/storage/"
+    filepath = "{path to images}"
     if context['identifier'].include? '___'
       parts = context['identifier'].split('___')
       filepath = filepath.concat(parts[1]).concat(".jpg")
@@ -282,7 +282,7 @@ class CustomDelegate
     puts "http_resource_info() Object ID: ".concat(pid)
     puts "http_resource_info() Request uri: ".concat(request_uri)
     key = ''
-    str = 'https://libspecc01-vlp.du.edu/discovery/datastream/'
+    str = '{app domain/datastream/}'
 
     # remove filename
     if pid.include? '___'
