@@ -7,9 +7,7 @@
 # to be thread-safe, but sharing information across instances (requests)
 # **does** need to be done thread-safely.
 #
-# This version of the script works with Cantaloupe version 4, and not earlier
-# versions. Likewise, earlier versions of the script are not compatible with
-# Cantaloupe 4.
+# This version of the script works with Cantaloupe version >= 5.
 #
 class CustomDelegate
 
@@ -28,19 +26,27 @@ class CustomDelegate
   #
   # * `client_ip`        [String] Client IP address.
   # * `cookies`          [Hash<String,String>] Hash of cookie name-value pairs.
+  # * `full_size`        [Hash<String,Integer>] Hash with `width` and `height`
+  #                      keys corresponding to the pixel dimensions of the
+  #                      source image.
   # * `identifier`       [String] Image identifier.
+  # * `local_uri`        [String] URI seen by the application, which may be
+  #                      different from `request_uri` when operating behind a
+  #                      reverse-proxy server.
+  # * `metadata`         [Hash<String,Object>] Embedded image metadata. Object
+  #                      structure varies depending on the source image.
+  #                      See the `metadata()` method.
+  # * `page_count`       [Integer] Page count.
+  # * `page_number`      [Integer] Page number.
   # * `request_headers`  [Hash<String,String>] Hash of header name-value pairs.
-  # * `request_uri`      [String] Public request URI.
+  # * `request_uri`      [String] URI requested by the client.
   # * `scale_constraint` [Array<Integer>] Two-element array with scale
   #                      constraint numerator at position 0 and denominator at
   #                      position 1.
   #
   # It will contain the following additional string keys in response to image
-  # requests:
+  # requests, after the image has been accessed:
   #
-  # * `full_size`      [Hash<String,Integer>] Hash with `width` and `height`
-  #                    keys corresponding to the pixel dimensions of the
-  #                    source image.
   # * `operations`     [Array<Hash<String,Object>>] Array of operations in
   #                    order of application. Only operations that are not
   #                    no-ops will be included. Every hash contains a `class`
@@ -57,8 +63,52 @@ class CustomDelegate
   attr_accessor :context
 
   ##
-  # Returns authorization status for the current request. Will be called upon
-  # all requests to all public endpoints.
+  # Deserializes the given meta-identifier string into a hash of its component
+  # parts.
+  #
+  # This method is used only when the `meta_identifier.transformer`
+  # configuration key is set to `DelegateMetaIdentifierTransformer`.
+  #
+  # The hash contains the following keys:
+  #
+  # * `identifier`       [String] Required.
+  # * `page_number`      [Integer] Optional.
+  # * `scale_constraint` [Array<Integer>] Two-element array with scale
+  #                      constraint numerator at position 0 and denominator at
+  #                      position 1. Optional.
+  #
+  # @param meta_identifier [String]
+  # @return Hash<String,Object> See above. The return value should be
+  #                             compatible with the argument to
+  #                             {serialize_meta_identifier}.
+  #
+  def deserialize_meta_identifier(meta_identifier)
+  end
+
+  ##
+  # Serializes the given meta-identifier hash.
+  #
+  # This method is used only when the `meta_identifier.transformer`
+  # configuration key is set to `DelegateMetaIdentifierTransformer`.
+  #
+  # See {deserialize_meta_identifier} for a description of the hash structure.
+  #
+  # @param components [Hash<String,Object>]
+  # @return [String] Serialized meta-identifier compatible with the argument to
+  #                  {deserialize_meta_identifier}.
+  #
+  def serialize_meta_identifier(components)
+  end
+
+  ##
+  # Returns authorization status for the current request. This method is called
+  # upon all requests to all public endpoints early in the request cycle,
+  # before the image has been accessed. This means that some context keys (like
+  # `full_size`) will not be available yet.
+  #
+  # This method should implement all possible authorization logic except that
+  # which requires any of the context keys that aren't yet available. This will
+  # ensure efficient authorization failures.
   #
   # Implementations should assume that the underlying resource is available,
   # and not try to check for it.
@@ -84,34 +134,54 @@ class CustomDelegate
   # @param options [Hash] Empty hash.
   # @return [Boolean,Hash<String,Object>] See above.
   #
+  def pre_authorize(options = {})
+    true
+  end
+
+  ##
+  # Returns authorization status for the current request. Will be called upon
+  # all requests to all public image (not information) endpoints.
+  #
+  # This is a counterpart of `pre_authorize()` that is invoked later in the
+  # request cycle, once more information about the underlying image has become
+  # available. It should only contain logic that depends on context keys that
+  # contain information about the source image (like `full_size`, `metadata`,
+  # etc.)
+  #
+  # Implementations should assume that the underlying resource is available,
+  # and not try to check for it.
+  #
+  # @param options [Hash] Empty hash.
+  # @return [Boolean,Hash<String,Object>] See the documentation of
+  #                                       `pre_authorize()`.
+  #
   def authorize(options = {})
     true
   end
 
   ##
-  # Used to add additional keys to an information JSON response. See the
-  # [Image API specification](http://iiif.io/api/image/2.1/#image-information).
+  # Adds additional keys to an Image API 2.x information response. See the
+  # [IIIF Image API 2.1](http://iiif.io/api/image/2.1/#image-information)
+  # specification and "endpoints" section of the user manual.
   #
   # @param options [Hash] Empty hash.
-  # @return [Hash] Hash that will be merged into an IIIF Image API 2.x
-  #                information response. Return an empty hash to add nothing.
+  # @return [Hash] Hash to merge into an Image API 2.x information response.
+  #                Return an empty hash to add nothing.
   #
   def extra_iiif2_information_response_keys(options = {})
-=begin
-    Example:
-    {
-        'attribution' =>  'Copyright My Great Organization. All rights '\
-                          'reserved.',
-        'license' =>  'http://example.org/license.html',
-        'logo' =>  'http://example.org/logo.png',
-        'service' => {
-            '@context' => 'http://iiif.io/api/annex/services/physdim/1/context.json',
-            'profile' => 'http://iiif.io/api/annex/services/physdim',
-            'physicalScale' => 0.0025,
-            'physicalUnits' => 'in'
-        }
-    }
-=end
+    {}
+  end
+
+  ##
+  # Adds additional keys to an Image API 3.x information response. See the
+  # [IIIF Image API 3.0](http://iiif.io/api/image/3.0/#image-information)
+  # specification and "endpoints" section of the user manual.
+  #
+  # @param options [Hash] Empty hash.
+  # @return [Hash] Hash to merge into an Image API 3.x information response.
+  #                Return an empty hash to add nothing.
+  #
+  def extra_iiif3_information_response_keys(options = {})
     {}
   end
 
@@ -129,7 +199,7 @@ class CustomDelegate
       filename = filePattern.concat(".jpg")
 
       puts "source() script checking for local image file '".concat(filename).concat("'...")
-      path = "{path to images}"
+      path = "/home/appuser/digitaldu-backend-convert-service/storage/"
       puts "Current image location is: ".concat(path)
 
       Dir.chdir(path)
@@ -145,7 +215,7 @@ class CustomDelegate
         end
 
         filename = files[0]
-        filepath = path.concat(files[0]) 
+        filepath = path.concat(files[0])
         if(File.exist?(filepath))
           puts "Found image file ".concat(filename).concat(". Using FilesystemSource option")
           str = "FilesystemSource"
@@ -154,7 +224,7 @@ class CustomDelegate
           str = "HttpSource"
         end
       end
-    end 
+    end
     return str;
   end
 
@@ -178,12 +248,12 @@ class CustomDelegate
   #                      given identifier, or nil if not found.
   #
   def filesystemsource_pathname(options = {})
-    filepath = "{path to images}"
+    filepath = "/home/appuser/digitaldu-backend-convert-service/storage/"
     if context['identifier'].include? '___'
       parts = context['identifier'].split('___')
       filepath = filepath.concat(parts[1]).concat(".jpg")
       puts "filesystemsource_pathname returning pathname: ".concat(filepath)
-    else 
+    else
       puts "Error: filename not found in request uri"
     end
     return filepath;
@@ -194,10 +264,10 @@ class CustomDelegate
   #
   # 1. String URI
   # 2. Hash with the following keys:
-  #     * `uri` [String] (required)
+  #     * `uri`      [String] (required)
   #     * `username` [String] For HTTP Basic authentication (optional).
-  #     * `secret` [String] For HTTP Basic authentication (optional).
-  #     * `headers` [Hash<String,String>] Hash of request headers (optional).
+  #     * `secret`   [String] For HTTP Basic authentication (optional).
+  #     * `headers`  [Hash<String,String>] Hash of request headers (optional).
   # 3. nil if not found.
   #
   # N.B.: this method should not try to perform authorization. `authorize()`
@@ -212,7 +282,7 @@ class CustomDelegate
     puts "http_resource_info() Object ID: ".concat(pid)
     puts "http_resource_info() Request uri: ".concat(request_uri)
     key = ''
-    str = '{url to frontend application}'
+    str = 'https://libspecc01-vlp.du.edu/discovery/datastream/'
 
     # remove filename
     if pid.include? '___'
@@ -220,7 +290,7 @@ class CustomDelegate
       pid = parts[0]
       puts "http_resource_info() Removed file name from ID string. Object ID: ".concat(pid)
     end
-    
+
     if pid.include? '__'
       parts = pid.split('__')
       key = '?key='
@@ -280,29 +350,45 @@ class CustomDelegate
   end
 
   ##
-  # Tells the server what overlay, if any, to apply to an image in response
-  # to a request. Will be called upon all image requests to any endpoint if
-  # overlays are enabled and the overlay strategy is set to `ScriptStrategy`
-  # in the application configuration.
+  # Tells the server what overlay, if any, to apply to an image. Called upon
+  # all image requests to any endpoint if overlays are enabled and the overlay
+  # strategy is set to `ScriptStrategy` in the application configuration.
   #
-  # N.B.: When a string overlay is too large or long to fit entirely within
-  # the image, it won't be drawn. Consider breaking long strings with LFs (\n).
+  # Return values:
+  #
+  # 1. For string overlays, a hash with the following keys:
+  #     * `background_color` [String] CSS-compliant RGA(A) color.
+  #     * `color`            [String] CSS-compliant RGA(A) color.
+  #     * `font`             [String] Font name. Launch with the -list-fonts
+  #                          argument to see a list of available fonts.
+  #     * `font_min_size`    [Integer] Minimum font size in points (ignored
+  #                          when `word_wrap` is true).
+  #     * `font_size`        [Integer] Font size in points.
+  #     * `font_weight`      [Float] Font weight based on 1.
+  #     * `glyph_spacing`    [Float] Glyph spacing based on 0.
+  #     * `inset`            [Integer] Pixels of inset.
+  #     * `position`         [String] Position like `top left`, `center right`,
+  #                          etc.
+  #     * `string`           [String] String to draw.
+  #     * `stroke_color`     [String] CSS-compliant RGB(A) text outline color.
+  #     * `stroke_width`     [Float] Text outline width in pixels.
+  #     * `word_wrap`        [Boolean] Whether to wrap long lines within
+  #                          `string`.
+  # 2. For image overlays, a hash with the following keys:
+  #     * `image`    [String] Image pathname or URL.
+  #     * `position` [String] See above.
+  #     * `inset`    [Integer] See above.
+  # 3. nil for no overlay.
   #
   # @param options [Hash] Empty hash.
-  # @return [Hash<String,String>,nil] For image overlays, a hash with `image`,
-  #         `position`, and `inset` keys. For string overlays, a hash with
-  #         `background_color`, `color`, `font`, `font_min_size`, `font_size`,
-  #         `font_weight`, `glyph_spacing`,`inset`, `position`, `string`,
-  #         `stroke_color`, and `stroke_width` keys.
-  #         Return nil for no overlay.
+  # @return See above.
   #
   def overlay(options = {})
   end
 
   ##
   # Tells the server what regions of an image to redact in response to a
-  # particular request. Will be called upon all image requests to any endpoint
-  # if redactions are enabled in the application configuration.
+  # particular request. Will be called upon all image requests to any endpoint.
   #
   # @param options [Hash] Empty hash.
   # @return [Array<Hash<String,Integer>>] Array of hashes, each with `x`, `y`,
@@ -311,6 +397,62 @@ class CustomDelegate
   #
   def redactions(options = {})
     []
+  end
+
+  ##
+  # Returns XMP metadata to embed in the derivative image.
+  #
+  # Source image metadata is available in the `metadata` context key, and has
+  # the following structure:
+  #
+  # ```
+  # {
+  #     "exif": {
+  #         "tagSet": "Baseline TIFF",
+  #         "fields": {
+  #             "Field1Name": value,
+  #             "Field2Name": value,
+  #             "EXIFIFD": {
+  #                 "tagSet": "EXIF",
+  #                 "fields": {
+  #                     "Field1Name": value,
+  #                     "Field2Name": value
+  #                 }
+  #             }
+  #         }
+  #     },
+  #     "iptc": [
+  #         "Field1Name": value,
+  #         "Field2Name": value
+  #     ],
+  #     "xmp_string": "<rdf:RDF>...</rdf:RDF>",
+  #     "xmp_model": https://jena.apache.org/documentation/javadoc/jena/org/apache/jena/rdf/model/Model.html
+  #     "native": {
+  #         # structure varies
+  #     }
+  # }
+  # ```
+  #
+  # * The `exif` key refers to embedded EXIF data. This also includes IFD0
+  #   metadata from source TIFFs, whether or not an EXIF IFD is present.
+  # * The `iptc` key refers to embedded IPTC IIM data.
+  # * The `xmp_string` key refers to raw embedded XMP data, which may or may
+  #   not contain EXIF and/or IPTC information.
+  # * The `xmp_model` key contains a Jena Model object pre-loaded with the
+  #   contents of `xmp_string`.
+  # * The `native` key refers to format-specific metadata.
+  #
+  # Any combination of the above keys may be present or missing depending on
+  # what is available in a particular source image.
+  #
+  # Only XMP can be embedded in derivative images. See the user manual for
+  # examples of working with the XMP model programmatically.
+  #
+  # @return [String,Model,nil] String or Jena model containing XMP data to
+  #                            embed in the derivative image, or nil to not
+  #                            embed anything.
+  #
+  def metadata(options = {})
   end
 
 end
