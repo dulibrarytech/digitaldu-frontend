@@ -224,7 +224,7 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
 
         // Get cantaloupe uri for jpg
         let server = Helper.getFileExtensionFromFilePath(object.object) == "tif" ? config.IIIFTiffServerUrl : config.IIIFServerUrl,
-            uri = server + "/iiif/2/" + objectID + "/full/!1024,1024/0/default.jpg";
+            uri = server + "/iiif/2/" + objectID + "/full/full/0/default.jpg";
 
         streamRemoteData(uri, function(error, status, stream) {
           if(error) {

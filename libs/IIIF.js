@@ -423,12 +423,12 @@ var getImageCanvas = function(container, object, apikey) {
 	canvas["thumbnail"] = getThumbnailObject(container, object, apikey);
 	canvas['images'] = [];
 
-	image["@id"] = config.rootUrl + "/datastream/" + container.resourceID + "/object/" + container.resourceID + ".jp2" + apikey;
+	image["@id"] = config.rootUrl + "/datastream/" + container.resourceID + "/object/" + container.resourceID + ".jpg" + apikey;
 	image["@type"] =  "oa:Annotation";
 	image["motivation"] = "sc:painting";
 
 	let imageServerUrl = (object.extension == "tif" || object.extension == "tiff") ? config.IIIFTiffServerUrl : config.IIIFServerUrl;
-	resource["@id"] = imageServerUrl + "/iiif/2/" + object.resourceID + apikey + object.filename + "/full/!1024,1024/0/default.jpg";
+	resource["@id"] = imageServerUrl + "/iiif/2/" + object.resourceID + apikey + object.filename + "/full/full/0/default.jpg";
 
 	resource["@type"] = object.type; 
 	resource["format"] = object.format; 
