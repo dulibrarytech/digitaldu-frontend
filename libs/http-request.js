@@ -21,15 +21,22 @@
 const axios = require('axios');
 
 exports.head = async function(url, callback) {
-        console.log("TEST http head gets url", url)
     axios.head(url).then(function(response) {
         callback(null, response.status, response.headers)
     }).catch(function(error) {
-        if(error && error.response.status == 500) {
-            callback(error.response.statusText, 500, null);
+        if(error.response) {
+            console.log("Url:", url);
+            console.log("Response status text:", error.response.statusText);
+
+            if(error.response.status == 500) {
+                callback(error.response.statusText, 500, null);
+            }
+            else {
+                callback(null, error.response.status, error.response.headers)
+            }
         }
         else {
-            callback(null, error.response.status, null, error.response.headers);
+            callback(error, 500, null)
         }
     }); 
 }
@@ -61,14 +68,19 @@ exports.get_stream = function(url, data, callback) {
         }
         
     }).catch(function (error) {
-            
-        if(error.response.status == 500) {
-            callback(error.response.statusText, 500, null, null);
+        if(error.response) {
+            console.log("Url:", url);
+            console.log("Response status text:", error.response.statusText);
+
+            if(error.response.status == 500) {
+                callback(error.response.statusText, 500, null);
+            }
+            else {
+                callback(null, error.response.status, null, error.response.headers)
+            }
         }
         else {
-            console.log("Response status text:", error.response.statusText)
-            console.log("Url:", url)
-            callback(null, error.response.status, null, error.response.headers);
+            callback(error, 500, null);
         }
     });
 }
