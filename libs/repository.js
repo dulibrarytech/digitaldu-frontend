@@ -25,6 +25,8 @@
 'use strict';
 
 const config = require('../config/' + process.env.CONFIGURATION_FILE),
+	  HttpRequest = require("../libs/http-request.js"),
+
 	  rs = require('./request-stream'),
 	  request = require('request'),
 	  fs = require('fs');
@@ -118,18 +120,17 @@ exports.streamData = function(object, dsid, callback) {
 		}
 
 		if(config.nodeEnv == "devlog") {console.log("Repository fetching url:", url)}
-		rs(url, {}, function(err, res) {
-			if(err) {
+		HttpRequest.get_stream(url, {}, function(error, status, data) {
+			if(error) {
 				callback("Could not open datastream. " + err + " Check connection to repository", null);
 			}
+			else if(status != 200) {
+				console.log("Request to repository received status", status);
+				callback(null, null);
+			}
 			else {
-				if(config.nodeEnv == "devlog") {console.log("Repository fetching url receive status of:", res.statusCode)}
-				if(res.statusCode == 200) {
-					callback(null, res);
-				} 
-				else {
-					callback(null, null);
-				}
+				console.log("Request to repository received status 200");
+				callback(null, data);
 			}
 		});
 	}
@@ -150,13 +151,14 @@ exports.getStreamStatus = function(object, dsid, callback) {
 			url += ("/" + objectPath);
 		}
 		else {url += ("/" + object.object)}
+
 			
-		request.head(url, function (err, res) {
-			if(err) {
-				callback("Could not open datastream. " + err + " Check connection to repository", null);
+		HttpRequest.head(url, function(error, status, data) {
+			if(error) {
+				callback(error, 500);
 			}
 			else {
-				callback(null, res.statusCode);
+				callback(null, status);
 			}
 		});
 	}
