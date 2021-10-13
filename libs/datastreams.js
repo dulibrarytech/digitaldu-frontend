@@ -61,6 +61,7 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
 
     var settings = config.thumbnails[object.object_type] || null;
     if(!object.mime_type && object.object_type != "collection") {settings = null}
+
     if(settings) {
       if(settings.type && settings.type[fileType]) {
         settings = settings.type[fileType];
@@ -109,6 +110,7 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
               console.log("Error retrieving datastream for", objectID);
               break;
           }
+
           if(config.nodeEnv == "devlog") {console.log("Thumbnail image stream uri:", uri || "null")}
           if(uri == null || uri == "") {
             console.log("Could not construct uri for datastream request. uri field is null. Stream option: " + (settings.streamOption || "null") + " Pid: " + objectID);
@@ -238,7 +240,6 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
           }
           else {
             if(status == 200) {
-              // Cache the datastream if cache is enabled for this object type
               if(config.objectDerivativeCacheEnabled == true && cacheEnabled) {
               Cache.cacheDatastream('object', objectID, stream, extension, function(error) {
                   if(error) { console.error("Could not create object file for", objectID, error) }
@@ -263,7 +264,6 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
             callback(null, null);
           }
           else {
-            // Cache the datastream if cache is enabled for this object type
             if(config.objectDerivativeCacheEnabled == true && cacheEnabled) {
               Cache.cacheDatastream('object', objectID, stream, extension, function(error) {
                 if(error) { console.error("Could not create object file for", objectID, error) }

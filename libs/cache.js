@@ -31,6 +31,7 @@ exports.cacheDatastream = function(objectType, objectID, stream, extension, call
 		filepath = config.objectDerivativeCacheLocation + "/" + objectID + "." + extension;
 	}
 
+	console.log("Writing to cache,", filepath);
 	if(typeof stream == 'object' && stream.statusCode) {
 		try {
 			stream.pipe(fs.createWriteStream(filepath)).on('close', function() {
@@ -72,6 +73,7 @@ exports.getFileStream = function(objectType, objectID, extension="", callback) {
 		filepath = config.objectDerivativeCacheLocation + "/" + objectID + "." + extension;
 	}
 
+	console.log("Fetching from cache,", filepath);
 	let readStream = fs.createReadStream(filepath);
 	readStream.on('open', function () {
 	    callback(null, readStream);

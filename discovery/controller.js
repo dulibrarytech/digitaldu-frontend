@@ -380,6 +380,7 @@ exports.getDatastream = function(req, res) {
 			else if(stream.headers && stream.headers["content-type"]) {
 				res.set('Content-Type', stream.headers["content-type"]);
 			}
+
 			stream.pipe(res);
 		}
 	});
