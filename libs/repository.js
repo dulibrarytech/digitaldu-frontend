@@ -25,11 +25,7 @@
 'use strict';
 
 const config = require('../config/' + process.env.CONFIGURATION_FILE),
-	  HttpRequest = require("../libs/http-request.js"),
-
-	  rs = require('./request-stream'),
-	  request = require('request'),
-	  fs = require('fs');
+	  HttpRequest = require("../libs/http-request.js");
 
 const domain = config.repositoryDomain,
 	  path = config.repositoryPath,
