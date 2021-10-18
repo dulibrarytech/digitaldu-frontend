@@ -24,7 +24,6 @@
 'use strict';
 
 const 	config = require('../config/' + process.env.CONFIGURATION_FILE),
-	 	request  = require("request"),
 		IIIF = require('../libs/IIIF');
 
 exports.getManifest = function(container, objects, apikey, callback) {
@@ -199,20 +198,8 @@ var getImageData = function(objects, data=[], apikey, callback) {
 		let object = objects[index],
 			url = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + apikey; 
 
-		request(url, function(error, response, body) {
-			if(error) {
-				callback(error, []);
-			}
-			else if(body[0] != '{') {
-				data.push({});
-				getImageData(objects, data, apikey, callback);
-			}
-			else {
-				let object = JSON.parse(body);
-				data.push(object);
-				getImageData(objects, data, apikey, callback);
-			}
-		});
+		// TODO Implement async request loop for each image object in objects array, return the image data once a request has been completed and the data stored for each image
+		callback("IIIF::getImageData() has not yet been implemented, set config flag 'IIIFUseGenericImageData' to true", []);
 	}
 }
 
