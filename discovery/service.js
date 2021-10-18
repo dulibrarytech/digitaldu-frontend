@@ -503,7 +503,6 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
       else if(container.isCompound) {
         let parts = AppHelper.getCompoundObjectPart(object, -1) || [];
 
-        // Manifest paging - this option is defunct 
         if(config.IIIFManifestPageSize && page && page > 0) {
           let size = config.IIIFManifestPageSize || 10,
               offset = (page-1) * size;
@@ -517,7 +516,12 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
 
         for(var key in parts) {
           let pageCount = null,
-              filename = config.IIIFUseLocalFilesource ? (config.IIIFFilesourceImageFilenamePrefix + AppHelper.getDuracloudFilenameFromObjectPath(parts[key])) : null;
+              filename = "";
+
+          if(config.IIIFUseLocalFilesource) {
+            let path = AppHelper.getDuracloudFilenameFromObjectPath(parts[key]);
+            filename = path ? config.IIIFFilesourceImageFilenamePrefix + path : "";
+          }
 
           // Get pdf page count
           if(config.IIIFEnablePdfPaging && AppHelper.getDsType(parts[key].type) == "pdf") {
@@ -533,6 +537,7 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
             }
           }
 
+          
           children.push({
             label: parts[key].title,
             sequence: parts[key].order || key,
@@ -562,10 +567,15 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
       // Single objects
       else {
         let pageCount = null,
-            filename = config.IIIFUseLocalFilesource ? (config.IIIFFilesourceImageFilenamePrefix + AppHelper.getDuracloudFilenameFromObjectPath(object)) : null;
+            filename = "";
+
+        if(config.IIIFUseLocalFilesource) {
+          let path = AppHelper.getDuracloudFilenameFromObjectPath(object);
+          filename = path ? config.IIIFFilesourceImageFilenamePrefix + path : "";
+        }
 
         // pdf page count
-        if(config.IIIFEnablePdfPaging && AppHelper.getDsType(object.mime_type) == "pdf") {
+        if(AppHelper.getDsType(object.mime_type) == "pdf" && config.IIIFEnablePdfPaging) {
           let objectID = object.pid,
               cacheFileName = objectID + ".pdf",
               cacheFilePath = config.objectDerivativeCacheLocation;
