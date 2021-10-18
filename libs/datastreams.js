@@ -1,22 +1,4 @@
- /**
- * @file 
- *
- * Object Datastream Access Functions
- */
-
-'use strict';
-
-const config = require('../config/' + process.env.CONFIGURATION_FILE),
-  rs = require('request-stream'),
-  request = require("request"),
-  fetch = require('node-fetch'),
-  fs = require('fs'),
-  Repository = require('../libs/repository'),
-  Helper = require('../libs/helper'),
-  Kaltura = require('../libs/kaltura'),
-  Cache = require('../libs/cache'),
-  IIIF = require('../libs/IIIF');
-  /**
+   /**
     Copyright 2019 University of Denver
 
     Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,6 +13,23 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
     See the License for the specific language governing permissions and
     limitations under the License.
  */
+ /**
+ * @file 
+ *
+ * Object Datastream Access Functions
+ */
+
+'use strict';
+
+const config = require('../config/' + process.env.CONFIGURATION_FILE),
+  HttpRequest = require("../libs/http-request"),
+  fetch = require('node-fetch'),
+  fs = require('fs'),
+  Repository = require('../libs/repository'),
+  Helper = require('../libs/helper'),
+  Kaltura = require('../libs/kaltura'),
+  Cache = require('../libs/cache'),
+  IIIF = require('../libs/IIIF');
 
 /**
  * Get a datastream for an object
@@ -117,11 +116,11 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
           }
           streamRemoteData(uri, function(error, status, stream) {
             if(error) {
-              if(config.nodeEnv == "devlog") {console.log(error)}
+              console.log(error);
               streamDefaultThumbnail(object, callback);
             }
             else if(stream == null) {
-              console.log("Datastream error: Can not fetch datastream for object ", objectID);
+              console.log("Datastream error: Can not fetch datastream for object " + objectID);
               streamDefaultThumbnail(object, callback);
             }
             else {
@@ -129,6 +128,7 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
                 if(config.thumbnailImageCacheEnabled == true && 
                   settings.cache == true && 
                   settings.streamOption != "index") {
+
                   Cache.cacheDatastream('thumbnail', objectID, stream, null, function(error) {
                     if(error) {console.error("Could not create thumbnail image for", objectID, error)}
                     else {console.log("Thumbnail image created for", objectID)}
@@ -173,7 +173,6 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
     else {
       extension = datastreamID;
     }
-
     if(config.objectDerivativeCacheEnabled && config.cacheTypes.includes(extension)) {
       cacheEnabled = true;
     }
@@ -296,17 +295,16 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
  */
 var streamRemoteData = function(uri, callback) {
   if(uri) {
-    rs(uri, {followRedirects: true}, function(err, res) {
-      if(err) {
-        callback("Could not open datastream. " + err, null, null);
+    HttpRequest.get_stream(uri, {}, function(error, status, data) {
+      if(error) {
+        callback("Data request error: " + error, null, null);
+      }
+      else if(status != 200) {
+        console.log("Request for data received status", status);
+        callback(null, status, null);
       }
       else {
-        if(res.socket.bytesRead < 500) {
-          callback(null, 204, null);
-        }
-        else {
-          callback(null, res.statusCode, res);
-        }
+        callback(null, status, data);
       }
     });
   }
@@ -317,50 +315,25 @@ var streamRemoteData = function(uri, callback) {
 
 var streamKalturaData = function(uri, callback) {
   if(uri) {
-    rs(uri, {followRedirects: true}, function(err, res) {
-      if(err) {
-        callback("Could not open datastream. " + err, null, null);
+    HttpRequest.get_stream(uri, {followRedirects: true}, function(error, status, stream) {
+      if(error) {
+        callback("Could not open Kaltura datastream. Uri: " + uri + " Error: " + error, null, null);
       }
       else {
-        if(res.statusCode == 200) {
-          // Get the redirect path, stream remote data
-          let kalturaDownloadUri = res.connection._httpMessage._header.replace("GET ", "");
-          kalturaDownloadUri = kalturaDownloadUri.substring(0, kalturaDownloadUri.indexOf("/a.")+6);
-          streamRemoteData(kalturaDownloadUri, function(error, status, stream) {
-            if(error) { callback(error, 500, null) }
-            else { 
-              callback(null, status, stream) 
-            }
-          });
+        if(status == 200) { 
+          callback(null, status, stream) 
+
         }
         else {
-          callback(null, res.statusCode, res);
+          callback(null, status, null);
         }
       }
     });
+
   }
   else {
      callback(null, 404, null);
   }
-}
-
-/**
- * Request data from uri
- *
- * @param {String} uri - Uri of data source
- *
- * @callback callback
- * @param {String|null} - Error message or null
- * @param {http status code|null} - Response status code, Null if error
- * @param {response|null} Response data, Null if error
- *
- * @return {undefined}
- */
-var fetchRemoteData = function(uri, callback) {
-    request(uri, function(error, response, body) {
-      if(error) {callback(error, null)}
-      else {callback(null, response)}
-    });
 }
 
 /**
