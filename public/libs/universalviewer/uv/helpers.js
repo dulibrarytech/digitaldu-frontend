@@ -35,31 +35,63 @@ function createUV(selector, data, dataProvider) {
          * DU implementation
          */
         setTimeout(function(){ 
+            /*
+             * Append a spinner and and a hidden error message, to appear after a time interval that indicates the object is not loading correctly
+             */
             $(".spinner").append('<div class="loading-msg">Loading, please wait...</div>');
             $(".spinner").append("<div class='timeout-msg' style='display: none'><h6>We're sorry, this is taking longer than expected. To report any problems with accessing this resource, please contact <a href='mailto:archives@du.edu'>archives@du.edu</a></h6></div>")
-        
+            setTimeout(function(){  
+                $(".loading-msg").css("display", "none");
+                $(".timeout-msg").css("display", "block");
+                $(".spinner").css("background-color", "black");
+                $(".spinner").css("background-image", "none !important");
+            }, 45000);
+
+            /* 
+             * PDF only: need to update the thumbnail link urls with the pdf page number ('page' param appended to IIIF request uri)
+             *
+             * The page thumbnail scrolling list (Default view on UV load) are on the page once the UV has loaded, so PDF events can be added here.
+             *
+             */
             $(".thumbsView").scroll(function(event) {
                 if($("#uv").hasClass("pdf-object")) {
                     updateThumbnailImageUrlsWithPageParam();
                 }
             });
 
+            /*
+             * PDF only: need to update the thumbnail link urls with the pdf page number ('page' param appended to IIIF request uri)
+             *
+             * The page thumbnail gallery view elements are added once the gallery icon is clicked. Need to add the events once the elements are added to the DOM
+             * In the gallery thumbnail section, The div which needs the "scroll" event added has no meaningful id or class name. It contains the class "main". It is not the only div with this class,
+             * so in order to add the event, it needs to be found within the "galleryView" div, and the events added once the div is identified.
+            */
             $("#uv button.gallery").click(function(event) {
-                $("#uv .thumb .wrap").attr("style", "width: 200px");
-                if($("#uv").hasClass("pdf-object")) {
-                    updateGridThumbnailImageUrlsWithPageParam();
-                }
+                setTimeout(function(){ 
+                    $("#uv .thumb .wrap").attr("style", "width: 200px");
+                    if($("#uv").hasClass("pdf-object")) {
+                        updateGridThumbnailImageUrlsWithPageParam();
+                    }
+
+                    let thumbnailSections = $(".galleryView .thumbs").parent();
+                    for(var thumbnailSection of thumbnailSections) {
+                        if($(thumbnailSection).hasClass("main")) {
+                            $(thumbnailSection).scroll(function(event) {
+                                if($("#uv").hasClass("pdf-object")) {
+                                    updateGridThumbnailImageUrlsWithPageParam();
+                                }
+                            });
+                        }
+                    }
+
+                }, 1000);
             });
         }, 1000);
-        setTimeout(function(){  
-            $(".loading-msg").css("display", "none");
-            $(".timeout-msg").css("display", "block");
-            $(".spinner").css("background-color", "black");
-            $(".spinner").css("background-image", "none !important");
-        }, 45000);
 
-        // Kludge: the first link in the index tab will not work after any index link is clicked. 
-        // This forces the object to reload whenever the first link in the index is clicked. This object should always be the one in the viewer when the page loads
+        /*
+         * Kludge: the first link in the index tab will not work after any index link is clicked. 
+         * This forces the object to reload whenever the first link in the index is clicked. This object should always be the one in the viewer when the page loads
+         */
         setTimeout(function(){
             $("a.index").click(function(ev) {
                 $("#tree-link-0-0").click(function(event) {
@@ -267,13 +299,13 @@ function getExitFullScreen() {
  */
 function updateThumbnailImageUrlsWithPageParam() {
     setTimeout(function() {
-    let thumbnailImages = $(".wrap img"), thumbIndex;
-    for(var i=0; i < thumbnailImages.length; i++) {
-        thumbIndex = thumbnailImages[i].parentElement.parentElement.id.replace("thumb", "");
-        if(thumbnailImages[i].src.indexOf("?t") >= 0) {
-            thumbnailImages[i].src = thumbnailImages[i].src.substring(0, thumbnailImages[i].src.indexOf("?t")) + "?page=" + (parseInt(thumbIndex)+1);
+        let thumbnailImages = $(".wrap img"), thumbIndex;
+        for(var i=0; i < thumbnailImages.length; i++) {
+            thumbIndex = thumbnailImages[i].parentElement.parentElement.id.replace("thumb", "");
+            if(thumbnailImages[i].src.indexOf("?t") >= 0) {
+                thumbnailImages[i].src = thumbnailImages[i].src.substring(0, thumbnailImages[i].src.indexOf("?t")) + "?page=" + (parseInt(thumbIndex)+1);
+            }
         }
-    }
     }, 250);
 }
 
@@ -293,6 +325,10 @@ function updateGridThumbnailImageUrlsWithPageParam() {
     }, 500);
 }
 
+/*
+ * DU implementation
+ * Updates the url in the download button(s) for each download option. Should be done each time another part is selected in the viewer when viewing a compound object
+ */
 function updateDownloadUrlsForPart(part) {
     let url = "",
         filename = "",

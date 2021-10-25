@@ -1,5 +1,5 @@
 # Digital Collections Frontend - digitaldu
-# Release 1.1
+# Release 1.1.3
 
 ## Table of Contents
 
@@ -121,7 +121,7 @@ elastic-index-mapping.json
 
 #### Cantaloupe Image Server (v4.1.7)
 
-Download and install the Cantaloupe image server (https://cantaloupe-project.github.io/), update the frontend .env file with the Cantaloupe port and url.  ***Alternatively, another IIIF image server can be used***.
+Download and install the Cantaloupe image server (https://cantaloupe-project.github.io/), update the frontend .env file with the Cantaloupe port and url. 
 
 ##### "Cantaloupe.properties" updates
 
