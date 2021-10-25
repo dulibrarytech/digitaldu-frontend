@@ -36,7 +36,6 @@
     "nocache": "^2.1.0",
     "pdf-page-counter": "^1.0.3",
     "pluralize": "^8.0.0",
-    "request-stream": "^1.2.2",
     "sanitize-html": "^2.4.0",
     "stringify-object": "^3.3.0",
     "write": "^2.0.0",
