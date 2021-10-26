@@ -117,6 +117,7 @@ function createUV(selector, data, dataProvider) {
          * DU implementation
          */
         $(".uv-preload-msg").remove();
+        $(".outer-spinner").remove();
         /*
          * End DU implementation
          */
