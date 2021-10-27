@@ -1,5 +1,5 @@
 # Digital Collections Frontend - digitaldu
-# Release 1.1.3
+# Release 1.1.4
 
 ## Table of Contents
 
@@ -220,27 +220,27 @@ end
 
 To serve jp2 files, Cantaloupe must be configured to use a jp2 codec such as Kakadu or OpenJPEG.  See Cantaloupe documentation for installation and configuration instructions
 
-### Upgrading the Universalviewer Library (public/libs/universalviewer)
+### Installing UniversalViewer library
 
-Current version included is 3.0.36
+#### Steps 
 
-To upgrade the Universalviewer, the universalviewer folder in the public/libs folder can be replaced with a newer version. The files that need to be updated in the universalviewer folder are the uv/helpers.js file, and the uv/uv.css file. There are several code blocks that need to be added to the first file. See the current file in public/libs/universalviewer/uv/helpers.js for the code blocks that need to be imported into the latest Universalviewer version's uv/helpers.js file.
+1. Clone or download folder from github (https://github.com/UniversalViewer/universalviewer) into {project root}/public/libs
 
-There are 3 files which contain code updates to the UV for the digital-du discovery layer:
+2. Cd into the folder (universalviewer) and run "npm install"
 
-#### public/libs/universalviewer/uv/helpers.js
+3. Run the command "grunt" to build the application
 
-(UV file) Contains UV hooks that are imlemented to support the operation of the UV within the digital-du discovery layer app. This code updates the internal workings of UV, such as the thumbnail display, loading spinner and timeout message.
+4. Copy {application root}/universalviewer-files/helpers.js to universalviewer/dist (replace existing file)
 
-#### public/views/events.universalviewer.js:
+* It may be a good idea to move over the DU updates from the /universalviewer-files/helpers.js functions to the same functions in the existing helpers.js file. The code updates for DU are marked with comments.
+
+5. Copy {application root}/universalviewer-files/uv.css to universalviewer/dist (replace existing file)
+
+#### Digital-DU - Universalviewer interface: public/views/events.universalviewer.js
 
 (Digital-du file, external to UV) Contains events that alter the behavior and appearance of the UV. This code updates the external workings of UV, such as the Kaltura viewer embed, the loading spinner, and the transcript view section.
 
-*If the UV version is upgraded, and either the Kaltura player embed or the transcript option does not work, check the browser console logs to determine if anything in this file needs to be updated to match the current version of Universalviewer*
-
-#### public/libs/universalviewer/uv/uv.css
-
-(UV file) DU updates to UV styles
+*If the UV version is installed or upgraded, and either the Kaltura player embed or the transcript option does not work, check the browser console logs to determine if anything in this file needs to be updated to match the current version of Universalviewer*
 
 ## Services
 
