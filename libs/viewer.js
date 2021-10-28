@@ -306,7 +306,7 @@ function getIIIFObjectViewer(object, page=null, embedKalturaViewer=false, apikey
 		viewer += 'createUV("#uv", {';
 		viewer += 'iiifResourceUri: "' + config.IIIFUrl + '/' + pid + '/manifest' + page + apikey + '",';
 		viewer += 'configUri: "' + config.rootUrl + '/libs/universalviewer/uv-config.json",';
-		viewer += 'root: "' + relativePath + config.appPath + '/libs/universalviewer/uv",';
+		viewer += 'root: "' + relativePath + config.appPath + '/libs/universalviewer/dist",';
 		viewer += '}, new UV.URLDataProvider());';
 		viewer += eventTriggers;
 		viewer += '}, false);';
