@@ -175,7 +175,7 @@ exports.createMetadataDisplayObject = function(result, collections=[]) {
 		displayObj["In Collections"] = titles;
 	}
 
-	// Add fields external to the main display configuration
+	// Add non display_object fields to appear before the display_object fields
 	if(result.type) {
 		displayObj["Item Type"] = result.type;
 	}
@@ -271,7 +271,11 @@ exports.createMetadataDisplayObject = function(result, collections=[]) {
 		}
 	}
 
-	// Fields external to the main display configuration (these will appear after the display record)
+	// Add non display_object fields to appear after the display_object fields
+	if(result.handle) {
+		displayObj["Handle"] = result.handle;
+		displayObj["Handle"] += '<a id="copy-handle-url"><img src="' + config.rootUrl + '/assets/img/cut-copy-and-paste.jpg" width="40" height="25" style="margin-left: 6px"/></a>';
+	}
 	if(result.pid) {
 		let manifestUrl = config.rootUrl + "/iiif/" + result.pid + "/manifest";
 		displayObj["IIIF Manifest"] = '<a href="' + manifestUrl + '">' + manifestUrl + '</a>';

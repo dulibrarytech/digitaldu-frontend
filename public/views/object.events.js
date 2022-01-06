@@ -50,6 +50,16 @@ $( document ).ready(function() {
 		window.getSelection().removeAllRanges();
 	});
 
+	$("#copy-handle-url").click(function(event) {
+		var r = document.createRange();
+		var handle = document.getElementById("copy-handle-url").previousSibling;
+		r.selectNode(handle);
+		window.getSelection().removeAllRanges();
+		window.getSelection().addRange(r);
+		document.execCommand('copy');
+		window.getSelection().removeAllRanges();
+	});
+
 	$("#transcript-view-wrapper").css("display", "none");
 	$("#view-transcript").click(function(event) {
   		if($("#viewer-section").hasClass("transcript-visible") == false) {
