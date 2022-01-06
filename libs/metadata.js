@@ -274,12 +274,12 @@ exports.createMetadataDisplayObject = function(result, collections=[]) {
 	// Add non display_object fields to appear after the display_object fields
 	if(result.handle) {
 		displayObj["Handle"] = result.handle;
-		displayObj["Handle"] += '<a id="copy-handle-url"><img src="' + config.rootUrl + '/assets/img/cut-copy-and-paste.jpg" width="40" height="25" style="margin-left: 6px"/></a>';
+		displayObj["Handle"] += '<a class="copy-text-link"><img src="' + config.rootUrl + '/assets/img/cut-copy-and-paste.jpg" width="40" height="25" style="margin-left: 6px"/></a>';
 	}
 	if(result.pid) {
 		let manifestUrl = config.rootUrl + "/iiif/" + result.pid + "/manifest";
 		displayObj["IIIF Manifest"] = '<a href="' + manifestUrl + '">' + manifestUrl + '</a>';
-		displayObj["IIIF Manifest"] += '<a id="copy-manifest-link"><img src="' + config.rootUrl + '/assets/img/cut-copy-and-paste.jpg" width="40" height="25" style="margin-left: 6px"/></a>';
+		displayObj["IIIF Manifest"] += '<a class="copy-text-link"><img src="' + config.rootUrl + '/assets/img/cut-copy-and-paste.jpg" width="40" height="25" style="margin-left: 6px"/></a>';
 	}
 
 	return displayObj;

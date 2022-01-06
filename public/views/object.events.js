@@ -40,25 +40,15 @@ $( document ).ready(function() {
 		$("#"+buttonId).css("display", "inline-block");
 	})
 
-	$("#copy-manifest-link").click(function(event) {
-		var r = document.createRange();
-		var iiifLink = document.getElementById("copy-manifest-link").previousSibling;
-		r.selectNode(iiifLink);
+	$(".copy-text-link").click(function(event) {
+		var range = document.createRange();
+		var text = event.currentTarget.previousSibling;
+		range.selectNode(text);
 		window.getSelection().removeAllRanges();
-		window.getSelection().addRange(r);
+		window.getSelection().addRange(range);
 		document.execCommand('copy');
 		window.getSelection().removeAllRanges();
-	});
-
-	$("#copy-handle-url").click(function(event) {
-		var r = document.createRange();
-		var handle = document.getElementById("copy-handle-url").previousSibling;
-		r.selectNode(handle);
-		window.getSelection().removeAllRanges();
-		window.getSelection().addRange(r);
-		document.execCommand('copy');
-		window.getSelection().removeAllRanges();
-	});
+	})
 
 	$("#transcript-view-wrapper").css("display", "none");
 	$("#view-transcript").click(function(event) {
