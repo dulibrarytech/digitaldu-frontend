@@ -224,17 +224,17 @@ To serve jp2 files, Cantaloupe must be configured to use a jp2 codec such as Kak
 
 #### Steps 
 
-1. Clone or download folder from github (https://github.com/UniversalViewer/universalviewer) into {project root}/public/libs
+1. Clone or download folder from github (https://github.com/dulibrarytech/universalviewer.git) into {project root}/public/libs
 
 2. Cd into the folder (universalviewer) and run "npm install"
 
-3. Run the command "grunt" to build the application
+3. Copy uv.css (in project folder root) into the "universalviewer/src/" folder
 
-4. Copy {application root}/universalviewer-files/helpers.js to universalviewer/dist (replace existing file)
+4. Copy uv_helpers.js (in project folder root) into the "universalviewer/src/" folder, and *rename it to 'helpers.js'*
 
-* It may be a good idea to move over the DU updates from the /universalviewer-files/helpers.js functions to the same functions in the existing helpers.js file. The code updates for DU are marked with comments.
+5. Run the command "grunt" to build the application
 
-5. Copy {application root}/universalviewer-files/uv.css to universalviewer/dist (replace existing file)
+Instructions to install/configure Universalviewer: https://universalviewer.io/
 
 #### Digital-DU - Universalviewer interface: public/views/events.universalviewer.js
 
