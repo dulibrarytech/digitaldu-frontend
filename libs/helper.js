@@ -242,7 +242,7 @@ var getFileExtensionFromFilePath = function(filename) {
       pathExtension = filename.substring(extIndex);
 
 	if(/\.\w\w\w\w?$/g.test(pathExtension)) {
-		extension = pathExtension.substring(1);
+		extension = pathExtension.substring(1).toLowerCase();
 	}
   return extension;
 }
