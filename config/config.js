@@ -24,7 +24,7 @@
 'use strict';
 
 module.exports = {
-    appTitle: "Digital Collections @ DU",
+    appTitle: "Special Collections @ DU",
 
     /*
      * Runtime environment
@@ -291,7 +291,7 @@ module.exports = {
     defaultThumbnailImage: "tn-placeholder.jpg",
     thumbnailImageCacheEnabled: true,
     thumbnailImageCacheLocation: "cache/thumbnail",
-    objectDerivativeCacheEnabled: false,
+    objectDerivativeCacheEnabled: true,
     objectDerivativeCacheLocation: "/var/cache/digcoll",
 
     /*
