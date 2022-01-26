@@ -326,7 +326,7 @@ exports.getDatastream = function(indexName, objectID, datastreamID, part, authKe
         cacheEnabled = config.thumbnailImageCacheEnabled;
       }
       else {
-        cacheEnabled = config.objectDerivativeCacheEnabled && config.cacheTypes.includes(extension);
+        cacheEnabled = config.objectDerivativeCacheEnabled && config.enableCacheForFileType.includes(extension);
       }
 
       if(cacheEnabled && Cache.exists(cacheName, objectID, extension) == true) {
@@ -865,7 +865,7 @@ var addCacheItem = function(objectID, cacheName, updateExiting) {
         var extension = (cacheName == "thumbnail") ? config.thumbnailFileExtension : AppHelper.getFileExtensionForMimeType(item.mimeType || null),
         filename = item.pid + "." + extension;
 
-        if(config.cacheTypes.includes(extension) == false) {
+        if(config.enableCacheForFileType.includes(extension) == false) {
           console.log("Caching is disabled for " + AppHelper.getObjectType(item.mimeType) + " files. " + filename + " not added to " + cacheName + " cache");
         }
         else if(Cache.exists(cacheName, item.pid, extension) == false || updateExiting === true) {
