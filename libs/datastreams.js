@@ -28,7 +28,6 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
   Repository = require('../libs/repository'),
   Helper = require('../libs/helper'),
   Kaltura = require('../libs/kaltura'),
-  Cache = require('../libs/cache'),
   IIIF = require('../libs/IIIF');
 
 /**
@@ -45,7 +44,8 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
  *
  * @return {undefined}
  */
-exports.getDatastream = function(object, objectID, datastreamID, partIndex=null, apiKey, callback) {
+exports.getDatastream = function(object, objectID, datastreamID, partIndex=null, apiKey, callback) { // TODO remove partIndex param, then remove from all function calls
+    console.log("Datastream module request", objectID, datastreamID)
   var fileType = "default";
   if(Helper.isParentObject(object)) {
      fileType = "compound";
@@ -66,7 +66,8 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
         settings = settings.type[fileType];
       }
 
-      if(settings.cache == false || Cache.exists('thumbnail', objectID) == false) {
+      if(1) {
+      //if(settings.cache == false || Cache.exists('thumbnail', objectID) == false) {
         if(settings.source == "repository") {
           Repository.streamData(object, "tn", function(error, stream) {
             if(error) {
@@ -75,12 +76,6 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
             }
             else {
               if(stream) {
-                if(config.thumbnailImageCacheEnabled == true && settings.cache == true) {
-                  Cache.cacheDatastream('thumbnail', objectID, stream, null, function(error) {
-                    if(error) {console.error("Could not create thumbnail image for", objectID, error)}
-                    else {console.log("Thumbnail image created for", objectID)}
-                  });
-                }
                 callback(null, stream);
               }
               else {
@@ -125,15 +120,6 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
             }
             else {
               if(status == 200) {
-                if(config.thumbnailImageCacheEnabled == true && 
-                  settings.cache == true && 
-                  settings.streamOption != "index") {
-
-                  Cache.cacheDatastream('thumbnail', objectID, stream, null, function(error) {
-                    if(error) {console.error("Could not create thumbnail image for", objectID, error)}
-                    else {console.log("Thumbnail image created for", objectID)}
-                  });
-                }
                 callback(null, stream);
               }
               else {
@@ -145,14 +131,6 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
           });
         }
       }
-
-      // Cached thumbnail image found
-      else {
-        Cache.getFileStream('thumbnail', objectID, null, function(error, stream) {
-          if(error) {callback(error, null)}
-          else {callback(null, stream)}
-        });
-      }
     }
     else {
       console.log("Error retrieving datastream for " + objectID + ", can not find configuration settings for object type " + object.object_type, null);
@@ -163,33 +141,16 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
   // Request a non-thumbnail datastream
   else {
     let extension = "file",
-        mimeType = Helper.getContentType("object", object),
-        cacheEnabled = false; 
+        mimeType = Helper.getContentType("object", object); 
 
-    // Get the file extension to use for the object
     if(datastreamID == "object") {
       extension = object.object ? Helper.getFileExtensionFromFilePath(object.object) : Helper.getFileExtensionForMimeType(object.mime_type || null);
     }
     else {
       extension = datastreamID;
     }
-    if(config.objectDerivativeCacheEnabled && config.cacheTypes.includes(extension)) {
-      cacheEnabled = true;
-    }
 
-    // Stream from the cache
-    if(cacheEnabled && Cache.exists('object', objectID, extension) == true) {
-      Cache.getFileStream('object', objectID, extension, function(error, stream) {
-        if(error) {
-          callback(error, null);
-        }
-        else {
-          callback(null, stream);
-        }
-      })
-    }
-
-    else if(object.object) {
+    if(object.object) {
       let objectType = Helper.getObjectType(mimeType),
           viewerId = object.entry_id || object.kaltura_id || null;
 
@@ -202,13 +163,6 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
           streamKalturaData(kalturaStreamUri, function(error, status, stream) {
             if(error) { callback(error, null) }
             else { 
-              // Cache the datastream if cache is enabled for this object type
-              if(config.objectDerivativeCacheEnabled == true && cacheEnabled) {
-                Cache.cacheDatastream('object', objectID, stream, extension, function(error) {
-                  if(error) { console.error("Could not create object file for", objectID, error) }
-                  else { console.log("Object file created for", objectID) }
-                });
-              }
               callback(null, stream) 
             }
           });
@@ -239,12 +193,6 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
           }
           else {
             if(status == 200) {
-              if(config.objectDerivativeCacheEnabled == true && cacheEnabled) {
-              Cache.cacheDatastream('object', objectID, stream, extension, function(error) {
-                  if(error) { console.error("Could not create object file for", objectID, error) }
-                  else { console.log("Object file created for", objectID) }
-                });
-              }
               callback(null, stream);
             }
             else {
@@ -263,12 +211,6 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
             callback(null, null);
           }
           else {
-            if(config.objectDerivativeCacheEnabled == true && cacheEnabled) {
-              Cache.cacheDatastream('object', objectID, stream, extension, function(error) {
-                if(error) { console.error("Could not create object file for", objectID, error) }
-                else { console.log("Object file created for", objectID) }
-              });
-            }
             callback(null, stream);
           }
         });
@@ -354,7 +296,7 @@ var getFileStream = function(path, callback) {
 /**
  * Check for an object-specific default thumbnail image.  If none is found, stream the default generic thumbnail image
  *
- * @param {Object} object - index document source
+ * @param {Object} object - index document object
  *
  * @callback callback
  * @param {String|null} - Error message or null
@@ -388,6 +330,18 @@ var getIndexTnUri = function(objectID, uri) {
   return uri;
 }
 
+/**
+ * Sends a head request to the repository to verify that a specified datastream is available for an object
+ *
+ * @param {Object} object - index document object
+ * @param {String} datastreamID - type of datastream to verify
+ *
+ * @callback callback
+ * @param {String|null} - Error message or null
+ * @param {Boolean} - true if object request status is 200, false if not 200
+ *
+ * @return {undefined}
+ */
 exports.verifyObject = function(object, datastreamID, callback) {
   if(datastreamID != "tn" && datastreamID != "object") {
     datastreamID = "object";

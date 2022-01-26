@@ -90,7 +90,7 @@ exports.get_stream = function(url, data, callback) {
         
     }).catch(function (error) {
         if(error.response) {
-            console.log("Url:", url);
+            console.log("HTTP GET Url:", url);
             console.log("Response status text:", error.response.statusText);
 
             if(error.response.status == 500) {

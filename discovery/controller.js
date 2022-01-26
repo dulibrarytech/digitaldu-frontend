@@ -667,13 +667,13 @@ exports.renderHandleErrorPage = function(req, res) {
 	});
 }
 
-exports.cachePurgeInvalidItems = function(req, res) {
+exports.cachePurge = function(req, res) {
 	let key = req.query.key || "",
 		cacheName = req.params.cache || null;
 
 	if(key && key == config.apiKey) {
 		if(cacheName) {
-			Service.refreshCache(cacheName);
+			Service.purgeCache(cacheName);
 			res.sendStatus(200);
 		}
 		else {
@@ -707,11 +707,12 @@ exports.cacheRemoveItem = function(req, res) {
 exports.cacheAddItem = function(req, res) {
 	let key = req.query.key || "",
 		pid = req.params.pid || null,
-		cacheName = req.params.cache || null;
+		cacheName = req.params.cache || null,
+		updateExisting = req.query.updateExisting ? (req.query.updateExisting == "true") : false
 
 	if(key && key == config.apiKey) {
 		if(pid && cacheName) {
-			Service.addCacheItem(pid, cacheName);
+			Service.addCacheItem(pid, cacheName, updateExisting);
 			res.sendStatus(200);
 		}
 		else {

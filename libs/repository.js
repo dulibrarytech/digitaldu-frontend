@@ -103,6 +103,7 @@ exports.getDatastreamUrl = function(dsid, object) {
 exports.streamData = function(object, dsid, callback) {
 	try {
 		if(!object) { throw "Object is null" }
+		if(!object.object) { throw "Object path is null" }
 		var url = getRepositoryUrl();
 
 		if(dsid.toLowerCase() == "tn") {url += "/" + object.thumbnail}

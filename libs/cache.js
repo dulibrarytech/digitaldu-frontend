@@ -22,16 +22,16 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
 /*
  * Write file to backend cache
  */
-exports.cacheDatastream = function(objectType, objectID, stream, extension, callback) {
+exports.cacheDatastream = function(cacheName, objectID, stream, extension, callback) {
 	let filepath = "";
-	if(objectType == 'thumbnail') {
+	if(cacheName == 'thumbnail') {
 		filepath = config.thumbnailImageCacheLocation + "/" + objectID + "." + config.thumbnailFileExtension;
 	}
-	else if(objectType == 'object') {
+	else {
 		filepath = config.objectDerivativeCacheLocation + "/" + objectID + "." + extension;
 	}
 
-	if(typeof stream == 'object' && stream.statusCode) {
+	if(stream && typeof stream == 'object' && stream.statusCode) {
 		try {
 			stream.pipe(fs.createWriteStream(filepath)).on('close', function() {
 				callback(null);
@@ -49,26 +49,27 @@ exports.cacheDatastream = function(objectType, objectID, stream, extension, call
 /*
  * Check if a file exists in the cache
  */
-exports.exists = function(objectType, objectID, extension="") {
+exports.exists = function(cacheName, objectID, extension="") {
 	let filepath = "";	
-	if(objectType == 'thumbnail') {
+	if(cacheName == 'thumbnail') {
 		filepath = config.thumbnailImageCacheLocation + "/" + objectID + "." + config.thumbnailFileExtension;
 	}
-	else if(objectType == 'object') {
+	else {
 		filepath = config.objectDerivativeCacheLocation + "/" + objectID + "." + extension;
 	}
+
 	return fs.existsSync(filepath) || false;
 }
 
 /*
  * Fetch a file stream
  */
-exports.getFileStream = function(objectType, objectID, extension="", callback) {
+exports.getFileStream = function(cacheName, objectID, extension="", callback) {
 	let filepath = "";	
-	if(objectType == 'thumbnail') {
+	if(cacheName == 'thumbnail') {
 		filepath = config.thumbnailImageCacheLocation + "/" + objectID + "." + config.thumbnailFileExtension;
 	}
-	else if(objectType == 'object') {
+	else {
 		filepath = config.objectDerivativeCacheLocation + "/" + objectID + "." + extension;
 	}
 
@@ -89,7 +90,7 @@ exports.removeObject = function(cacheName, filename, callback) {
 	if(cacheName == 'thumbnail') {
 		filepath = config.thumbnailImageCacheLocation + "/" + filename;
 	}
-	else if(cacheName == 'object') {
+	else {
 		filepath = config.objectDerivativeCacheLocation + "/" + filename;
 	}
 
@@ -112,7 +113,7 @@ exports.getList = function(cacheName) {
 	if(cacheName == 'thumbnail') {
 		list = fs.readdirSync(config.thumbnailImageCacheLocation) || [];
 	}
-	else if(cacheName == 'object') {
+	else {
 		list = fs.readdirSync(config.objectDerivativeCacheLocation) || [];
 	}
 

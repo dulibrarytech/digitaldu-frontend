@@ -83,8 +83,8 @@ module.exports = function (app) {
             res.redirect("/object/" + req.params.pid);
     });
 
-    app.route('/cache/purgeInvalidItems/:cache')
-        .get(Discovery.cachePurgeInvalidItems)
+    app.route('/cache/purge/:cache')
+        .get(Discovery.cachePurge)
 
     app.route('/cache/removeItem/:cache/:pid')
         .get(Discovery.cacheRemoveItem)
