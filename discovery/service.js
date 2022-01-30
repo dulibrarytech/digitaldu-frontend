@@ -297,7 +297,7 @@ exports.getDatastream = function(indexName, objectID, datastreamID, part, authKe
         let objectPart = AppHelper.getCompoundObjectPart(object, part || "1")
         if(objectPart) {
           objectPart["object_type"] = "object";
-          objectPart["mime_type"] = objectPart.type ? objectPart.type : (objectPart.mime_type || null);
+          objectPart["mime_type"] = objectPart.type ? objectPart.type : (objectPart.mime_type || "");
           object = objectPart;
           objectID = objectID + (config.compoundObjectPartID + objectPart.order);
         }
@@ -314,7 +314,7 @@ exports.getDatastream = function(indexName, objectID, datastreamID, part, authKe
         extension = config.thumbnailFileExtension;
       }
       else if (datastreamID == "object") {
-        extension = object.object ? AppHelper.getFileExtensionFromFilePath(object.object) : AppHelper.getFileExtensionForMimeType(object.mime_type || null);
+        extension = object.object ? AppHelper.getFileExtensionFromFilePath(object.object) : AppHelper.getFileExtensionForMimeType(object.mime_type);
       }
       else {
         extension = datastreamID;
@@ -826,6 +826,7 @@ var removeCacheItem = function(objectID, cacheName) {
 exports.removeCacheItem = removeCacheItem;
 
 var addCacheItem = function(objectID, cacheName, updateExiting) {
+  console.log("Adding item to " + cacheName + " cache for object " + objectID);
   fetchObjectByPid(config.elasticsearchPublicIndex, objectID, function (error, object) {
     if(error) {
       console.log(error);
@@ -833,12 +834,13 @@ var addCacheItem = function(objectID, cacheName, updateExiting) {
     else {
       var items = [];
       if(AppHelper.isParentObject(object)) {
-        for(var part of AppHelper.getCompoundObjectPart(object, -1)) {
+        let parts = AppHelper.getCompoundObjectPart(object, -1);
+        for(var part of parts) {
           items.push({
             pid: objectID + config.compoundObjectPartID + (part.order || part.sequence || "1"),
             mimeType: part.type || null,
             sequence: (part.order || part.sequence || "1"),
-            object: part
+            object: part.object
           });
         }
       }
@@ -862,9 +864,13 @@ var addCacheItem = function(objectID, cacheName, updateExiting) {
       }
 
       for(var item of items) {
+        if(!item.object) {
+          console.log("Object path missing for object:" + objectID + " Part:" + item.sequence + " Skipping cache write");
+          continue;
+        }
+
         var extension = (cacheName == "thumbnail") ? config.thumbnailFileExtension : AppHelper.getFileExtensionForMimeType(item.mimeType || null),
         filename = item.pid + "." + extension;
-
         if(config.enableCacheForFileType.includes(extension) == false) {
           console.log("Caching is disabled for " + AppHelper.getObjectType(item.mimeType) + " files. " + filename + " not added to " + cacheName + " cache");
         }

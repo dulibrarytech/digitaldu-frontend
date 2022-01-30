@@ -309,7 +309,7 @@ exports.isValidExtension = isValidExtension;
 var getContentType = function(datastream, object, part) {
   // Default content type
   var contentType = "application/octet-stream",
-  	  pid = object.pid || "";
+  	  pid = object ? object.pid || "null" : "null object";
 
   // Get the compound object part if specified
   if(part && object.display_record.parts) {

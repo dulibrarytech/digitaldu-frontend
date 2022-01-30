@@ -45,7 +45,6 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
  * @return {undefined}
  */
 exports.getDatastream = function(object, objectID, datastreamID, partIndex=null, apiKey, callback) { // TODO remove partIndex param, then remove from all function calls
-    console.log("Datastream module request", objectID, datastreamID)
   var fileType = "default";
   if(Helper.isParentObject(object)) {
      fileType = "compound";
@@ -66,70 +65,67 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
         settings = settings.type[fileType];
       }
 
-      if(1) {
-      //if(settings.cache == false || Cache.exists('thumbnail', objectID) == false) {
-        if(settings.source == "repository") {
-          Repository.streamData(object, "tn", function(error, stream) {
-            if(error) {
-              console.error(error);
-              streamDefaultThumbnail(object, callback);
+      if(settings.source == "repository") {
+        Repository.streamData(object, "tn", function(error, stream) {
+          if(error) {
+            console.error(error);
+            streamDefaultThumbnail(object, callback);
+          }
+          else {
+            if(stream) {
+              callback(null, stream);
             }
             else {
-              if(stream) {
-                callback(null, stream);
-              }
-              else {
-                streamDefaultThumbnail(object, callback);
-              }
+              streamDefaultThumbnail(object, callback);
             }
-          });
+          }
+        });
+      }
+
+      // Get the stream from an external source
+      else {
+        let uri = settings.uri || null;
+        switch(settings.streamOption || "") {
+          case "iiif":
+            uri = IIIF.getThumbnailUri(objectID, apiKey);
+            break;
+          case "kaltura":
+            uri = Kaltura.getThumbnailUrl(object);
+            break;
+          case "external":
+            break;
+          case "index":
+            uri = getIndexTnUri(object.pid, object.thumbnail || uri);
+            break;
+          default:
+            console.log("Error retrieving datastream for", objectID);
+            break;
         }
 
-        // Get the stream from an external source
-        else {
-          let uri = settings.uri || null;
-          switch(settings.streamOption || "") {
-            case "iiif":
-              uri = IIIF.getThumbnailUri(objectID, apiKey);
-              break;
-            case "kaltura":
-              uri = Kaltura.getThumbnailUrl(object);
-              break;
-            case "external":
-              break;
-            case "index":
-              uri = getIndexTnUri(object.pid, object.thumbnail || uri);
-              break;
-            default:
-              console.log("Error retrieving datastream for", objectID);
-              break;
+        if(config.nodeEnv == "devlog") {console.log("Thumbnail image stream uri:", uri || "null")}
+        if(uri == null || uri == "") {
+          console.log("Could not construct uri for datastream request. uri field is null. Stream option: " + (settings.streamOption || "null") + " Pid: " + objectID);
+        }
+        streamRemoteData(uri, function(error, status, stream) {
+          if(error) {
+            console.log(error);
+            streamDefaultThumbnail(object, callback);
           }
-
-          if(config.nodeEnv == "devlog") {console.log("Thumbnail image stream uri:", uri || "null")}
-          if(uri == null || uri == "") {
-            console.log("Could not construct uri for datastream request. uri field is null. Stream option: " + (settings.streamOption || "null") + " Pid: " + objectID);
+          else if(stream == null) {
+            console.log("Datastream error: Can not fetch datastream for object " + objectID);
+            streamDefaultThumbnail(object, callback);
           }
-          streamRemoteData(uri, function(error, status, stream) {
-            if(error) {
-              console.log(error);
-              streamDefaultThumbnail(object, callback);
-            }
-            else if(stream == null) {
-              console.log("Datastream error: Can not fetch datastream for object " + objectID);
-              streamDefaultThumbnail(object, callback);
+          else {
+            if(status == 200) {
+              callback(null, stream);
             }
             else {
-              if(status == 200) {
-                callback(null, stream);
-              }
-              else {
-                console.log("Datastream error: " + uri + " returns a status of " + status);
-                console.log("Using default thumbnail for object " + objectID);
-                streamDefaultThumbnail(object, callback);
-              }
+              console.log("Datastream error: " + uri + " returns a status of " + status);
+              console.log("Using default thumbnail for object " + objectID);
+              streamDefaultThumbnail(object, callback);
             }
-          });
-        }
+          }
+        });
       }
     }
     else {
