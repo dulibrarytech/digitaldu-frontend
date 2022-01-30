@@ -669,10 +669,10 @@ exports.renderHandleErrorPage = function(req, res) {
 
 exports.cachePurge = function(req, res) {
 	let key = req.query.key || "",
-		cacheName = req.params.cache || null;
+		cacheName = req.params.cache || "";
 
 	if(key && key == config.apiKey) {
-		if(cacheName) {
+		if(Helper.validateCacheName(cacheName)) {
 			Service.purgeCache(cacheName);
 			res.sendStatus(200);
 		}
@@ -688,10 +688,10 @@ exports.cachePurge = function(req, res) {
 exports.cacheRemoveItem = function(req, res) {
 	let key = req.query.key || "",
 		pid = req.params.pid || null,
-		cacheName = req.params.cache || null;
+		cacheName = req.params.cache || "";
 
 	if(key && key == config.apiKey) {
-		if(pid && cacheName) {
+		if(pid && Helper.validateCacheName(cacheName)) {
 			Service.removeCacheItem(pid, cacheName);
 			res.sendStatus(200);
 		}
@@ -707,11 +707,11 @@ exports.cacheRemoveItem = function(req, res) {
 exports.cacheAddItem = function(req, res) {
 	let key = req.query.key || "",
 		pid = req.params.pid || null,
-		cacheName = req.params.cache || null,
-		updateExisting = req.query.updateExisting ? (req.query.updateExisting == "true") : false
+		cacheName = req.params.cache || "",
+		updateExisting = req.query.updateExisting ? (req.query.updateExisting == "true") : false;
 
 	if(key && key == config.apiKey) {
-		if(pid && cacheName) {
+		if(pid && Helper.validateCacheName(cacheName)) {
 			Service.addCacheItem(pid, cacheName, updateExisting);
 			res.sendStatus(200);
 		}
