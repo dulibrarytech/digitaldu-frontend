@@ -325,7 +325,7 @@ exports.getDatastream = function(indexName, objectID, datastreamID, part, authKe
       if (cacheName == "thumbnail") {
         cacheEnabled = config.thumbnailImageCacheEnabled;
       }
-      else {
+      else {  // 'object'
         cacheEnabled = config.objectDerivativeCacheEnabled && config.enableCacheForFileType.includes(extension);
       }
 
@@ -825,8 +825,7 @@ var removeCacheItem = function(objectID, cacheName) {
 }
 exports.removeCacheItem = removeCacheItem;
 
-var addCacheItem = function(objectID, cacheName, updateExiting) {
-  console.log("Adding item to " + cacheName + " cache for object " + objectID);
+var addCacheItem = function(objectID, cacheName, updateExisting) {
   fetchObjectByPid(config.elasticsearchPublicIndex, objectID, function (error, object) {
     if(error) {
       console.log(error);
@@ -847,7 +846,7 @@ var addCacheItem = function(objectID, cacheName, updateExiting) {
       else if(AppHelper.isCollectionObject(object)) {
         getCollectionChildren(objectID, config.elasticsearchPublicIndex, function(error, pids) {
           for(var i in pids) {
-            addCacheItem(pids[i], cacheName);
+            addCacheItem(pids[i], cacheName, updateExisting);
           }
         });
       }
@@ -871,10 +870,11 @@ var addCacheItem = function(objectID, cacheName, updateExiting) {
 
         var extension = (cacheName == "thumbnail") ? config.thumbnailFileExtension : AppHelper.getFileExtensionForMimeType(item.mimeType || null),
         filename = item.pid + "." + extension;
+          console.log("TEST update existing", updateExisting)
         if(config.enableCacheForFileType.includes(extension) == false) {
           console.log("Caching is disabled for " + AppHelper.getObjectType(item.mimeType) + " files. " + filename + " not added to " + cacheName + " cache");
         }
-        else if(Cache.exists(cacheName, item.pid, extension) == false || updateExiting === true) {
+        else if(Cache.exists(cacheName, item.pid, extension) == false || updateExisting === true) {
           let datastreamID = cacheName == "thumbnail" ? "tn" : "object";
           Datastreams.getDatastream(item.object, objectID, datastreamID, item.sequence, null, function(error, stream) {
             if(error) {
