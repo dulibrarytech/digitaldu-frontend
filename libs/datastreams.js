@@ -32,6 +32,7 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
 
 /**
  * Get a datastream for an object
+ * Return a placeholder image if the requested datastream is not available (thumbnail datastreams only)
  *
  * @param {Array.<Object>} object - index document source Required 
  * @param {Array.<String>} objectID - object PID
@@ -134,6 +135,8 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
 
   // Request a non-thumbnail datastream
   else {
+      console.log("TEST Request a non-thumbnail datastream... datastreamID", datastreamID)
+      console.log("TEST Request a non-thumbnail datastreamn... object.object", object.object)
     let extension = "file",
         mimeType = Helper.getContentType("object", object); 
 
