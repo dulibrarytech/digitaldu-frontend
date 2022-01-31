@@ -31,7 +31,7 @@ exports.cacheDatastream = function(cacheName, objectID, stream, extension, callb
 		filepath = config.objectDerivativeCacheLocation + "/" + objectID + "." + extension;
 	}
 
-	if(stream && typeof stream == 'object' && stream.statusCode) {
+	if(stream && typeof stream == 'object') {
 		try {
 			stream.pipe(fs.createWriteStream(filepath)).on('close', function() {
 				callback(null);
@@ -42,7 +42,7 @@ exports.cacheDatastream = function(cacheName, objectID, stream, extension, callb
 		}
 	}
 	else {
-		callback("Invalid stream, can not write stream data");
+		callback("Invalid stream, can not write stream data.");
 	}
 }
 

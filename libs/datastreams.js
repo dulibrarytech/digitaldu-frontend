@@ -33,7 +33,7 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
 /**
  * Get a datastream for an object
  *
- * @param {Array.<Object>} object - index document source
+ * @param {Array.<Object>} object - index document source Required 
  * @param {Array.<String>} objectID - object PID
  * @param {Array.<String>} datastreamID - datastream ID
  * @param {Array.<String|null>} part - Part sequence order value if compound object, null if single object
@@ -58,8 +58,6 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
     }
 
     var settings = config.thumbnails[object.object_type] || null;
-    if(!object.mime_type && object.object_type != "collection") {settings = null}
-
     if(settings) {
       if(settings.type && settings.type[fileType]) {
         settings = settings.type[fileType];
@@ -73,7 +71,7 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
           }
           else {
             if(stream) {
-              callback(null, stream);
+              callback(null, stream, object);
             }
             else {
               streamDefaultThumbnail(object, callback);
@@ -117,7 +115,7 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
           }
           else {
             if(status == 200) {
-              callback(null, stream);
+              callback(null, stream, object);
             }
             else {
               console.log("Datastream error: " + uri + " returns a status of " + status);
@@ -129,7 +127,7 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
       }
     }
     else {
-      console.log("Error retrieving datastream for " + objectID + ", can not find configuration settings for object type " + object.object_type, null);
+      console.log("Error retrieving datastream for " + objectID + ", can not find configuration settings for object type " + object.object_type);
       streamDefaultThumbnail(object, callback);
     }
   }
@@ -157,14 +155,14 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
 
         if(datastreamID == "object" || datastreamID == Helper.getFileExtensionFromFilePath(object.object)) {
           streamKalturaData(kalturaStreamUri, function(error, status, stream) {
-            if(error) { callback(error, null) }
+            if(error) { callback(error, null, object) }
             else { 
-              callback(null, stream) 
+              callback(null, stream, object) 
             }
           });
         }
         else {
-          callback(null, null);
+          callback(null, null, object);
         }
       }
 
@@ -180,21 +178,21 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
         streamRemoteData(uri, function(error, status, stream) {
           if(error) {
             if(config.nodeEnv == "devlog") {console.log(error)}
-            callback(error, null);
+            callback(error, null, object);
           }
           else if(stream == null) {
             let msg = "Datastream error: Can not fetch Cantaloupe derivative for object/uri ", objectID, uri;
             console.log(msg);
-            callback(msg, null);
+            callback(msg, null, object);
           }
           else {
             if(status == 200) {
-              callback(null, stream);
+              callback(null, stream, object);
             }
             else {
               let msg = "Cantaloupe source error: " + uri + " returns a status of " + status;
               console.log(msg);
-              callback(msg, null);
+              callback(msg, null, object);
             }
           }
         });
@@ -204,17 +202,17 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
         Repository.streamData(object, datastreamID, function(error, stream) {
           if(error || !stream) {
             console.log("Repository stream data error: " + (error || "Path to resource not found. Pid: " + objectID));
-            callback(null, null);
+            callback(null, null, object);
           }
           else {
-            callback(null, stream);
+            callback(null, stream, object);
           }
         });
       }
     }
     else {
       console.log("'object' path not found in index. Pid: " + objectID);
-      callback(null, null);
+      callback(null, null, object);
     }
   }
 }
@@ -312,8 +310,8 @@ var streamDefaultThumbnail = function(object, callback) {
 
   // Create the thumbnail stream
   getFileStream(path, function(error, thumbnail) {
-    if(error) {callback("Error fetching default thumbnail image: " + error, null);}
-    else{callback(null, thumbnail)}
+    if(error) {callback("Error fetching default thumbnail image: " + error, null, object)}
+    else{callback(null, thumbnail, object, true)}
   });
 }
 
