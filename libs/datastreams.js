@@ -135,8 +135,6 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
 
   // Request a non-thumbnail datastream
   else {
-      console.log("TEST Request a non-thumbnail datastream... datastreamID", datastreamID)
-      console.log("TEST Request a non-thumbnail datastreamn... object.object", object.object)
     let extension = "file",
         mimeType = Helper.getContentType("object", object); 
 
