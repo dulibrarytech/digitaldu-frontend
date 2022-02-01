@@ -694,16 +694,6 @@ exports.cacheRemoveItem = function(req, res) {
 		if(pid && Helper.validateCacheName(cacheName)) {
 			Service.removeCacheItem(pid, cacheName);
 			res.sendStatus(200);
-
-			// Service.removeCacheItem(pid, cacheName, function(Error) {
-			// 	if(error) {
-			// 		res.status(500);
-			// 		res.send(error);
-			// 	}
-			// 	else {
-			// 		res.sendStatus(200);
-			// 	}
-			// });
 		}
 		else {
 			res.sendStatus(400);

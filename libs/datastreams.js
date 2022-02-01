@@ -348,7 +348,7 @@ exports.verifyObject = function(object, datastreamID, callback) {
     }
     else {
       if(status == "200") {
-        callback(null, true);
+        callback(null, true, object.pid);
       }
       else {
         callback(null, false);

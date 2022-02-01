@@ -736,16 +736,16 @@ exports.purgeCache = function(cacheName) {
 
   console.log("Purging " + cacheName + " cache...");
   for(let file of cacheFiles) {
-    pid = file.substring(0, file.lastIndexOf("."));
 
+    // Extract the pid from the filename, then remove the part ID if it is a compound object
+    pid = file.substring(0, file.lastIndexOf("."));
     if(pid.indexOf(config.compoundObjectPartID) > 0) {
       pid = pid.substring(0, pid.indexOf(config.compoundObjectPartID));
     }
 
+    console.log("Verifying cache item for object ", pid, "...");
     fetchObjectByPid(config.elasticsearchPublicIndex, pid, function (error, object) {
-      if(error) {
-        console.log(error);
-      }
+      if(error) {console.log(error)}
 
       // Object not found in public index
       else if(object == null) {
@@ -755,7 +755,7 @@ exports.purgeCache = function(cacheName) {
         });
       }
       else {
-        Datastreams.verifyObject(object, "object", function(error, isValid) {
+        Datastreams.verifyObject(object, "object", function(error, isValid, objectID="") {
           if(error) {console.log(error)}
 
           // Object not found in DuraCloud
@@ -764,6 +764,9 @@ exports.purgeCache = function(cacheName) {
               if(error) {console.log("Error removing cache file " + file + ": " + error)}
               else {console.log("Removed " + file + ". Object not found in repository.")}
             });
+          }
+          else {
+            console.log("Item is valid for object", objectID);
           }
         })
       }
@@ -780,10 +783,7 @@ exports.purgeCache = function(cacheName) {
 var removeCacheItem = function(objectID, cacheName, callback) {
   console.log("Removing", cacheName, "cache item for object", objectID);
   fetchObjectByPid(config.elasticsearchPublicIndex, objectID, function (error, object) {
-    if(error) {
-      console.log(error);
-      //callback(error);
-    }
+    if(error) {console.log(error)}
 
     else if (object) {
       var items = [];
@@ -835,24 +835,20 @@ var removeCacheItem = function(objectID, cacheName, callback) {
           Cache.removeObject(cacheName, filename, function(error, filepath) {
             if(error) {
               console.log(error);
-              //callback(error);
             }
             else {
-              console.log(filepath + " successfully removed from the " + cacheName + " cache");
-              //callback(null);
+              console.log(filepath + " has been removed from the " + cacheName + " cache");
             }
           });
         }
         else {
           console.log(filename + " does not exist in cache");
-          //callback(error);
         }
       }
     }
 
     else {
       console.log("Object not found. Pid:", objectID);
-      //callback(error);
     }
   });
   return false;
@@ -866,9 +862,7 @@ exports.removeCacheItem = removeCacheItem;
 var addCacheItem = function(objectID, cacheName, updateExisting=false) {
   console.log("Adding", cacheName, "cache item for object", objectID);
   fetchObjectByPid(config.elasticsearchPublicIndex, objectID, function (error, object) {
-    if(error) {
-      console.log(error);
-    }
+    if(error) {console.log(error)}
     else {
       var items = [];
 
@@ -927,8 +921,8 @@ var addCacheItem = function(objectID, cacheName, updateExisting=false) {
         if(config.enableCacheForFileType.includes(extension) == false) {
           console.log("Caching is disabled for " + AppHelper.getObjectType(item.mime_type) + " files. " + filename + " not added to " + cacheName + " cache");
         }
-
         else if(Cache.exists(cacheName, item.pid, extension) == false || updateExisting === true) {
+
           let datastreamID = cacheName == "thumbnail" ? "tn" : "object";
           Datastreams.getDatastream(item, item.pid, datastreamID, item.sequence, null, function(error, stream, objectData, isPlaceholder=false) {
             if(error) {
