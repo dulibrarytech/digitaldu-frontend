@@ -347,7 +347,6 @@ exports.getDatastream = function(indexName, objectID, datastreamID, part, authKe
             callback(error, null);
           }
           else {
-
             // Cache the datastream if enabled for this object type or file type
             if(cacheEnabled && Cache.exists(cacheName, objectID, extension) == false) {
               Cache.cacheDatastream(cacheName, objectID, stream, extension, function(error) {
@@ -779,6 +778,7 @@ exports.purgeCache = function(cacheName) {
  * Use "purgeCache()" to remove items from the cache that do not exist in the public index
  */
 var removeCacheItem = function(objectID, cacheName, callback) {
+  console.log("Removing", cacheName, "cache item for object", objectID);
   fetchObjectByPid(config.elasticsearchPublicIndex, objectID, function (error, object) {
     if(error) {
       console.log(error);
@@ -790,14 +790,11 @@ var removeCacheItem = function(objectID, cacheName, callback) {
 
       // Is a compound object. Remove all compound object part items from the cache
       if(AppHelper.isParentObject(object)) {
-        items.push({
-          pid: objectID,
-          mime_type: object.mime_type || null
-        });
         for(var part of AppHelper.getCompoundObjectPart(object, -1)) {
           items.push({
             pid: objectID + config.compoundObjectPartID + (part.order || part.sequence || "1"),
-            mime_type: part.type || null
+            mime_type: part.type || null,
+            object: part.object || ""
           });
         }
       }
@@ -815,22 +812,33 @@ var removeCacheItem = function(objectID, cacheName, callback) {
       else {
         items.push({
           pid: objectID,
-          mime_type: object.mime_type || null
+          mime_type: object.mime_type || null,
+          object: object.object || ""
         });
       }
 
       for(var item of items) {
-        var extension = (cacheName == "thumbnail") ? config.thumbnailFileExtension : AppHelper.getFileExtensionForMimeType(item.mime_type || null),
-        filename = item.pid + "." + extension;
+        let extension;
+        if (cacheName == "thumbnail") {
+          extension = config.thumbnailFileExtension;
+        }
+        else if (cacheName == "object") {
+          extension = AppHelper.getFileExtensionFromFilePath(item.object) || AppHelper.getFileExtensionForMimeType(item.mime_type);
+        }
+        else {
+          extension = AppHelper.getFileExtensionForMimeType(item.mime_type || null)
+        }
+        let filename = item.pid + "." + extension;
 
         if(Cache.exists(cacheName, item.pid, extension)) {
+          console.log("Removing file...")
           Cache.removeObject(cacheName, filename, function(error, filepath) {
             if(error) {
               console.log(error);
               //callback(error);
             }
             else {
-              console.log(filepath + " removed from the " + cacheName + " cache");
+              console.log(filepath + " successfully removed from the " + cacheName + " cache");
               //callback(null);
             }
           });
@@ -856,6 +864,7 @@ exports.removeCacheItem = removeCacheItem;
  * Will use file type (extension) of the file source in the index 'object' field for object source caching
  */
 var addCacheItem = function(objectID, cacheName, updateExisting=false) {
+  console.log("Adding", cacheName, "cache item for object", objectID);
   fetchObjectByPid(config.elasticsearchPublicIndex, objectID, function (error, object) {
     if(error) {
       console.log(error);
@@ -904,8 +913,16 @@ var addCacheItem = function(objectID, cacheName, updateExisting=false) {
           continue;
         }
 
-        var extension = (cacheName == "thumbnail") ? config.thumbnailFileExtension : AppHelper.getFileExtensionForMimeType(item.mime_type || null),
-            filename = item.pid + "." + extension;
+        let extension;
+        if (cacheName == "thumbnail") {
+          extension = config.thumbnailFileExtension;
+        }
+        else if (cacheName == "object") {
+          extension = AppHelper.getFileExtensionFromFilePath(item.object) || AppHelper.getFileExtensionForMimeType(item.mime_type);
+        }
+        else {
+          extension = AppHelper.getFileExtensionForMimeType(item.mime_type || null)
+        }
 
         if(config.enableCacheForFileType.includes(extension) == false) {
           console.log("Caching is disabled for " + AppHelper.getObjectType(item.mime_type) + " files. " + filename + " not added to " + cacheName + " cache");
