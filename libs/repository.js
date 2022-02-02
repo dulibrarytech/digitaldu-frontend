@@ -117,6 +117,7 @@ exports.streamData = function(object, dsid, callback) {
 		}
 
 		if(config.nodeEnv == "devlog") {console.log("Repository data request from url:", url)}
+		console.log("Repository fetch url:", url);
 		HttpRequest.get_stream(url, {}, function(error, status, data) {
 			if(error) {
 				callback("Could not open datastream. " + error + " Check connection to repository", null);
@@ -138,7 +139,7 @@ exports.streamData = function(object, dsid, callback) {
 
 exports.getStreamStatus = function(object, dsid, callback) {
 	try {
-		if(!object) { throw "Object is null" }
+		if(!object) { throw "Object path is null: " + object.pid }
 		var url = getRepositoryUrl();
 
 		if(dsid.toLowerCase() == "tn") {url += "/" + object.thumbnail}
@@ -148,8 +149,8 @@ exports.getStreamStatus = function(object, dsid, callback) {
 			url += ("/" + objectPath);
 		}
 		else {url += ("/" + object.object)}
-
-			
+		
+		console.log("Repository fetch head url:", url);
 		HttpRequest.head(url, function(error, status, data) {
 			if(error) {
 				callback(error, 500);
