@@ -704,7 +704,7 @@ exports.cacheRemoveItem = function(req, res) {
 	}
 }
 
-exports.cacheAddItem = function(req, res) {
+exports.cacheAddItem = async function(req, res) {
 	let key = req.query.key || "",
 		pid = req.params.pid || null,
 		cacheName = req.params.cache || "",
@@ -712,8 +712,11 @@ exports.cacheAddItem = function(req, res) {
 
 	if(key && key == config.apiKey) {
 		if(pid && Helper.validateCacheName(cacheName)) {
-			Service.addCacheItem(pid, cacheName, updateExisting);
-			res.sendStatus(200);
+			let error = await Service.addCacheItem(pid, cacheName, updateExisting);
+			if(error) {
+				console.log(error);
+			}
+			res.send("Complete");
 		}
 		else {
 			res.sendStatus(400);
