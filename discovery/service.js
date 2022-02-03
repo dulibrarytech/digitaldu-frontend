@@ -37,8 +37,6 @@ const Cache = require('../libs/cache');
 const Pdf = require("../libs/pdfUtils");
 const Metadata = require("../libs/metadata");
 
-var Service = require("./service_interface");
-
 /**
  * Create a list of the root level collections
  *
@@ -325,12 +323,29 @@ exports.getDatastream = function(indexName, objectID, datastreamID, part, authKe
         extension = datastreamID;
       }
 
-      let cacheName = datastreamID == "tn" ? "thumbnail" : "object", 
-          cacheEnabled = false;
-      if (cacheName == "thumbnail") {
-        cacheEnabled = config.thumbnailImageCacheEnabled;
+        console.log("settings obj", config.thumbnails.object.type)
+
+      let objectTypeThumbnailCacheEnabled = true;
+      if(AppHelper.isCollectionObject(object) == false) {
+        let type = AppHelper.getObjectType(object.mime_type || "");
+        let settings = config.thumbnails.object.type[type] || null;
+
+        if(settings) {
+          objectTypeThumbnailCacheEnabled = settings.cache;
+        }
+
+          console.log("TEST settings ", settings)
+          console.log("TEST mimetype", object.mime_type)
+          console.log("TEST type", type)
+          console.log("TEST settings for thumbnail", settings[type])
+          console.log("TEST object type cache enabled for", type, objectTypeThumbnailCacheEnabled);
       }
-      else {  // 'object' TODO enforce param values 'thumbnail' or 'object'
+
+      let cacheName = datastreamID == "tn" ? "thumbnail" : "object", cacheEnabled = false;
+      if (cacheName == "thumbnail") {
+        cacheEnabled = config.thumbnailImageCacheEnabled && objectTypeThumbnailCacheEnabled;
+      }
+      else {
         cacheEnabled = config.objectDerivativeCacheEnabled && config.enableCacheForFileType.includes(extension);
       }
 
