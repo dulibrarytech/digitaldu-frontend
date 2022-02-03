@@ -289,17 +289,17 @@ module.exports = {
     thumbnailDefaultImagePath: "files/default/thumbnail/",
     thumbnailFileExtension: "jpg",
     defaultThumbnailImage: "tn-placeholder.jpg",
-    thumbnailImageCacheEnabled: true,
+    thumbnailImageCacheEnabled: false,
     thumbnailImageCacheLocation: "cache/thumbnail",
-    objectDerivativeCacheEnabled: true,
-    objectDerivativeCacheLocation: "/var/cache/digcoll",
+    objectDerivativeCacheEnabled: false,
+    objectDerivativeCacheLocation: "cache/object",
 
     /*
-     * Object types to cache
-     * Add to array to enable
-     * Must be an object type defined in 'objectTypes' configuration field 
+     * Enable cache for these file types
+     * See fileExtensions settings in this file 
+     * Add defined file extensions to array below to enable cache 
      */
-    cacheTypes: ["jpg", "pdf"],
+    enableCacheForFileType: [],
 
     /*
      * Object specific default thumbnail images
@@ -660,14 +660,14 @@ module.exports = {
     },
 
      /*
-      * File extension associated with mimetype values
-      * A downloaded object file will use this file extension based on the object's mime type
+      * Download this file type if the object has assigned mime types below
       */
      fileExtensions: {
-        "jpg": ["image/jpg", "image/jpeg", "image/tiff"],
+        "jpg": ["image/jpg", "image/jpeg"],
         "mp3": ["audio/mp3", "audio/x-wav", "audio/mpeg"],
         "mp4": ["video/mp4", "video/quicktime", "video/mov"],
-        "pdf": ["application/pdf"]
+        "pdf": ["application/pdf"],
+        "tif": ["image/tiff"]
      },
 
       /*

@@ -25,9 +25,7 @@ exports.head = async function(url, callback) {
         callback(null, response.status, response.headers)
     }).catch(function(error) {
         if(error.response) {
-            console.log("Url:", url);
-            console.log("Response status text:", error.response.statusText);
-
+            console.log("HTTP Response status text:", error.response.statusText);
             if(error.response.status == 500) {
                 callback(error.response.statusText, 500, null);
             }
@@ -46,9 +44,7 @@ exports.get = function(url, data, callback) {
         callback(null, response.status, response.data, response.headers)
     }).catch(function(error) {
         if(error.response) {
-            console.log("Url:", url);
-            console.log("Response status text:", error.response.statusText);
-
+            console.log("HTTP Response status text:", error.response.statusText);
             if(error.response.status == 500) {
                 callback(error.response.statusText, 500, null);
             }
@@ -90,9 +86,7 @@ exports.get_stream = function(url, data, callback) {
         
     }).catch(function (error) {
         if(error.response) {
-            console.log("Url:", url);
-            console.log("Response status text:", error.response.statusText);
-
+            console.log("HTTP Response status text:", error.response.statusText);
             if(error.response.status == 500) {
                 callback(error.response.statusText, 500, null);
             }

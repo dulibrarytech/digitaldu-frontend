@@ -374,5 +374,15 @@ exports.getFileDownloadLinks = function(object, part=null) {
   return links;
 }
 
+ /**
+ * Validate the cache name
+ *
+ * @param {String} name - The cache name
+ * @return {Boolean} True if valid False if invalid
+ */
+exports.validateCacheName = function(name) {
+  return name && (name == 'thumbnail' || name == 'object');
+}
+
 
 

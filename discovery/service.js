@@ -278,7 +278,7 @@ var getFacets = function (collection=null, callback) {
 exports.getFacets = getFacets;
 
 /**
- * Requests a datastream
+ * Fetch a datastream
  *
  * @param {String} indexName - Name of index to retrieve object from
  * @param {String} objectID - Object PID
@@ -291,19 +291,17 @@ exports.getFacets = getFacets;
  */
 exports.getDatastream = function(indexName, objectID, datastreamID, part, authKey, callback) {
   fetchObjectByPid(indexName, objectID, function(error, object) {
+
     if(object) {
       let contentType = AppHelper.getContentType(datastreamID, object, part);
+
       if(AppHelper.isParentObject(object)) {
         let objectPart = AppHelper.getCompoundObjectPart(object, part || "1")
         if(objectPart) {
           objectPart["object_type"] = "object";
-          objectPart["mime_type"] = objectPart.type ? objectPart.type : (objectPart.mime_type || null);
+          objectPart["mime_type"] = objectPart.type ? objectPart.type : (objectPart.mime_type || "");
           object = objectPart;
           objectID = objectID + (config.compoundObjectPartID + objectPart.order);
-          
-          Datastreams.getDatastream(object, objectID, datastreamID, part, authKey, function(error, stream) {    
-            callback(error, stream, contentType);
-          });
         }
         else {
           callback(null, null);
@@ -311,8 +309,70 @@ exports.getDatastream = function(indexName, objectID, datastreamID, part, authKe
       }
 
       else {
-        Datastreams.getDatastream(object, objectID, datastreamID, null, authKey, function(error, stream) {    
-          callback(error, stream, contentType);
+        part = null;
+      }
+
+      let extension;
+      if (datastreamID == "tn") {
+        extension = config.thumbnailFileExtension;
+      }
+      else if (datastreamID == "object") {
+        extension = object.object ? AppHelper.getFileExtensionFromFilePath(object.object) : AppHelper.getFileExtensionForMimeType(object.mime_type);
+      }
+      else {
+        extension = datastreamID;
+      }
+
+        console.log("settings obj", config.thumbnails.object.type)
+
+      let objectTypeThumbnailCacheEnabled = true;
+      if(AppHelper.isCollectionObject(object) == false) {
+        let type = AppHelper.getObjectType(object.mime_type || "");
+        let settings = config.thumbnails.object.type[type] || null;
+
+        if(settings) {
+          objectTypeThumbnailCacheEnabled = settings.cache;
+        }
+
+          console.log("TEST settings ", settings)
+          console.log("TEST mimetype", object.mime_type)
+          console.log("TEST type", type)
+          console.log("TEST settings for thumbnail", settings[type])
+          console.log("TEST object type cache enabled for", type, objectTypeThumbnailCacheEnabled);
+      }
+
+      let cacheName = datastreamID == "tn" ? "thumbnail" : "object", cacheEnabled = false;
+      if (cacheName == "thumbnail") {
+        cacheEnabled = config.thumbnailImageCacheEnabled && objectTypeThumbnailCacheEnabled;
+      }
+      else {
+        cacheEnabled = config.objectDerivativeCacheEnabled && config.enableCacheForFileType.includes(extension);
+      }
+
+      // Stream data from the cache
+      if(cacheEnabled && Cache.exists(cacheName, objectID, extension) == true) {
+        Cache.getFileStream(cacheName, objectID, extension, function(error, stream) {
+          if(error) {callback(error, null)}
+          else {callback(null, stream, contentType)}
+        });
+      }
+
+      // Stream data from the source
+      else {
+        Datastreams.getDatastream(object, objectID, datastreamID, part, authKey, function(error, stream) { 
+          if(error) {
+            callback(error, null);
+          }
+          else {
+            // Cache the datastream if enabled for this object type or file type
+            if(cacheEnabled && Cache.exists(cacheName, objectID, extension) == false) {
+              Cache.cacheDatastream(cacheName, objectID, stream, extension, function(error) {
+                if(error) { console.error("Could not create object file for", objectID, error) }
+                else { console.log("Added object " + objectID + " to " + cacheName + " cache") }
+              });
+            }
+            callback(null, stream, contentType);
+          }
         });
       }
     }
@@ -683,40 +743,46 @@ var getCollectionChildren = function(collectionId, index, callback) {
   });
 }
 
-exports.refreshCache = function(cacheName) {
+/*
+ * Will remove itms from the cache for objects that are not present in the public index, OR are not found (or otherwise available) in Duracloud
+ */
+exports.purgeCache = function(cacheName) {
   let cacheFiles = Cache.getList(cacheName),
       pid = "", 
       url = "";
 
-  console.log("Refreshing " + cacheName + " cache...");
+  console.log("Purging " + cacheName + " cache...");
   for(let file of cacheFiles) {
+    // Extract the pid from the filename, then remove the part ID if it is a compound object
     pid = file.substring(0, file.lastIndexOf("."));
-
-    // If the parent is found in the index, do not purge the part object from the cache. Only check for the parent object
     if(pid.indexOf(config.compoundObjectPartID) > 0) {
       pid = pid.substring(0, pid.indexOf(config.compoundObjectPartID));
     }
 
+    console.log("Verifying cache item for object ", pid, "...");
     fetchObjectByPid(config.elasticsearchPublicIndex, pid, function (error, object) {
-      if(error) {
-        console.log(error);
-      }
-      // Object not found in index
+      if(error) {console.log(error)}
+
+      // Object not found in public index
       else if(object == null) {
         Cache.removeObject(cacheName, file, function(error) {
           if(error) {console.log("Error removing cache file " + file + ": " + error)}
-          else {console.log("Removed " + file)}
+          else {console.log("Removed " + file + ". Object not found in index.")}
         });
       }
       else {
-        Datastreams.verifyObject(object, "object", function(error, isValid) {
+        Datastreams.verifyObject(object, "object", function(error, isValid, objectID="") {
           if(error) {console.log(error)}
-          // Object index record is present, but is not found (200) in DuraCloud
+
+          // Object not found in DuraCloud
           else if(isValid == false) {
             Cache.removeObject(cacheName, file, function(error) {
               if(error) {console.log("Error removing cache file " + file + ": " + error)}
-              else {console.log("Removed " + file + ". Object not found in repository")}
+              else {console.log("Removed " + file + ". Object not found in repository.")}
             });
+          }
+          else {
+            console.log("Item is valid for object", objectID);
           }
         })
       }
@@ -726,50 +792,68 @@ exports.refreshCache = function(cacheName) {
   return 0;
 }
 
-var removeCacheItem = function(objectID, cacheName) {
+/*
+ * Will only remove items that are currently in the index
+ * Use "purgeCache()" to remove items from the cache that do not exist in the public index
+ */
+var removeCacheItem = function(objectID, cacheName, callback) {
+  console.log("Removing", cacheName, "cache item for object", objectID);
   fetchObjectByPid(config.elasticsearchPublicIndex, objectID, function (error, object) {
-    if(error) {
-      console.log(error);
-    }
+    if(error) {console.log(error)}
+
     else if (object) {
       var items = [];
+
+      // Is a compound object. Remove all compound object part items from the cache
       if(AppHelper.isParentObject(object)) {
-        items.push({
-          pid: objectID,
-          mimeType: object.mime_type || null
-        });
         for(var part of AppHelper.getCompoundObjectPart(object, -1)) {
           items.push({
             pid: objectID + config.compoundObjectPartID + (part.order || part.sequence || "1"),
-            mimeType: part.type || null
+            mime_type: part.type || null,
+            object: part.object || ""
           });
         }
       }
+
+      // Is a collection object. Remove all cache items for the collection
       else if(AppHelper.isCollectionObject(object)) {
         getCollectionChildren(objectID, config.elasticsearchPublicIndex, function(error, pids) {
           for(var i in pids) {
-
             removeCacheItem(pids[i], cacheName);
           }
         });
       }
+
+      // Is a single object
       else {
         items.push({
           pid: objectID,
-          mimeType: object.mime_type || null
+          mime_type: object.mime_type || null,
+          object: object.object || ""
         });
       }
 
       for(var item of items) {
-        var extension = (cacheName == "thumbnail") ? config.thumbnailFileExtension : AppHelper.getFileExtensionForMimeType(item.mimeType || null),
-            filename = item.pid + "." + extension;
+        let extension;
+        if (cacheName == "thumbnail") {
+          extension = config.thumbnailFileExtension;
+        }
+        else if (cacheName == "object") {
+          extension = AppHelper.getFileExtensionFromFilePath(item.object) || AppHelper.getFileExtensionForMimeType(item.mime_type);
+        }
+        else {
+          extension = AppHelper.getFileExtensionForMimeType(item.mime_type || null)
+        }
+        let filename = item.pid + "." + extension;
+
         if(Cache.exists(cacheName, item.pid, extension)) {
+          console.log("Removing file...")
           Cache.removeObject(cacheName, filename, function(error, filepath) {
             if(error) {
               console.log(error);
             }
             else {
-              console.log(filepath + " removed from the " + cacheName + " cache");
+              console.log(filepath + " has been removed from the " + cacheName + " cache");
             }
           });
         }
@@ -778,72 +862,136 @@ var removeCacheItem = function(objectID, cacheName) {
         }
       }
     }
+
     else {
-      console.log("Object not found. Use '/cache/purgeInvalidItems' to remove cache items that are no longer in the public index");
+      console.log("Object not found. Pid:", objectID);
     }
   });
   return false;
 }
 exports.removeCacheItem = removeCacheItem;
 
-var addCacheItem = function(objectID, cacheName) {
-  fetchObjectByPid(config.elasticsearchPublicIndex, objectID, function (error, object) {
-    if(error) {
-      console.log(error);
-    }
-    else {
-      var items = [];
+/*
+ * Will write a cache item to store an object's data in local filesystem. 
+ * Will use file type (extension) of the file source in the index 'object' field for object source caching
+ */
+var addCacheItem = async function(objectID, cacheName, updateExisting=false) {
 
-      if(AppHelper.isParentObject(object)) {
-        for(var part of AppHelper.getCompoundObjectPart(object, -1)) {
-          items.push({
-            pid: objectID + config.compoundObjectPartID + (part.order || part.sequence || "1"),
-            mimeType: part.type || null,
-            sequence: (part.order || part.sequence || "1"),
-            object: part
-          });
-        }
-      }
-      else if(AppHelper.isCollectionObject(object)) {
-        getCollectionChildren(objectID, config.elasticsearchPublicIndex, function(error, pids) {
-          for(var i in pids) {
-            addCacheItem(pids[i], cacheName);
-          }
-        });
-      }
-      else if(object) {
-        items.push({
-          pid: objectID,
-          mimeType: object.mime_type || null,
-          sequence: "1",
-          object: object
-        });
+  return new Promise(function(resolve, reject) {
+    console.log("Adding", cacheName, "cache item for object", objectID);
+    fetchObjectByPid(config.elasticsearchPublicIndex, objectID, function (error, object) {
+      if(error) {
+        console.log(error);
+        reject(error);
       }
       else {
-        console.log("Object not found. Only objects that are present in the public index can be cached");
-      }
+        var items = [];
 
-      for(var item of items) {
-        var extension = (cacheName == "thumbnail") ? config.thumbnailFileExtension : AppHelper.getFileExtensionForMimeType(item.mimeType || null),
-            filename = item.pid + "." + extension;
+        // Is a compound object
+        if(AppHelper.isParentObject(object)) {
+          let parts = AppHelper.getCompoundObjectPart(object, -1);
+          for(var part of parts) {
+            items.push({
+              pid: objectID + config.compoundObjectPartID + (part.order || part.sequence || "1"),
+              mime_type: part.type || null,
+              object_type: object.object_type || "",
+              sequence: (part.order || part.sequence || "1"),
+              thumbnail: part.thumbnail || null,
+              object: part.object || null
+            });
+          }
+        }
 
-        if(config.cacheTypes.includes(extension) == false) {
-          console.log("Caching is disabled for " + AppHelper.getObjectType(item.mimeType) + " files. " + filename + " not added to " + cacheName + " cache");
-        }    
-        else if(Cache.exists(cacheName, item.pid, extension) == false) {
-          if(cacheName == "thumbnail") {cacheName = "tn"}
-          Datastreams.getDatastream(item.object, objectID, cacheName, item.sequence, null, function(error, stream) {
-            if(error) {
-              console.log(error);
+        // Is a collection object, add a cache item for each collection member
+        else if(AppHelper.isCollectionObject(object)) {
+          getCollectionChildren(objectID, config.elasticsearchPublicIndex, async function(error, pids) {
+            console.log("Caching", pids.length, "objects in collection:", objectID, "...");
+            if(error) {console.log(error)}
+            for(var i in pids) {
+              console.log("Creating cache item for", pids[i], "...");
+              error = await addCacheItem(pids[i], cacheName, updateExisting);
+              if(error) {
+                console.log("Error:", error);
+              }
+              else {
+                console.log("Done.")
+              }
             }
+            resolve(false);
           });
         }
+
+        // Is a single object
+        else if(object) {
+          items.push(object);
+        }
+
+        // Null object == not in index
         else {
-          console.log(filename + " already exists in cache")
+          console.log("Object not found. Only objects that are present in the public index can be cached");
+        }
+
+        // Get the datastream for each item to be added to the cache, store the data
+        for(var item of items) {
+          if(!item.object) {
+            console.log("Object path missing for object:" + objectID + " Part:" + item.sequence + " Skipping cache write");
+            continue;
+          }
+
+          let extension;
+          if (cacheName == "thumbnail") {
+            extension = config.thumbnailFileExtension;
+          }
+          else if (cacheName == "object") {
+            extension = AppHelper.getFileExtensionFromFilePath(item.object) || AppHelper.getFileExtensionForMimeType(item.mime_type);
+          }
+          else {
+            extension = AppHelper.getFileExtensionForMimeType(item.mime_type || null)
+          }
+
+          let filename = item.pid+"."+extension;
+          if(config.enableCacheForFileType.includes(extension) == false) {
+            console.log("Caching is disabled for " + AppHelper.getObjectType(item.mime_type) + " files. " + filename + " not added to " + cacheName + " cache");
+            resolve(false);
+          }
+          else if(Cache.exists(cacheName, item.pid, extension) == false || updateExisting === true) {
+
+            let datastreamID = cacheName == "thumbnail" ? "tn" : "object";
+            Datastreams.getDatastream(item, item.pid, datastreamID, item.sequence, null, function(error, stream, objectData, isPlaceholder=false) {
+              if(error) {
+                console.log(error);
+                reject(error);
+              }
+              else if(!stream) {
+                console.error("Could not create cache file for", objectData.pid, "Error retrieving datastream");
+                reject(error);
+              }
+              else if(isPlaceholder) {
+                console.error("Could not create cache file for", objectData.pid, "datastream returned placeholder image");
+                reject(error);
+              }
+              else {
+                console.log("Writing", objectData.pid+"."+extension, "to", cacheName, "cache...")
+                Cache.cacheDatastream(cacheName, objectData.pid, stream, extension, function(error) {
+                  if(error) { 
+                    console.error("Could not create object file for", objectData.pid, error) 
+                    reject(error);
+                  }
+                  else { 
+                    console.log("Added item " + objectData.pid + " to " + cacheName + " cache") 
+                    resolve(null);
+                  }
+                });
+              }
+            });
+          }
+          else {
+            console.log(filename + " already exists in cache. Update existing is disabled.");
+            resolve(false);
+          }
         }
       }
-    }
+    });
   });
-  return false;
 }
 exports.addCacheItem = addCacheItem;
