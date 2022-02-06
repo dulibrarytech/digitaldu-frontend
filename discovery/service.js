@@ -767,7 +767,7 @@ exports.purgeCache = function(cacheName) {
           else {console.log("Removed " + file + ". Object not found in index.")}
         });
       }
-      else {
+      else if(AppHelper.isCollectionObject(object) == false) {
         Datastreams.verifyObject(object, "object", function(error, isValid, objectID="") {
           if(error) {console.log(error)}
 
@@ -782,6 +782,9 @@ exports.purgeCache = function(cacheName) {
             console.log("Item is valid for object", objectID);
           }
         })
+      }
+      else {
+        console.log("Skipping repository stream verification for collection object: ", pid);
       }
     });
   }
