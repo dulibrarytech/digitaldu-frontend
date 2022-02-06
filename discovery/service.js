@@ -325,7 +325,7 @@ exports.getDatastream = function(indexName, objectID, datastreamID, part, authKe
 
       // Determine cache status
       let cacheName = datastreamID == "tn" ? "thumbnail" : "object",
-      objectTypeThumbnailCacheEnabled = false,
+      objectTypeThumbnailCacheEnabled = true,
       cacheEnabled = false;
       if(AppHelper.isCollectionObject(object) == false) {
         let type = AppHelper.getObjectType(object.mime_type || "");
@@ -334,13 +334,12 @@ exports.getDatastream = function(indexName, objectID, datastreamID, part, authKe
         if(settings) {
           objectTypeThumbnailCacheEnabled = settings.cache;
         }
-
-        if(cacheName == "thumbnail") {
-          cacheEnabled = config.thumbnailImageCacheEnabled && objectTypeThumbnailCacheEnabled;
-        }
-        else {
-          cacheEnabled = config.objectDerivativeCacheEnabled && config.enableCacheForFileType.includes(extension);
-        }
+      }
+      if(cacheName == "thumbnail") {
+        cacheEnabled = config.thumbnailImageCacheEnabled && objectTypeThumbnailCacheEnabled;
+      }
+      else {
+        cacheEnabled = config.objectDerivativeCacheEnabled && config.enableCacheForFileType.includes(extension);
       }
 
       // Stream data from the cache, if the cache is enabled and a cache item is present
@@ -353,17 +352,21 @@ exports.getDatastream = function(indexName, objectID, datastreamID, part, authKe
 
       // Stream data from the source
       else {
-        Datastreams.getDatastream(object, objectID, datastreamID, part, authKey, function(error, stream) { 
+        Datastreams.getDatastream(object, objectID, datastreamID, part, authKey, function(error, stream, objectData, isPlaceholder=false) { 
           if(error) {
             callback(error, null);
           }
           else {
-            // Cache the datastream if enabled for this object type or file type
-            if(cacheEnabled && Cache.exists(cacheName, objectID, extension) == false) {
-              Cache.cacheDatastream(cacheName, objectID, stream, extension, function(error) {
-                if(error) { console.error("Could not create object file for", objectID, error) }
-                else { console.log("Added object " + objectID + " to " + cacheName + " cache") }
-              });
+            if(isPlaceholder == false) {
+              if(cacheEnabled && Cache.exists(cacheName, objectID, extension) == false) {
+                Cache.cacheDatastream(cacheName, objectID, stream, extension, function(error) {
+                  if(error) { console.error("Could not create object file for", objectID, error) }
+                  else { console.log("Added object " + objectID + " to " + cacheName + " cache") }
+                });
+              }
+            }
+            else {
+              console.log("Error fetching datastream. Using placeholder image. Object:", objectData.pid)
             }
             callback(null, stream, contentType);
           }

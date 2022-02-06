@@ -234,7 +234,7 @@ var streamRemoteData = function(uri, callback) {
   if(uri) {
     HttpRequest.get_stream(uri, {}, function(error, status, data) {
       if(error) {
-        callback("Data request error: " + error, null, null);
+        callback("HTTP request error: " + error, null, null);
       }
       else if(status != 200) {
         console.log("Request for data received status", status);
