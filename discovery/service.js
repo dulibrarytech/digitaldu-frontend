@@ -323,9 +323,10 @@ exports.getDatastream = function(indexName, objectID, datastreamID, part, authKe
         extension = datastreamID;
       }
 
-        console.log("settings obj", config.thumbnails.object.type)
-
-      let objectTypeThumbnailCacheEnabled = true;
+      // Determine cache status
+      let cacheName = datastreamID == "tn" ? "thumbnail" : "object",
+      objectTypeThumbnailCacheEnabled = false,
+      cacheEnabled = false;
       if(AppHelper.isCollectionObject(object) == false) {
         let type = AppHelper.getObjectType(object.mime_type || "");
         let settings = config.thumbnails.object.type[type] || null;
@@ -334,22 +335,15 @@ exports.getDatastream = function(indexName, objectID, datastreamID, part, authKe
           objectTypeThumbnailCacheEnabled = settings.cache;
         }
 
-          console.log("TEST settings ", settings)
-          console.log("TEST mimetype", object.mime_type)
-          console.log("TEST type", type)
-          console.log("TEST settings for thumbnail", settings[type])
-          console.log("TEST object type cache enabled for", type, objectTypeThumbnailCacheEnabled);
+        if(cacheName == "thumbnail") {
+          cacheEnabled = config.thumbnailImageCacheEnabled && objectTypeThumbnailCacheEnabled;
+        }
+        else {
+          cacheEnabled = config.objectDerivativeCacheEnabled && config.enableCacheForFileType.includes(extension);
+        }
       }
 
-      let cacheName = datastreamID == "tn" ? "thumbnail" : "object", cacheEnabled = false;
-      if (cacheName == "thumbnail") {
-        cacheEnabled = config.thumbnailImageCacheEnabled && objectTypeThumbnailCacheEnabled;
-      }
-      else {
-        cacheEnabled = config.objectDerivativeCacheEnabled && config.enableCacheForFileType.includes(extension);
-      }
-
-      // Stream data from the cache
+      // Stream data from the cache, if the cache is enabled and a cache item is present
       if(cacheEnabled && Cache.exists(cacheName, objectID, extension) == true) {
         Cache.getFileStream(cacheName, objectID, extension, function(error, stream) {
           if(error) {callback(error, null)}

@@ -246,23 +246,33 @@ Instructions to install/configure Universalviewer: https://universalviewer.io/
 
 ### Cache
 
-#### Add Object(s) to Cache
+#### Configuration Settings
 
-##### /cache/addItem/{cache name}/{object ID}
+enableCacheForFileType:
+
+Enable cacheing by file type. Add File extension to this array to enable the file type. File extensions must be defined in the "fileExtensions" list
+
+Example:
+
+["jpg", "pdf"]
+
+Will cache all .tif and .pdf derivatives 
+
+#### API
+
+##### /cache/addItem/{cache name}/{object ID} : Add Object(s) to Cache
 
 Will add object derivative file from the {cache name} cache for object {object ID}. If the object is a collection, a derivative file will be added to the cache for all of the objects in the collection.
 
 Caches available for {Cache name} are 'thumbnail' or 'object'
 
-#### Remove Object(s) from Cache
-
-##### /cache/removeItem/{cache name}/{object ID}
+##### /cache/removeItem/{cache name}/{object ID} : Remove Object(s) from Cache
 
 Removes the derivative file from the {cache name} cache for object {object ID} 
 
 Caches available for {Cache name} are 'thumbnail' or 'object'
 
-#### Automated Cache Purge
+##### /cache/purge/{cache name} : Automated Cache Purge
 
 This service will check all of the files in the cache and check to see if the object still exists in the public index. If the object does not exist, it is assumed to have been removed from the repository, and the cache file will be removed. 
 
