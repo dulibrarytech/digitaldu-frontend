@@ -344,6 +344,7 @@ exports.getDatastream = function(indexName, objectID, datastreamID, part, authKe
 
       // Stream data from the cache, if the cache is enabled and a cache item is present
       if(cacheEnabled && Cache.exists(cacheName, objectID, extension) == true) {
+        if(config.nodeEnv == "devlog") {console.log("Cache source:", objectID || "null")}
         Cache.getFileStream(cacheName, objectID, extension, function(error, stream) {
           if(error) {callback(error, null)}
           else {callback(null, stream, contentType)}
@@ -352,6 +353,7 @@ exports.getDatastream = function(indexName, objectID, datastreamID, part, authKe
 
       // Stream data from the source
       else {
+        if(config.nodeEnv == "devlog") {console.log("Datastream source:", objectID || "null")}
         Datastreams.getDatastream(object, objectID, datastreamID, part, authKey, function(error, stream, objectData, isPlaceholder=false) { 
           if(error) {
             callback(error, null);
