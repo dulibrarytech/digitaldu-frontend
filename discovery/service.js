@@ -362,13 +362,13 @@ exports.getDatastream = function(indexName, objectID, datastreamID, part, authKe
             if(isPlaceholder == false) {
               if(cacheEnabled && Cache.exists(cacheName, objectID, extension) == false) {
                 Cache.cacheDatastream(cacheName, objectID, stream, extension, function(error) {
-                  if(error) { console.error("Could not create object file for", objectID, error) }
-                  else { console.log("Added object " + objectID + " to " + cacheName + " cache") }
+                  if(error) { console.error(`Could not create object file for ${objectID} ${error}`) }
+                  else { console.log(`Added object ${objectID} to ${cacheName} cache`) }
                 });
               }
             }
             else {
-              console.log("Error fetching datastream. Using placeholder image. Object:", objectData.pid)
+              console.log(`Error fetching datastream. Using placeholder image. Object: ${objectData.pid}`)
             }
             callback(null, stream, contentType);
           }
@@ -592,7 +592,7 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
               pageCount = Pdf.getPageCountSync(cacheFilePath + "/" + cacheFileName);
             }
             else {
-              console.log(cacheFileName + " not found in cache. Generating single page pdf manifest");
+              console.log(`${cacheFileName} not found in cache. Generating single page pdf manifest`);
             }
           }
 
@@ -643,7 +643,7 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
             pageCount = Pdf.getPageCountSync(cacheFilePath + "/" + cacheFileName);
           }
           else {
-            console.log(cacheFileName + " not found in cache. Generating single page pdf manifest");
+            console.log(`${cacheFileName} not found in cache. Generating single page pdf manifest`);
           }
         }
 
@@ -750,7 +750,7 @@ exports.purgeCache = function(cacheName) {
       pid = "", 
       url = "";
 
-  console.log("Purging " + cacheName + " cache...");
+  console.log("Purging", cacheName, "cache...");
   for(let file of cacheFiles) {
     // Extract the pid from the filename, then remove the part ID if it is a compound object
     pid = file.substring(0, file.lastIndexOf("."));
@@ -765,8 +765,8 @@ exports.purgeCache = function(cacheName) {
       // Object not found in public index
       else if(object == null) {
         Cache.removeObject(cacheName, file, function(error) {
-          if(error) {console.log("Error removing cache file " + file + ": " + error)}
-          else {console.log("Removed " + file + ". Object not found in index.")}
+          if(error) {console.log("Error removing cache file", file, ": ", error)}
+          else {console.log("Removed", file, ". Object not found in index.")}
         });
       }
       else if(AppHelper.isCollectionObject(object) == false) {
@@ -776,8 +776,8 @@ exports.purgeCache = function(cacheName) {
           // Object not found in DuraCloud
           else if(isValid == false) {
             Cache.removeObject(cacheName, file, function(error) {
-              if(error) {console.log("Error removing cache file " + file + ": " + error)}
-              else {console.log("Removed " + file + ". Object not found in repository.")}
+              if(error) {console.log("Error removing cache file", file, ": ", error)}
+              else {console.log("Removed", file, ". Object not found in repository.")}
             });
           }
           else {
@@ -855,12 +855,12 @@ var removeCacheItem = function(objectID, cacheName, callback) {
               console.log(error);
             }
             else {
-              console.log(filepath + " has been removed from the " + cacheName + " cache");
+              console.log(filepath, "has been removed from the", cacheName, "cache");
             }
           });
         }
         else {
-          console.log(filename + " does not exist in cache");
+          console.log(filename, "does not exist in cache");
         }
       }
     }
@@ -936,7 +936,7 @@ var addCacheItem = async function(objectID, cacheName, updateExisting=false) {
         // Get the datastream for each item to be added to the cache, store the data
         for(var item of items) {
           if(!item.object) {
-            console.log("Object path missing for object:" + objectID + " Part:" + item.sequence + " Skipping cache write");
+            console.log(`Object path missing for object: ${objectID} Part: ${item.sequence} Skipping cache write`);
             continue;
           }
 
@@ -953,7 +953,7 @@ var addCacheItem = async function(objectID, cacheName, updateExisting=false) {
 
           let filename = item.pid+"."+extension;
           if(config.enableCacheForFileType.includes(extension) == false) {
-            console.log("Caching is disabled for " + AppHelper.getObjectType(item.mime_type) + " files. " + filename + " not added to " + cacheName + " cache");
+            console.log(`Caching is disabled for ${AppHelper.getObjectType(item.mime_type)} files. ${filename} not added to ${cacheName} cache`);
             resolve(false);
           }
           else if(Cache.exists(cacheName, item.pid, extension) == false || updateExisting === true) {
@@ -973,14 +973,14 @@ var addCacheItem = async function(objectID, cacheName, updateExisting=false) {
                 reject(error);
               }
               else {
-                console.log("Writing", objectData.pid+"."+extension, "to", cacheName, "cache...")
+                console.log(`Writing ${objectData.pid}.${extension} to ${cacheName} cache...`)
                 Cache.cacheDatastream(cacheName, objectData.pid, stream, extension, function(error) {
                   if(error) { 
                     console.error("Could not create object file for", objectData.pid, error) 
                     reject(error);
                   }
                   else { 
-                    console.log("Added item " + objectData.pid + " to " + cacheName + " cache") 
+                    console.log(`Added item ${objectData.pid} to ${cacheName} cache`) 
                     resolve(null);
                   }
                 });
@@ -988,7 +988,7 @@ var addCacheItem = async function(objectID, cacheName, updateExisting=false) {
             });
           }
           else {
-            console.log(filename + " already exists in cache. Update existing is disabled.");
+            console.log(filename, "already exists in cache. Update existing is disabled.");
             resolve(false);
           }
         }
