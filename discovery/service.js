@@ -38,51 +38,89 @@ const Pdf = require("../libs/pdfUtils");
 const Metadata = require("../libs/metadata");
 
 /**
- * Create a list of the root level collections
+ * Will write a cache item to store an object's data in local filesystem. 
+ * Will use file type (extension) of the file source in the index 'object' field for object source caching
+ * 
+ * @param {String} objectID - Object pid
+ * @param {String} cacheName - 'thumbnail' or 'object'
+ * @param {String} updateExisting - If true, will overwrite an existing item in the cache
+ */
+var addCacheItem = async function(objectID, cacheName, updateExisting=false) {}
+
+/**
+ * Get the index data for an object
  *
- * @param {String} page - Get this page of result collections
- *
- * @typedef {Object} collections - Collection data
- * @property {Array} list - Array of collection objects
- * @property {Number} count - Number of collections in top level collection
- *
- * @typedef {Object} viewData - List of 'view data' objects
- * @property {String} pid - Object pid
- * @property {String} tn - Object TN image source path
- * @property {String} title - Object title
- * @property {String} path - Object type path (ex "/object" or "/collection") Used to create the link to the object in the view
+ * @param {String} index - Elastic index from which to retrieve object data
+ * @param {String} pid - PID of the object
  *
  * @callback callback
  * @param {String|null} Error message or null
- * @param {collections|null} Null if error
+ * @param {Object|null} Elastic result data for the Object (index document source data) Null if error
  */
-exports.getTopLevelCollections = function(page=1, callback) {
-  Repository.getRootCollections().catch(error => {
-    callback(error, null);
-  })
-  .then( response => {
-      var collections = {
-        list: [],
-        count: 0
-      }
-      if(response && response.length > 0) {
-        collections.list = Helper.getObjectLinkDisplayList(JSON.parse(response));
-        collections.count = collections.list.length;
-        callback(null, collections);
-      }
-      else {
-        getObjectsInCollection(config.topLevelCollectionPID, page, null, {"field": "Title", "order": "asc"}, 1000, null, function(error, collections) {
-          if(error) {
-            console.log("Error retrieving collections: ", error);
-            callback(error, null);
-          }
-          else {
-            callback(null, collections);
-          }
-        });
-      }
-  });
-}
+var fetchObjectByPid = function(index, pid, callback) {}
+
+/**
+ * 
+ */
+var getAutocompleteData = function(callback) {}
+
+/**
+ * 
+ */
+var getCollectionChildren = function(collectionId, index, callback) {}
+
+/**
+ * Wrapper function for getParentTrace()
+ * Returns array of parent collection titles in heirarchical order (index 0 = top level collection)
+ *
+ * @param {String} pid - Object PID
+ *
+ * @callback callback
+ * @param {String|null} Error message or null
+ * @param {Array|null} Array of parent object titles Null if error
+ */
+var getCollectionHeirarchy = function(pid, callback) {}
+
+/**
+ * 
+ */
+var getCollectionList = function(callback) {}
+
+/**
+ * Fetch a datastream
+ *
+ * @param {String} indexName - Name of index to retrieve object from
+ * @param {String} objectID - Object PID
+ * @param {String} datastreamID - DDU Datastream ID (defined in configuration)
+ * @param {String} part - Stream data for a compound object part
+ *
+ * @callback callback
+ * @param {String|null} Error message or null
+ * @param {Object|null} Data stream Null if error
+ */
+var getDatastream = function(indexName, objectID, datastreamID, part, authKey, callback) {}
+
+/**
+ * Perform empty query Elastic search to get facet (aggregation) data for the entire index
+ *
+ * @param {String} collection - Collection PID.  If present, will scope the full index facet data to the collection
+ *
+ * @callback callback
+ * @param {String|null} Error message or null
+ * @param {Object|null} Elastic aggregations object Null if error
+ */
+var getFacets = function (collection=null, callback) {}
+
+/**
+ * Gets a IIIF manifest for an object
+ *
+ * @param {Array} pid - PID of object
+ *
+ * @callback callback
+ * @param {String|null} Error message or null
+ * @param {Object|null} Manifest object (JSON) Null if error
+ */
+var getManifestObject = function(pid, index, page, apikey, callback) {}
 
 /**
  * Get all objects in a collection, including facet data for collection members
@@ -105,105 +143,189 @@ exports.getTopLevelCollections = function(page=1, callback) {
  * @param {String|null} Error message or null
  * @param {collection|null} Null if error 
  */
-var getObjectsInCollection = function(collectionId, page=1, facets=null, sort=null, pageSize=10, daterange=null, callback) {
-  Repository.getCollectionObjects(collectionId, facets).catch(error => {
-    callback(error, null);
-  })
-  .then( response => {
-      var collection = {
-        list: [], 
-        title: "",
-        facets: {},
-        count: 0
-      };
-
-      // Get facets for this collection
-      var facetAggregations = AppHelper.getFacetAggregationObject(config.facets);
-
-      // Validate repository response
-      if(response && response.length > 0) {
-        collection.count = response.list.length;
-        collection.list = Helper.getObjectLinkDisplayList(JSON.parse(response.list));
-        collection.facets = response.facets || {};
-        collection.title = response.title || "";
-        callback(null, collection);
-      }
-      else {
-        var queryData = [];
-        queryData.push({
-          terms: "",
-          field: "all",
-          type: "contains",
-          bool: "or"
-        });
-
-        pageSize = pageSize || config.defaultCollectionsPerPage || 10;
-        var from = (page - 1) * pageSize;
-        Search.searchIndex(queryData, facets, collectionId, page, pageSize, daterange, sort, null, function(error, response) {
-          if(error) {
-            callback(error, null);
-          }
-          else {
-            var responseData = {};
-            response = response.elasticResponse;
-            if (error){
-              callback(error, null);
-            }
-            else if(from > response.hits.total.value) {
-              callback("Invalid page number ", null);
-            }
-            else {
-              var results = [];
-              for(var index of response.hits.hits) {
-                results.push(index._source);
-              }
-
-              collection.list = Helper.getObjectLinkDisplayList(results);
-              collection.facets = response.aggregations;
-              collection.count = response.hits.total.value;
-
-              if(collectionId != config.topLevelCollectionPID) {
-                fetchObjectByPid(config.elasticsearchPublicIndex, collectionId, function(error, object) {
-                  if(error) {
-                    collection.title = "";
-                    callback(error + ". Pid: " + collectionId, []);
-                  }
-                  else if(!object) {
-                    callback("Collection not found. Pid: " + collectionId, null);
-                  }
-                  else if(object.object_type != "collection") {
-                    callback("Invalid collection. Pid: " + collectionId, []);
-                  }
-                  else {
-                    collection.title = object.title || "No Title";
-                    collection.abstract = (object.abstract && typeof object.abstract == "object") ? object.abstract[0] : object.abstract || "";
-                    callback(null, collection);
-                  }
-                });
-              }
-              else {
-                  collection.title = config.topLevelCollectionName || "";
-                  callback(null, collection);
-              }
-            }
-          }
-        });
-      }
-  });
-}
-exports.getObjectsInCollection = getObjectsInCollection;
+var getObjectsInCollection = function(collectionId, page=1, facets=null, sort=null, pageSize=10, daterange=null, callback) {}
 
 /**
- * Get the index data for an object
+ * Returns array of parent collection titles in heirarchical order (index 0 = top level collection)
  *
- * @param {String} index - Elastic index from which to retrieve object data
- * @param {String} pid - PID of the object
+ * @param {String} pid - Object PID
+ * @param {Array} collections - Array to fill with parent collection titles.  Must begin with an empty array
  *
  * @callback callback
  * @param {String|null} Error message or null
- * @param {Object|null} Elastic result data for the Object (index document source data) Null if error
+ * @param {Array|null} Array of parent object titles Null if error
  */
-var fetchObjectByPid = function(index, pid, callback) {
+var getParentTrace = function(pid, collections, callback) {}
+
+/**
+ * Returns array of parent collection titles in heirarchical order (index 0 = top level collection)
+ *
+ * @param {Array} pids - Array of object PIDs to retrieve title strings for
+ * @param {Array} titles - Array to fill with collection titles.  Must begin with an empty array
+ *
+ * @callback callback
+ * @param {String|null} Error message or null
+ * @param {Array|null} Array of parent collection titles ({pid: pid, name: title, url: url}).  The order of titles in this array will match order of input pids array Null if error
+ */
+var getTitleString = function(pids, titles, callback) {}
+
+/**
+ * Create a list of the root level collections
+ *
+ * @param {String} page - Get this page of result collections
+ *
+ * @typedef {Object} collections - Collection data
+ * @property {Array} list - Array of collection objects
+ * @property {Number} count - Number of collections in top level collection
+ *
+ * @typedef {Object} viewData - List of 'view data' objects
+ * @property {String} pid - Object pid
+ * @property {String} tn - Object TN image source path
+ * @property {String} title - Object title
+ * @property {String} path - Object type path (ex "/object" or "/collection") Used to create the link to the object in the view
+ *
+ * @callback callback
+ * @param {String|null} Error message or null
+ * @param {collections|null} Null if error
+ */
+var getTopLevelCollections = function(page=1, callback) {}
+
+/**
+ * Will remove itms from the cache for objects that are not present in the public index, OR are not found (or otherwise available) in Duracloud
+ */
+var purgeCache = function(cacheName) {}
+
+/*
+ * Will only remove items that are currently in the index
+ * Use "purgeCache()" to remove items from the cache that do not exist in the public index
+ */
+var removeCacheItem = function(objectID, cacheName, callback) {}
+
+/*
+ * Implementation
+ */
+
+addCacheItem = async function(objectID, cacheName, updateExisting=false) {
+  return new Promise(function(resolve, reject) {
+    console.log("Adding", cacheName, "cache item for object", objectID);
+    fetchObjectByPid(config.elasticsearchPublicIndex, objectID, function (error, object) {
+      if(error) {
+        console.log(error);
+        reject(error);
+      }
+      else {
+        var items = [];
+
+        // Is a compound object
+        if(AppHelper.isParentObject(object)) {
+          let parts = AppHelper.getCompoundObjectPart(object, -1);
+          for(var part of parts) {
+            items.push({
+              pid: objectID + config.compoundObjectPartID + (part.order || part.sequence || "1"),
+              mime_type: part.type || null,
+              object_type: object.object_type || "",
+              sequence: (part.order || part.sequence || "1"),
+              thumbnail: part.thumbnail || null,
+              object: part.object || null
+            });
+          }
+        }
+
+        // Is a collection object, add a cache item for each collection member
+        else if(AppHelper.isCollectionObject(object)) {
+          getCollectionChildren(objectID, config.elasticsearchPublicIndex, async function(error, pids) {
+            console.log("Caching", pids.length, "objects in collection:", objectID, "...");
+            if(error) {console.log(error)}
+            for(var i in pids) {
+              console.log("Creating cache item for", pids[i], "...");
+              error = await addCacheItem(pids[i], cacheName, updateExisting);
+              if(error) {
+                console.log("Error:", error);
+              }
+              else {
+                console.log("Done.")
+              }
+            }
+            resolve(false);
+          });
+        }
+
+        // Is a single object
+        else if(object) {
+          items.push(object);
+        }
+
+        // Null object == not in index
+        else {
+          console.log("Object not found. Only objects that are present in the public index can be cached");
+        }
+
+        // Get the datastream for each item to be added to the cache, store the data
+        for(var item of items) {
+          if(!item.object) {
+            console.log(`Object path missing for object: ${objectID} Part: ${item.sequence} Skipping cache write`);
+            continue;
+          }
+
+          let extension;
+          if (cacheName == "thumbnail") {
+            extension = config.thumbnailFileExtension;
+          }
+          else if (cacheName == "object") {
+            extension = AppHelper.getFileExtensionFromFilePath(item.object) || AppHelper.getFileExtensionForMimeType(item.mime_type);
+          }
+          else {
+            extension = AppHelper.getFileExtensionForMimeType(item.mime_type || null)
+          }
+
+          let filename = item.pid+"."+extension;
+          if(config.enableCacheForFileType.includes(extension) == false) {
+            console.log(`Caching is disabled for ${extension} files. ${filename} not added to ${cacheName} cache`);
+            resolve(false);
+          }
+          else if(Cache.exists(cacheName, item.pid, extension) == false || updateExisting === true) {
+
+            let datastreamID = cacheName == "thumbnail" ? "tn" : "object";
+            Datastreams.getDatastream(item, item.pid, datastreamID, item.sequence, null, function(error, stream, objectData, isPlaceholder=false) {
+              if(error) {
+                console.log(error);
+                reject(error);
+              }
+              else if(!stream) {
+                console.error("Could not create cache file for", objectData.pid, "Error retrieving datastream");
+                reject(error);
+              }
+              else if(isPlaceholder) {
+                console.error("Could not create cache file for", objectData.pid, "datastream returned placeholder image");
+                reject(error);
+              }
+              else {
+                console.log(`Writing ${objectData.pid}.${extension} to ${cacheName} cache...`)
+                Cache.cacheDatastream(cacheName, objectData.pid, stream, extension, function(error) {
+                  if(error) { 
+                    console.error("Could not create object file for", objectData.pid, error) 
+                    reject(error);
+                  }
+                  else { 
+                    console.log(`Added item ${objectData.pid} to ${cacheName} cache`) 
+                    resolve(null);
+                  }
+                });
+              }
+            });
+          }
+          else {
+            console.log(filename, "already exists in cache. Update existing is disabled.");
+            resolve(false);
+          }
+        }
+      }
+    });
+  });
+}
+exports.addCacheItem = addCacheItem;
+
+fetchObjectByPid = function(index, pid, callback) {
   es.search({
       index: index,
       body: {
@@ -229,67 +351,83 @@ var fetchObjectByPid = function(index, pid, callback) {
 }
 exports.fetchObjectByPid = fetchObjectByPid;
 
-/**
- * Perform empty query Elastic search to get facet (aggregation) data for the entire index
- *
- * @param {String} collection - Collection PID.  If present, will scope the full index facet data to the collection
- *
- * @callback callback
- * @param {String|null} Error message or null
- * @param {Object|null} Elastic aggregations object Null if error
- */
-var getFacets = function (collection=null, callback) {
-    var field, matchFacetFields = [], restrictions = [];
-    var aggs = AppHelper.getFacetAggregationObject(config.facets);
-
-    var searchObj = {
-        index: config.elasticsearchPublicIndex,
-        body: {
-            "size": 0,
-            "aggregations": aggs
-        }
-    };
-
-    if(collection) {
-      matchFacetFields.push({
-          "match_phrase": {
-            "is_member_of_collection": collection
-          }
-      });
-
-      restrictions.push({
-        "exists": {
-            "field": "is_child_of"
-        }
-      });
-
-      searchObj.body.query["bool"] = {
-        "must": matchFacetFields,
-        "must_not": restrictions
-      }
-    }
-
-    es.search(searchObj).then(function (body) {
-        callback(null, body.aggregations);
-    }, function (error) {
-        callback(error.body.error.reason, null);
-    });
+getAutocompleteData = function(callback) {
+  var data = {};
+  getCollectionList(function(error, list) {
+    if(error) {callback(error, data)}
+    else {data["collectionData"] = list};
+    callback(null, data);
+  })
 }
-exports.getFacets = getFacets;
+exports.getAutocompleteData = getAutocompleteData;
 
-/**
- * Fetch a datastream
- *
- * @param {String} indexName - Name of index to retrieve object from
- * @param {String} objectID - Object PID
- * @param {String} datastreamID - DDU Datastream ID (defined in configuration)
- * @param {String} part - Stream data for a compound object part
- *
- * @callback callback
- * @param {String|null} Error message or null
- * @param {Object|null} Data stream Null if error
- */
-exports.getDatastream = function(indexName, objectID, datastreamID, part, authKey, callback) {
+getCollectionChildren = function(collectionId, index, callback) {
+  es.search({
+      index: index,
+      _source: ["pid"],
+      body: {
+        "query": {
+          "match_phrase": {
+            "is_member_of_collection": collectionId
+          }
+        },
+        "size": 10000
+      }
+  }, function (error, response) {
+      if(error) {
+        callback(error, null);
+      }
+      else {
+        let results = response.hits.hits || [], pids = [];
+        for(let i in results) {
+          pids.push(results[i]._source.pid);
+        }
+
+        callback(null, pids);
+      }
+  });
+}
+
+getCollectionHeirarchy = function(pid, callback) {
+  if(pid && pid.length > 0) {
+    getParentTrace(pid, [], callback);
+  }
+  else {
+    callback([])
+  }
+}
+exports.getCollectionHeirarchy = getCollectionHeirarchy;
+
+getCollectionList = function(callback) {
+  es.search({
+      index: config.elasticsearchPublicIndex,
+      _source: ["pid"],
+      body: {
+        "query": {
+          "match_phrase": {
+            "object_type": "collection"
+          }
+        },
+        "size": 1000
+      }
+  }, function (error, response) {
+      if(error) {
+        callback(error, null);
+      }
+      else {
+        let results = response.hits.hits || [], pids = [], titles = [];
+        for(let i in results) {
+          pids.push(results[i]._source.pid);
+        }
+
+        getTitleString(pids, [], function(error, response) {
+          callback(null, response);
+        });
+      }
+  });
+}
+
+getDatastream = function(indexName, objectID, datastreamID, part, authKey, callback) {
   fetchObjectByPid(indexName, objectID, function(error, object) {
 
     if(object) {
@@ -380,124 +518,48 @@ exports.getDatastream = function(indexName, objectID, datastreamID, part, authKe
     }
   });
 }
+exports.getDatastream = getDatastream;
 
-/**
- * Wrapper function for getParentTrace()
- * Returns array of parent collection titles in heirarchical order (index 0 = top level collection)
- *
- * @param {String} pid - Object PID
- *
- * @callback callback
- * @param {String|null} Error message or null
- * @param {Array|null} Array of parent object titles Null if error
- */
-exports.getCollectionHeirarchy = function(pid, callback) {
-  if(pid && pid.length > 0) {
-    getParentTrace(pid, [], callback);
-  }
-  else {
-    callback([])
-  }
-}
+getFacets = function (collection=null, callback) {
+    var field, matchFacetFields = [], restrictions = [];
+    var aggs = AppHelper.getFacetAggregationObject(config.facets);
 
-/**
- * Returns array of parent collection titles in heirarchical order (index 0 = top level collection)
- *
- * @param {Array} pids - Array of object PIDs to retrieve title strings for
- * @param {Array} titles - Array to fill with collection titles.  Must begin with an empty array
- *
- * @callback callback
- * @param {String|null} Error message or null
- * @param {Array|null} Array of parent collection titles ({pid: pid, name: title, url: url}).  The order of titles in this array will match order of input pids array Null if error
- */
-var getTitleString = function(pids, titles, callback) {
-  var pidArray = [], pid;
-  if(typeof pids == 'string') {
-    pidArray.push(pids);
-  }
-  else {
-    pidArray = pids;
-  }
-  pid = pidArray[ titles.length ];
+    var searchObj = {
+        index: config.elasticsearchPublicIndex,
+        body: {
+            "size": 0,
+            "aggregations": aggs
+        }
+    };
 
-  fetchObjectByPid(config.elasticsearchPublicIndex, pid, function (error, response) {
-    if(error) {
-      callback(error, titles);
-    }
-    else if(response == null) {
-      callback("Object not found: ", pid, titles);
-    }
-    else {
-      titles.push({
-        name: response ? response.title : pid,
-        pid: pid
+    if(collection) {
+      matchFacetFields.push({
+          "match_phrase": {
+            "is_member_of_collection": collection
+          }
       });
 
-      if(titles.length == pidArray.length) {
-        callback(null, titles);
-      }
-      else {
-        getTitleString(pidArray, titles, callback);
+      restrictions.push({
+        "exists": {
+            "field": "is_child_of"
+        }
+      });
+
+      searchObj.body.query["bool"] = {
+        "must": matchFacetFields,
+        "must_not": restrictions
       }
     }
-  });
+
+    es.search(searchObj).then(function (body) {
+        callback(null, body.aggregations);
+    }, function (error) {
+        callback(error.body.error.reason, null);
+    });
 }
-exports.getTitleString = getTitleString;
+exports.getFacets = getFacets;
 
-/**
- * Returns array of parent collection titles in heirarchical order (index 0 = top level collection)
- *
- * @param {String} pid - Object PID
- * @param {Array} collections - Array to fill with parent collection titles.  Must begin with an empty array
- *
- * @callback callback
- * @param {String|null} Error message or null
- * @param {Array|null} Array of parent object titles Null if error
- */
-var getParentTrace = function(pid, collections, callback) {
-  fetchObjectByPid(config.elasticsearchPublicIndex, pid, function(error, response) {
-      var title = "",
-          url = config.rootUrl + "/object/" + pid;
-
-      if(error) {
-        callback(error, null);
-      }
-      else if(response == null) {
-        callback("Object not found:", pid, null);
-      }
-      else {
-        if(typeof response.title == "object") {
-          title = response.title[0];
-        }
-        else {
-          title = response.title || "Untitled Collection";
-        }
-        collections.push({pid: response.pid, name: title, url: url});
-
-        if(typeof response.is_member_of_collection == 'object') {
-          getParentTrace(response.is_member_of_collection[0], collections, callback);
-        }
-        else if(response.is_member_of_collection == config.topLevelCollectionPID) {
-          collections.push({pid: config.topLevelCollectionPID, name: config.topLevelCollectionName, url: config.rootUrl + "#collections"});
-          callback(collections.reverse());
-        }
-        else {
-          getParentTrace(response.is_member_of_collection, collections, callback);
-        }
-      }
-  });
-}
-
-/**
- * Gets a IIIF manifest for an object
- *
- * @param {Array} pid - PID of object
- *
- * @callback callback
- * @param {String|null} Error message or null
- * @param {Object|null} Manifest object (JSON) Null if error
- */
-exports.getManifestObject = function(pid, index, page, apikey, callback) {
+getManifestObject = function(pid, index, page, apikey, callback) {
   var object = {}, children = [], part = null;
 
   if(pid.indexOf(config.compoundObjectPartID) > 0) {
@@ -676,76 +738,194 @@ exports.getManifestObject = function(pid, index, page, apikey, callback) {
     }
   });
 }
+exports.getManifestObject = getManifestObject;
 
-exports.getAutocompleteData = function(callback) {
-  var data = {};
-  getCollectionList(function(error, list) {
-    if(error) {callback(error, data)}
-    else {data["collectionData"] = list};
-    callback(null, data);
+getObjectsInCollection = function(collectionId, page=1, facets=null, sort=null, pageSize=10, daterange=null, callback) {
+  Repository.getCollectionObjects(collectionId, facets).catch(error => {
+    callback(error, null);
   })
-}
+  .then( response => {
+      var collection = {
+        list: [], 
+        title: "",
+        facets: {},
+        count: 0
+      };
 
-var getCollectionList = function(callback) {
-  es.search({
-      index: config.elasticsearchPublicIndex,
-      _source: ["pid"],
-      body: {
-        "query": {
-          "match_phrase": {
-            "object_type": "collection"
-          }
-        },
-        "size": 1000
-      }
-  }, function (error, response) {
-      if(error) {
-        callback(error, null);
+      // Get facets for this collection
+      var facetAggregations = AppHelper.getFacetAggregationObject(config.facets);
+
+      // Validate repository response
+      if(response && response.length > 0) {
+        collection.count = response.list.length;
+        collection.list = Helper.getObjectLinkDisplayList(JSON.parse(response.list));
+        collection.facets = response.facets || {};
+        collection.title = response.title || "";
+        callback(null, collection);
       }
       else {
-        let results = response.hits.hits || [], pids = [], titles = [];
-        for(let i in results) {
-          pids.push(results[i]._source.pid);
-        }
+        var queryData = [];
+        queryData.push({
+          terms: "",
+          field: "all",
+          type: "contains",
+          bool: "or"
+        });
 
-        getTitleString(pids, [], function(error, response) {
-          callback(null, response);
+        pageSize = pageSize || config.defaultCollectionsPerPage || 10;
+        var from = (page - 1) * pageSize;
+        Search.searchIndex(queryData, facets, collectionId, page, pageSize, daterange, sort, null, function(error, response) {
+          if(error) {
+            callback(error, null);
+          }
+          else {
+            var responseData = {};
+            response = response.elasticResponse;
+            if (error){
+              callback(error, null);
+            }
+            else if(from > response.hits.total.value) {
+              callback("Invalid page number ", null);
+            }
+            else {
+              var results = [];
+              for(var index of response.hits.hits) {
+                results.push(index._source);
+              }
+
+              collection.list = Helper.getObjectLinkDisplayList(results);
+              collection.facets = response.aggregations;
+              collection.count = response.hits.total.value;
+
+              if(collectionId != config.topLevelCollectionPID) {
+                fetchObjectByPid(config.elasticsearchPublicIndex, collectionId, function(error, object) {
+                  if(error) {
+                    collection.title = "";
+                    callback(error + ". Pid: " + collectionId, []);
+                  }
+                  else if(!object) {
+                    callback("Collection not found. Pid: " + collectionId, null);
+                  }
+                  else if(object.object_type != "collection") {
+                    callback("Invalid collection. Pid: " + collectionId, []);
+                  }
+                  else {
+                    collection.title = object.title || "No Title";
+                    collection.abstract = (object.abstract && typeof object.abstract == "object") ? object.abstract[0] : object.abstract || "";
+                    callback(null, collection);
+                  }
+                });
+              }
+              else {
+                  collection.title = config.topLevelCollectionName || "";
+                  callback(null, collection);
+              }
+            }
+          }
         });
       }
   });
 }
+exports.getObjectsInCollection = getObjectsInCollection;
 
-var getCollectionChildren = function(collectionId, index, callback) {
-  es.search({
-      index: index,
-      _source: ["pid"],
-      body: {
-        "query": {
-          "match_phrase": {
-            "is_member_of_collection": collectionId
-          }
-        },
-        "size": 10000
-      }
-  }, function (error, response) {
+getParentTrace = function(pid, collections, callback) {
+  fetchObjectByPid(config.elasticsearchPublicIndex, pid, function(error, response) {
+      var title = "",
+          url = config.rootUrl + "/object/" + pid;
+
       if(error) {
         callback(error, null);
       }
+      else if(response == null) {
+        callback("Object not found:", pid, null);
+      }
       else {
-        let results = response.hits.hits || [], pids = [];
-        for(let i in results) {
-          pids.push(results[i]._source.pid);
+        if(typeof response.title == "object") {
+          title = response.title[0];
         }
+        else {
+          title = response.title || "Untitled Collection";
+        }
+        collections.push({pid: response.pid, name: title, url: url});
 
-        callback(null, pids);
+        if(typeof response.is_member_of_collection == 'object') {
+          getParentTrace(response.is_member_of_collection[0], collections, callback);
+        }
+        else if(response.is_member_of_collection == config.topLevelCollectionPID) {
+          collections.push({pid: config.topLevelCollectionPID, name: config.topLevelCollectionName, url: config.rootUrl + "#collections"});
+          callback(collections.reverse());
+        }
+        else {
+          getParentTrace(response.is_member_of_collection, collections, callback);
+        }
       }
   });
 }
 
-/*
- * Will remove itms from the cache for objects that are not present in the public index, OR are not found (or otherwise available) in Duracloud
- */
-exports.purgeCache = function(cacheName) {
+getTitleString = function(pids, titles, callback) {
+  var pidArray = [], pid;
+  if(typeof pids == 'string') {
+    pidArray.push(pids);
+  }
+  else {
+    pidArray = pids;
+  }
+  pid = pidArray[ titles.length ];
+
+  fetchObjectByPid(config.elasticsearchPublicIndex, pid, function (error, response) {
+    if(error) {
+      callback(error, titles);
+    }
+    else if(response == null) {
+      callback("Object not found: ", pid, titles);
+    }
+    else {
+      titles.push({
+        name: response ? response.title : pid,
+        pid: pid
+      });
+
+      if(titles.length == pidArray.length) {
+        callback(null, titles);
+      }
+      else {
+        getTitleString(pidArray, titles, callback);
+      }
+    }
+  });
+}
+exports.getTitleString = getTitleString;
+
+getTopLevelCollections = function(page=1, callback) {
+  Repository.getRootCollections().catch(error => {
+    callback(error, null);
+  })
+  .then( response => {
+      var collections = {
+        list: [],
+        count: 0
+      }
+      if(response && response.length > 0) {
+        collections.list = Helper.getObjectLinkDisplayList(JSON.parse(response));
+        collections.count = collections.list.length;
+        callback(null, collections);
+      }
+      else {
+        getObjectsInCollection(config.topLevelCollectionPID, page, null, {"field": "Title", "order": "asc"}, 1000, null, function(error, collections) {
+          if(error) {
+            console.log("Error retrieving collections: ", error);
+            callback(error, null);
+          }
+          else {
+            callback(null, collections);
+          }
+        });
+      }
+  });
+}
+exports.getTopLevelCollections = getTopLevelCollections;
+
+purgeCache = function(cacheName) {
   let cacheFiles = Cache.getList(cacheName),
       pid = "", 
       url = "";
@@ -793,12 +973,9 @@ exports.purgeCache = function(cacheName) {
 
   return 0;
 }
+exports.purgeCache = purgeCache;
 
-/*
- * Will only remove items that are currently in the index
- * Use "purgeCache()" to remove items from the cache that do not exist in the public index
- */
-var removeCacheItem = function(objectID, cacheName, callback) {
+removeCacheItem = function(objectID, cacheName, callback) {
   console.log("Removing", cacheName, "cache item for object", objectID);
   fetchObjectByPid(config.elasticsearchPublicIndex, objectID, function (error, object) {
     if(error) {console.log(error)}
@@ -849,7 +1026,7 @@ var removeCacheItem = function(objectID, cacheName, callback) {
         let filename = item.pid + "." + extension;
 
         if(Cache.exists(cacheName, item.pid, extension)) {
-          console.log("Removing file...")
+          console.log("Removing file...", item.pid);
           Cache.removeObject(cacheName, filename, function(error, filepath) {
             if(error) {
               console.log(error);
@@ -872,128 +1049,3 @@ var removeCacheItem = function(objectID, cacheName, callback) {
   return false;
 }
 exports.removeCacheItem = removeCacheItem;
-
-/*
- * Will write a cache item to store an object's data in local filesystem. 
- * Will use file type (extension) of the file source in the index 'object' field for object source caching
- */
-var addCacheItem = async function(objectID, cacheName, updateExisting=false) {
-
-  return new Promise(function(resolve, reject) {
-    console.log("Adding", cacheName, "cache item for object", objectID);
-    fetchObjectByPid(config.elasticsearchPublicIndex, objectID, function (error, object) {
-      if(error) {
-        console.log(error);
-        reject(error);
-      }
-      else {
-        var items = [];
-
-        // Is a compound object
-        if(AppHelper.isParentObject(object)) {
-          let parts = AppHelper.getCompoundObjectPart(object, -1);
-          for(var part of parts) {
-            items.push({
-              pid: objectID + config.compoundObjectPartID + (part.order || part.sequence || "1"),
-              mime_type: part.type || null,
-              object_type: object.object_type || "",
-              sequence: (part.order || part.sequence || "1"),
-              thumbnail: part.thumbnail || null,
-              object: part.object || null
-            });
-          }
-        }
-
-        // Is a collection object, add a cache item for each collection member
-        else if(AppHelper.isCollectionObject(object)) {
-          getCollectionChildren(objectID, config.elasticsearchPublicIndex, async function(error, pids) {
-            console.log("Caching", pids.length, "objects in collection:", objectID, "...");
-            if(error) {console.log(error)}
-            for(var i in pids) {
-              console.log("Creating cache item for", pids[i], "...");
-              error = await addCacheItem(pids[i], cacheName, updateExisting);
-              if(error) {
-                console.log("Error:", error);
-              }
-              else {
-                console.log("Done.")
-              }
-            }
-            resolve(false);
-          });
-        }
-
-        // Is a single object
-        else if(object) {
-          items.push(object);
-        }
-
-        // Null object == not in index
-        else {
-          console.log("Object not found. Only objects that are present in the public index can be cached");
-        }
-
-        // Get the datastream for each item to be added to the cache, store the data
-        for(var item of items) {
-          if(!item.object) {
-            console.log(`Object path missing for object: ${objectID} Part: ${item.sequence} Skipping cache write`);
-            continue;
-          }
-
-          let extension;
-          if (cacheName == "thumbnail") {
-            extension = config.thumbnailFileExtension;
-          }
-          else if (cacheName == "object") {
-            extension = AppHelper.getFileExtensionFromFilePath(item.object) || AppHelper.getFileExtensionForMimeType(item.mime_type);
-          }
-          else {
-            extension = AppHelper.getFileExtensionForMimeType(item.mime_type || null)
-          }
-
-          let filename = item.pid+"."+extension;
-          if(config.enableCacheForFileType.includes(extension) == false) {
-            console.log(`Caching is disabled for ${AppHelper.getObjectType(item.mime_type)} files. ${filename} not added to ${cacheName} cache`);
-            resolve(false);
-          }
-          else if(Cache.exists(cacheName, item.pid, extension) == false || updateExisting === true) {
-
-            let datastreamID = cacheName == "thumbnail" ? "tn" : "object";
-            Datastreams.getDatastream(item, item.pid, datastreamID, item.sequence, null, function(error, stream, objectData, isPlaceholder=false) {
-              if(error) {
-                console.log(error);
-                reject(error);
-              }
-              else if(!stream) {
-                console.error("Could not create cache file for", objectData.pid, "Error retrieving datastream");
-                reject(error);
-              }
-              else if(isPlaceholder) {
-                console.error("Could not create cache file for", objectData.pid, "datastream returned placeholder image");
-                reject(error);
-              }
-              else {
-                console.log(`Writing ${objectData.pid}.${extension} to ${cacheName} cache...`)
-                Cache.cacheDatastream(cacheName, objectData.pid, stream, extension, function(error) {
-                  if(error) { 
-                    console.error("Could not create object file for", objectData.pid, error) 
-                    reject(error);
-                  }
-                  else { 
-                    console.log(`Added item ${objectData.pid} to ${cacheName} cache`) 
-                    resolve(null);
-                  }
-                });
-              }
-            });
-          }
-          else {
-            console.log(filename, "already exists in cache. Update existing is disabled.");
-            resolve(false);
-          }
-        }
-      }
-    });
-  });
-}
-exports.addCacheItem = addCacheItem;
