@@ -384,21 +384,41 @@ exports.validateCacheName = function(name) {
   return name && (name == 'thumbnail' || name == 'object');
 }
 
+ /**
+  * Get an object's transcript data
+  * 
+  * @param {Object} object - DDU Elastic index doc
+  * @return {Array.<String>} Transcript text for each object part
+  */
 exports.getTranscriptData = function(object) {
-  let transcriptPages = [];
+  let transcriptData = [];
   if(AppHelper.isParentObject(object)) {
-    let parts = AppHelper.getCompoundObjectPart(object, -1);
+    let parts = AppHelper.getCompoundObjectPart(object, -1), 
+        partData = [],
+        transcriptCount = 0;
+
     for(var index in parts) {
-      transcriptPages[index] = parts[index].transcript || "Transcript not available for this page";
+      if(parts[index].transcript) {
+        transcriptCount++;
+        partData[index] = parts[index].transcript
+      }
+      else {
+        partData[index] = "Transcript not available for this page";
+      }
+
+      if(transcriptCount > 0) {
+        transcriptData = partData;
+      }
     }
   }
   else {
     let transcript = object.transcript || object.transcript_search || null;
     if(transcript) {
-      transcriptPages[0] = transcript;
+      transcriptData[0] = transcript;
     }
   }
-  return transcriptPages;
+
+  return transcriptData;
 }
 
 
