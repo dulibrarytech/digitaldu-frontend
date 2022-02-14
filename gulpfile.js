@@ -42,4 +42,14 @@ var deploy_view_js = function() {
 }
 exports.deploy_view_js = deploy_view_js;
 
-gulp.task('deploy_all', gulp.series(obfuscate_js, deploy_js, obfuscate_view_js, deploy_view_js))
+/*
+ * Universal Viewer DU updates
+ */ 
+var obfuscate_uv_helper_js = function() {
+  return gulp.src('./public/libs/universalviewer/dist/helpers.js')
+    .pipe(javascriptObfuscator())
+    .pipe(gulp.dest('./public/libs/universalviewer/dist/'));
+}
+exports.obfuscate_view_js = obfuscate_view_js;
+
+gulp.task('deploy_all', gulp.series(obfuscate_js, deploy_js, obfuscate_view_js, deploy_view_js, obfuscate_uv_helper_js))
