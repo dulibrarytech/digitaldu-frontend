@@ -306,17 +306,6 @@ exports.renderObjectView = function(req, res) {
 					});
 				}
 				else {
-					if(object.transcript && object.transcript.length > 0) {
-						data.transcript = object.transcript;
-					}
-
-					if(req.header('Referer') && req.header('Referer').indexOf(config.rootUrl + "/search?") >= 0) {
-
-					}
-					else if(req.header('Referer') && req.header('Referer').indexOf(config.rootUrl + "/search?") >= 0) {
-
-					}
-
 					data["returnLink"] = (req.header('Referer') && req.header('Referer').indexOf(config.rootUrl + "/search?") >= 0) ? req.header('Referer') : false;
 					Service.getCollectionHeirarchy(object.is_member_of_collection, function(collectionTitles) {
 						data.id = pid;
@@ -327,6 +316,7 @@ exports.renderObjectView = function(req, res) {
 						data.metadata = Object.assign(data.metadata, Metadata.createMetadataDisplayObject(object, collectionTitles));
 						data.downloads = config.enableFileDownload ? Helper.getFileDownloadLinks(object, part) : null; // PROD
 						data.citations = Helper.getCitations(object);
+						data.transcript =  Helper.getTranscriptData(object);
 						res.render('object', data);
 					});
 				}

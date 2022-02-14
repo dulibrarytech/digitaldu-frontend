@@ -384,5 +384,22 @@ exports.validateCacheName = function(name) {
   return name && (name == 'thumbnail' || name == 'object');
 }
 
+exports.getTranscriptData = function(object) {
+  let transcriptPages = [];
+  if(AppHelper.isParentObject(object)) {
+    let parts = AppHelper.getCompoundObjectPart(object, -1);
+    for(var index in parts) {
+      transcriptPages[index] = parts[index].transcript || "Transcript not available for this item";
+    }
+  }
+  else {
+    let transcript = object.transcript || object.transcript_search || null;
+    if(transcript) {
+      transcriptPages[0] = transcript;
+    }
+  }
+  return transcriptPages;
+}
+
 
 
