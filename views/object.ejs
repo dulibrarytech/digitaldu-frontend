@@ -17,9 +17,9 @@
       <%- viewer %>
     </div>
 
-    <div id="transcript-view-wrapper">
+    <div id="transcript-view-wrapper" style="display: none">
       <div id="transcript-view">
-        <% if(transcript?.length > 0) { %>
+        <% if(transcript && transcript.length > 0) { %>
           <% for (var i in transcript) { %>
             <% if(i == 0) { %>
               <div class="transcript" data-transcript-page="1"><%= transcript[i] %></div>
