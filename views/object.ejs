@@ -19,22 +19,18 @@
 
     <div id="transcript-view-wrapper">
       <div id="transcript-view">
-        <%= transcript %>
+        <% if(transcript?.length > 0) { %>
+          <% for (var i in transcript) { %>
+            <% if(i == 0) { %>
+              <div class="transcript" data-transcript-page="1"><%= transcript[i] %></div>
+            <% } else { %>
+              <div class="transcript" data-transcript-page="<%= parseInt(i)+1 %>" style="display: none"><%= transcript[i] %></div>
+            <% } %>
+          <% } %>
+        <% } %>
       </div>
     </div>
   </div>
-
-  <!-- <div class="download-links container panel-collapsed">
-    <ul>
-      <% for (var i in downloads) { %>
-        <% if(downloads[i].isBatch) { %>
-          <li><button class="download-button" alt="Download <%= downloads[i].extension %>" value="<%= downloads[i].uri %>">Download ZIP file (all images)</button></li>
-        <% } else { %>
-          <li><a href="<%= downloads[i].uri %>" download="<% downloads[i].filename %>">Download <%= //downloads[i].extension.toUpperCase() %></a></li>
-        <% } %>
-      <% } %>
-    </ul>
-  </div> -->
 </div>
 
 <div id="metadata-section">
@@ -79,7 +75,7 @@
             </div>
           <% } %>
 
-          <% if(transcript) { %>
+          <% if(transcript.length > 0) { %>
             <button id="view-transcript" alt="View Transcript" type="button">View Transcript</button>
           <% } %>
         </span>
