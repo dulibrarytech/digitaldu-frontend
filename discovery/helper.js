@@ -389,7 +389,7 @@ exports.getTranscriptData = function(object) {
   if(AppHelper.isParentObject(object)) {
     let parts = AppHelper.getCompoundObjectPart(object, -1);
     for(var index in parts) {
-      transcriptPages[index] = parts[index].transcript || "Transcript not available for this item";
+      transcriptPages[index] = parts[index].transcript || "Transcript not available for this page";
     }
   }
   else {
