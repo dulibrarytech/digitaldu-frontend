@@ -145,6 +145,7 @@ function createUV(selector, data, dataProvider) {
             if($("#uv").hasClass("pdf-object")) {
                 updateThumbnailImageUrlsWithPageParam();
                 updateDownloadUrlsForPart(manifestIndex+1);
+                setTranscriptPage(manifestIndex+1);
             }
         }, 1000);
         /*
@@ -168,6 +169,7 @@ function createUV(selector, data, dataProvider) {
         if($("#uv").hasClass("pdf-object") == false &&
             $("#uv").hasClass("compound-object")) {
             updateDownloadUrlsForPart(canvasIndex+1);
+            setTranscriptPage(canvasIndex+1);
         }
         /*
          * End DU implementation
@@ -356,6 +358,17 @@ function updateDownloadUrlsForPart(part) {
             filename = pid + "_" + part + "." + extension;
             $("#"+button.id).prop("value", url);
         }
+    }
+}
+
+/*
+ * DU implementation
+ * Sets an object view transcript page to visible
+ */
+function setTranscriptPage(pageNumber) {
+    let pages = document.querySelectorAll(".transcript");
+    for(var page of pages) {
+        page.style.display = parseInt(page.getAttribute("data-transcript-page")) == pageNumber ? "block" : "none"
     }
 }
 /*
