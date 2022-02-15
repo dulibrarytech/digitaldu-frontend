@@ -85,6 +85,24 @@ All other content is released under [CC-BY-4.0](https://creativecommons.org/lice
     
     9. Run the app by using "node discovery.js" or "nodejs discovery.js" from the app root folder.
 
+#### Index
+
+##### Fields
+
+###### "thumbnail"
+
+This field can have three types of values:
+
+1. Relative path to Duracloud source file 
+2. Uri to remote file 
+3. Object Pid
+
+A relative path will contain no protocol or domain 
+
+A uri will contain a protocol and domain
+
+A pid value in the thumbnail field will display a thumbnail image of the referenced object
+
 ##### Index Document Required Fields for Each Object 
 
 "pid": {string} Unique identifier for the object

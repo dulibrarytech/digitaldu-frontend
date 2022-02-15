@@ -29,8 +29,13 @@ Removed included Universalviewer library, allowing a direct pull from Universalv
 
 ### v1.2.4
 
-Upgraded the cache funtionality for better usability and efficiency. Converted addCache function to synchronous operation
+Upgraded the cache funtionality for better usability and efficiency
+Converted addCache function to synchronous operation
 
 ### v1.2.41
 
-Updated datastream caching to not cache collection datastreams directly. The collection datastream request will initiate a second datastream request for the collection thumbnail, as the collection thumbnail source can be static or set by the user. The datastream requested for the collection thumbnail will be cached.
+Updated datastream service to cache thumbnail images sourced from a remote url
+
+### v1.3.0
+
+Updated the transcript viewer for image objects to display transcripts for compound objects
