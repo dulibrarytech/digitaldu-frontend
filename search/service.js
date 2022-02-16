@@ -390,7 +390,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       }
     }
 
-    if(config.nodeEnv == "devlogsearch") {console.log("DEVLOG: Search query object:", util.inspect(data, {showHidden: false, depth: null}));}
+    if(config.nodeEnv == "devlogsearch") {console.log("Search query object:", util.inspect(data, {showHidden: false, depth: null}));}
 
     // Query the index
     es.search(data, function (error, response, status) {

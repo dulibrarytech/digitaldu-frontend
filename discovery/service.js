@@ -193,7 +193,7 @@ var getTopLevelCollections = function(page=1, callback) {}
 /**
  * Will remove itms from the cache for objects that are not present in the public index, OR are not found (or otherwise available) in Duracloud
  */
-var purgeCache = function(cacheName) {}
+var purgeCache = function(cacheName, refresh=false) {}
 
 /*
  * Will only remove items that are currently in the index
@@ -257,7 +257,7 @@ addCacheItem = async function(objectID, cacheName, updateExisting=false) {
 
         // Null object == not in index
         else {
-          console.log("Object not found. Only objects that are present in the public index can be cached");
+          console.log("Object not found");
         }
 
         // Get the datastream for each item to be added to the cache, store the data
@@ -279,7 +279,7 @@ addCacheItem = async function(objectID, cacheName, updateExisting=false) {
           }
 
           let filename = item.pid+"."+extension;
-          if(config.enableCacheForFileType.includes(extension) == false) {
+          if(cacheName != "thumbnail" && config.enableCacheForFileType.includes(extension) == false) {
             console.log(`Caching is disabled for ${extension} files. ${filename} not added to ${cacheName} cache`);
             resolve(false);
           }
@@ -925,14 +925,15 @@ getTopLevelCollections = function(page=1, callback) {
 }
 exports.getTopLevelCollections = getTopLevelCollections;
 
-purgeCache = function(cacheName) {
+purgeCache = function(cacheName, refresh=false) {
   let cacheFiles = Cache.getList(cacheName),
       pid = "", 
       url = "";
 
   console.log("Purging", cacheName, "cache...");
   for(let file of cacheFiles) {
-    // Extract the pid from the filename, then remove the part ID if it is a compound object
+
+    // Extract the object pid from the filename
     pid = file.substring(0, file.lastIndexOf("."));
     if(pid.indexOf(config.compoundObjectPartID) > 0) {
       pid = pid.substring(0, pid.indexOf(config.compoundObjectPartID));
@@ -962,6 +963,9 @@ purgeCache = function(cacheName) {
           }
           else {
             console.log("Item is valid for object", objectID);
+            if(refresh) {
+              addCacheItem(objectID, cacheName, true)
+            }
           }
         })
       }

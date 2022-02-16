@@ -659,11 +659,12 @@ exports.renderHandleErrorPage = function(req, res) {
 
 exports.cachePurge = function(req, res) {
 	let key = req.query.key || "",
-		cacheName = req.params.cache || "";
+		cacheName = req.params.cache || "",
+		refreshItems = req.query.refreshItems ? (req.query.refreshItems == "true") : false;
 
 	if(key && key == config.apiKey) {
 		if(Helper.validateCacheName(cacheName)) {
-			Service.purgeCache(cacheName);
+			Service.purgeCache(cacheName, refreshItems);
 			res.sendStatus(200);
 		}
 		else {
