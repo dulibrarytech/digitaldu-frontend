@@ -71,7 +71,6 @@ module.exports = function () {
     }
     
     require('express-template-cache');
-    //require('../libs/socket.js');
 
     app.route('/')
         .get(function(req, res) {
