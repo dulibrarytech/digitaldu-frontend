@@ -167,15 +167,12 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
         }
       }
 
-      // Get jpg
+      // Get jpg derivative from Cantaloupe
       else if(Helper.getObjectType(mimeType) == "still image" &&
               extension == "jpg" &&
               datastreamID != "object") {
 
-        // Get cantaloupe uri for jpg
-        let server = Helper.getFileExtensionFromFilePath(object.object) == "tif" ? config.IIIFTiffServerUrl : config.IIIFServerUrl,
-            uri = server + "/iiif/2/" + objectID + "/full/full/0/default.jpg";
-
+        uri = config.IIIFServerUrl + "/iiif/2/" + objectID + "/full/full/0/default.jpg";
         streamRemoteData(uri, function(error, status, stream) {
           if(error) {
             if(config.nodeEnv == "devlog") {console.log(error)}

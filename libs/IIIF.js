@@ -364,8 +364,7 @@ var getThumbnailCanvas = function(container, object) {
 
 var getThumbnailObject = function(container, object, apikey, page=null) {
 	let thumbnail = {},
-		service = {},
-		imageServerUrl = (object.extension == "tif" || object.extension == "tiff") ? config.IIIFTiffServerUrl : config.IIIFServerUrl;
+		service = {};
 
 	if(page) {
 		page = page ? ("?page=" + page) : "";
@@ -376,20 +375,19 @@ var getThumbnailObject = function(container, object, apikey, page=null) {
 		apikey = apikey ? apikey : "";
 	}
 
-	thumbnail["@id"] = imageServerUrl + "/iiif/2/" + object.resourceID + apikey + "/full/" + config.IIIFThumbnailWidth + ",/0/default.jpg" + page;
+	thumbnail["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + apikey + "/full/" + config.IIIFThumbnailWidth + ",/0/default.jpg" + page;
 	thumbnail["@type"] = config.IIIFObjectTypes["still image"];
 	if(config.IIIFThumbnailHeight) {thumbnail["height"] = config.IIIFThumbnailHeight}
 	if(config.IIIFThumbnailWidth) {thumbnail["width"] = config.IIIFThumbnailWidth}
-
-	service["@context"] = "http://iiif.io/api/image/2/context.json";
-	service["@id"] = imageServerUrl + "/iiif/2/" + object.resourceID + apikey;
-	service["protocol"] = "http://iiif.io/api/image";
-
 	if(config.IIIFThumbnailHeight) {service["height"] = config.IIIFThumbnailHeight}
 	if(config.IIIFThumbnailWidth) {service["width"] = config.IIIFThumbnailWidth}
-	service["profile"] = "http://iiif.io/api/image/2/level0.json";
-	thumbnail["service"] = service;
 
+	service["@context"] = "http://iiif.io/api/image/2/context.json";
+	service["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + apikey;
+	service["protocol"] = "http://iiif.io/api/image";
+	service["profile"] = "http://iiif.io/api/image/2/level0.json";
+
+	thumbnail["service"] = service;
 	return thumbnail;
 }
 
@@ -414,14 +412,12 @@ var getImageCanvas = function(container, object, apikey) {
 	image["@type"] =  "oa:Annotation";
 	image["motivation"] = "sc:painting";
 
-	let imageServerUrl = (object.extension == "tif" || object.extension == "tiff") ? config.IIIFTiffServerUrl : config.IIIFServerUrl;
-	resource["@id"] = imageServerUrl + "/iiif/2/" + object.resourceID + apikey + object.filename + "/full/full/0/default.jpg";
-
+	resource["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + apikey + object.filename + "/full/full/0/default.jpg";
 	resource["@type"] = object.type; 
 	resource["format"] = object.format; 
 
 	service["@context"] = "";
-	service["@id"] = imageServerUrl + "/iiif/2/" + object.resourceID + apikey + object.filename;
+	service["@id"] = config.IIIFServerUrl + "/iiif/2/" + object.resourceID + apikey + object.filename;
 
 	resource["service"] = service;
 

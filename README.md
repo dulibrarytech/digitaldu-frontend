@@ -43,7 +43,7 @@ All other content is released under [CC-BY-4.0](https://creativecommons.org/lice
     
     3. Create a file ".env" in the project root folder. It should contain the following properties:
     ```
-        NODE_ENV={development|devlog|production} 
+        NODE_ENV={production|development|devlog|devlogsearch} 
         NODE_TLS_REJECT_UNAUTHORIZED=1
         APP_HOST={nodejs app domain}
         APP_PORT={nodejs app port}
@@ -67,8 +67,6 @@ All other content is released under [CC-BY-4.0](https://creativecommons.org/lice
         PDF_JS_VIEWER_PORT={port}
         IIIF_IMAGE_SERVER_URL={cantaloupe api domain}
         IIIF_IMAGE_SERVER_PATH={relative path to cantaloupe endpoint, blank if none}
-        IIIF_TIFF_IMAGE_SERVER_URL{cantaloupe api domain, option for second image server to render tiff files. Keep blank if using one server for all images}
-        IIIF_TIFF_IMAGE_SERVER_PATH{relative path to cantaloupe tiff server endpoint, blank if none}
         IIIF_DOMAIN={iiif api domain}
         IIIF_PATH={relative path to iiif, should be '/iiif'}
 
