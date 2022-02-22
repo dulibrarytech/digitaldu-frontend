@@ -60,7 +60,14 @@ var addCacheItem = async function(objectID, cacheName, updateExisting=false) {}
 var fetchObjectByPid = function(index, pid, callback) {}
 
 /**
+ * Returns an array of collection titles including all collections in the repository
  * 
+ * @callback callback
+ * @param {String|null} Error message or null
+ * @param {Object} autocompleteData
+ * 
+ * @typedef {Object} autocompleteData - Data to render view autocomplete suggestions
+ * @property {Array.<String>} Collection title
  */
 var getAutocompleteData = function(callback) {}
 
@@ -82,7 +89,11 @@ var getCollectionChildren = function(collectionId, index, callback) {}
 var getCollectionHeirarchy = function(pid, callback) {}
 
 /**
+ * Returns an array of collection titles including all collections in the repository
  * 
+ * @callback callback
+ * @param {String|null} Error message or null
+ * @param {Array.<String>} 
  */
 var getCollectionList = function(callback) {}
 
@@ -429,16 +440,18 @@ getCollectionList = function(callback) {
 
 getDatastream = function(indexName, objectID, datastreamID, part, authKey, callback) {
   fetchObjectByPid(indexName, objectID, function(error, object) {
-
+    let contentType = AppHelper.getContentType(datastreamID, object, part);
     if(object) {
-      let contentType = AppHelper.getContentType(datastreamID, object, part);
-
       if(AppHelper.isParentObject(object)) {
         let objectPart = AppHelper.getCompoundObjectPart(object, part || "1")
         if(objectPart) {
+          objectPart["pid"] = objectID;
           objectPart["object_type"] = "object";
           objectPart["mime_type"] = objectPart.type ? objectPart.type : (objectPart.mime_type || "");
+
           object = objectPart;
+          object["isCompound"] = true;
+
           objectID = objectID + (config.compoundObjectPartID + objectPart.order);
         }
         else {
@@ -448,6 +461,21 @@ getDatastream = function(indexName, objectID, datastreamID, part, authKey, callb
 
       else {
         part = null;
+        object["isCompound"] = false;
+      }
+
+      // Determine cache status
+      let cacheName = datastreamID == "tn" ? "thumbnail" : "object",
+      objectTypeThumbnailCacheEnabled = true,
+      cacheEnabled = false;
+
+      if(AppHelper.isCollectionObject(object) == false) {
+        let type = AppHelper.getObjectType(object.mime_type || "");
+        let settings = config.thumbnailDatastreams.object.type[type] || null;
+
+        if(settings) {
+          objectTypeThumbnailCacheEnabled = settings.cache;
+        }
       }
 
       let extension;
@@ -455,23 +483,10 @@ getDatastream = function(indexName, objectID, datastreamID, part, authKey, callb
         extension = config.thumbnailFileExtension;
       }
       else if (datastreamID == "object") {
-        extension = object.object ? AppHelper.getFileExtensionFromFilePath(object.object) : AppHelper.getFileExtensionForMimeType(object.mime_type);
+        extension = object.object ? AppHelper.getFileExtensionFromFilePath(object.object) : AppHelper.getFileExtensionForMimeType(object.mime_type || "");
       }
       else {
         extension = datastreamID;
-      }
-
-      // Determine cache status
-      let cacheName = datastreamID == "tn" ? "thumbnail" : "object",
-      objectTypeThumbnailCacheEnabled = true,
-      cacheEnabled = false;
-      if(AppHelper.isCollectionObject(object) == false) {
-        let type = AppHelper.getObjectType(object.mime_type || "");
-        let settings = config.thumbnails.object.type[type] || null;
-
-        if(settings) {
-          objectTypeThumbnailCacheEnabled = settings.cache;
-        }
       }
       if(cacheName == "thumbnail") {
         cacheEnabled = config.thumbnailImageCacheEnabled && objectTypeThumbnailCacheEnabled;

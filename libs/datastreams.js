@@ -34,106 +34,114 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
  * Get a datastream for an object
  * Return a placeholder image if the requested datastream is not available (thumbnail datastreams only)
  *
- * @param {Array.<Object>} object - index document source Required 
- * @param {Array.<String>} objectID - object PID
+ * @param {Array.<Object>} object - index document source Required fields: "object", "thumbnail" 
  * @param {Array.<String>} datastreamID - datastream ID
- * @param {Array.<String|null>} part - Part sequence order value if compound object, null if single object
  *
  * @callback callback
  * @param {String|null} Error message or null
  * @param {datastream|null} Null if error
+ * 
+ * @param {<String>} apikey - Api key to use private (admin) index to fetch unpublished datastreams
  *
  * @return {undefined}
  */
-exports.getDatastream = function(object, objectID, datastreamID, partIndex=null, apiKey, callback) { // TODO remove partIndex param, then remove from all function calls
-  var fileType = "default";
-  if(Helper.isParentObject(object)) {
-     fileType = "compound";
-  }
+exports.getDatastream = function(object, datastreamID, callback, apikey=null) {
+  let settings = null;
 
+  datastreamID == "thumbnail" ? "tn" : datastreamID;
   if(datastreamID == "tn") {
-    for(let type in config.objectTypes) {
-      if(config.objectTypes[type].includes(object.mime_type)) {
-        fileType = type;
-      }
-    }
-
-    var settings = config.thumbnails[object.object_type] || null;
-    if(settings) {
-      if(settings.type && settings.type[fileType]) {
-        settings = settings.type[fileType];
-      }
-
-      if(settings.source == "repository") {
-        Repository.streamData(object, "tn", function(error, stream) {
-          if(error) {
-            console.error(error);
-            streamDefaultThumbnail(object, callback);
-          }
-          else {
-            if(stream) {
-              callback(null, stream, object);
-            }
-            else {
-              streamDefaultThumbnail(object, callback);
-            }
-          }
-        });
-      }
-
-      // Get the stream from an external source
-      else {
-        let uri = settings.uri || null;
-        switch(settings.streamOption || "") {
-          case "iiif":
-            uri = IIIF.getThumbnailUri(objectID, apiKey);
-            break;
-          case "kaltura":
-            uri = Kaltura.getThumbnailUrl(object);
-            break;
-          case "external":
-            break;
-          case "index":
-            uri = getIndexTnUri(object.pid, object.thumbnail || uri);
-            break;
-          default:
-            console.log("Error retrieving datastream for", objectID);
-            break;
-        }
-
-        if(config.nodeEnv == "devlog") {console.log("Thumbnail image stream uri:", uri || "null")}
-        if(uri == null || uri == "") {
-          console.log("Could not construct uri for datastream request. uri field is null. Stream option: " + (settings.streamOption || "null") + " Pid: " + objectID);
-        }
-        streamRemoteData(uri, function(error, status, stream) {
-          if(error) {
-            console.log(error);
-            streamDefaultThumbnail(object, callback);
-          }
-          else if(stream == null) {
-            console.log("Datastream error: Can not fetch datastream for object " + objectID);
-            streamDefaultThumbnail(object, callback);
-          }
-          else {
-            if(status == 200) {
-              callback(null, stream, object);
-            }
-            else {
-              console.log("Datastream error: " + uri + " returns a status of " + status);
-              console.log("Using default thumbnail for object " + objectID);
-              streamDefaultThumbnail(object, callback);
-            }
-          }
-        });
-      }
+    if(Helper.isCollectionObject(object)) {
+      settings = config.thumbnailDatastreams.collection || null;
     }
     else {
-      console.log("Error retrieving datastream for " + objectID + ", can not find configuration settings for object type " + object.object_type);
-      streamDefaultThumbnail(object, callback);
+      if(object.isCompound) {
+        objectType = "compound";
+      }
+      else {
+        let extension = object.object ? AppHelper.getFileExtensionFromFilePath(object.object) : AppHelper.getFileExtensionForMimeType(object.mime_type || ""),
+            mimeType = extension ? Helper.getMimeType(extension) : object.mime_type || null,
+            objectType = Helper.getObjectType(mimeType);
+      }
+      settings = config.thumbnailDatastreams.object.type[objectType] || null;
+
+      if(settings) {
+        let uri = null;
+        if(settings.source == "auto") {
+          let data = getAutoStreamSource(datastreamID, object);
+          uri = data.uri;
+          settings.source = data.source;
+        }
+
+        else {
+          switch(settings.source) {
+            case "iiif":
+              uri = IIIF.getThumbnailUri(objectID, apiKey);
+              break;
+            case "kaltura":
+              uri = Kaltura.getThumbnailUrl(object);
+              break;
+            case "repository":
+              uri = object.thumbnail;
+              break;
+            case "remote":
+              uri = object.thumbnail;
+              break;
+            default:
+              console.log("Invalid source setting, could not detrmine uri");
+              break;
+          }
+        }
+        if(config.nodeEnv == "devlog") {console.log("Thumbnail image stream uri:", uri || "null")}
+
+        if(uri == null || uri == "") {
+          callback(`Could not construct uri for datastream request. uri field is null. Check object source fields. Stream option: ${(settings.source || "null")} Pid: ${object.pid}`, null, object);
+        }
+        else {
+          if(settings.source == "repository") {
+            Repository.streamData(object, "tn", function(error, stream) {
+              if(error) {
+                console.log(`Repository fetch error: ${error} Object: ${object.pid}`);
+                streamDefaultThumbnail(object, callback);
+              }
+              else {
+                if(stream) {
+                  callback(null, stream, object);
+                }
+                else {
+                  console.log(`Repository fetch error: Source not available. Object: ${object.pid}`)
+                  streamDefaultThumbnail(object, callback);
+                }
+              }
+            });
+          }
+          else {
+            streamRemoteData(uri, function(error, status, stream) {
+              if(error) {
+                console.log(`Remote stream error: ${error} Object: ${object.pid}`);
+                streamDefaultThumbnail(object, callback);
+              }
+              else if(stream == null) {
+                console.log(`Remote stream error: Source not available. Object: ${object.pid}`);
+                streamDefaultThumbnail(object, callback);
+              }
+              else {
+                if(status == 200) {
+                  callback(null, stream, object);
+                }
+                else {
+                  console.log(`Remote stream error: Response status: ${status} Object: ${object.pid}`);
+                  streamDefaultThumbnail(object, callback);
+                }
+              }
+            });
+          }
+        }
+      }
+      else {
+        callback(`Could not determine datastream settings for object ${object.pid}. Check configuration or object source data. Object path: ${object.object || "null"} Mime type: ${object.mime_type || "null"}`, null, object);
+      }
     }
   }
-
-  // Request a non-thumbnail datastream
   else {
     let extension = "file",
         mimeType = Helper.getContentType("object", object); 
@@ -216,113 +224,6 @@ exports.getDatastream = function(object, objectID, datastreamID, partIndex=null,
 }
 
 /**
- * Request data stream from uri
- *
- * @param {String} uri - Uri of data source
- *
- * @callback callback
- * @param {String|null} - Error message or null
- * @param {http status code|null} - Response status code, Null if error
- * @param {response|null} Response data, Null if error
- *
- * @return {undefined}
- */
-var streamRemoteData = function(uri, callback) {
-  if(uri) {
-    HttpRequest.get_stream(uri, {}, function(error, status, data) {
-      if(error) {
-        callback("HTTP request error: " + error, null, null);
-      }
-      else if(status != 200) {
-        console.log("Request for data received status", status);
-        callback(null, status, null);
-      }
-      else {
-        callback(null, status, data);
-      }
-    });
-  }
-  else {
-     callback(null, 404, null);
-  }
-}
-
-var streamKalturaData = function(uri, callback) {
-  if(uri) {
-    HttpRequest.get_stream(uri, {followRedirects: true}, function(error, status, stream) {
-      if(error) {
-        callback("Could not open Kaltura datastream. Uri: " + uri + " Error: " + error, null, null);
-      }
-      else {
-        if(status == 200) { 
-          callback(null, status, stream) 
-
-        }
-        else {
-          callback(null, status, null);
-        }
-      }
-    });
-
-  }
-  else {
-     callback(null, 404, null);
-  }
-}
-
-/**
- * Get a file stream from a local file
- *
- * @param {String} path - Path to file in local folder
- *
- * @callback callback
- * @param {String|null} - Error message or null
- * @param {file stream|null} - Node 'fs' readStream, Null if error
- *
- * @return {undefined}
- */
-var getFileStream = function(path, callback) {
-    callback(null, fs.createReadStream(path));
-}
-
-/**
- * Check for an object-specific default thumbnail image.  If none is found, stream the default generic thumbnail image
- *
- * @param {Object} object - index document object
- *
- * @callback callback
- * @param {String|null} - Error message or null
- * @param {file stream|null} - Node 'fs' readStream, Null if error
- *
- * @return {undefined}
- */
-var streamDefaultThumbnail = function(object, callback) {
-  let path = config.thumbnailDefaultImagePath + config.defaultThumbnailImage;
-
-  // Check for an object specific default thumbnail image.  If found, use it
-  for(var index in config.objectTypes) {
-    if(config.objectTypes[index].includes(object.mime_type)) {
-      path = config.thumbnailDefaultImagePath + config.thumbnailPlaceholderImages[index];
-    }
-  }
-
-  // Create the thumbnail stream
-  getFileStream(path, function(error, thumbnail) {
-    if(error) {callback("Error fetching default thumbnail image: " + error, null, object)}
-    else{callback(null, thumbnail, object, true)}
-  });
-}
-
-var getIndexTnUri = function(objectID, uri) {
-  // Thumbnail value is assumed to be an object pid. If thumbnail pid == this object, do not use it (infinite loop)
-  if(uri && uri.indexOf("http") < 0) {
-    uri = (objectID == uri) ? null : config.rootUrl + "/datastream/" + uri + "/tn";
-  }
-
-  return uri;
-}
-
-/**
  * Sends a head request to the repository to verify that a specified datastream is available for an object
  *
  * @param {Object} object - index document object
@@ -354,3 +255,90 @@ exports.verifyObject = function(object, datastreamID, callback) {
   });
 }
 
+/**
+ * Request data stream from uri
+ *
+ * @param {String} uri - Uri of data source
+ *
+ * @callback callback
+ * @param {String|null} - Error message or null
+ * @param {http status code|null} - Response status code, Null if error
+ * @param {response|null} Response data, Null if error
+ *
+ * @return {undefined}
+ */
+var streamRemoteData = function(uri, callback) {
+  if(uri) {
+    HttpRequest.get_stream(uri, {}, function(error, status, data) {
+      if(error) {
+        callback("HTTP request error: " + error, null, null);
+      }
+      else if(status != 200) {
+        console.log("Request for data received status", status);
+        callback(null, status, null);
+      }
+      else {
+        callback(null, status, data);
+      }
+    });
+  }
+  else {
+     callback(null, 404, null);
+  }
+}
+
+/**
+ * Check for an object-specific default thumbnail image.  If none is found, stream the default generic thumbnail image
+ *
+ * @param {Object} object - index document object
+ *
+ * @callback callback
+ * @param {String|null} - Error message or null
+ * @param {file stream|null} - Node 'fs' readStream, Null if error
+ *
+ * @return {undefined}
+ */
+var streamDefaultThumbnail = function(object, callback) {
+  console.log("Streaming default thumbnail for object " + objectID);
+  let path = config.thumbnailDefaultImagePath + config.defaultThumbnailImage;
+
+  // Check for an object specific default thumbnail image.  If found, use it
+  for(var index in config.objectTypes) {
+    if(config.objectTypes[index].includes(object.mime_type)) {
+      path = config.thumbnailDefaultImagePath + config.thumbnailPlaceholderImages[index];
+    }
+  }
+
+  // Create the thumbnail stream
+  // TODO: Replace with File module function
+  getFileStream(path, function(error, thumbnail) {
+    if(error) {callback("Error fetching default thumbnail image: " + error, null, object)}
+    else{callback(null, thumbnail, object, true)}
+  });
+}
+
+/**
+ * Get a file stream from a local file
+ *
+ * @param {String} path - Path to file in local folder
+ *
+ * @callback callback
+ * @param {String|null} - Error message or null
+ * @param {file stream|null} - Node 'fs' readStream, Null if error
+ *
+ * @return {undefined}
+ */
+var getFileStream = function(path, callback) {
+    callback(null, fs.createReadStream(path));
+}
+
+var getAutoStreamSource = function(dsid, object) {
+  let data = {
+    uri: null,
+    source: "repository"
+  }
+
+
+
+  return data;
+}

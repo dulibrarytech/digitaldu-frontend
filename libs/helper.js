@@ -283,6 +283,16 @@ var getObjectType = function(mimeType="") {
 }
 exports.getObjectType = getObjectType;
 
+var getMimeType = function(fileExtension) {
+	let mimeType = null;
+	for(var key in config.mimeTypes) {
+    if(key == fileExtension) {
+      mimeType = config.mimeTypes[key];
+    }
+  }
+	return mimeType;
+}
+
  /**
  * Finds the DDU object type that corresponds with an object's mime type
  *
@@ -324,14 +334,14 @@ var getContentType = function(datastream, object, part) {
 
   // Datastream request by Id (/jpg /mp3 etc) Get content type assigned to the datastream type
   else if(datastream.toLowerCase() != "object") {
-    contentType = config.contentTypes[datastream] || "";
+    contentType = config.mimeTypes[datastream] || "";
   }
 
   // Determine the file type via the object path file extension
   else if(object && object.object) {
     let ext = getFileExtensionFromFilePath(object.object);
     if(ext) {
-    	contentType = config.contentTypes[ext] || "";
+    	contentType = config.mimeTypes[ext] || "";
     }
     else {
     	contentType = getFileExtensionForMimeType(object.mime_type || "")
