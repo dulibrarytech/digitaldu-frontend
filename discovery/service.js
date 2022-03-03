@@ -441,8 +441,11 @@ getCollectionList = function(callback) {
 
 getDatastream = function(indexName, objectID, datastreamID, part, authKey, callback) {
   fetchObjectByPid(indexName, objectID, function(error, object) {
-    let contentType = AppHelper.getContentType(datastreamID, object, part);
+
     if(object) {
+      let contentType = AppHelper.getContentType(datastreamID, object, part);
+
+      // If this is a compound object, get the part data, and assign to 'object'
       if(AppHelper.isParentObject(object)) {
         let objectPart = AppHelper.getCompoundObjectPart(object, part || "1")
         if(objectPart) {
@@ -456,20 +459,19 @@ getDatastream = function(indexName, objectID, datastreamID, part, authKey, callb
           objectID = objectID + (config.compoundObjectPartID + objectPart.order);
         }
         else {
-          callback(null, null);
+          part = null;
+          object["isCompound"] = true;
         }
       }
-
       else {
         part = null;
         object["isCompound"] = false;
       }
 
-      // Determine cache status
+      // Determine cache status for this object
       let cacheName = datastreamID == "tn" ? "thumbnail" : "object",
       objectTypeThumbnailCacheEnabled = true,
       cacheEnabled = false;
-
       if(AppHelper.isCollectionObject(object) == false) {
         let type = AppHelper.getObjectType(object.mime_type || "");
         let settings = config.thumbnailDatastreams.object.type[type] || null;
@@ -478,7 +480,6 @@ getDatastream = function(indexName, objectID, datastreamID, part, authKey, callb
           objectTypeThumbnailCacheEnabled = settings.cache;
         }
       }
-
       let extension;
       if (datastreamID == "tn") {
         extension = config.thumbnailFileExtension;
