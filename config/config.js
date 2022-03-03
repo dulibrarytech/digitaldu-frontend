@@ -265,7 +265,7 @@ module.exports = {
     objectTypes: {
         "audio": ["audio/mpeg", "audio/x-wav", "audio/mp3", "audio/wav"],
         "video": ["video/mp4", "video/quicktime", "video/mov"],
-        "still image": ["image/png", "image/jpg", "image/jpeg", "image/tiff", "image/jp2"],
+        "still image": ["image/png", "image/jpg", "image/jpeg", "image/tif", "image/tiff", "image/jp2"],
         "pdf": ["application/pdf"]
     },
 
@@ -307,14 +307,14 @@ module.exports = {
      *  2. iiif: Get thumbnail derivative from Cantaloupe image server usinf IIIF api
      *  3. kaltura: Source thumbnail from Kaltura using Kaltura api
      *  4. repository: Source from DuraCloud
-     *  5. auto:    Will attempt to determine the type of url in the index (in the object or thumbnail field)
+     *  5. remote: Fetch uri in "thumbnail" field, must be an absolute uri
+     *  6. auto:    Will attempt to determine the type of url in the index (in the object or thumbnail field)
      *          1. If it contains an http protocol "http*" an absolute url is identified, and data will be fetched from it directly
      *          2. If it has no protocol, a relative path is assumed. The only allowed relative path is to DuraCloud repository, so the data will be sourced from DuraCloud
      *          3. If it has no protocol or slashes, an object pid is assumed (filenames with no path are not allowed). The object will be sourced from the [discovery layer] datastreams api, using object pid and either "object" or "tn" repository stream.
      */
     thumbnailDatastreams: {
         "collection": {
-            "uri": "", 
             "source": "auto",
             "cache": false
         },
@@ -322,27 +322,22 @@ module.exports = {
             "type": {
                 "still image": {
                     "source": "iiif",
-                    "uri": "", 
                     "cache": true
                 },
                 "audio": {
                     "source": "kaltura",
-                    "uri": "", 
                     "cache": false
                 },
                 "video": {
                     "source": "kaltura",
-                    "uri": "", 
                     "cache": false
                 },
                 "pdf": {
                     "source": "iiif",
-                    "uri": "", 
                     "cache": true
                 },
                 "compound": {
                     "source": "auto",
-                    "uri": "",
                     "cache": false
                 }
             }
@@ -357,49 +352,43 @@ module.exports = {
      *  2. kaltura: Source thumbnail from Kaltura using Kaltura api
      *  3. repository: Source from DuraCloud
      *
-     *  file_type: File type level settings. Mimic object type default values. If file type is not defined, default values will be used
+     *  file_type: File type level settings
      */
     objectDatastreams: {
         "collection": {
             "source": "repository",
+            "cache": false
         },
         "object": {
             "type": {
                 "still image": {
                     "source": "repository",
+                    "cache": true,
                     "file_type": {
                         "jpg": {
                             "source": "iiif",
-                            "datastreams": ["jpg"]
+                            "cache": true
                         }
                     }
                 },
                 "audio": {
                     "source": "kaltura",
+                    "cache": false
                 },
                 "video": {
                     "source": "kaltura",
+                    "cache": false
                 },
                 "pdf": {
                     "source": "repository",
+                    "cache": true
                 },
                 "compound": {
                     "source": "repository",
+                    "cache": false
                 }
             }
         }
-
-
-
-
-
-
-
-
-        "audio": "kaltura",
-        "video": "kaltura",
-        "still image": "repository",
-        "pdf": "repository"
     },
 
     /*
@@ -707,7 +696,7 @@ module.exports = {
         "mp3": ["audio/mp3", "audio/x-wav", "audio/mpeg"],
         "mp4": ["video/mp4", "video/quicktime", "video/mov"],
         "pdf": ["application/pdf"],
-        "tif": ["image/tiff"]
+        "tif": ["image/tif", "image/tiff"]
      },
 
       /*

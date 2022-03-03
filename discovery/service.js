@@ -290,6 +290,7 @@ addCacheItem = async function(objectID, cacheName, updateExisting=false) {
           }
 
           let filename = item.pid+"."+extension;
+          let cacheEnabled
           if(cacheName != "thumbnail" && config.enableCacheForFileType.includes(extension) == false) {
             console.log(`Caching is disabled for ${extension} files. ${filename} not added to ${cacheName} cache`);
             resolve(false);
@@ -297,7 +298,7 @@ addCacheItem = async function(objectID, cacheName, updateExisting=false) {
           else if(Cache.exists(cacheName, item.pid, extension) == false || updateExisting === true) {
 
             let datastreamID = cacheName == "thumbnail" ? "tn" : "object";
-            Datastreams.getDatastream(item, item.pid, datastreamID, item.sequence, null, function(error, stream, objectData, isPlaceholder=false) {
+            Datastreams.getDatastream(item, datastreamID, function(error, stream, objectData, isPlaceholder=false) {
               if(error) {
                 console.log(error);
                 reject(error);
@@ -323,7 +324,7 @@ addCacheItem = async function(objectID, cacheName, updateExisting=false) {
                   }
                 });
               }
-            });
+            }, null);
           }
           else {
             console.log(filename, "already exists in cache. Update existing is disabled.");
@@ -504,10 +505,10 @@ getDatastream = function(indexName, objectID, datastreamID, part, authKey, callb
         });
       }
 
-      // Stream data from the source
+      // Fetch datastream
       else {
         if(config.nodeEnv == "devlog") {console.log("Datastream source:", objectID || "null")}
-        Datastreams.getDatastream(object, objectID, datastreamID, part, authKey, function(error, stream, objectData, isPlaceholder=false) { 
+        Datastreams.getDatastream(object, datastreamID, function(error, stream, objectData, isPlaceholder=false) { 
           if(error) {
             callback(error, null);
           }
@@ -520,12 +521,9 @@ getDatastream = function(indexName, objectID, datastreamID, part, authKey, callb
                 });
               }
             }
-            else {
-              console.log(`Error fetching datastream. Using placeholder image. Object: ${objectData.pid}`)
-            }
             callback(null, stream, contentType);
           }
-        });
+        }, authKey);
       }
     }
     else {

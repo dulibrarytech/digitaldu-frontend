@@ -292,6 +292,7 @@ var getMimeType = function(fileExtension) {
   }
 	return mimeType;
 }
+exports.getMimeType = getMimeType;
 
  /**
  * Finds the DDU object type that corresponds with an object's mime type
