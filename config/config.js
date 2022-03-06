@@ -335,10 +335,6 @@ module.exports = {
                 "pdf": {
                     "source": "iiif",
                     "cache": true
-                },
-                "compound": {
-                    "source": "auto",
-                    "cache": false
                 }
             }
         }
@@ -382,10 +378,6 @@ module.exports = {
                 "pdf": {
                     "source": "repository",
                     "cache": true
-                },
-                "compound": {
-                    "source": "repository",
-                    "cache": false
                 }
             }
         }

@@ -56,17 +56,10 @@ exports.getDatastream = function(object, datastreamID, callback, apikey=null) {
       settings = config.thumbnailDatastreams.collection || null;
     }
     else {
-      // Get the settings for this object type
-      let objectType;
-      if(object.isCompound) {
-        objectType = "compound";
-      }
-      else {
-        // Determine object type
-        let extension = object.object ? Helper.getFileExtensionFromFilePath(object.object) : Helper.getFileExtensionForMimeType(object.mime_type || ""),
-        mimeType = extension ? Helper.getMimeType(extension) : object.mime_type || null;
-        objectType = Helper.getObjectType(mimeType);
-      }
+      // Get the object type, then settings for that type
+      let extension = object.object ? Helper.getFileExtensionFromFilePath(object.object) : Helper.getFileExtensionForMimeType(object.mime_type || ""),
+      mimeType = extension ? Helper.getMimeType(extension) : object.mime_type || null;
+      let objectType = Helper.getObjectType(mimeType);
       settings = config.thumbnailDatastreams.object.type[objectType] || null;
     }    
 
