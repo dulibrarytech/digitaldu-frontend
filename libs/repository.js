@@ -117,7 +117,6 @@ exports.streamData = function(object, dsid, callback) {
 		}
 
 		if(config.nodeEnv == "devlog") {console.log("Repository data request from url:", url)}
-		console.log("Repository fetch url:", url);
 		HttpRequest.get_stream(url, {}, function(error, status, data) {
 			if(error) {
 				callback("Could not open datastream. " + error + " Check connection to repository", null);
