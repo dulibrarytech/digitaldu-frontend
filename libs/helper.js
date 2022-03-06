@@ -323,7 +323,7 @@ var getContentType = function(datastream, object, part) {
   	  pid = object ? object.pid || "null" : "null object";
 
   // Get the compound object part if specified
-  if(part && object.display_record.parts) {
+  if(part && object.display_record && object.display_record.parts) {
     part = parseInt(part);
     object = object.display_record.parts[part-1] || null;
   }
