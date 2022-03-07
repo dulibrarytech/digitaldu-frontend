@@ -9,7 +9,6 @@
 const fs = require("fs");
 const download = require('file-download');
 const path = require("path");
-const fetch = require('node-fetch');
 const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
 exports.fetchFile = function(type, url, async=true, body=null, callback=null) {
