@@ -1,5 +1,5 @@
 # Digital Collections Frontend - digitaldu
-# Release 1.1.4
+# Release 1.3.1
 
 ## Table of Contents
 
@@ -89,7 +89,17 @@ All other content is released under [CC-BY-4.0](https://creativecommons.org/lice
 
 ###### "thumbnail"
 
-This field can have three types of values:
+###### Source Options (configuration.thumbnailDatastreams) "source" field:
+
+"repository": "thumbnail" path must be a relative uri to DuraCloud resource. Will fetch thumbnail from Duracloud using this uri.
+
+"remote": Path in the "thumbnail" field will be sourced remotely.
+
+"iiif": IIIF Server will generate thumbnail derivative from the master object derivative.
+
+"kaltura": Source thumbnail image from Kaltura thumbnail api. Object index document requires "kaltura_id" or "entry_id" with the Kaltura video ID.
+
+"auto": Detect a remote url, DuraCloud url, or object identifier in the "thumbnail" field. Object types set to "auto" can have  any of the 3 typed of values:
 
 1. Relative path to Duracloud source file 
 2. Uri to remote file 
@@ -100,6 +110,13 @@ A relative path will contain no protocol or domain
 A uri will contain a protocol and domain
 
 A pid value in the thumbnail field will display a thumbnail image of the referenced object
+
+Auto-source selection for thumbnail path: Set "source" to "auto" in thumbnail configuration:
+   1. Path includes "http[s]://" -> Absolute url, fetch remote. Assign the absolute url to the remote image to the "thumbnail" field.
+   2. Path includes slashes "/" -> Relative url. Only DuraCloud allowed, build DuraCloud Url, fetch via repository (DuraCloud source)
+   3. No protocol or slashes -> Assume object id (no filename allowed). Build /datastream uri (ddu frontend) and fetch remote (MUST be a different object than current datastream request object) This makes it possible to use the pid from another object in the repository for the thumbnail image. Assign the pid value directly to "thumbnail" field.
+
+If the source is not set to "auto", a DuraCloud path is assumed for the thumbnail path. This will only be used directly if the source option is set to "repository". If the source is set to another option (such as "iiif" or "kaltura" the value in the thumbnail path is unused)
 
 ##### Index Document Required Fields for Each Object 
 
@@ -262,17 +279,13 @@ Instructions to install/configure Universalviewer: https://universalviewer.io/
 
 ### Cache
 
-#### Configuration Settings
+#### Configuration
 
-enableCacheForFileType:
+Enable/disable caching of thumbnail and object streams, by object type in configuration object fields:
 
-Enable cacheing by file type. Add File extension to this array to enable the file type. File extensions must be defined in the "fileExtensions" list
+thumbnailDatastreams
 
-Example:
-
-["jpg", "pdf"]
-
-Will cache all .tif and .pdf derivatives 
+objectDatastreams
 
 #### API
 
