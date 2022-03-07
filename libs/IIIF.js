@@ -42,12 +42,11 @@ exports.getThumbnailUri = function(objectID, apikey) {
 	return config.IIIFServerUrl + "/iiif/2/" + objectID + apikey + "/full/" + width + "," + height + "/0/default.jpg";
 }
 
-/**
- * 
- *
- * @param 
- * @return 
- */
+exports.getResourceUri = function(objectID, apikey) {
+	apikey = apikey ? (config.IIIFAPiKeyPrefix + apikey) : "";
+	return config.IIIFServerUrl + "/iiif/2/" + objectID + apikey + "/full/full/0/default.jpg";
+}
+
 var getObjectManifest = function(container, objects, apikey, callback) {
 	var manifest = {},
 		mediaSequences = [];
@@ -428,12 +427,6 @@ var getImageCanvas = function(container, object, apikey) {
 	return canvas;
 }
 
-/**
- * 
- *
- * @param 
- * @return 
- */
 var getCollectionManifest = function(container, objects, apikey, callback) {
 	let manifest = {};
 	manifest["@context"] = "http://iiif.io/api/presentation/2/context.json";

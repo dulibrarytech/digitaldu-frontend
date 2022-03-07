@@ -103,21 +103,20 @@ exports.getDatastreamUrl = function(dsid, object) {
 exports.streamData = function(object, dsid, callback) {
 	try {
 		if(!object) { throw "Object is null" }
-		if(!object.object) { throw "Object path is null" }
 		var url = getRepositoryUrl();
 
 		if(dsid.toLowerCase() == "tn") {url += "/" + object.thumbnail}
 		else if(dsid.toLowerCase() !== "object") {
-			let objectPath = object.object.substring(0, object.object.length-4);
+			let objectPath = object.object.substring(0, object.object.lastIndexOf("."));
 			objectPath += ("." + dsid);
 			url += ("/" + objectPath);
 		}
 		else {
+			if(!object.object) { throw "Object path is null" }
 			url += ("/" + object.object);
 		}
 
 		if(config.nodeEnv == "devlog") {console.log("Repository data request from url:", url)}
-		console.log("Repository fetch url:", url);
 		HttpRequest.get_stream(url, {}, function(error, status, data) {
 			if(error) {
 				callback("Could not open datastream. " + error + " Check connection to repository", null);

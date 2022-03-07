@@ -60,7 +60,14 @@ var addCacheItem = async function(objectID, cacheName, updateExisting=false) {}
 var fetchObjectByPid = function(index, pid, callback) {}
 
 /**
+ * Returns an array of collection titles including all collections in the repository
  * 
+ * @callback callback
+ * @param {String|null} Error message or null
+ * @param {Object} autocompleteData
+ * 
+ * @typedef {Object} autocompleteData - Data to render view autocomplete suggestions
+ * @property {Array.<String>} Collection title
  */
 var getAutocompleteData = function(callback) {}
 
@@ -82,7 +89,11 @@ var getCollectionChildren = function(collectionId, index, callback) {}
 var getCollectionHeirarchy = function(pid, callback) {}
 
 /**
+ * Returns an array of collection titles including all collections in the repository
  * 
+ * @callback callback
+ * @param {String|null} Error message or null
+ * @param {Array.<String>} 
  */
 var getCollectionList = function(callback) {}
 
@@ -277,16 +288,12 @@ addCacheItem = async function(objectID, cacheName, updateExisting=false) {
           else {
             extension = AppHelper.getFileExtensionForMimeType(item.mime_type || null)
           }
-
           let filename = item.pid+"."+extension;
-          if(cacheName != "thumbnail" && config.enableCacheForFileType.includes(extension) == false) {
-            console.log(`Caching is disabled for ${extension} files. ${filename} not added to ${cacheName} cache`);
-            resolve(false);
-          }
-          else if(Cache.exists(cacheName, item.pid, extension) == false || updateExisting === true) {
+          
+          if(Cache.exists(cacheName, item.pid, extension) == false || updateExisting === true) {
 
             let datastreamID = cacheName == "thumbnail" ? "tn" : "object";
-            Datastreams.getDatastream(item, item.pid, datastreamID, item.sequence, null, function(error, stream, objectData, isPlaceholder=false) {
+            Datastreams.getDatastream(item, datastreamID, function(error, stream, objectData, isPlaceholder=false) {
               if(error) {
                 console.log(error);
                 reject(error);
@@ -312,7 +319,7 @@ addCacheItem = async function(objectID, cacheName, updateExisting=false) {
                   }
                 });
               }
-            });
+            }, null);
           }
           else {
             console.log(filename, "already exists in cache. Update existing is disabled.");
@@ -429,56 +436,79 @@ getCollectionList = function(callback) {
 
 getDatastream = function(indexName, objectID, datastreamID, part, authKey, callback) {
   fetchObjectByPid(indexName, objectID, function(error, object) {
-
     if(object) {
       let contentType = AppHelper.getContentType(datastreamID, object, part);
 
+      // If this is a compound object, get the part data, and assign to 'object'
       if(AppHelper.isParentObject(object)) {
         let objectPart = AppHelper.getCompoundObjectPart(object, part || "1")
         if(objectPart) {
+          objectPart["pid"] = objectID;
           objectPart["object_type"] = "object";
           objectPart["mime_type"] = objectPart.type ? objectPart.type : (objectPart.mime_type || "");
           object = objectPart;
+          object["isCompound"] = true;
           objectID = objectID + (config.compoundObjectPartID + objectPart.order);
         }
         else {
-          callback(null, null);
+          part = null;
+          object["isCompound"] = true;
         }
       }
-
       else {
         part = null;
+        object["isCompound"] = false;
       }
 
+      // Get the file extension to use for caching
       let extension;
       if (datastreamID == "tn") {
         extension = config.thumbnailFileExtension;
       }
       else if (datastreamID == "object") {
-        extension = object.object ? AppHelper.getFileExtensionFromFilePath(object.object) : AppHelper.getFileExtensionForMimeType(object.mime_type);
+        extension = object.object ? AppHelper.getFileExtensionFromFilePath(object.object) : AppHelper.getFileExtensionForMimeType(object.mime_type || "");
       }
       else {
         extension = datastreamID;
       }
 
-      // Determine cache status
-      let cacheName = datastreamID == "tn" ? "thumbnail" : "object",
-      objectTypeThumbnailCacheEnabled = true,
-      cacheEnabled = false;
-      if(AppHelper.isCollectionObject(object) == false) {
-        let type = AppHelper.getObjectType(object.mime_type || "");
-        let settings = config.thumbnails.object.type[type] || null;
+      // Get cache settings
+      let settings = null,
+          cacheName = datastreamID == "tn" ? "thumbnail" : "object",
+          cacheEnabled = false;
 
-        if(settings) {
-          objectTypeThumbnailCacheEnabled = settings.cache;
+      // Collection objects
+      if(AppHelper.isCollectionObject(object)) {
+        if(cacheName == "thumbnail") {
+          settings = config.thumbnailDatastreams.collection;
+        }
+        else {
+          settings = config.objectDatastreams.collection;
         }
       }
-      if(cacheName == "thumbnail") {
-        cacheEnabled = config.thumbnailImageCacheEnabled && objectTypeThumbnailCacheEnabled;
-      }
+
+      // Non collection objects
       else {
-        cacheEnabled = config.objectDerivativeCacheEnabled && config.enableCacheForFileType.includes(extension);
+        let type = AppHelper.getObjectType(object.mime_type || "");
+
+        if(cacheName == "thumbnail") {
+          settings = config.thumbnailDatastreams.object.type[type] || null;
+        }
+        else {
+          let typeSettings = config.objectDatastreams.object.type;
+          settings = typeSettings[type] || null; // Default settings for object type
+            console.log("TEST settings", settings)
+          // Object type specific settings
+          if(typeSettings[type].file_type && typeSettings[type].file_type[extension]) {
+            settings = config.objectDatastreams.object.type[type].file_type[extension];
+              console.log("TEST updated settings")
+          }
+        }
       }
+      if(settings) {
+        cacheEnabled = settings.cache;
+      }
+        console.log("TEST cacheEnabled", cacheEnabled)
 
       // Stream data from the cache, if the cache is enabled and a cache item is present
       if(cacheEnabled && Cache.exists(cacheName, objectID, extension) == true) {
@@ -489,10 +519,10 @@ getDatastream = function(indexName, objectID, datastreamID, part, authKey, callb
         });
       }
 
-      // Stream data from the source
+      // Fetch datastream
       else {
         if(config.nodeEnv == "devlog") {console.log("Datastream source:", objectID || "null")}
-        Datastreams.getDatastream(object, objectID, datastreamID, part, authKey, function(error, stream, objectData, isPlaceholder=false) { 
+        Datastreams.getDatastream(object, datastreamID, function(error, stream, objectData, isPlaceholder=false) { 
           if(error) {
             callback(error, null);
           }
@@ -505,12 +535,9 @@ getDatastream = function(indexName, objectID, datastreamID, part, authKey, callb
                 });
               }
             }
-            else {
-              console.log(`Error fetching datastream. Using placeholder image. Object: ${objectData.pid}`)
-            }
             callback(null, stream, contentType);
           }
-        });
+        }, authKey);
       }
     }
     else {

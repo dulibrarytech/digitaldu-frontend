@@ -94,9 +94,18 @@ exports.downloadToFileSync = async function(uri, filepath, filename) {
     } catch (e) {
       console.log("Error downloading file: " + uri + " Error: " + e)
     }
-
   });
 
   let result = await promise;
   return result;
+}
+
+exports.getFileStream = function(path, callback) {
+    let stream = fs.createReadStream(path);
+    stream.on('error', function(error) {
+      callback(error, null)
+    });
+    stream.on('open', function() {
+      callback(null, stream);
+    });
 }

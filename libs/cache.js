@@ -72,7 +72,7 @@ exports.getFileStream = function(cacheName, objectID, extension="", callback) {
 	else {
 		filepath = config.objectDerivativeCacheLocation + "/" + objectID + "." + extension;
 	}
-
+	
 	let readStream = fs.createReadStream(filepath);
 	readStream.on('open', function () {
 	    callback(null, readStream);

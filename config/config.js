@@ -265,19 +265,8 @@ module.exports = {
     objectTypes: {
         "audio": ["audio/mpeg", "audio/x-wav", "audio/mp3", "audio/wav"],
         "video": ["video/mp4", "video/quicktime", "video/mov"],
-        "still image": ["image/png", "image/jpg", "image/jpeg", "image/tiff", "image/jp2"],
+        "still image": ["image/png", "image/jpg", "image/jpeg", "image/tif", "image/tiff", "image/jp2"],
         "pdf": ["application/pdf"]
-    },
-
-    /*
-     * Object stream source
-     * ["repository" | "kaltura"]
-     */
-    streamSource: {
-        "audio": "kaltura",
-        "video": "kaltura",
-        "still image": "repository",
-        "pdf": "repository"
     },
 
     /*
@@ -293,15 +282,8 @@ module.exports = {
     objectDerivativeCacheLocation: "cache/object",
 
     /*
-     * Enable cache for these file types
-     * See fileExtensions settings in this file 
-     * Add defined file extensions to array below to enable cache 
-     */
-    enableCacheForFileType: [],
-
-    /*
      * Object specific default thumbnail images
-     * If the file listed can not be accessed the DU sheld placeholder wil be used
+     * If the file listed can not be accessed the DU sheld placeholder will be used
      * { "object type" : "image filename" }
      */
     thumbnailPlaceholderImages: {
@@ -312,48 +294,81 @@ module.exports = {
     },
 
     /*
-     *  Declare thumbnail image sources here for each object type/file type
+     *  Thumbnail image datastream settings
      *
-     *  streamOption: [index|iiif|kaltura|external]
-     *  uri: if 'external' this is the path to the resource,
-     *  source: [repository|remote] if 'index' stream: 'repository' will use repository api to source uri, 'remote' will request data from uri
+     *  1. source: [repository|iiif|kaltura|external]:
+     *  2. iiif: Get thumbnail derivative from Cantaloupe image server usinf IIIF api
+     *  3. kaltura: Source thumbnail from Kaltura using Kaltura api
+     *  4. repository: Source from DuraCloud
+     *  5. remote: Fetch uri in "thumbnail" field, must be an absolute uri
+     *  6. auto:    Will attempt to determine the type of url in the index (in the object or thumbnail field)
+     *          1. If it contains an http protocol "http*" an absolute url is identified, and data will be fetched from it directly
+     *          2. If it has no protocol, a relative path is assumed. The only allowed relative path is to DuraCloud repository, so the data will be sourced from DuraCloud
+     *          3. If it has no protocol or slashes, an object pid is assumed (filenames with no path are not allowed). The object will be sourced from the [discovery layer] datastreams api, using object pid and either "object" or "tn" repository stream.
      */
-    thumbnails: {
+    thumbnailDatastreams: {
         "collection": {
-            "streamOption": "index",
-            "uri": "", 
-            "source": "remote",
+            "source": "auto",
             "cache": false
         },
         "object": {
             "type": {
                 "still image": {
-                    "streamOption": "iiif",
-                    "uri": "", 
-                    "source": "repository",
-                    "cache": true
+                    "source": "iiif",
+                    "cache": false
                 },
                 "audio": {
-                    "streamOption": "kaltura",
-                    "uri": "", 
-                    "source": "remote",
+                    "source": "kaltura",
                     "cache": false
                 },
                 "video": {
-                    "streamOption": "kaltura",
-                    "uri": "", 
-                    "source": "remote",
+                    "source": "kaltura",
                     "cache": false
                 },
                 "pdf": {
-                    "streamOption": "iiif",
-                    "uri": "", 
-                    "source": "remote",
-                    "cache": true
+                    "source": "iiif",
+                    "cache": false
+                }
+            }
+        }
+    },
+
+    /*
+     *  Object datastream settings
+     *
+     *  source: [repository|iiif|kaltura|external]:
+     *  1. iiif: Get thumbnail derivative from Cantaloupe image server using IIIF api
+     *  2. kaltura: Source thumbnail from Kaltura using Kaltura api
+     *  3. repository: Source from DuraCloud
+     *
+     *  file_type: File type level settings
+     */
+    objectDatastreams: {
+        "collection": {
+            "source": "repository",
+            "cache": false
+        },
+        "object": {
+            "type": {
+                "still image": {
+                    "source": "repository",
+                    "cache": false,
+                    "file_type": {
+                        "jpg": {
+                            "source": "iiif",
+                            "cache": false
+                        }
+                    }
                 },
-                "compound": {
-                    "streamOption": "index",
-                    "uri": "",
+                "audio": {
+                    "source": "kaltura",
+                    "cache": false
+                },
+                "video": {
+                    "source": "kaltura",
+                    "cache": false
+                },
+                "pdf": {
                     "source": "repository",
                     "cache": false
                 }
@@ -658,6 +673,7 @@ module.exports = {
     },
 
      /*
+      * File download extensions
       * Download this file type if the object has assigned mime types below
       */
      fileExtensions: {
@@ -665,13 +681,14 @@ module.exports = {
         "mp3": ["audio/mp3", "audio/x-wav", "audio/mpeg"],
         "mp4": ["video/mp4", "video/quicktime", "video/mov"],
         "pdf": ["application/pdf"],
-        "tif": ["image/tiff"]
+        "tif": ["image/tif", "image/tiff"]
      },
 
       /*
-      * Value of the http 'Content-Type' header for datastream response 
+      * File extension mime types
+      * Set mime type for 'Content Type' header for file downloads 
       */
-     contentTypes: {
+     mimeTypes: {
         "tif": "image/tiff",
         "tiff": "image/tiff",
         "jp2": "image/jp2",

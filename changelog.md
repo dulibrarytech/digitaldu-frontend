@@ -39,3 +39,10 @@ Updated datastream service to cache thumbnail images sourced from a remote url
 ### v1.3.0
 
 Updated the transcript viewer for image objects to display transcripts for compound objects
+
+### v1.3.1
+
+Refactored the datastreams module for efficiency and clarity
+Added a configuration object for type-specific object datastreams
+Added object cache enable/disable setting to object datastream config object, removed file extension array that specified files to cache by extension
+Updated addCache() function to populate the cache regardless of the enable/disable status of the objects being cached
