@@ -289,7 +289,7 @@ addCacheItem = async function(objectID, cacheName, updateExisting=false) {
             extension = AppHelper.getFileExtensionForMimeType(item.mime_type || null)
           }
           let filename = item.pid+"."+extension;
-          
+
           if(Cache.exists(cacheName, item.pid, extension) == false || updateExisting === true) {
 
             let datastreamID = cacheName == "thumbnail" ? "tn" : "object";
@@ -497,18 +497,16 @@ getDatastream = function(indexName, objectID, datastreamID, part, authKey, callb
         else {
           let typeSettings = config.objectDatastreams.object.type;
           settings = typeSettings[type] || null; // Default settings for object type
-            console.log("TEST settings", settings)
+
           // Object type specific settings
           if(typeSettings[type].file_type && typeSettings[type].file_type[extension]) {
             settings = config.objectDatastreams.object.type[type].file_type[extension];
-              console.log("TEST updated settings")
           }
         }
       }
       if(settings) {
         cacheEnabled = settings.cache;
       }
-        console.log("TEST cacheEnabled", cacheEnabled)
 
       // Stream data from the cache, if the cache is enabled and a cache item is present
       if(cacheEnabled && Cache.exists(cacheName, objectID, extension) == true) {
