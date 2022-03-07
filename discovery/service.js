@@ -288,14 +288,9 @@ addCacheItem = async function(objectID, cacheName, updateExisting=false) {
           else {
             extension = AppHelper.getFileExtensionForMimeType(item.mime_type || null)
           }
-
           let filename = item.pid+"."+extension;
-          let cacheEnabled
-          if(cacheName != "thumbnail" && config.enableCacheForFileType.includes(extension) == false) {
-            console.log(`Caching is disabled for ${extension} files. ${filename} not added to ${cacheName} cache`);
-            resolve(false);
-          }
-          else if(Cache.exists(cacheName, item.pid, extension) == false || updateExisting === true) {
+          
+          if(Cache.exists(cacheName, item.pid, extension) == false || updateExisting === true) {
 
             let datastreamID = cacheName == "thumbnail" ? "tn" : "object";
             Datastreams.getDatastream(item, datastreamID, function(error, stream, objectData, isPlaceholder=false) {
@@ -441,7 +436,6 @@ getCollectionList = function(callback) {
 
 getDatastream = function(indexName, objectID, datastreamID, part, authKey, callback) {
   fetchObjectByPid(indexName, objectID, function(error, object) {
-
     if(object) {
       let contentType = AppHelper.getContentType(datastreamID, object, part);
 
@@ -452,10 +446,8 @@ getDatastream = function(indexName, objectID, datastreamID, part, authKey, callb
           objectPart["pid"] = objectID;
           objectPart["object_type"] = "object";
           objectPart["mime_type"] = objectPart.type ? objectPart.type : (objectPart.mime_type || "");
-
           object = objectPart;
           object["isCompound"] = true;
-
           objectID = objectID + (config.compoundObjectPartID + objectPart.order);
         }
         else {
@@ -468,18 +460,7 @@ getDatastream = function(indexName, objectID, datastreamID, part, authKey, callb
         object["isCompound"] = false;
       }
 
-      // Determine cache status for this object
-      let cacheName = datastreamID == "tn" ? "thumbnail" : "object",
-      objectTypeThumbnailCacheEnabled = true,
-      cacheEnabled = false;
-      if(AppHelper.isCollectionObject(object) == false) {
-        let type = AppHelper.getObjectType(object.mime_type || "");
-        let settings = config.thumbnailDatastreams.object.type[type] || null;
-
-        if(settings) {
-          objectTypeThumbnailCacheEnabled = settings.cache;
-        }
-      }
+      // Get the file extension to use for caching
       let extension;
       if (datastreamID == "tn") {
         extension = config.thumbnailFileExtension;
@@ -490,12 +471,44 @@ getDatastream = function(indexName, objectID, datastreamID, part, authKey, callb
       else {
         extension = datastreamID;
       }
-      if(cacheName == "thumbnail") {
-        cacheEnabled = config.thumbnailImageCacheEnabled && objectTypeThumbnailCacheEnabled;
+
+      // Get cache settings
+      let settings = null,
+          cacheName = datastreamID == "tn" ? "thumbnail" : "object",
+          cacheEnabled = false;
+
+      // Collection objects
+      if(AppHelper.isCollectionObject(object)) {
+        if(cacheName == "thumbnail") {
+          settings = config.thumbnailDatastreams.collection;
+        }
+        else {
+          settings = config.objectDatastreams.collection;
+        }
       }
+
+      // Non collection objects
       else {
-        cacheEnabled = config.objectDerivativeCacheEnabled && config.enableCacheForFileType.includes(extension);
+        let type = AppHelper.getObjectType(object.mime_type || "");
+
+        if(cacheName == "thumbnail") {
+          settings = config.thumbnailDatastreams.object.type[type] || null;
+        }
+        else {
+          let typeSettings = config.objectDatastreams.object.type;
+          settings = typeSettings[type] || null; // Default settings for object type
+            console.log("TEST settings", settings)
+          // Object type specific settings
+          if(typeSettings[type].file_type && typeSettings[type].file_type[extension]) {
+            settings = config.objectDatastreams.object.type[type].file_type[extension];
+              console.log("TEST updated settings")
+          }
+        }
       }
+      if(settings) {
+        cacheEnabled = settings.cache;
+      }
+        console.log("TEST cacheEnabled", cacheEnabled)
 
       // Stream data from the cache, if the cache is enabled and a cache item is present
       if(cacheEnabled && Cache.exists(cacheName, objectID, extension) == true) {

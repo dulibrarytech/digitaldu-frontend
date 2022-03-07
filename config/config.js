@@ -282,15 +282,8 @@ module.exports = {
     objectDerivativeCacheLocation: "cache/object",
 
     /*
-     * Enable cache for these file types
-     * See fileExtensions settings in this file 
-     * Add defined file extensions to array below to enable cache 
-     */
-    enableCacheForFileType: [],
-
-    /*
      * Object specific default thumbnail images
-     * If the file listed can not be accessed the DU sheld placeholder wil be used
+     * If the file listed can not be accessed the DU sheld placeholder will be used
      * { "object type" : "image filename" }
      */
     thumbnailPlaceholderImages: {
@@ -322,7 +315,7 @@ module.exports = {
             "type": {
                 "still image": {
                     "source": "iiif",
-                    "cache": true
+                    "cache": false
                 },
                 "audio": {
                     "source": "kaltura",
@@ -334,7 +327,7 @@ module.exports = {
                 },
                 "pdf": {
                     "source": "iiif",
-                    "cache": true
+                    "cache": false
                 }
             }
         }
@@ -359,11 +352,11 @@ module.exports = {
             "type": {
                 "still image": {
                     "source": "repository",
-                    "cache": true,
+                    "cache": false,
                     "file_type": {
                         "jpg": {
                             "source": "iiif",
-                            "cache": true
+                            "cache": false
                         }
                     }
                 },
@@ -377,7 +370,7 @@ module.exports = {
                 },
                 "pdf": {
                     "source": "repository",
-                    "cache": true
+                    "cache": false
                 }
             }
         }
