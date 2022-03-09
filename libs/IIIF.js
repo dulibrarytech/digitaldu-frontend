@@ -130,7 +130,7 @@ var getObjectManifest = function(container, objects, apikey, callback) {
 				object.type == config.IIIFObjectTypes["video"]) {
 
 			elements.push(getObjectElement(object, apikey));
-			canvases.push(getThumbnailCanvas(container, object));
+			canvases.push(getThumbnailCanvas(container, object, apikey));
 			manifest.sequences[0].canvases = canvases;
 
 			if(elements.length > 0) {
@@ -213,7 +213,7 @@ var getObjectElement = function(object, apikey) {
 
 	// Create the rendering data
 	let rendering = {};
-	rendering['@id'] = object.resourceUrl;
+	rendering['@id'] = object.resourceUrl + apikey;
 	rendering['format'] = object.format;
 	rendering['label'] = "Test Label for Download";
 
@@ -223,7 +223,7 @@ var getObjectElement = function(object, apikey) {
 	element["format"] = object.format; 
 	element["label"] = object.label;
 	element["metadata"] = [];
-	element["thumbnail"] = object.thumbnailUrl;
+	element["thumbnail"] = object.thumbnailUrl + apikey;
 	element["rendering"] = rendering;
 
 	element.metadata.push({
@@ -236,7 +236,7 @@ var getObjectElement = function(object, apikey) {
 
 var getPDFElement = function(object, apikey) {
 	let element = {};
-		apikey = apikey ? ("?key=" + apikey) : "";
+	apikey = apikey ? ("?key=" + apikey) : "";
 
 	element["@id"] = object.resourceUrl + apikey;
 	element["@type"] = object.type;
@@ -331,19 +331,20 @@ var getPDFCanvas = function(container, object, apikey) {
 	return canvas;
 }
 
-var getThumbnailCanvas = function(container, object) {
+var getThumbnailCanvas = function(container, object, apikey) {
 	let canvas = {
 		images: []
 	},
 	image = {},
 	resource = {};
+	apikey = apikey ? ("?key=" + apikey) : "";
 
-	resource["@id"] = object.thumbnailUrl;
+	resource["@id"] = object.thumbnailUrl + apikey;
 	resource["@type"] = config.IIIFObjectTypes["still image"];
 	if(config.IIIFThumbnailHeight) {resource["height"] = config.IIIFThumbnailHeight}
 	if(config.IIIFThumbnailWidth) {resource["width"] = config.IIIFThumbnailWidth}
 
-	image["@id"] = object.thumbnailUrl;
+	image["@id"] = object.thumbnailUrl + apikey;
 	image["@type"] = "oa:Annotation";
 	image["motivation"] = "sc:painting";
 	image["resource"] = resource;
@@ -351,7 +352,7 @@ var getThumbnailCanvas = function(container, object) {
 	canvas["@id"] = config.IIIFUrl + "/" + container.resourceID + "/canvas/c" + object.sequence;
 	canvas["@type"] = "sc:Canvas";
 	canvas["label"] = "Placeholder Image";
-	canvas["thumbnail"] = object.thumbnailUrl;
+	canvas["thumbnail"] = object.thumbnailUrl + apikey;
 
 	if(config.IIIFDefaultCanvasHeight) {canvas["height"] = config.IIIFDefaultCanvasHeight}
 	if(config.IIIFDefaultCanvasWidth) {canvas["width"] = config.IIIFDefaultCanvasWidth}
