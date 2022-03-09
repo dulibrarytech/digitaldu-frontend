@@ -289,6 +289,7 @@ function getIIIFObjectViewer(object, page=null, embedKalturaViewer=false, apikey
 	params["pageSize"] = config.IIIFManifestPageSize || 10;
 	params["embedKalturaViewer"] = embedKalturaViewer;
 	params["isCompound"] = isCompound;
+	params["apikey"] = apikey;
 
 	// Option to embed the Kaltura player into the Universalviewer instance
 	if(embedKalturaViewer) {

@@ -46,3 +46,8 @@ Refactored the datastreams module for efficiency and clarity
 Added a configuration object for type-specific object datastreams
 Added object cache enable/disable setting to object datastream config object, removed file extension array that specified files to cache by extension
 Updated addCache() function to populate the cache regardless of the enable/disable status of the objects being cached
+
+### v1.3.2
+
+Fixed bug in compound object Kaltura viewer that prevented unpublished object part thumbnails from displaying (remote viewer only)
+Fixed bug in compound object Kaltura viewer that prevented unpublished object parts from being loaded (remote viewer only)

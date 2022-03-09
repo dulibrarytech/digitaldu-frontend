@@ -424,9 +424,14 @@ exports.getIIIFManifest = function(req, res) {
  */
 exports.getKalturaViewer = function(req, res) {
 	let pid = req.params.pid || "",
-		part = parseInt(req.params.part) || 1;
+		  part = parseInt(req.params.part) || 1,
+		  index = config.elasticsearchPublicIndex;
 
-	Service.fetchObjectByPid(config.elasticsearchPublicIndex, pid, function(error, object) {
+	if(req.query.key && req.query.key == config.apiKey) {
+		index = config.elasticsearchPrivateIndex;
+	}
+
+	Service.fetchObjectByPid(index, pid, function(error, object) {
 		if(error) {
 			console.log(error, pid);
 			res.send("<h4>Error loading viewer");

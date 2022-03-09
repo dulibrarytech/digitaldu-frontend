@@ -29,7 +29,7 @@ $( document ).ready(function() {
 					let part = parseInt($(this)[0].id.replace("thumb", "")) + 1;
 
 					// Get the Kaltura viewer content, add to viewer
-		  			let kalturaViewerUri = params.baseUrl + "/viewer/kaltura/" + params.objectID + "/" + part;
+		  			let kalturaViewerUri = params.baseUrl + "/viewer/kaltura/" + params.objectID + "/" + part + params.apikey;
 		  			$.get(kalturaViewerUri, function(viewerContent, status) {
 					    if(status == "success") {$("[id^=mep_]").html(viewerContent)}
 					    else {console.log("Error: Can not retrieve Kaltura content. Status is ", status)}
