@@ -264,7 +264,7 @@ module.exports = {
      */
     objectTypes: {
         "audio": ["audio/mpeg", "audio/x-wav", "audio/mp3", "audio/wav"],
-        "video": ["video/mp4", "video/quicktime", "video/mov"],
+        "video": ["video/mp4", "video/quicktime", "video/mov", "video/x-msvideo"],
         "still image": ["image/png", "image/jpg", "image/jpeg", "image/tif", "image/tiff", "image/jp2"],
         "pdf": ["application/pdf"]
     },
@@ -315,7 +315,7 @@ module.exports = {
             "type": {
                 "still image": {
                     "source": "iiif",
-                    "cache": false
+                    "cache": true
                 },
                 "audio": {
                     "source": "kaltura",
@@ -327,7 +327,7 @@ module.exports = {
                 },
                 "pdf": {
                     "source": "iiif",
-                    "cache": false
+                    "cache": true
                 }
             }
         }
@@ -352,11 +352,11 @@ module.exports = {
             "type": {
                 "still image": {
                     "source": "repository",
-                    "cache": false,
+                    "cache": true,
                     "file_type": {
                         "jpg": {
                             "source": "iiif",
-                            "cache": false
+                            "cache": true
                         }
                     }
                 },
@@ -370,7 +370,7 @@ module.exports = {
                 },
                 "pdf": {
                     "source": "repository",
-                    "cache": false
+                    "cache": true
                 }
             }
         }
@@ -679,7 +679,7 @@ module.exports = {
      fileExtensions: {
         "jpg": ["image/jpg", "image/jpeg"],
         "mp3": ["audio/mp3", "audio/x-wav", "audio/mpeg"],
-        "mp4": ["video/mp4", "video/quicktime", "video/mov"],
+        "mp4": ["video/mp4", "video/quicktime", "video/mov", "video/x-msvideo"],
         "pdf": ["application/pdf"],
         "tif": ["image/tif", "image/tiff"]
      },
