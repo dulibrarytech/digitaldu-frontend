@@ -51,3 +51,7 @@ Updated addCache() function to populate the cache regardless of the enable/disab
 
 Fixed bug in compound object Kaltura viewer that prevented unpublished object part thumbnails from displaying (remote viewer only)
 Fixed bug in compound object Kaltura viewer that prevented unpublished object parts from being loaded (remote viewer only)
+
+### v1.3.21
+
+Fixed bug in compound object part file download

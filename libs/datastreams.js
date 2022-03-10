@@ -187,6 +187,7 @@ exports.getDatastream = function(object, datastreamID, callback, apikey=null) {
       // Set the source uri
       switch(sourceOption) {
         case "iiif":
+          let pid = object.order ? `${object.pid}_${object.order}` : object.pid;
           uri = IIIF.getResourceUri(object.pid, apikey);
           break;
         case "kaltura":
@@ -194,7 +195,7 @@ exports.getDatastream = function(object, datastreamID, callback, apikey=null) {
           uri = viewerId ? Kaltura.getStreamingMediaUrl(viewerId, extension) : null;
           if(!viewerId) {console.log("Null viewer ID")}
           break;
-        case "repository": // Will stream from Repository
+        case "repository":
           uri = object.object;
           break;
         default:
