@@ -79,7 +79,8 @@ exports.getDatastream = function(object, datastreamID, callback, apikey=null) {
         // Use manual setting for source uri
         switch(source) {
           case "iiif":
-            uri = IIIF.getThumbnailUri(object.pid, apikey);
+            let pid = object.order ? `${object.pid}_${object.order}` : object.pid; // Append the part id to the object pid
+            uri = IIIF.getThumbnailUri(pid, apikey);
             break;
           case "kaltura":
             uri = Kaltura.getThumbnailUrl(object);
@@ -192,7 +193,7 @@ exports.getDatastream = function(object, datastreamID, callback, apikey=null) {
       // Set the source uri
       switch(sourceOption) {
         case "iiif":
-          let pid = object.order ? `${object.pid}_${object.order}` : object.pid;
+          let pid = object.order ? `${object.pid}_${object.order}` : object.pid; // Append the part id to the object pid
           uri = IIIF.getResourceUri(object.pid, apikey);
           break;
         case "kaltura":
