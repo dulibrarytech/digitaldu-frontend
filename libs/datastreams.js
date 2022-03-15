@@ -183,6 +183,11 @@ exports.getDatastream = function(object, datastreamID, callback, apikey=null) {
           }
         }
       }
+
+      // Prevent infinite loop. The 'object' datastream route is reserved for the image server requests. If a iiif source is requested using the 'object' datastream, stream from the repository.
+      if(sourceOption == "iiif" && datastreamID == "object") {
+        sourceOption = "repository";
+      }
     
       // Set the source uri
       switch(sourceOption) {

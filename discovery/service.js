@@ -439,7 +439,7 @@ getDatastream = function(indexName, objectID, datastreamID, part, authKey, callb
     if(object) {
       let contentType = AppHelper.getContentType(datastreamID, object, part);
 
-      // If this is a compound object, get the part data, and assign to 'object'
+      // Compound object. Add the part data to the main data object
       if(AppHelper.isParentObject(object)) {
         let objectPart = AppHelper.getCompoundObjectPart(object, part || "1")
         if(objectPart) {
@@ -455,6 +455,8 @@ getDatastream = function(indexName, objectID, datastreamID, part, authKey, callb
           object["isCompound"] = true;
         }
       }
+
+      // Non-compound object
       else {
         part = null;
         object["isCompound"] = false;
