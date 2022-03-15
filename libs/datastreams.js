@@ -194,7 +194,7 @@ exports.getDatastream = function(object, datastreamID, callback, apikey=null) {
       switch(sourceOption) {
         case "iiif":
           let pid = object.order ? `${object.pid}_${object.order}` : object.pid; // Append the part id to the object pid
-          uri = IIIF.getResourceUri(object.pid, apikey);
+          uri = IIIF.getResourceUri(pid, apikey);
           break;
         case "kaltura":
           let viewerId = object.entry_id || object.kaltura_id || null;

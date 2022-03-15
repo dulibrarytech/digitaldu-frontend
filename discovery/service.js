@@ -439,8 +439,8 @@ getDatastream = function(indexName, objectID, datastreamID, part, authKey, callb
     if(object) {
       let contentType = AppHelper.getContentType(datastreamID, object, part);
 
-      // Compound object. Add the part data to the main data object
       if(AppHelper.isParentObject(object)) {
+        // This is a compound object: Add the compound part data to the main data object
         let objectPart = AppHelper.getCompoundObjectPart(object, part || "1")
         if(objectPart) {
           objectPart["pid"] = objectID;
@@ -450,6 +450,8 @@ getDatastream = function(indexName, objectID, datastreamID, part, authKey, callb
           object["isCompound"] = true;
           objectID = objectID + (config.compoundObjectPartID + objectPart.order);
         }
+
+        // Invalid part, or no data for part index.
         else {
           part = null;
           object["isCompound"] = true;
@@ -462,82 +464,87 @@ getDatastream = function(indexName, objectID, datastreamID, part, authKey, callb
         object["isCompound"] = false;
       }
 
-      // Get the file extension to use for caching
-      let extension;
-      if (datastreamID == "tn") {
-        extension = config.thumbnailFileExtension;
-      }
-      else if (datastreamID == "object") {
-        extension = object.object ? AppHelper.getFileExtensionFromFilePath(object.object) : AppHelper.getFileExtensionForMimeType(object.mime_type || "");
+      if(object.isCompound && part == null) {
+        callback(null, null);
       }
       else {
-        extension = datastreamID;
-      }
-
-      // Get cache settings
-      let settings = null,
-          cacheName = datastreamID == "tn" ? "thumbnail" : "object",
-          cacheEnabled = false;
-
-      // Collection objects
-      if(AppHelper.isCollectionObject(object)) {
-        if(cacheName == "thumbnail") {
-          settings = config.thumbnailDatastreams.collection;
+        // Get the file extension to use for caching
+        let extension;
+        if (datastreamID == "tn") {
+          extension = config.thumbnailFileExtension;
+        }
+        else if (datastreamID == "object") {
+          extension = object.object ? AppHelper.getFileExtensionFromFilePath(object.object) : AppHelper.getFileExtensionForMimeType(object.mime_type || "");
         }
         else {
-          settings = config.objectDatastreams.collection;
+          extension = datastreamID;
         }
-      }
 
-      // Non collection objects
-      else {
-        let type = AppHelper.getObjectType(object.mime_type || "");
+        // Get cache settings
+        let settings = null,
+            cacheName = datastreamID == "tn" ? "thumbnail" : "object",
+            cacheEnabled = false;
 
-        if(cacheName == "thumbnail") {
-          settings = config.thumbnailDatastreams.object.type[type] || null;
-        }
-        else {
-          let typeSettings = config.objectDatastreams.object.type;
-          settings = typeSettings[type] || null; // Default settings for object type
-
-          // Object type specific settings
-          if(typeSettings[type].file_type && typeSettings[type].file_type[extension]) {
-            settings = config.objectDatastreams.object.type[type].file_type[extension];
-          }
-        }
-      }
-      if(settings) {
-        cacheEnabled = settings.cache;
-      }
-
-      // Stream data from the cache, if the cache is enabled and a cache item is present
-      if(cacheEnabled && Cache.exists(cacheName, objectID, extension) == true) {
-        if(config.nodeEnv == "devlog") {console.log("Cache source:", objectID || "null")}
-        Cache.getFileStream(cacheName, objectID, extension, function(error, stream) {
-          if(error) {callback(error, null)}
-          else {callback(null, stream, contentType)}
-        });
-      }
-
-      // Fetch datastream
-      else {
-        if(config.nodeEnv == "devlog") {console.log("Datastream source:", objectID || "null")}
-        Datastreams.getDatastream(object, datastreamID, function(error, stream, objectData, isPlaceholder=false) { 
-          if(error) {
-            callback(error, null);
+        // Collection objects
+        if(AppHelper.isCollectionObject(object)) {
+          if(cacheName == "thumbnail") {
+            settings = config.thumbnailDatastreams.collection;
           }
           else {
-            if(isPlaceholder == false) {
-              if(cacheEnabled && Cache.exists(cacheName, objectID, extension) == false) {
-                Cache.cacheDatastream(cacheName, objectID, stream, extension, function(error) {
-                  if(error) { console.error(`Could not create object file for ${objectID} ${error}`) }
-                  else { console.log(`Added object ${objectID} to ${cacheName} cache`) }
-                });
-              }
-            }
-            callback(null, stream, contentType);
+            settings = config.objectDatastreams.collection;
           }
-        }, authKey);
+        }
+
+        // Non collection objects
+        else {
+          let type = AppHelper.getObjectType(object.mime_type || "");
+
+          if(cacheName == "thumbnail") {
+            settings = config.thumbnailDatastreams.object.type[type] || null;
+          }
+          else {
+            let typeSettings = config.objectDatastreams.object.type;
+            settings = typeSettings[type] || null; // Default settings for object type
+
+            // Object type specific settings
+            if(typeSettings[type].file_type && typeSettings[type].file_type[extension]) {
+              settings = config.objectDatastreams.object.type[type].file_type[extension];
+            }
+          }
+        }
+        if(settings) {
+          cacheEnabled = settings.cache;
+        }
+
+        // Stream data from the cache, if the cache is enabled and a cache item is present
+        if(cacheEnabled && Cache.exists(cacheName, objectID, extension) == true) {
+          if(config.nodeEnv == "devlog") {console.log("Cache source:", objectID || "null")}
+          Cache.getFileStream(cacheName, objectID, extension, function(error, stream) {
+            if(error) {callback(error, null)}
+            else {callback(null, stream, contentType)}
+          });
+        }
+
+        // Fetch datastream
+        else {
+          if(config.nodeEnv == "devlog") {console.log("Datastream source:", objectID || "null")}
+          Datastreams.getDatastream(object, datastreamID, function(error, stream, objectData, isPlaceholder=false) { 
+            if(error) {
+              callback(error, null);
+            }
+            else {
+              if(isPlaceholder == false) {
+                if(cacheEnabled && Cache.exists(cacheName, objectID, extension) == false) {
+                  Cache.cacheDatastream(cacheName, objectID, stream, extension, function(error) {
+                    if(error) { console.error(`Could not create object file for ${objectID} ${error}`) }
+                    else { console.log(`Added object ${objectID} to ${cacheName} cache`) }
+                  });
+                }
+              }
+              callback(null, stream, contentType);
+            }
+          }, authKey);
+        }
       }
     }
     else {
