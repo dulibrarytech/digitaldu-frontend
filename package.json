@@ -1,6 +1,6 @@
 {
   "name": "digital-du",
-  "version": "1.3.21",
+  "version": "1.4.1",
   "description": "Digital assets discovery application",
   "main": "digital-du.js",
   "scripts": {

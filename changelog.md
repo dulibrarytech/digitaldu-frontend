@@ -55,3 +55,7 @@ Fixed bug in compound object Kaltura viewer that prevented unpublished object pa
 ### v1.3.21
 
 Fixed bug in compound object part file download
+
+### v1.4.1
+
+Datastream module upgrade complete
