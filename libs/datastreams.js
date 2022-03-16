@@ -56,10 +56,7 @@ exports.getDatastream = function(object, datastreamID, callback, apikey=null) {
       settings = config.thumbnailDatastreams.collection || null;
     }
     else {
-      // Get the object type, then settings for that type
-      let extension = object.object ? Helper.getFileExtensionFromFilePath(object.object) : Helper.getFileExtensionForMimeType(object.mime_type || ""),
-      mimeType = extension ? Helper.getMimeType(extension) : object.mime_type || null;
-      let objectType = Helper.getObjectType(mimeType);
+      let objectType = Helper.getObjectType(object) || "";
       settings = config.thumbnailDatastreams.object.type[objectType] || null;
     }    
 
@@ -158,25 +155,25 @@ exports.getDatastream = function(object, datastreamID, callback, apikey=null) {
    * Object datastreams
    */
   else {
-    let extension = null;
-    if(datastreamID == "object") {
-      extension = object.object ? Helper.getFileExtensionFromFilePath(object.object) : Helper.getFileExtensionForMimeType(object.mime_type || "");
-    }
-    else {
-      extension = datastreamID;
-    }
     if(!object.object) {console.log(`Object path is null for object: ${object.pid}`)}
 
-    let mimeType = Helper.getMimeType(extension || "") || object.mime_type || null,
-    objectType = Helper.getObjectType(mimeType || ""),
-    sourceOption = "repository";
-    settings = config.objectDatastreams.object.type[objectType] || null;
+    let objectType = Helper.getObjectType(object) || "",
+        sourceOption = "repository";
 
+    settings = config.objectDatastreams.object.type[objectType] || null;
     if(settings) {
-      let uri = null;
-      sourceOption = settings.source;
+      let uri = null,
+          extension = null;
+
+      if(datastreamID == "object") {
+        extension = object.object ? Helper.getFileExtensionFromFilePath(object.object) : Helper.getFileExtensionForMimeType(object.mime_type || "");
+      }
+      else {
+        extension = datastreamID;
+      }
 
       // If settings has specific source option, (settings.file_type) Get the source
+      sourceOption = settings.source;
       if(settings.file_type) {
         for(var key in settings.file_type) {
           if(key == extension && settings.file_type[key].source != 'undefined') {

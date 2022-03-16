@@ -201,7 +201,7 @@ exports.getIIIFObjectType = function(mimeType) {
  * @return {String} III "format" mimetype
  */
 exports.getIIIFFormat = function(mimeType) {
-  let objType = AppHelper.getObjectType(mimeType),
+  let objType = AppHelper.getObjectTypeForMimeType(mimeType),
       format = "";
 
   switch(objType) {

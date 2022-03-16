@@ -181,7 +181,7 @@ exports.createMetadataDisplayObject = function(result, collections=[]) {
 	}
 	if(result.mime_type) {
 		if(!displayObj["Item Type"]) {
-			displayObj["Item Type"] = Helper.getObjectType(result.mime_type);
+			displayObj["Item Type"] = Helper.getObjectTypeForMimeType(result.mime_type);
 		}
 		displayObj["Mimetype"] = result.mime_type;
 	}
@@ -329,7 +329,7 @@ exports.addResultMetadataDisplays = function(resultArray) {
 			metadata["Type"] = result.itemType;
 		}
 		else if(result.mimeType) {
-			metadata["Type"] = Helper.getObjectType(result.mimeType);
+			metadata["Type"] = Helper.getObjectTypeForMimeType(result.mimeType);
 		}
 
 		if(Helper.isObjectEmpty(metadata)) {

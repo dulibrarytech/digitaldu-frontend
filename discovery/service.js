@@ -468,22 +468,19 @@ getDatastream = function(indexName, objectID, datastreamID, part, authKey, callb
         callback(null, null);
       }
       else {
+        // Get cache settings
+        let settings = null,
+            cacheName = datastreamID == "tn" ? "thumbnail" : "object",
+            cacheEnabled = false;
+
         // Get the file extension to use for caching
-        let extension;
+        let extension = datastreamID;;
         if (datastreamID == "tn") {
           extension = config.thumbnailFileExtension;
         }
         else if (datastreamID == "object") {
           extension = object.object ? AppHelper.getFileExtensionFromFilePath(object.object) : AppHelper.getFileExtensionForMimeType(object.mime_type || "");
         }
-        else {
-          extension = datastreamID;
-        }
-
-        // Get cache settings
-        let settings = null,
-            cacheName = datastreamID == "tn" ? "thumbnail" : "object",
-            cacheEnabled = false;
 
         // Collection objects
         if(AppHelper.isCollectionObject(object)) {
@@ -495,10 +492,8 @@ getDatastream = function(indexName, objectID, datastreamID, part, authKey, callb
           }
         }
 
-        // Non collection objects
         else {
-          let type = AppHelper.getObjectType(object.mime_type || "");
-
+          let type = AppHelper.getObjectType(object) || "";
           if(cacheName == "thumbnail") {
             settings = config.thumbnailDatastreams.object.type[type] || null;
           }

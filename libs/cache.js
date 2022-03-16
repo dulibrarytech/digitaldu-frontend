@@ -20,7 +20,7 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
 	  fs = require ('fs');
 
 /*
- * Write file to backend cache
+ * Write file to cache
  */
 exports.cacheDatastream = function(cacheName, objectID, stream, extension, callback) {
 	let filepath = "";

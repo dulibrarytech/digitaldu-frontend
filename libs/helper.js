@@ -37,14 +37,14 @@ exports.getDateMonthString = function(monthVal) {
 }
 
 /*
- * True if object is a compound object
+ * 
  */
 exports.isParentObject = function(object) {
   return (object && (object.is_compound == true || object.object_type == "compound" || object.type == "compound"));
 }
 
 /*
- * True if object is a collection object
+ * 
  */
 exports.isCollectionObject = function(object) {
   return (object && (object.object_type && object.object_type == "collection"));
@@ -69,7 +69,7 @@ exports.removeHtmlEntities = function(string) {
 }
 
 /*
- * data can be a string or an array of strings, single or multi dimension 
+ * 
  */
 var stripHtmlTags = function(data) {
 	if(typeof data == "string") {
@@ -113,6 +113,9 @@ exports.sanitizeHttpParamsObject = function(object) {
 	}
 }
 
+/*
+ * 
+ */
 var getCompoundObjectPart = function(object, partIndex) {
 	var parts = [],
 		objectPart = null;
@@ -221,6 +224,9 @@ var validateCompoundObjectParts = function(parts, objectTypes) {
 	return isValid;
 }
 
+/*
+ * 
+ */
 exports.getCompoundObjectItemCount = function(object) {
 	let count = null;
 	if(object[config.displayRecordField].parts && object[config.displayRecordField].parts.length) {
@@ -235,6 +241,9 @@ exports.getCompoundObjectItemCount = function(object) {
 	return count;
 }
 
+/*
+ * 
+ */
 var getFileExtensionFromFilePath = function(filename) {
   filename = filename ? filename : "";	
   let extension = null, 
@@ -267,12 +276,28 @@ var getFileExtensionForMimeType = function(mimeType) {
 exports.getFileExtensionForMimeType = getFileExtensionForMimeType;
 
  /**
- * Finds the DDU object type that corresponds with an object's mime type
+ * Get the object type for an object
  *
  * @param {String} mimeType - Object mime type (ex "audio/mp3")
  * @return {String} DDU object type
  */
-var getObjectType = function(mimeType="") {
+exports.getObjectType = function(object) {
+	let objectType = null;
+	if(object) {
+		let extension = object.object ? getFileExtensionFromFilePath(object.object) : getFileExtensionForMimeType(object.mime_type || "");
+  	let mimeType = extension ? getMimeType(extension) : object.mime_type || null;
+  	objectType = getObjectTypeForMimeType(mimeType);
+	}
+  return objectType;
+}
+
+ /**
+ * Get the object type for a given mime type
+ *
+ * @param {String} mimeType - Object mime type (ex "audio/mp3")
+ * @return {String} DDU object type
+ */
+var getObjectTypeForMimeType = function(mimeType="") {
   let type = "";
   for(var key in config.objectTypes) {
     if(config.objectTypes[key].includes(mimeType)) {
@@ -281,8 +306,11 @@ var getObjectType = function(mimeType="") {
   }
   return type;
 }
-exports.getObjectType = getObjectType;
+exports.getObjectTypeForMimeType = getObjectTypeForMimeType;
 
+/*
+ * 
+ */
 var getMimeType = function(fileExtension) {
 	let mimeType = null;
 	for(var key in config.mimeTypes) {
@@ -415,6 +443,9 @@ exports.getFacetAggregationObject = function(facets) {
     return facetAggregations;
 }
 
+/*
+ * 
+ */
 exports.validateDateParameters = function(query) {
   var isValid = true;
   const	year = /^[0-9][0-9][0-9][0-9]$/;
@@ -434,6 +465,9 @@ exports.validateDateParameters = function(query) {
   return isValid;
 }
 
+/*
+ * 
+ */
 exports.getDuracloudFilenameFromObjectPath = function(object) {
 	let filename = null;
 	if(object.object) {
@@ -442,6 +476,9 @@ exports.getDuracloudFilenameFromObjectPath = function(object) {
 	return filename;
 }
 
+/*
+ * 
+ */
 exports.addHyperlinks = function(strings) {
 	for(var index in strings) {
 		if(typeof strings[index] == "string") {
