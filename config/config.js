@@ -125,7 +125,7 @@ module.exports = {
      * [browser | jwplayer | universalviewer | kaltura]
      * 'browser' will use <audio> element
      */
-    audioPlayer: "jwplayer",
+    audioPlayer: "universalviewer",
 
     /* 
      * Viewer to display video files
@@ -319,7 +319,7 @@ module.exports = {
             "type": {
                 "still image": {
                     "source": "iiif",
-                    "cache": true
+                    "cache": false
                 },
                 "audio": {
                     "source": "kaltura",
@@ -331,7 +331,7 @@ module.exports = {
                 },
                 "pdf": {
                     "source": "iiif",
-                    "cache": true
+                    "cache": false
                 }
             }
         }
