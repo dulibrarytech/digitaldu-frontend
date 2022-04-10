@@ -22,7 +22,7 @@ $( document ).ready(function() {
 	}
 
 	$("#home-search #search-options select").change(function(event) {
-		let selected = $(this).children().children("option:selected").val();
+		let selected = $(this).children().children("option:selected").attr("data-label");
 		if(typeof selected == 'undefined') {
 			selected = $(this).children("option:selected").val();
 		}

@@ -23,8 +23,9 @@
 
 'use strict';
 
-var config = require('../config/' + process.env.CONFIGURATION_FILE);
-var pluralize = require('pluralize');
+const config = require('../config/' + process.env.CONFIGURATION_FILE);
+const metadataConfig = require('../config/config-metadata-displays');
+const pluralize = require('pluralize');
 
 /**
  * Removes any facets appearing in 'facets' object from the Elastic response object agregations buckets 
@@ -195,24 +196,37 @@ exports.getDateRangeQuery = function(daterange) {
  *
  * @return {Array.<Object>} Array of search fields defined in the configuration
  */
-exports.getSearchFields = function(fieldValue) {
+var getSearchFields = function(field) {
   var fields = [];
 
   // Non-scoped search: Search in all of the fields in the fulltext search
-  if(fieldValue.toLowerCase() == 'all') {
+  if(field.toLowerCase() == 'all') {
     fields = config.searchAllFields;
   }
 
-  // Scoped search: Use the selected type in the search type dropdown
   else {
-    for(var field of config.searchAllFields) {
-      if(field.id.toLowerCase() == fieldValue.toLowerCase()) {
-          fields.push(field);
+    for(var searchField of config.searchAllFields) {
+      if(searchField.id.toLowerCase() == field.toLowerCase()) {
+          fields.push(searchField);
       }
     }
   }
 
   return fields;
+}
+exports.getSearchFields = getSearchFields;
+
+/**
+ * Retrieve an array of all search field ids
+ *
+ * @return {Array.<String>} Array of all search field ids
+ */
+var getSearchAllFieldIds = function() {
+  let ids = [];
+  for(var searchField of config.searchAllFields) {
+    ids.push(searchField.id);
+  }
+  return ids;
 }
 
 /**
@@ -232,7 +246,7 @@ exports.getSearchFields = function(fieldValue) {
  *
  * @return {Array.<queryData>} queryDataArray
  */
-exports.getSearchQueryDataObject = function(queryArray, fieldArray, typeArray, boolArray) {
+exports.getSearchQueryDataObject = function(queryArray, fieldArray, typeArray, boolArray, highlightTerms=false) {
   var queryDataArray = [];
 
   for(var index in queryArray) {
@@ -246,7 +260,8 @@ exports.getSearchQueryDataObject = function(queryArray, fieldArray, typeArray, b
       terms: queryArray[index],
       field: fieldArray[index],
       type: typeArray[index],
-      bool: boolArray[index]
+      bool: boolArray[index],
+      highlight: highlightTerms
     });
   }
 
@@ -412,3 +427,81 @@ var singularizeSearchStringTerms = function(string) {
   return string.trim();
 }
 exports.singularizeSearchStringTerms = singularizeSearchStringTerms;
+
+/**
+ * 
+ *
+ * @param {Object}  
+ *
+ */
+exports.addSearchTermHighlights = function(queryData, resultObject) {
+  let highlightTerms = [],
+      highlightSearchFields = [];
+
+  let terms, quotedTerms, remainingTerms;
+  for(var index in queryData) {
+    if(queryData[index].highlight) {
+      terms = queryData[index].terms || "";
+      quotedTerms = terms.match(/".*"/g) || queryData[index].type == "is";
+
+      if(quotedTerms) {
+        for(let quotedTerm of quotedTerms) {
+          highlightTerms.push(quotedTerm.replace(/"/g, ""));
+
+          remainingTerms = terms.replace(quotedTerm, "").trim();
+          if(remainingTerms.length > 2) {
+            highlightTerms = highlightTerms.concat(remainingTerms.split(" "));
+          }
+        }
+      }
+      else {
+        highlightTerms = highlightTerms.concat(terms.split(" "));
+      }
+
+      if(queryData[index].field.toLowerCase() == "all") {
+        highlightSearchFields = highlightSearchFields.concat(getSearchAllFieldIds());
+      }
+      else {
+        highlightSearchFields.push(queryData[index].field);
+      }
+    }
+  }
+
+  if(highlightSearchFields.length > 0) {
+    let metadataDisplay;
+    if(resultObject.objectType == "collection") {
+      metadataDisplay = metadataConfig.resultsDisplay["collection"] || {};
+    }
+    else {
+      metadataDisplay = metadataConfig.resultsDisplay["default"] || {};
+    }
+
+    let metadataFieldArray = [];
+    for(let result of resultObject) {
+      for(let index in highlightTerms) {
+
+        if(highlightSearchFields.includes("title")) {
+          result.title = result.title.replace(new RegExp(highlightTerms[index], 'gi'), `<span class="text-highlight">${highlightTerms[index]}</span>`);
+        }
+
+        for(let key in result.metadata) {
+          let searchFieldId = metadataDisplay[key].searchFieldID || "",
+              isHighlighted = highlightSearchFields.includes(metadataDisplay[key].searchFieldId);
+
+          if(typeof result.metadata[key] == "string" && isHighlighted) {
+            result.metadata[key] = result.metadata[key].replace(new RegExp(highlightTerms[index], 'gi'), `<span class="text-highlight">${highlightTerms[index]}</span>`);
+          }
+          else if(typeof result.metadata[key] == "object" && isHighlighted) {
+            metadataFieldArray = [];
+            for(var value of result.metadata[key]) {
+              metadataFieldArray.push(value.replace(new RegExp(highlightTerms[index], 'gi'), `<span class="text-highlight">${highlightTerms[index]}</span>`));
+            }
+            result.metadata[key] = metadataFieldArray;
+          }
+        }
+      }
+    }
+  }
+
+  return resultObject;
+}

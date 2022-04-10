@@ -11,7 +11,8 @@
         <optgroup label="Specific Fields">
           <% for (var i = 0; i < searchFields.length; i++) { %>
             <% for (var key in searchFields[i]) { %>
-              <option value='<%- key %>'><%- key %></option>
+              <!--option value='<%- key %>'><%- key %></option-->
+              <option value='<%- searchFields[i][key] %>' data-label='<%- key %>'><%- key %></option>
             <% } %>
           <% } %>
         </optgroup>

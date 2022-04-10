@@ -26,7 +26,8 @@ const es = require('../config/index'),
       config = require('../config/' + process.env.CONFIGURATION_FILE),
       Repository = require('../libs/repository'),
       Helper = require("./helper"),
-      AppHelper = require("../libs/helper.js");
+      AppHelper = require("../libs/helper.js"),
+      Metadata = require('../libs/metadata');
 
 /**
  * Search the index
@@ -66,7 +67,7 @@ const es = require('../config/index'),
  * @param {Array.<searchResults>|null} Search results object, Null if error
  */
 exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=1, pageSize=10, daterange=null, sort=null, isAdvanced=false, callback) {
-    var queryFields = [],
+      var queryFields = [],
         fuzzQueryFields = [],
         results = [], 
         restrictions = [],
@@ -157,7 +158,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
           else {
             fieldObj[field.field] = terms;
           }
-
+  
           queryObj[queryType] = fieldObj;
 
           // If field specifies a 'match field' create a must array to match the field exactly on a specified term, as well as on the main query fields/terms
@@ -428,6 +429,12 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
             // Add current result to the results array
             results.push(resultObj);
           }
+
+          // Add metadata display
+          Metadata.addResultMetadataDisplays(results);
+
+          // Add search term highlight
+          Helper.addSearchTermHighlights(queryData, results);
 
           // Add the results array, send the response
           responseData['results'] = results;

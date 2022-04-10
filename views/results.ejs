@@ -130,17 +130,15 @@
               <div class="row search-result">
                 <div class="col-md-9 search-result-data">
                   <dl>
-                    <dt class="result-title"><%= (i+1)+((page-1)*options.pageSize) %>.&nbsp&nbsp<a href="<%= root_url %>/object/<%= results[i].pid %>"><%= results[i].title %></a></dt><dd></dd>
+                    <dt class="result-title"><%= (i+1)+((page-1)*options.pageSize) %>.&nbsp&nbsp<a href="<%= root_url %>/object/<%= results[i].pid %>"><%- results[i].title %></a></dt><dd></dd>
                       <% for (var key in results[i].metadata) { %>
                         <% if(key.length > 0) { %>
                         <dt>
-                          
-                            <%- key %>:
-                          
+                          <%- key %>:
                         </dt>
-                        <dd><%= results[i].metadata[key] %></dd>
+                        <dd><%- results[i].metadata[key] %></dd>
                         <% } else { %>
-                        <p><%= results[i].metadata[key] %></p>
+                        <p><%- results[i].metadata[key] %></p>
                         <% } %>
                       <% } %>
                   </dl>

@@ -59,3 +59,7 @@ Fixed bug in compound object part file download
 ### v1.4.1
 
 Datastream module upgrade complete
+
+### v1.4.2
+
+Added search result hit highlighting to add highlight to search terms appearing in specified search fields in the results view result item data

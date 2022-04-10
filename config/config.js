@@ -123,12 +123,14 @@ module.exports = {
     /* 
      * Viewer to play audio files
      * [browser | jwplayer | universalviewer | kaltura]
+     * 'browser' will use <audio> element
      */
-    audioPlayer: "universalviewer",
+    audioPlayer: "jwplayer",
 
     /* 
      * Viewer to display video files
-     * [videojs | jwplayer | universalviewer | kaltura]
+     * [browser | videojs | jwplayer | universalviewer | kaltura]
+     * 'browser' will use <video> element
      */
     videoViewer: "universalviewer",
 
@@ -148,7 +150,9 @@ module.exports = {
     /* 
      * Viewer to display large image files (tiff, jp2)
      * [browser | openseadragon | universalviewer]
+     *
      * "browser" viewer will not display .jp2 images
+     * "browser" option currently will not scale image to browser viewer section
      */
     largeImageViewer: "universalviewer",
 
@@ -352,11 +356,11 @@ module.exports = {
             "type": {
                 "still image": {
                     "source": "repository",
-                    "cache": true,
+                    "cache": false,
                     "file_type": {
                         "jpg": {
                             "source": "iiif",
-                            "cache": true
+                            "cache": false
                         }
                     }
                 },
@@ -370,7 +374,7 @@ module.exports = {
                 },
                 "pdf": {
                     "source": "repository",
-                    "cache": true
+                    "cache": false
                 }
             }
         }
@@ -425,7 +429,7 @@ module.exports = {
         {"label": "Creator", "id": "creator", "field": "creator", "boost": "8"},
         {"label": "Subject", "id": "subject", "field": "f_subjects", "boost": "4"},
         {"label": "Topic", "id": "topic", "field": "display_record.subjects.terms.term", "matchField": "display_record.subjects.terms.type", "matchTerm": "topical"},
-        {"label": "Format", "id": "format", "field": "type", "boost": "3"},
+        {"label": "Format", "id": "type", "field": "type", "boost": "3"},
         {"label": "Description", "id": "description", "field": "abstract", "boost": "6"},
         {"label": "Language", "id": "language", "field": "display_record.t_language.text", "boost": "1"},
         {"label": "Creation Date", "id": "create_date", "field": "display_record.dates.expression", "isNestedType": "true", "matchField": "display_record.dates.label", "matchTerm": "creation"},

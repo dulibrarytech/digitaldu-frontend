@@ -47,29 +47,35 @@ module.exports = {
      */
     resultsDisplay: {
         "default": {
-            "Date": {
+            "Creation Date": {
                 "path": "dates.expression",
                 "matchField": "label",
-                "matchValue": "creation"
+                "matchValue": "creation",
+                "searchFieldId": "create_date"
             },
             "Creator": {
-                "path": "names.title"
+                "path": "names.title",
+                "searchFieldId": "creator"
             },
             "Type": {
-                "path": "type"
+                "path": "type",
+                "searchFieldId": "format"
             },
             "Description": {
                 "path": "notes.content",
                 "matchField": "type",
-                "matchValue": "abstract"
+                "matchValue": "abstract",
+                "searchFieldId": "description"
             }
         },
         "collection": {
             "Creator": {
-                "path": "names.title"
+                "path": "names.title",
+                "searchFieldId": "creator"
             },
             "Description": {
-                "path": "abstract"
+                "path": "abstract",
+                "searchFieldId": "description"
             },
         }
     },
