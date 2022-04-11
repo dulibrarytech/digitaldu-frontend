@@ -62,4 +62,4 @@ Datastream module upgrade complete
 
 ### v1.4.2
 
-Added search result hit highlighting to add highlight to search terms appearing in specified search fields in the results view result item data
+Added search result hit highlighting to add highlight to search terms appearing in current search field(s) in the search results view item data
