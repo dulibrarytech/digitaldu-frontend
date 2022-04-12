@@ -26,6 +26,7 @@
 const config = require('../config/' + process.env.CONFIGURATION_FILE);
 const metadataConfig = require('../config/config-metadata-displays');
 const pluralize = require('pluralize');
+const { removeStopwords } = require('stopword');
 
 /**
  * Removes any facets appearing in 'facets' object from the Elastic response object agregations buckets 
@@ -79,11 +80,13 @@ exports.removeEmptyFacetKeys = function(facets) {
  *
  * @return {String} The results label
  */
-exports.getResultsLabel = function(query, facets, bool, field) {
+exports.getSearchTermsLabel = function(query, facets, bool, field) {
   let queryLabel = " ", // One space character is required here (" ")
       appendLabel = "";
+
   if(query && query.length > 0) {
     for(let index in query) {
+
       // Handle special case of a collection field advanced search
       if(field[index] && field[index].toLowerCase() == "collection") {
         continue;
@@ -97,7 +100,7 @@ exports.getResultsLabel = function(query, facets, bool, field) {
       queryLabel += (query[index] + ((index == query.length-1) ? " " : "; "));
     }
   }
-  return queryLabel + appendLabel; 
+  return queryLabel + appendLabel;
 }
 
 /**
@@ -403,10 +406,15 @@ exports.getResultSetMinDate = function(facets) {
  *
  * @return {string} - Updated terms
  */
-exports.getSearchTerms = function(queryString) {
+exports.formatSearchTerms = function(queryString) {
   let terms = "";
-  terms = queryString.toLowerCase().replace(/"/g, '') || "";
-  //terms = singularizeSearchStringTerms(terms);
+
+  // Remove non-alphanumeric characters, except for control characters '*', '"', "'"
+  terms = queryString.toLowerCase().replace(/[^a-z0-9*\s"']/gi, '') || "";
+
+  // Remove stop words
+  terms = removeStopwords(terms.split(" ")).toString().replace(/,/gi, " ")
+
   return terms;
 }
 

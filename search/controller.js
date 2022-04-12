@@ -82,7 +82,8 @@ exports.search = function(req, res) {
 		pageData: null,
 		page: page,
 		root_url: config.rootUrl,
-		query: Helper.getResultsLabel(query, facets, bool, field),
+		//query: Helper.getSearchTermsLabel(query, facets, bool, field),
+		query: "",
 		view: req.query.view || config.defaultSearchResultsView || "list",
 		sortType: req.query.sort || config.defaultSearchSortField || "relevance",
 		isAdvancedSearch: advancedSearch,
@@ -114,6 +115,7 @@ exports.search = function(req, res) {
 			data.options["pageSize"] = pageSize;
 			data.options["showDateRange"] = config.showSearchResultsDateRangeLimiter || false;
 			data.results = response.results;
+			data.query = Helper.getSearchTermsLabel(response.searchTerms, facets, bool, field);
 
 			// Create paginator data object, add it to the view data
 			let path = config.rootUrl + req.url.substring(req.url.indexOf('search')-1);

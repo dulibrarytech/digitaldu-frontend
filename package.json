@@ -39,6 +39,7 @@
     "pdf-page-counter": "^1.0.3",
     "pluralize": "^8.0.0",
     "sanitize-html": "^2.4.0",
+    "stopword": "^2.0.1",
     "stringify-object": "^3.3.0",
     "write": "^2.0.0",
     "ws": "^7.3.1",
