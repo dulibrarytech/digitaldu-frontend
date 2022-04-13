@@ -451,7 +451,6 @@ exports.addSearchTermHighlights = function(queryData, resultObject) {
     if(queryData[index].highlight) {
       terms = queryData[index].terms || "";
       quotedTerms = terms.match(/".*"/g) || queryData[index].type == "is";
-
       if(quotedTerms) {
         for(let quotedTerm of quotedTerms) {
           highlightTerms.push(quotedTerm.replace(/"/g, ""));
@@ -462,8 +461,8 @@ exports.addSearchTermHighlights = function(queryData, resultObject) {
           }
         }
       }
-      else {
-        highlightTerms = highlightTerms.concat(terms.split(" "));
+      else if(terms.match(/[a-zA-Z0-9]+/g)) { // only highlight alphanumeric terms
+        highlightTerms = highlightTerms.concat(terms.trim().split(" "));
       }
 
       if(queryData[index].field.toLowerCase() == "all") {
