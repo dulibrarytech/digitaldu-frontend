@@ -82,7 +82,6 @@ exports.search = function(req, res) {
 		pageData: null,
 		page: page,
 		root_url: config.rootUrl,
-		//query: Helper.getSearchTermsLabel(query, facets, bool, field),
 		query: "",
 		view: req.query.view || config.defaultSearchResultsView || "list",
 		sortType: req.query.sort || config.defaultSearchSortField || "relevance",

@@ -407,15 +407,16 @@ exports.getResultSetMinDate = function(facets) {
  * @return {string} - Updated terms
  */
 exports.formatSearchTerms = function(queryString) {
-  let terms = "";
 
-  // Remove non-alphanumeric characters, except for control characters '*', '"', "'"
-  terms = queryString.toLowerCase().replace(/[^a-z0-9*\s"']/gi, '') || "";
+  // Remove non-alphanumeric characters, except for control characters '*', '"'
+  queryString = queryString.toLowerCase().replace(/[^a-z0-9*\s"]/gi, '') || "";
 
-  // Remove stop words
-  terms = removeStopwords(terms.split(" ")).toString().replace(/,/gi, " ")
+  // Remove stop words if the terms are not enclosed in quotation marks
+  if(queryString.match(/"|\*/g) == null) {
+    queryString = removeStopwords(queryString.split(" ")).toString().replace(/,/gi, " ")
+  }
 
-  return terms;
+  return queryString;
 }
 
 /**
@@ -439,7 +440,7 @@ exports.singularizeSearchStringTerms = singularizeSearchStringTerms;
 /**
  * 
  *
- * @param {Object}  
+ * @param {Object}
  *
  */
 exports.addSearchTermHighlights = function(queryData, resultObject) {
@@ -450,15 +451,22 @@ exports.addSearchTermHighlights = function(queryData, resultObject) {
   for(var index in queryData) {
     if(queryData[index].highlight) {
       terms = queryData[index].terms || "";
-      quotedTerms = terms.match(/".*"/g) || queryData[index].type == "is";
-      if(quotedTerms) {
+
+      if(queryData[index].type == "is") {
+        quotedTerms.push(terms);
+      }
+      else {
+        quotedTerms = terms.match(/"[a-zA-Z0-9]*[^"]+[a-zA-Z0-9]*"/g);
+      }
+
+      if(quotedTerms && quotedTerms.length > 0) {
         for(let quotedTerm of quotedTerms) {
           highlightTerms.push(quotedTerm.replace(/"/g, ""));
+          terms = terms.replace(quotedTerm, "");
+        }
 
-          remainingTerms = terms.replace(quotedTerm, "").trim();
-          if(remainingTerms.length > 2) {
-            highlightTerms = highlightTerms.concat(remainingTerms.split(" "));
-          }
+        if(terms.length > 2) {
+          highlightTerms = highlightTerms.concat(terms.split(" ").filter(i => i));
         }
       }
       else if(terms.match(/[a-zA-Z0-9]+/g)) { // only highlight alphanumeric terms

@@ -107,7 +107,6 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
      * Append the queries in reverse order to provide the correct logic for joining multiple advanced search queries
      */
     let searchTermArray = [];
-    //let searchTermArray = Helper.getSearchTerms(queryData);
     for(var index in queryData.reverse()) {
       queryFields = [];
       currentQuery = {};
@@ -115,14 +114,13 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
 
       // Handle special query cases for searching specific search fields
       queryData[index].terms = Helper.updateQueryTermsForField(queryData[index].terms, queryData[index].field, queryData[index].type, queryData[index].bool);
-
+      
       // Get the query data for Elastic request
       queryType = Helper.getQueryType(queryData[index]);
       field = queryData[index].field || "all";
       type = queryData[index].type || "contains";
       bool = queryData[index].bool || "or";
       terms = Helper.formatSearchTerms(queryData[index].terms);
-      //terms = searchTermArray[index];
       fields = Helper.getSearchFields(field);
 
       if(Array.isArray(fields)) {
@@ -440,8 +438,9 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
           Metadata.addResultMetadataDisplays(results);
 
           // Add search term highlight
-          // if(config.enableSearchHitHighlighting) {}
-          Helper.addSearchTermHighlights(queryData, results);
+          if(config.enableSearchHitHighlighting) {
+            Helper.addSearchTermHighlights(queryData, results);
+          }
 
           // Add the results array, send the response
           responseData['results'] = results;
