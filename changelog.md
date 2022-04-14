@@ -63,3 +63,8 @@ Datastream module upgrade complete
 ### v1.4.2
 
 Added search result hit highlighting to add highlight to search terms appearing in current search field(s) in the search results view item data
+Applied stop words filter to search terms in the search service, to prevent hits on single stop words and to display terms without stop words in the results label
+Removed stop words from the search results view search terms label
+Added configuration setting to disable search hit highlighting
+Updated search term formatter to not remove stop words from terms enclosed in quotation marks #144
+Added configuration setting to enable/disable search term highlighting #144
