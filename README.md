@@ -1,5 +1,5 @@
 # Digital Collections Frontend - digitaldu
-# Release 1.4.2
+# Release 1.4.21
 
 ## Table of Contents
 

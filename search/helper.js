@@ -450,7 +450,8 @@ exports.addSearchTermHighlights = function(queryData, resultObject) {
   let terms, quotedTerms, remainingTerms;
   for(var index in queryData) {
     if(queryData[index].highlight) {
-      terms = queryData[index].terms || "";
+      terms = queryData[index].terms || "";;
+      quotedTerms = [];
 
       if(queryData[index].type == "is") {
         quotedTerms.push(terms);

@@ -1,4 +1,4 @@
-## Releases
+git ## Releases
 * v1.0.0-beta [release]() [notes]()
 
 ### v1.1.1 6/10/2021
@@ -68,3 +68,7 @@ Removed stop words from the search results view search terms label
 Added configuration setting to disable search hit highlighting
 Updated search term formatter to not remove stop words from terms enclosed in quotation marks #144
 Added configuration setting to enable/disable search term highlighting #144
+
+### v1.4.21
+
+ Fixed bug that prevented 'contains' queries from being combined with 'is' queries #144

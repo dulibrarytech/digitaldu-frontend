@@ -113,7 +113,7 @@ module.exports = {
     /*
      * Set to true to highlight search terms in the search result text 
      */
-    enableSearchHitHighlighting: true,
+    enableSearchHitHighlighting: false,
 
     /*
      * Set to false if collection objects should be omitted from search results
