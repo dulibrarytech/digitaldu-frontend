@@ -68,9 +68,9 @@ exports.getDatastream = function(object, datastreamID, callback, apikey=null) {
       if(settings.source == "auto") {
 
         // Automatically determine the source uri
-        let data = getAutoStreamSource(datastreamID, object);
-        uri = data.uri;
-        source = data.source;
+        let sourceData = getAutoStreamSource(datastreamID, object);
+        uri = sourceData.uri;
+        source = sourceData.source;
       }
       else {
         // Use manual setting for source uri

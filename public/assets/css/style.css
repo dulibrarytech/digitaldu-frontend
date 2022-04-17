@@ -1533,6 +1533,10 @@ div#transcript-view {
   white-space: initial !important;
 }
 
+.text-highlight {
+  background: #FAF799;
+}
+
 footer {
   background: #8b2332;
   padding: 50px 0 25px 0;

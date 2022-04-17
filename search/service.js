@@ -26,7 +26,8 @@ const es = require('../config/index'),
       config = require('../config/' + process.env.CONFIGURATION_FILE),
       Repository = require('../libs/repository'),
       Helper = require("./helper"),
-      AppHelper = require("../libs/helper.js");
+      AppHelper = require("../libs/helper.js"),
+      Metadata = require('../libs/metadata');
 
 /**
  * Search the index
@@ -66,20 +67,20 @@ const es = require('../config/index'),
  * @param {Array.<searchResults>|null} Search results object, Null if error
  */
 exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=1, pageSize=10, daterange=null, sort=null, isAdvanced=false, callback) {
-    var queryFields = [],
-        fuzzQueryFields = [],
-        results = [], 
-        restrictions = [],
-        filters = [],
-        queryType,
-        booleanQuery = {
-          "bool": {
-            "should": [],
-            "must": [],
-            "must_not": []
-          }
-        },
-        currentQuery;
+      var queryFields = [],
+          fuzzQueryFields = [],
+          results = [], 
+          restrictions = [],
+          filters = [],
+          queryType,
+          booleanQuery = {
+            "bool": {
+              "should": [],
+              "must": [],
+              "must_not": []
+            }
+          },
+          currentQuery;
     /*  
      * Build the search fields object 
      * Use a match query for each word token, a match_phrase query for word group tokens, and a wildcard search for tokens that contain a '*'.
@@ -105,6 +106,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
      * Iterate through the individual queries in the search request.  Advanced searches may have multiple queries.
      * Append the queries in reverse order to provide the correct logic for joining multiple advanced search queries
      */
+    let searchTermArray = [];
     for(var index in queryData.reverse()) {
       queryFields = [];
       currentQuery = {};
@@ -112,13 +114,13 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
 
       // Handle special query cases for searching specific search fields
       queryData[index].terms = Helper.updateQueryTermsForField(queryData[index].terms, queryData[index].field, queryData[index].type, queryData[index].bool);
-
+      
       // Get the query data for Elastic request
       queryType = Helper.getQueryType(queryData[index]);
       field = queryData[index].field || "all";
       type = queryData[index].type || "contains";
       bool = queryData[index].bool || "or";
-      terms = Helper.getSearchTerms(queryData[index].terms);
+      terms = Helper.formatSearchTerms(queryData[index].terms);
       fields = Helper.getSearchFields(field);
 
       if(Array.isArray(fields)) {
@@ -157,7 +159,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
           else {
             fieldObj[field.field] = terms;
           }
-
+  
           queryObj[queryType] = fieldObj;
 
           // If field specifies a 'match field' create a must array to match the field exactly on a specified term, as well as on the main query fields/terms
@@ -204,6 +206,9 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
             fuzzQueryFields.push(fuzzQueryObj);
           }
         }
+
+        queryData[index].terms = terms;
+        searchTermArray.push(terms);
       }
 
       if(fuzzQueryFields.length > 0) {
@@ -429,8 +434,17 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
             results.push(resultObj);
           }
 
+          // Add metadata display
+          Metadata.addResultMetadataDisplays(results);
+
+          // Add search term highlight
+          if(config.enableSearchHitHighlighting) {
+            Helper.addSearchTermHighlights(queryData, results);
+          }
+
           // Add the results array, send the response
           responseData['results'] = results;
+          responseData['searchTerms'] = searchTermArray;
           responseData['elasticResponse'] = response;
           callback(null, responseData);
         }

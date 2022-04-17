@@ -29,7 +29,6 @@ const async = require('async'),
     Facets = require('../libs/facets'),
     Paginator = require('../libs/paginator'),
     Helper = require('./helper.js'),
-    Metadata = require('../libs/metadata'),
     Format = require("../libs/format");
 
 /**
@@ -83,7 +82,7 @@ exports.search = function(req, res) {
 		pageData: null,
 		page: page,
 		root_url: config.rootUrl,
-		query: Helper.getResultsLabel(query, facets, bool, field),
+		query: "",
 		view: req.query.view || config.defaultSearchResultsView || "list",
 		sortType: req.query.sort || config.defaultSearchSortField || "relevance",
 		isAdvancedSearch: advancedSearch,
@@ -97,9 +96,9 @@ exports.search = function(req, res) {
 		data.error = msg;
 		return res.render('results', data);
 	}
-
+	
 	let sortBy = Helper.getSortDataArray(sort);
-	let queryData = Helper.getSearchQueryDataObject(query, field, type, bool);
+	let queryData = Helper.getSearchQueryDataObject(query, field, type, bool, true);
 	Service.searchIndex(queryData, facets, collection, page, pageSize, daterange, sortBy, advancedSearch, function(error, response) {
 		if(error) {
 			console.error(error);
@@ -114,10 +113,8 @@ exports.search = function(req, res) {
 			data.options["sortByOptions"] = config.sortByOptions || {};
 			data.options["pageSize"] = pageSize;
 			data.options["showDateRange"] = config.showSearchResultsDateRangeLimiter || false;
-
-			// Add the metadata display field from the configuration, then add the results list to the view data
-			Metadata.addResultMetadataDisplays(response.results);
 			data.results = response.results;
+			data.query = Helper.getSearchTermsLabel(response.searchTerms, facets, bool, field);
 
 			// Create paginator data object, add it to the view data
 			let path = config.rootUrl + req.url.substring(req.url.indexOf('search')-1);

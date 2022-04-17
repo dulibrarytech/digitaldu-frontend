@@ -1,5 +1,5 @@
 # Digital Collections Frontend - digitaldu
-# Release 1.4.1
+# Release 1.4.21
 
 ## Table of Contents
 
@@ -77,11 +77,13 @@ All other content is released under [CC-BY-4.0](https://creativecommons.org/lice
     
     6. IIIF_URL can be localhost, as the service is included with DigitalCollections.  Make sure the port listed here is the port that DigitalCollections is running on.
     
-    7. Setup a local instance of Cantaloupe image server and update the CANTALOUPE_URL field in .env
+    7. Setup a local instance of Cantaloupe image server and update the CANTALOUPE_URL field in .env. Update and add the config files "cantaloupe.properties" and "delegates.rb" (located in the "cantaloupe-files" folder) and place them in the cantaloupe folder, after the clone is complete. The two existing files should be replaced.
 
-    8. Update the settings file in /public/confog/configuration.js
+    8. Clone an instance of the UniversalViewer from . into "/public/libs"
+
+    9. Update the settings file in /public/confog/configuration.js
     
-    9. Run the app by using "node discovery.js" or "nodejs discovery.js" from the app root folder.
+    10. Run the app by using "node discovery.js" or "nodejs discovery.js" from the app root folder.
 
 #### Index
 
