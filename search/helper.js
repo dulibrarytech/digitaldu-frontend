@@ -85,7 +85,7 @@ exports.getSearchTermsLabel = function(query, facets, bool, field) {
       appendLabel = "";
 
   if(query && query.length > 0) {
-    for(let index in query) {
+    for(let index in query.reverse()) {
 
       // Handle special case of a collection field advanced search
       if(field[index] && field[index].toLowerCase() == "collection") {
@@ -94,12 +94,19 @@ exports.getSearchTermsLabel = function(query, facets, bool, field) {
       if(query[index].length == 0) {
         query[index] = "*";
       }
+      if(bool[index] && bool[index].toLowerCase() == "and" && index > 0) {
+        queryLabel += "AND ";
+      }
+      if(bool[index] && bool[index].toLowerCase() == "or") {
+        queryLabel += "OR ";
+      }
       if(bool[index] && bool[index].toLowerCase() == "not") {
         queryLabel += "NOT ";
       }
       queryLabel += (query[index] + ((index == query.length-1) ? " " : "; "));
     }
   }
+
   return queryLabel + appendLabel;
 }
 
