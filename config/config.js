@@ -431,7 +431,7 @@ module.exports = {
     searchAllFields: [
         {"label": "Title", "id": "title", "field": "title", "boost": "10"},
         {"label": "Collection", "id": "collection", "field": "is_member_of_collection", "boost": "10"},
-        {"label": "Creator", "id": "creator", "field": "creator", "boost": "8"},
+        {"label": "Creator", "id": "creator", "field": "display_record.names.title", "matchField": "display_record.names.role", "matchTerm": "creator", "boost": "8"},
         {"label": "Subject", "id": "subject", "field": "f_subjects", "boost": "4"},
         {"label": "Topic", "id": "topic", "field": "display_record.subjects.terms.term", "matchField": "display_record.subjects.terms.type", "matchTerm": "topical"},
         {"label": "Format", "id": "type", "field": "type", "boost": "3"},
