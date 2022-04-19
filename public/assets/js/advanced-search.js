@@ -59,23 +59,30 @@ var clearForm = function() {
 }
 
 var addFormRow = function() {
-	let formRow = "<div class='form-inline'>";
-	formRow += $("#advanced-search .form-inline:first-child").html();
-	formRow += "</div>";
-	$("#advanced-search").append(formRow);
+	if($(".advanced-search-query").length < 6) {
+		let formRow = "<div class='form-inline'>";
+		formRow += $("#advanced-search .form-inline:first-child").html();
+		formRow += "</div>";
+		$("#advanced-search").append(formRow);
 
-	// Set the form element id values with a row index suffix
-	let index = parseInt($("#advanced-search .form-inline").length-1);
-	$("#advanced-search .form-inline:last-child").attr("id", "advanced-search-query-row-" + index);
-	$("#advanced-search .form-inline:last-child .advanced-search-bool-select").attr("id", "advanced-search-bool-select-" + index);
-	$("#advanced-search .form-inline:last-child .advanced-search-field-select").attr("id", "advanced-search-field-select-" + index);
-	$("#advanced-search .form-inline:last-child .advanced-search-type-select").attr("id", "advanced-search-type-select-" + index);
-	$("#advanced-search .form-inline:last-child .advanced-search-box").attr("id", "advanced-search-box-" + index);
-	$("#advanced-search .form-inline:last-child .advanced-search-box-query").attr("id", "advanced-search-box-query-" + index);
-	$("#advanced-search .form-inline:last-child .advanced-search-bool-select").attr("name", "bool[]");
-	$("#advanced-search .form-inline:last-child .advanced-search-field-select").attr("name", "field[]");
-	$("#advanced-search .form-inline:last-child .advanced-search-type-select").attr("name", "type[]");
-	$("#advanced-search .form-inline:last-child .advanced-search-box-query").attr("name", "q[]");
+		let index = parseInt($("#advanced-search .form-inline").length-1);
+		$("#advanced-search .form-inline:last-child").attr("id", "advanced-search-query-row-" + index);
+		$("#advanced-search .form-inline:last-child").addClass("advanced-search-query");
+		$("#advanced-search .form-inline:last-child .advanced-search-bool-select").attr("id", "advanced-search-bool-select-" + index);
+		$("#advanced-search .form-inline:last-child .advanced-search-field-select").attr("id", "advanced-search-field-select-" + index);
+		$("#advanced-search .form-inline:last-child .advanced-search-type-select").attr("id", "advanced-search-type-select-" + index);
+		$("#advanced-search .form-inline:last-child .advanced-search-box").attr("id", "advanced-search-box-" + index);
+		$("#advanced-search .form-inline:last-child .advanced-search-box-query").attr("id", "advanced-search-box-query-" + index);
+		$("#advanced-search .form-inline:last-child .advanced-search-bool-select").attr("name", "bool[]");
+		$("#advanced-search .form-inline:last-child .advanced-search-field-select").attr("name", "field[]");
+		$("#advanced-search .form-inline:last-child .advanced-search-type-select").attr("name", "type[]");
+		$("#advanced-search .form-inline:last-child .advanced-search-box-query").attr("name", "q[]");
+	}
+	else {
+		$("#add-query-button").off("click");
+		$("#add-query-button > span").text("Maximum search queries added");
+		$("#add-query-button").css("cursor", "initial")
+	}
 }
 
 var storeFormData = function() {
