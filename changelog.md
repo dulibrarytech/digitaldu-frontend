@@ -71,4 +71,10 @@ Added configuration setting to enable/disable search term highlighting #144
 
 ### v1.4.21
 
- Fixed bug that prevented 'contains' queries from being combined with 'is' queries #144
+Fixed bug that prevented 'contains' queries from being combined with 'is' queries #144
+
+### v1.4.22
+
+Fixed bug in the search results terms label that displayed the query terms of advanced search in reverse order
+Added the search field and search type (contains/is) to the advanced search results page label
+Limited advanced search queries to 6, displaying a feedback message when the maximum number of queries has been added to the form

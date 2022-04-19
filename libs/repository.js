@@ -126,7 +126,6 @@ exports.streamData = function(object, dsid, callback) {
 				callback(null, null);
 			}
 			else {
-				console.log("Request to repository received status 200");
 				callback(null, data);
 			}
 		});
