@@ -80,7 +80,7 @@ exports.removeEmptyFacetKeys = function(facets) {
  *
  * @return {String} The results label
  */
-exports.getSearchTermsLabel = function(query, facets, bool, field) {
+exports.getSearchTermsLabel = function(query, facets, bool, field, type) {
   let queryLabel = " ", // One space character is required here (" ")
       appendLabel = "";
 
@@ -91,18 +91,28 @@ exports.getSearchTermsLabel = function(query, facets, bool, field) {
       if(field[index] && field[index].toLowerCase() == "collection") {
         continue;
       }
+
+        // Add the search query boolean to the label
       if(query[index].length == 0) {
         query[index] = "*";
       }
       if(bool[index] && bool[index].toLowerCase() == "and" && index > 0) {
         queryLabel += "AND ";
       }
-      if(bool[index] && bool[index].toLowerCase() == "or") {
+      if(bool[index] && bool[index].toLowerCase() == "or" && index > 0) {
         queryLabel += "OR ";
       }
       if(bool[index] && bool[index].toLowerCase() == "not") {
         queryLabel += "NOT ";
       }
+
+      // Add field name and search type to the label
+      if(query.length > 1 && field[index]) {
+        let fieldName = field[index] == "all" ? "All fields" : (field[index].charAt(0).toUpperCase() + field[index].slice(1))
+        queryLabel += `${fieldName} ${type[index]} `;
+      }
+
+      // Add the search terms to the label
       queryLabel += (query[index] + ((index == query.length-1) ? " " : "; "));
     }
   }

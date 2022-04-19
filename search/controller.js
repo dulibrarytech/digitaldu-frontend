@@ -114,7 +114,7 @@ exports.search = function(req, res) {
 			data.options["pageSize"] = pageSize;
 			data.options["showDateRange"] = config.showSearchResultsDateRangeLimiter || false;
 			data.results = response.results;
-			data.query = Helper.getSearchTermsLabel(response.searchTerms, facets, bool, field);
+			data.query = Helper.getSearchTermsLabel(response.searchTerms, facets, bool, field, type);
 
 			// Create paginator data object, add it to the view data
 			let path = config.rootUrl + req.url.substring(req.url.indexOf('search')-1);
