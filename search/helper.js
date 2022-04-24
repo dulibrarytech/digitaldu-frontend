@@ -107,10 +107,10 @@ exports.getSearchTermsLabel = function(query, facets, bool, field, type) {
       }
 
       // Add field name and search type to the label
-      if(query.length > 1 && field[index]) {
-        let fieldName = field[index] == "all" ? "All fields" : (field[index].charAt(0).toUpperCase() + field[index].slice(1))
-        queryLabel += `${fieldName} ${type[index]} `;
-      }
+      // if(query.length > 1 && field[index]) {
+      //   let fieldName = field[index] == "all" ? "All fields" : (field[index].charAt(0).toUpperCase() + field[index].slice(1))
+      //   queryLabel += `${fieldName} ${type[index]} `;
+      // }
 
       // Add the search terms to the label
       queryLabel += (query[index] + ((index == query.length-1) ? " " : "; "));
