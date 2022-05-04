@@ -49,9 +49,17 @@ module.exports = function () {
     app.use(noCache());
     app.use(helmet.contentSecurityPolicy({
       directives: {
-        defaultSrc: ["'self'", config.webSocketDomain, (config.webSocketDomain+":"+config.webSocketPort), config.IIIFServerDomain, config.IIIFDomain, config.repositoryDomain, 'www.google-analytics.com', 'cdnapisec.kaltura.com', 'data:', 'blob:', 'www.du.edu', 'fonts.gstatic.com', 'use.fontawesome.com', 'http://jwpltx.com'],
+        defaultSrc: ["'self'", config.webSocketDomain, (config.webSocketDomain+":"+config.webSocketPort), config.IIIFServerDomain, config.IIIFDomain, config.repositoryDomain, 'www.google-analytics.com', 'cdnapisec.kaltura.com', 'data:', 'blob:', 'www.du.edu', 'fonts.gstatic.com', 'use.fontawesome.com', 'http://jwpltx.com'
+
+            , "https://mozilla.github.io" // DEV
+
+        ],
         styleSrc: ["'self'", "'unsafe-inline'", 'maxcdn.bootstrapcdn.com', 'use.fontawesome.com', 'vjs.zencdn.net', 'code.jquery.com', 'fonts.googleapis.com'],
-        scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'www.google-analytics.com', 'vjs.zencdn.net', 'use.fontawesome.com', 'code.jquery.com', 'http://p.jwpcdn.com'],
+        scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'www.google-analytics.com', 'vjs.zencdn.net', 'use.fontawesome.com', 'code.jquery.com', 'http://p.jwpcdn.com'
+
+            , "https://cdnjs.cloudflare.com", "https://ajax.googleapis.com" // DEV
+
+        ],
         fontSrc: ["'self'", 'data:', 'fonts.gstatic.com', 'use.fontawesome.com']
       }
     }));
@@ -64,6 +72,11 @@ module.exports = function () {
     require('../discovery/routes.js')(app);
     require('../search/routes.js')(app);
     require('../specialcollections/routes.js')(app);
+
+    /* 
+     * DEV
+     */
+    require('../test/routes.js')(app);
 
     if(process.env.ENABLE_TEST && process.env.ENABLE_TEST == "true" && process.env.NODE_ENV === 'development') {
         console.log("Test route enabled");
