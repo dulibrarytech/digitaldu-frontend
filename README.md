@@ -37,19 +37,18 @@ All other content is released under [CC-BY-4.0](https://creativecommons.org/lice
 ### Local Setup and Configuration
 
  - Steps to configure Digital Collections app locally...
-    1. Clone the application files from Git repository(https://github.com/dulibrarytech/digitaldu-frontend.git") 
-    
+    1. Clone the application files from Git repository(https://github.com/dulibrarytech/digitaldu-frontend.git")
+
     2. Run "sudo npm install" from the root folder to install dependencies
-    
+
     3. Create a file ".env" in the project root folder. It should contain the following properties:
     ```
-        NODE_ENV={production|development|devlog|devlogsearch} 
+        NODE_ENV={production|development|devlog|devlogsearch}
         NODE_TLS_REJECT_UNAUTHORIZED=1
         APP_HOST={nodejs app domain}
         APP_PORT={nodejs app port}
         WEB_SOCKET_DOMAIN=ws://localhost
         WEB_SOCKET_PORT=9007
-        ENABLE_TEST={if true and NODE_ENV is set to 'development': will include express router in /test folder}
         API_KEY={frontend api key}
         CLIENT_HOST={client domain - same as APP_HOST + APP_PORT unless dns is registered for client domain}
         # Use leading slash
@@ -72,17 +71,17 @@ All other content is released under [CC-BY-4.0](https://creativecommons.org/lice
 
     ```
     4. APP_HOST is the url to the server.  Do not add the port to this url, add that to APP_PORT.  Set APP_PORT to whatever port the nodejs app should run on.
-    
+
     5. CLIENT_HOST is the url to the client.  Add the port to the end if necessary
-    
+
     6. IIIF_URL can be localhost, as the service is included with DigitalCollections.  Make sure the port listed here is the port that DigitalCollections is running on.
-    
+
     7. Setup a local instance of Cantaloupe image server and update the CANTALOUPE_URL field in .env. Update and add the config files "cantaloupe.properties" and "delegates.rb" (located in the "cantaloupe-files" folder) and place them in the cantaloupe folder, after the clone is complete. The two existing files should be replaced.
 
     8. Clone an instance of the UniversalViewer from . into "/public/libs"
 
     9. Update the settings file in /public/confog/configuration.js
-    
+
     10. Run the app by using "node discovery.js" or "nodejs discovery.js" from the app root folder.
 
 #### Index
@@ -103,11 +102,11 @@ All other content is released under [CC-BY-4.0](https://creativecommons.org/lice
 
 "auto": Detect a remote url, DuraCloud url, or object identifier in the "thumbnail" field. Object types set to "auto" can have  any of the 3 typed of values:
 
-1. Relative path to Duracloud source file 
-2. Uri to remote file 
+1. Relative path to Duracloud source file
+2. Uri to remote file
 3. Object Pid
 
-A relative path will contain no protocol or domain 
+A relative path will contain no protocol or domain
 
 A uri will contain a protocol and domain
 
@@ -120,12 +119,12 @@ Auto-source selection for thumbnail path: Set "source" to "auto" in thumbnail co
 
 If the source is not set to "auto", a DuraCloud path is assumed for the thumbnail path. This will only be used directly if the source option is set to "repository". If the source is set to another option (such as "iiif" or "kaltura" the value in the thumbnail path is unused)
 
-##### Index Document Required Fields for Each Object 
+##### Index Document Required Fields for Each Object
 
 "pid": {string} Unique identifier for the object
 "is_member_of_collection" {string} The PID of the collection object that this object is a member of
-"thumbnail" {string} Path to the object's thumbnail image resource.  This can be an absolute path or relative path, depending on the repository interface in use.  This path is accessed by the repository interface. For the out-of-the-box Duraspace repository interface, this is the relative path to the dip-store object 
-"object" {string} Path to the object's data resource.  This can be an absolute path or relative path, depending on the repository interface in use.  This path is accessed by the repository interface.  For the out-of-the-box Duraspace repository interface, this is the relative path to the dip-store object 
+"thumbnail" {string} Path to the object's thumbnail image resource.  This can be an absolute path or relative path, depending on the repository interface in use.  This path is accessed by the repository interface. For the out-of-the-box Duraspace repository interface, this is the relative path to the dip-store object
+"object" {string} Path to the object's data resource.  This can be an absolute path or relative path, depending on the repository interface in use.  This path is accessed by the repository interface.  For the out-of-the-box Duraspace repository interface, this is the relative path to the dip-store object
 "mime_type" {string} Mimetype of the object (ex. image/tiff)
 "object_type": {string} "object" or "collection"
 "is_compound": {boolean} Flag to identify a compound object (an object with constituent parts)
@@ -141,8 +140,8 @@ elastic-index-mapping.json
 "order": Sequence number of the part object
 "title" Title of the part object, if any
 "caption" Caption of the part object, if any
-"thumbnail" {string} Path to the part object's thumbnail image resource.  This can be an absolute path or relative path, depending on the repository interface in use.  This path is accessed by the repository interface. For the out-of-the-box Duraspace repository interface, this is the relative path to the dip-store object 
-"object" {string} Path to the part object's data resource.  This can be an absolute path or relative path, depending on the repository interface in use.  This path is accessed by the repository interface. For the out-of-the-box Duraspace repository interface, this is the relative path to the dip-store object 
+"thumbnail" {string} Path to the part object's thumbnail image resource.  This can be an absolute path or relative path, depending on the repository interface in use.  This path is accessed by the repository interface. For the out-of-the-box Duraspace repository interface, this is the relative path to the dip-store object
+"object" {string} Path to the part object's data resource.  This can be an absolute path or relative path, depending on the repository interface in use.  This path is accessed by the repository interface. For the out-of-the-box Duraspace repository interface, this is the relative path to the dip-store object
 
 ##### Update configuration for any "nested" type index fields
 
@@ -156,7 +155,7 @@ elastic-index-mapping.json
 
 #### Cantaloupe Image Server (v4.1.7)
 
-Download and install the Cantaloupe image server (https://cantaloupe-project.github.io/), update the frontend .env file with the Cantaloupe port and url. 
+Download and install the Cantaloupe image server (https://cantaloupe-project.github.io/), update the frontend .env file with the Cantaloupe port and url.
 
 ##### "Cantaloupe.properties" updates
 
@@ -192,7 +191,7 @@ def source(options = {})
         end
 
         filename = files[0]
-        filepath = path.concat(files[0]) 
+        filepath = path.concat(files[0])
         if(File.exist?(filepath))
           puts "Found image file ".concat(filename).concat(". Using FilesystemSource option")
           str = "FilesystemSource"
@@ -201,7 +200,7 @@ def source(options = {})
           str = "HttpSource"
         end
       end
-    end 
+    end
     return str;
 end
 
@@ -213,7 +212,7 @@ def filesystemsource_pathname(options = {})
     parts = context['identifier'].split('___')
     filepath = filepath.concat(parts[1]).concat(".jpg")
     puts "filesystemsource_pathname returning pathname: ".concat(filepath)
-  else 
+  else
     puts "Error: filename not found in request uri"
   end
   return filepath;
@@ -235,7 +234,7 @@ def httpsource_resource_info(options = {})
     pid = parts[0]
     puts "http_resource_info() Removed file name from ID string. Object ID: ".concat(pid)
   end
-  
+
   if pid.include? '__'
     parts = pid.split('__')
     key = '?key='
@@ -257,7 +256,7 @@ To serve jp2 files, Cantaloupe must be configured to use a jp2 codec such as Kak
 
 ### Installing UniversalViewer library
 
-#### Steps 
+#### Steps
 
 1. Clone or download folder from github (https://github.com/dulibrarytech/universalviewer.git) into {project root}/public/libs
 
@@ -299,13 +298,13 @@ Caches available for {Cache name} are 'thumbnail' or 'object'
 
 ##### /cache/removeItem/{cache name}/{object ID} : Remove Object(s) from Cache
 
-Removes the derivative file from the {cache name} cache for object {object ID} 
+Removes the derivative file from the {cache name} cache for object {object ID}
 
 Caches available for {Cache name} are 'thumbnail' or 'object'
 
 ##### /cache/purge/{cache name} : Automated Cache Purge
 
-This service will check all of the files in the cache and check to see if the object still exists in the public index. If the object does not exist, it is assumed to have been removed from the repository, and the cache file will be removed. 
+This service will check all of the files in the cache and check to see if the object still exists in the public index. If the object does not exist, it is assumed to have been removed from the repository, and the cache file will be removed.
 
 This service is started by issuing a GET request to
 [project domain]/cache/purgeInvalidItems

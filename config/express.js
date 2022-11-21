@@ -6,7 +6,7 @@
 
     You may obtain a copy of the License at
     http://www.apache.org/licenses/LICENSE-2.0
-    
+
     Unless required by applicable law or agreed to in writing, software
     distributed under the License is distributed on an "AS IS" BASIS,
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,7 +15,7 @@
  */
 
  /**
- * @file 
+ * @file
  *
  * express.js
  * Discovery app express.js bootstrap file
@@ -64,12 +64,6 @@ module.exports = function () {
     require('../discovery/routes.js')(app);
     require('../search/routes.js')(app);
     require('../specialcollections/routes.js')(app);
-
-    if(process.env.ENABLE_TEST && process.env.ENABLE_TEST == "true" && process.env.NODE_ENV === 'development') {
-        console.log("Test route enabled");
-        require('../test/routes.js')(app);
-    }
-    
     require('express-template-cache');
 
     app.route('/')
