@@ -266,7 +266,9 @@ To serve jp2 files, Cantaloupe must be configured to use a jp2 codec such as Kak
 
 4. Copy uv_helpers.js (in project folder root) into the "universalviewer/src/" folder, and *rename it to 'helpers.js'*
 
-5. Run the command "grunt" to build the application
+5. Install grunt (npm) if it is not installed. 'npm install -g grunt' for global install, 'npm install grunt --save-dev' to install it to the universalviewer app
+
+6. Run the command 'npm run build' (from the universalviewer folder) to build the application
 
 Instructions to install/configure Universalviewer: https://universalviewer.io/
 
@@ -280,9 +282,11 @@ Instructions to install/configure Universalviewer: https://universalviewer.io/
 
 ### Cache
 
-#### Configuration
+#### Enable caching
 
-Enable/disable caching of thumbnail and object streams, by object type in configuration object fields:
+Enable/disable caching for object types (caching is off for all object types by default)
+
+###### In the configuration file, the following properties contain the cache settings for thumbnails and objects
 
 thumbnailDatastreams
 
