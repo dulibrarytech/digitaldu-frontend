@@ -59,7 +59,7 @@ var clearForm = function() {
 }
 
 var addFormRow = function() {
-	if($(".advanced-search-query").length < 6) {
+	if($(".advanced-search-query").length < 4) {
 		let formRow = "<div class='form-inline'>";
 		formRow += $("#advanced-search .form-inline:first-child").html();
 		formRow += "</div>";
@@ -77,11 +77,12 @@ var addFormRow = function() {
 		$("#advanced-search .form-inline:last-child .advanced-search-field-select").attr("name", "field[]");
 		$("#advanced-search .form-inline:last-child .advanced-search-type-select").attr("name", "type[]");
 		$("#advanced-search .form-inline:last-child .advanced-search-box-query").attr("name", "q[]");
-	}
-	else {
-		$("#add-query-button").off("click");
-		$("#add-query-button > span").text("Maximum search queries added");
-		$("#add-query-button").css("cursor", "initial")
+
+		if($(".advanced-search-query").length == 3) {
+			$("#add-query-button").off("click");
+			$("#add-query-button > span").text("Maximum search queries added");
+			$("#add-query-button").css("cursor", "initial")
+		}
 	}
 }
 
@@ -112,7 +113,7 @@ var restoreFormData = function() {
 		for(var index in formState) {
 			// Do not add the first row, it is rendered with each page load
 			if(index > 0) {
-				// Restore the form state form from local storage data: Add a new form row if the number of rows currently in the form is less than the number of rows in local storage 
+				// Restore the form state form from local storage data: Add a new form row if the number of rows currently in the form is less than the number of rows in local storage
 				if(parseInt($("#advanced-search .form-inline").length) < formState.length) {
 					addFormRow(index);
 				}
@@ -131,7 +132,7 @@ var updateFormFieldValues = function(autocompleteData) {
 	var searchFieldInputs = $('.advanced-search-field-select');
 	for(var key in searchFieldInputs) {
 		if(isNaN(key) == false && key > 0) {
-			
+
 			// Updates for the collection field
 			if($("#" + searchFieldInputs[key].id).val() == "collection") {
 				let rowIndex = parseInt(key);
