@@ -17,17 +17,18 @@
 const config = require('../config/' + process.env.CONFIGURATION_FILE);
 const Kaltura = require('../libs/kaltura');
 const sanitizeHtml = require('sanitize-html');
-const linkifyHtml = require('linkifyjs/html');
+// const linkifyHtml = require('linkifyjs/html');
+const linkifyHtml = require('linkify-html');
 
 /*
- * 
+ *
  */
 exports.testObject = function(object) {
 	return (object && typeof object != "undefined");
 }
 
 /*
- * 
+ *
  */
 exports.getDateMonthString = function(monthVal) {
   const monthNames = ["January", "February", "March", "April", "May", "June",
@@ -37,21 +38,21 @@ exports.getDateMonthString = function(monthVal) {
 }
 
 /*
- * 
+ *
  */
 exports.isParentObject = function(object) {
   return (object && (object.is_compound == true || object.object_type == "compound" || object.type == "compound"));
 }
 
 /*
- * 
+ *
  */
 exports.isCollectionObject = function(object) {
   return (object && (object.object_type && object.object_type == "collection"));
 }
 
 /*
- * 
+ *
  */
 exports.isObjectEmpty = function(object) {
 	for(var key in object) {
@@ -62,14 +63,14 @@ exports.isObjectEmpty = function(object) {
 }
 
 /*
- * 
+ *
  */
 exports.removeHtmlEntities = function(string) {
 	return string.replace(/&amp;/g, "").replace(/&lt;/g, "").replace(/&gt;/g, "").replace(/&quot;/g, "");
 }
 
 /*
- * 
+ *
  */
 var stripHtmlTags = function(data) {
 	if(typeof data == "string") {
@@ -91,7 +92,7 @@ var stripHtmlTags = function(data) {
 exports.stripHtmlTags = stripHtmlTags;
 
 /*
- * 
+ *
  */
 exports.sanitizeHttpParamsObject = function(object) {
 	for(var key in object) {
@@ -114,13 +115,13 @@ exports.sanitizeHttpParamsObject = function(object) {
 }
 
 /*
- * 
+ *
  */
 var getCompoundObjectPart = function(object, partIndex) {
 	var parts = [],
 		objectPart = null;
-		
-	// Get the parts array	
+
+	// Get the parts array
 	if(object.parts) {
 		parts = object.parts;
 	}
@@ -168,7 +169,7 @@ var validateCompoundObject = function(object) {
 	else {
 		mimeType = object.mime_type;
 	}
-	
+
 	// Validate the compound object parts' mime types against the compound object's allowed mime types
 	if(config.objectTypes["audio"].includes(mimeType) || config.objectTypes["video"].includes(mimeType)) {
 		isValid = validateCompoundObjectParts(parts || [], ["audio", "video"]);
@@ -195,7 +196,7 @@ exports.validateCompoundObject = validateCompoundObject;
  * @return {Boolean} - true if combination of parts is valid, false if not
  */
 var validateCompoundObjectParts = function(parts, objectTypes) {
-	var acceptedMimeTypes = [], 
+	var acceptedMimeTypes = [],
 		mimeType = "",
 		isValid = false;
 
@@ -225,7 +226,7 @@ var validateCompoundObjectParts = function(parts, objectTypes) {
 }
 
 /*
- * 
+ *
  */
 exports.getCompoundObjectItemCount = function(object) {
 	let count = null;
@@ -242,11 +243,11 @@ exports.getCompoundObjectItemCount = function(object) {
 }
 
 /*
- * 
+ *
  */
 var getFileExtensionFromFilePath = function(filename) {
-  filename = filename ? filename : "";	
-  let extension = null, 
+  filename = filename ? filename : "";
+  let extension = null,
   	  extIndex = filename.lastIndexOf("."),
       pathExtension = filename.substring(extIndex);
 
@@ -309,7 +310,7 @@ var getObjectTypeForMimeType = function(mimeType="") {
 exports.getObjectTypeForMimeType = getObjectTypeForMimeType;
 
 /*
- * 
+ *
  */
 var getMimeType = function(fileExtension) {
 	let mimeType = null;
@@ -326,7 +327,7 @@ exports.getMimeType = getMimeType;
  * Finds the DDU object type that corresponds with an object's mime type
  *
  * @param {String} extension - a file extension (no '.' prefix)
- * @return {Boolean} true if extension is valid (in configuration) false if not recognized 
+ * @return {Boolean} true if extension is valid (in configuration) false if not recognized
  */
 var isValidExtension = function(extension) {
 	let isValid = false;
@@ -405,7 +406,7 @@ exports.getDsType = function(mimeType) {
 
 
 /**
- * Creates an Elastic 'aggs' query for an Elastic query object 
+ * Creates an Elastic 'aggs' query for an Elastic query object
  *
  * @param {Object} facets - DDU facet fields configuration
  * @return {Object} Elastic DSL aggregations query object
@@ -439,12 +440,12 @@ exports.getFacetAggregationObject = function(facets) {
       	}
       }
     };
-    
+
     return facetAggregations;
 }
 
 /*
- * 
+ *
  */
 exports.validateDateParameters = function(query) {
   var isValid = true;
@@ -466,7 +467,7 @@ exports.validateDateParameters = function(query) {
 }
 
 /*
- * 
+ *
  */
 exports.getDuracloudFilenameFromObjectPath = function(object) {
 	let filename = null;
@@ -477,7 +478,7 @@ exports.getDuracloudFilenameFromObjectPath = function(object) {
 }
 
 /*
- * 
+ *
  */
 exports.addHyperlinks = function(strings) {
 	for(var index in strings) {
