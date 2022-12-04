@@ -158,6 +158,7 @@ var renderCollection = function(req, res) {
 		data.options["showDateRange"] = config.showCollectionViewDateRangeLimiter || false;
 
 		let sortBy = Helper.getSortDataArray(data.sortType);
+
 		Service.getObjectsInCollection(pid, page, reqFacets, sortBy, pageSize, daterange, function(error, response) {
 			if(error) {
 				if(response) {
@@ -254,7 +255,7 @@ exports.renderObjectView = function(req, res) {
 	},
 	pid = req.params.pid || "",
 	part = null,
-	page = req.params.page && isNaN(parseInt(req.params.page)) === false ? req.params.page : null;
+	page = req.query.page && isNaN(parseInt(req.query.page)) === false ? req.query.page : null;
 	
 	Service.fetchObjectByPid(config.elasticsearchPublicIndex, pid, function(error, response) {
 		if(error) {

@@ -770,90 +770,97 @@ getManifestObject = function(pid, index, page, apikey, callback) {
 exports.getManifestObject = getManifestObject;
 
 getObjectsInCollection = function(collectionId, page=1, facets=null, sort=null, pageSize=10, daterange=null, callback) {
-  Repository.getCollectionObjects(collectionId, facets).catch(error => {
-    callback(error, null);
-  })
-  .then( response => {
-      var collection = {
-        list: [], 
-        title: "",
-        facets: {},
-        count: 0
-      };
+  let maxPages = config.maxElasticSearchResultCount / pageSize;
+  if(page > maxPages) {
+    let error = "Page number is out of range.";
+    callback(error, []);
+  }
+  else {
+      Repository.getCollectionObjects(collectionId, facets).catch(error => {
+      callback(error, null);
+    })
+    .then( response => {
+        var collection = {
+          list: [], 
+          title: "",
+          facets: {},
+          count: 0
+        };
 
-      // Get facets for this collection
-      var facetAggregations = AppHelper.getFacetAggregationObject(config.facets);
+        // Get facets for this collection
+        var facetAggregations = AppHelper.getFacetAggregationObject(config.facets);
 
-      // Validate repository response
-      if(response && response.length > 0) {
-        collection.count = response.list.length;
-        collection.list = Helper.getObjectLinkDisplayList(JSON.parse(response.list));
-        collection.facets = response.facets || {};
-        collection.title = response.title || "";
-        callback(null, collection);
-      }
-      else {
-        var queryData = [];
-        queryData.push({
-          terms: "",
-          field: "all",
-          type: "contains",
-          bool: "or"
-        });
+        // Validate repository response
+        if(response && response.length > 0) {
+          collection.count = response.list.length;
+          collection.list = Helper.getObjectLinkDisplayList(JSON.parse(response.list));
+          collection.facets = response.facets || {};
+          collection.title = response.title || "";
+          callback(null, collection);
+        }
+        else {
+          var queryData = [];
+          queryData.push({
+            terms: "",
+            field: "all",
+            type: "contains",
+            bool: "or"
+          });
 
-        pageSize = pageSize || config.defaultCollectionsPerPage || 10;
-        var from = (page - 1) * pageSize;
-        Search.searchIndex(queryData, facets, collectionId, page, pageSize, daterange, sort, null, function(error, response) {
-          if(error) {
-            callback(error, null);
-          }
-          else {
-            var responseData = {};
-            response = response.elasticResponse;
-            if (error){
+          pageSize = pageSize || config.defaultCollectionsPerPage || 10;
+          var from = (page - 1) * pageSize;
+          Search.searchIndex(queryData, facets, collectionId, page, pageSize, daterange, sort, null, function(error, response) {
+            if(error) {
               callback(error, null);
             }
-            else if(from > response.hits.total.value) {
-              callback("Invalid page number ", null);
-            }
             else {
-              var results = [];
-              for(var index of response.hits.hits) {
-                results.push(index._source);
+              var responseData = {};
+              response = response.elasticResponse;
+              if (error){
+                callback(error, null);
               }
-
-              collection.list = Helper.getObjectLinkDisplayList(results);
-              collection.facets = response.aggregations;
-              collection.count = response.hits.total.value;
-
-              if(collectionId != config.topLevelCollectionPID) {
-                fetchObjectByPid(config.elasticsearchPublicIndex, collectionId, function(error, object) {
-                  if(error) {
-                    collection.title = "";
-                    callback(error + ". Pid: " + collectionId, []);
-                  }
-                  else if(!object) {
-                    callback("Collection not found. Pid: " + collectionId, null);
-                  }
-                  else if(object.object_type != "collection") {
-                    callback("Invalid collection. Pid: " + collectionId, []);
-                  }
-                  else {
-                    collection.title = object.title || "No Title";
-                    collection.abstract = (object.abstract && typeof object.abstract == "object") ? object.abstract[0] : object.abstract || "";
-                    callback(null, collection);
-                  }
-                });
+              else if(from > response.hits.total.value) {
+                callback("Invalid page number ", null);
               }
               else {
-                  collection.title = config.topLevelCollectionName || "";
-                  callback(null, collection);
+                var results = [];
+                for(var index of response.hits.hits) {
+                  results.push(index._source);
+                }
+
+                collection.list = Helper.getObjectLinkDisplayList(results);
+                collection.facets = response.aggregations;
+                collection.count = response.hits.total.value;
+
+                if(collectionId != config.topLevelCollectionPID) {
+                  fetchObjectByPid(config.elasticsearchPublicIndex, collectionId, function(error, object) {
+                    if(error) {
+                      collection.title = "";
+                      callback(error + ". Pid: " + collectionId, []);
+                    }
+                    else if(!object) {
+                      callback("Collection not found. Pid: " + collectionId, null);
+                    }
+                    else if(object.object_type != "collection") {
+                      callback("Invalid collection. Pid: " + collectionId, []);
+                    }
+                    else {
+                      collection.title = object.title || "No Title";
+                      collection.abstract = (object.abstract && typeof object.abstract == "object") ? object.abstract[0] : object.abstract || "";
+                      callback(null, collection);
+                    }
+                  });
+                }
+                else {
+                    collection.title = config.topLevelCollectionName || "";
+                    callback(null, collection);
+                }
               }
             }
-          }
-        });
-      }
-  });
+          });
+        }
+    });
+  }
 }
 exports.getObjectsInCollection = getObjectsInCollection;
 
