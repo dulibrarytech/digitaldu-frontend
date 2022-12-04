@@ -11,3 +11,5 @@ config/config.js
 public/config/configuration.js
 views/partials/header.ejs
 public/libs/universalviewer/
+public/assets/js/*
+public/views/*
