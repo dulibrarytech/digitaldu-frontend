@@ -724,3 +724,24 @@ exports.cacheAddItem = async function(req, res) {
 	}
 }
 
+exports.getObjectData = function(req, res) {
+	let pid = req.params.pid || "";
+
+	if(req.query.key && req.query.key == config.apiKey) {
+		Service.fetchObjectByPid(config.elasticsearchPublicIndex, pid, function(error, object) {
+			if(error) {
+				console.error(error);
+				res.sendStatus(500);
+			}
+			else if(object == null) {
+				console.log("Object not found", pid);
+				res.sendStatus(404);
+			}
+			else {
+				res.send(object);
+			}
+		});
+	}
+	else res.sendStatus(403);
+}
+

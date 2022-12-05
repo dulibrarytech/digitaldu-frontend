@@ -91,5 +91,8 @@ module.exports = function (app) {
 
     app.route('/cache/addItem/:cache/:pid')
         .get(Discovery.cacheAddItem)
+
+    app.route('/data/:pid')
+        .get(Discovery.getObjectData)
 };
 
