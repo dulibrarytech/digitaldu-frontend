@@ -22,6 +22,26 @@ var deploy_js = function() {
 }
 exports.deploy_js = deploy_js;
 
+var minify_config_js = function() {
+  return gulp.src('./public/config/*.js')
+    .pipe(uglify())
+    .pipe(gulp.dest('./public/dist/config/'));
+}
+exports.minify_config_js = minify_config_js;
+
+var obfuscate_config_js = function() {
+  return gulp.src('./public/config/*.js')
+    .pipe(javascriptObfuscator())
+    .pipe(gulp.dest('./public/dist/config/'));
+}
+exports.obfuscate_config_js = obfuscate_config_js;
+
+var deploy_config_js = function() {
+  return gulp.src('./public/dist/config/*.js')
+    .pipe(gulp.dest('./public/config/'));
+}
+exports.deploy_config_js = deploy_config_js;
+
 var minify_view_js = function() {
   return gulp.src('./public/views/*.js')
     .pipe(uglify())
