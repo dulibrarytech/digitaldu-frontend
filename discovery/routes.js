@@ -35,7 +35,7 @@ module.exports = function (app) {
     app.route('/object/:pid/:page')
         .get(Discovery.renderObjectView)
 
-    app.route('/object/:pid')
+        app.route('/object/:pid')
         .get(function(req, res) {
             if(/codu[:_][0-9]+/.test(req.params.pid)) {
                 Discovery.renderHandleErrorPage(req, res);
@@ -92,7 +92,7 @@ module.exports = function (app) {
     app.route('/cache/addItem/:cache/:pid')
         .get(Discovery.cacheAddItem)
 
-    app.route('/data/:pid')
+    app.route('/repository/data/:pid')
         .get(Discovery.getObjectData)
 };
 
