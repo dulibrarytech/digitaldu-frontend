@@ -29,7 +29,8 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
     compression = require('compression'),
     helmet = require('helmet'),
     bodyParser = require('body-parser'),
-    noCache = require('nocache');
+    noCache = require('nocache'),
+    cors = require('cors');
 
 module.exports = function () {
     var app = express(),
@@ -40,6 +41,10 @@ module.exports = function () {
     } else if (process.env.NODE_ENV === 'production') {
         app.use(compression());
     }
+
+    app.use(cors({
+        origin: "*"
+    }));
 
     app.use(bodyParser.urlencoded({
         extended: true
