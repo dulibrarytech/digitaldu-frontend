@@ -196,7 +196,7 @@ exports.getDatastream = function(object, datastreamID, callback, apikey=null) {
         case "kaltura":
           let viewerId = object.entry_id || object.kaltura_id || null;
           uri = viewerId ? Kaltura.getStreamingMediaUrl(viewerId, extension) : null;
-          if(!viewerId) {console.log("Null viewer ID")}
+          if(!viewerId) {console.log("Null kaltura ID field")}
           break;
         case "repository":
           uri = object.object;
