@@ -6,7 +6,7 @@
 
     You may obtain a copy of the License at
     http://www.apache.org/licenses/LICENSE-2.0
-    
+
     Unless required by applicable law or agreed to in writing, software
     distributed under the License is distributed on an "AS IS" BASIS,
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,7 +15,7 @@
  */
 
  /**
- * @file 
+ * @file
  *
  * config.js
  * Discovery app configuration file
@@ -111,7 +111,7 @@ module.exports = {
     defaultSearchResultsView: "List",
 
     /*
-     * Set to true to highlight search terms in the search result text 
+     * Set to true to highlight search terms in the search result text
      */
     enableSearchHitHighlighting: false,
 
@@ -125,34 +125,34 @@ module.exports = {
      */
     noTitlePlaceholder: "Untitled",
 
-    /* 
+    /*
      * Viewer to play audio files
      * [browser | jwplayer | universalviewer | kaltura]
      * 'browser' will use <audio> element
      */
     audioPlayer: "universalviewer",
 
-    /* 
+    /*
      * Viewer to display video files
      * [browser | videojs | jwplayer | universalviewer | kaltura]
      * 'browser' will use <video> element
      */
     videoViewer: "universalviewer",
 
-    /* 
+    /*
      * Viewer to display pdf files
      * * PDF-JS currently unavailable
      * [browser | universalviewer]
      */
     pdfViewer: "universalviewer",
 
-    /* 
+    /*
      * Viewer dimensions, if none are set by the viewer configuration
      */
     defaultViewerHeight: "600",
     defaultViewerWidth: "1000",
 
-    /* 
+    /*
      * Viewer to display large image files (tiff, jp2)
      * [browser | openseadragon | universalviewer]
      *
@@ -161,14 +161,14 @@ module.exports = {
      */
     largeImageViewer: "universalviewer",
 
-    /* 
+    /*
      * Message to display in the object viewer if the object can not be rendered. Can be html
      */
     viewerErrorMessage: "This object could not be rendered. <br><br>Please contact <a href='mailto:archives@du.edu'>archives@du.edu</a> if you have any questions about accessing this object.",
 
-    /* 
+    /*
      * Viewer to display compound objects
-     * At this point, multiple compound viewers can not be configured.  
+     * At this point, multiple compound viewers can not be configured.
      * [ universalviewer ]
      */
     compoundObjectViewer: "universalviewer",
@@ -181,7 +181,7 @@ module.exports = {
     openseadragonPathToLibrary: "/libs/openseadragon/openseadragon.min.js",
     openseadragonImagePath: "/libs/openseadragon/images/",
 
-    /* 
+    /*
      * JWPlayer Settings
      * Path relative to /public folder
      */
@@ -208,7 +208,7 @@ module.exports = {
     },
 
     /*
-     * IIIF API 
+     * IIIF API
      */
     IIIFServerUrl: process.env.IIIF_IMAGE_SERVER_URL + process.env.IIIF_IMAGE_SERVER_PATH,
     IIIFServerDomain: process.env.IIIF_IMAGE_SERVER_URL,
@@ -221,7 +221,7 @@ module.exports = {
     IIIFDefaultCanvasWidth: 750,
     IIIFEnablePdfPaging: true,
     IIIFUseLocalFilesource: true,
-    IIIFFilesourceImageFilenamePrefix: "___", 
+    IIIFFilesourceImageFilenamePrefix: "___",
 
     /*
      * IIIF Object Types
@@ -287,7 +287,7 @@ module.exports = {
     defaultThumbnailImage: "tn-placeholder.jpg",
     thumbnailImageCacheEnabled: false,
     thumbnailImageCacheLocation: "cache/thumbnail",
-    objectDerivativeCacheEnabled: false,
+    objectDerivativeCacheEnabled: true,
     objectDerivativeCacheLocation: "cache/object",
 
     /*
@@ -318,17 +318,17 @@ module.exports = {
     thumbnailDatastreams: {
         "collection": {
             "source": "auto",
-            "cache": false
+            "cache": true
         },
         "object": {
             "type": {
                 "still image": {
                     "source": "iiif",
-                    "cache": false
+                    "cache": true
                 },
                 "audio": {
                     "source": "kaltura",
-                    "cache": false
+                    "cache": true
                 },
                 "video": {
                     "source": "kaltura",
@@ -336,7 +336,7 @@ module.exports = {
                 },
                 "pdf": {
                     "source": "iiif",
-                    "cache": false
+                    "cache": true
                 }
             }
         }
@@ -361,11 +361,11 @@ module.exports = {
             "type": {
                 "still image": {
                     "source": "repository",
-                    "cache": false,
+                    "cache": true,
                     "file_type": {
                         "jpg": {
                             "source": "iiif",
-                            "cache": false
+                            "cache": true
                         }
                     }
                 },
@@ -379,7 +379,7 @@ module.exports = {
                 },
                 "pdf": {
                     "source": "repository",
-                    "cache": false
+                    "cache": true
                 }
             }
         }
@@ -392,7 +392,7 @@ module.exports = {
     removemetadataDisplayHtml: true,
 
     /*
-     * Fulltext search fields 
+     * Fulltext search fields
      * Define all search fields here
      *
      * @example - Index display record
@@ -423,11 +423,11 @@ module.exports = {
      *
      * @example - searchAllField object example
      *          // Use the "term" field value if the sibling field "type" has the value "topic".  Other "term" values will be ignored
-     *          {"label": "Subject", "id": "subject", "field": "subjects.terms", "matchField": "subjects.terms.type", "matchTerm": "topic"} 
+     *          {"label": "Subject", "id": "subject", "field": "subjects.terms", "matchField": "subjects.terms.type", "matchTerm": "topic"}
      *
      *          // If field data is of type "nested", set the "isNestedType" param to true to enable searching within nested data
-     *          {"label": "Subject", "id": "subject", "field": "subjects.terms", "matchField": "subjects.terms.type", "matchTerm": "topic", "isNestedType": "true"} 
-     */ 
+     *          {"label": "Subject", "id": "subject", "field": "subjects.terms", "matchField": "subjects.terms.type", "matchTerm": "topic", "isNestedType": "true"}
+     */
     searchAllFields: [
         {"label": "Title", "id": "title", "field": "title", "boost": "10"},
         {"label": "Collection", "id": "collection", "field": "is_member_of_collection", "boost": "10"},
@@ -445,7 +445,7 @@ module.exports = {
     /*
      * Selectable search fields for the standard search.  These will appear in 'Search Type' dropdown list
      * (ex { "Label" : "searchAllFields.id" })
-     */ 
+     */
     searchFields: [
         {"Title": "title"},
         {"Creator": "creator"},
@@ -456,14 +456,14 @@ module.exports = {
 
     /*
      * Search fields to apply fuzzy value
-     * List by searchAllFields.field 
+     * List by searchAllFields.field
      */
     fuzzyFields: ["title", "creator"],
 
     /*
      * Selectable search fields for the advanced search
-     * { "Label" : "searchAllFields.id" }     
-     */ 
+     * { "Label" : "searchAllFields.id" }
+     */
     advancedSearchFields: [
         {"Title": "title"},
         {"Creator": "creator"},
@@ -548,7 +548,7 @@ module.exports = {
         "Creation Date (newest to oldest)": "Creation Date,desc",
         "Title (a - z)": "Title,asc",
         "Title (z - a)": "Title,desc",
-        "Archival Identifier (a to z)": "Archival Identifier,asc", 
+        "Archival Identifier (a to z)": "Archival Identifier,asc",
         "Archival Identifier (z to a)": "Archival Identifier,desc"
     },
 
@@ -635,7 +635,7 @@ module.exports = {
      * If the value is less than the above 'facetLimit' value, a 'show all' link will be displayed to display the full set of facets
      */
     facetLimitsByType: {
-        "Collection": 15 
+        "Collection": 15
     },
 
      /*
@@ -688,14 +688,15 @@ module.exports = {
      fileExtensions: {
         "jpg": ["image/jpg", "image/jpeg"],
         "mp3": ["audio/mp3", "audio/x-wav", "audio/mpeg"],
-        "mp4": ["video/mp4", "video/quicktime", "video/mov", "video/x-msvideo"],
+        "mp4": ["video/mp4", "video/x-msvideo"],
         "pdf": ["application/pdf"],
-        "tif": ["image/tif", "image/tiff"]
+        "tif": ["image/tif", "image/tiff"],
+        "mov": ["video/quicktime"]
      },
 
       /*
       * File extension mime types
-      * Set mime type for 'Content Type' header for file downloads 
+      * Set mime type for 'Content Type' header for file downloads
       */
      mimeTypes: {
         "tif": "image/tiff",
@@ -705,6 +706,7 @@ module.exports = {
         "mp3": "audio/mp3",
         "mp4": "video/mp4",
         "pdf": "application/pdf",
-        "wav": "audio/wav"
+        "wav": "audio/wav",
+        "mov": "video/quicktime"
      }
 };
