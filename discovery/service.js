@@ -494,19 +494,25 @@ getDatastream = function(indexName, objectID, datastreamID, part, authKey, callb
 
         else {
           let type = AppHelper.getObjectType(object) || "";
+
           if(cacheName == "thumbnail") {
             settings = config.thumbnailDatastreams.object.type[type] || null;
           }
           else {
+            // Get the settings for the object by object type
             let typeSettings = config.objectDatastreams.object.type;
-            settings = typeSettings[type] || null; // Default settings for object type
 
-            // Object type specific settings
-            if(typeSettings[type].file_type && typeSettings[type].file_type[extension]) {
-              settings = config.objectDatastreams.object.type[type].file_type[extension];
+            // Check for file type specific settings for this boject type (e.g. 'jpg' settings for image type, etc)
+            if(typeSettings[type] && typeSettings[type].file_type) {
+              settings = typeSettings[type].file_type[extension] || null;
+            }
+            else {
+              settings = typeSettings[type] || null;
             }
           }
         }
+
+        // If settings object is null, cache will default to disabled (cacheEnabled == false)
         if(settings) {
           cacheEnabled = settings.cache;
         }
