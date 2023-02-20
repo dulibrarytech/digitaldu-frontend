@@ -435,13 +435,16 @@ getCollectionList = function(callback) {
 }
 
 getDatastream = function(indexName, objectID, datastreamID, part, authKey, callback) {
+  console.log("HERE")
   fetchObjectByPid(indexName, objectID, function(error, object) {
     if(object) {
       let contentType = AppHelper.getContentType(datastreamID, object, part);
 
       if(AppHelper.isParentObject(object)) {
         // This is a compound object: Add the compound part data to the main data object
-        let objectPart = AppHelper.getCompoundObjectPart(object, part || "1")
+        if(!part) part = "1";
+        let objectPart = AppHelper.getCompoundObjectPart(object, part);
+
         if(objectPart) {
           objectPart["pid"] = objectID;
           objectPart["object_type"] = "object";

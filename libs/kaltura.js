@@ -24,7 +24,7 @@
 'use strict';
 
 const config = require('../config/' + process.env.CONFIGURATION_FILE),
-	  domain = "https://cdnapisec.kaltura.com";
+	  domain = config.kalturaDomain || "https://cdnapisec.kaltura.com";
 
 /**
  * 
@@ -77,5 +77,5 @@ exports.getThumbnailUrl = function(object) {
  * @return 
  */
 exports.getStreamingMediaUrl = function(entryid, extension) {
- 	return "https://cdnapisec.kaltura.com/p/2357732/sp/0/playManifest/entryId/" + entryid + "/format/url/protocol/https/flavorParamId/0_7gx3rx5v/video" + "." + extension;
+ 	return domain + "/p/2357732/sp/0/playManifest/entryId/" + entryid + "/format/url/protocol/https/flavorParamId/0_7gx3rx5v/video" + "." + extension;
 }
