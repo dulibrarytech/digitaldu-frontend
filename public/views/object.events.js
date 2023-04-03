@@ -42,12 +42,20 @@ $( document ).ready(function() {
 
 	$(".copy-text-link").click(function(event) {
 		var range = document.createRange();
-		var text = event.currentTarget.previousSibling;
+		var text = event.currentTarget.parentElement.previousSibling;
 		range.selectNode(text);
 		window.getSelection().removeAllRanges();
 		window.getSelection().addRange(range);
 		document.execCommand('copy');
 		window.getSelection().removeAllRanges();
+
+		// show green checkmark feedback when copy icon is clicked
+		let icon = event.target;
+		let iconUrl = icon.src;
+		icon.src = '/assets/img/text-copied.png';
+		setTimeout(() => {
+			icon.src = iconUrl;
+		}, 2000);
 	})
 
 	$("#transcript-view-wrapper").css("display", "none");

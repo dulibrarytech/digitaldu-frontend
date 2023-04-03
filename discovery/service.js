@@ -435,7 +435,6 @@ getCollectionList = function(callback) {
 }
 
 getDatastream = function(indexName, objectID, datastreamID, part, authKey, callback) {
-  console.log("HERE")
   fetchObjectByPid(indexName, objectID, function(error, object) {
     if(object) {
       let contentType = AppHelper.getContentType(datastreamID, object, part);

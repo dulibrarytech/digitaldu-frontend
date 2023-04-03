@@ -271,15 +271,15 @@ exports.createMetadataDisplayObject = function(result, collections=[]) {
 		}
 	}
 
-	// Add non display_object fields to appear after the display_object fields
+	// Add fields extraneous to display_object. these will appear below the display_object fields in the metadata display
 	if(result.handle) {
 		displayObj["Handle"] = result.handle;
-		displayObj["Handle"] += '<a class="copy-text-link"><img src="' + config.rootUrl + '/assets/img/cut-copy-and-paste.jpg" width="40" height="25" style="margin-left: 6px"/></a>';
+		displayObj["Handle"] += '<span class="copy-text-link-wrapper"><a class="copy-text-link"><img src="' + config.rootUrl + '/assets/img/cut-copy-and-paste.jpg" width="40" height="25" style="margin-left: 6px"/></a></span>';
 	}
 	if(result.pid) {
 		let manifestUrl = config.rootUrl + "/iiif/" + result.pid + "/manifest";
 		displayObj["IIIF Manifest"] = '<a href="' + manifestUrl + '">' + manifestUrl + '</a>';
-		displayObj["IIIF Manifest"] += '<a class="copy-text-link"><img src="' + config.rootUrl + '/assets/img/cut-copy-and-paste.jpg" width="40" height="25" style="margin-left: 6px"/></a>';
+		displayObj["IIIF Manifest"] += '<span class="copy-text-link-wrapper"><a class="copy-text-link"><img src="' + config.rootUrl + '/assets/img/cut-copy-and-paste.jpg" style="margin-left: 6px"/></a></span>';
 	}
 
 	return displayObj;
