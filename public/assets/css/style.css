@@ -80,10 +80,6 @@ ul {
   list-style-type: none;
 }
 
-td.inline-flex p {
-  display: inline-flex;
-}
-
 header {
   background: #8b2332;
   height: 50px;

@@ -274,12 +274,12 @@ exports.createMetadataDisplayObject = function(result, collections=[]) {
 	// Add fields extraneous to display_object. these will appear below the display_object fields in the metadata display
 	if(result.handle) {
 		displayObj["Handle"] = result.handle;
-		displayObj["Handle"] += '<span class="copy-text-link-wrapper"><a class="copy-text-link"><img src="' + config.rootUrl + '/assets/img/cut-copy-and-paste.jpg" width="40" height="25" style="margin-left: 6px"/></a></span>';
+		displayObj["Handle"] += '<span class="copy-text-link-wrapper"><a class="copy-text-link" data-text="' + result.handle + '"><img src="' + config.rootUrl + '/assets/img/cut-copy-and-paste.jpg" width="40" height="25" style="margin-left: 6px"/></a></span>';
 	}
 	if(result.pid) {
 		let manifestUrl = config.rootUrl + "/iiif/" + result.pid + "/manifest";
 		displayObj["IIIF Manifest"] = '<a href="' + manifestUrl + '">' + manifestUrl + '</a>';
-		displayObj["IIIF Manifest"] += '<span class="copy-text-link-wrapper"><a class="copy-text-link"><img src="' + config.rootUrl + '/assets/img/cut-copy-and-paste.jpg" style="margin-left: 6px"/></a></span>';
+		displayObj["IIIF Manifest"] += '<span class="copy-text-link-wrapper"><a class="copy-text-link" data-text="' + manifestUrl + '"><img src="' + config.rootUrl + '/assets/img/cut-copy-and-paste.jpg" style="margin-left: 6px"/></a></span>';
 	}
 
 	return displayObj;

@@ -41,13 +41,12 @@ $( document ).ready(function() {
 	})
 
 	$(".copy-text-link").click(function(event) {
-		var range = document.createRange();
-		var text = event.currentTarget.parentElement.previousSibling;
-		range.selectNode(text);
-		window.getSelection().removeAllRanges();
-		window.getSelection().addRange(range);
-		document.execCommand('copy');
-		window.getSelection().removeAllRanges();
+		// copy text to the clipboard
+		var text = event.currentTarget.getAttribute('data-text');
+		navigator.clipboard.writeText(text)
+		.catch(err => {
+			console.error('Error in copying text: ', err);
+		});
 
 		// show green checkmark feedback when copy icon is clicked
 		let icon = event.target;
