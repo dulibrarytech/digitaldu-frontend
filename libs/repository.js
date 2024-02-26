@@ -100,7 +100,7 @@ exports.getDatastreamUrl = function(dsid, object) {
  *
  * @return {undefined}
  */
-exports.streamData = function(object, dsid, callback) {
+exports.streamData = function(object, dsid, callback) { 
 	try {
 		if(!object) { throw "Object is null" }
 		var url = getRepositoryUrl();

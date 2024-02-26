@@ -242,6 +242,7 @@ module.exports = {
     /*
      * Kaltura viewer settings
      */
+    kalturaDomain: "https://cdnapisec.kaltura.com",
     kalturaUI_ID: "44058172",
     kalturaPartnerID: "2357732",
     kalturaUniqueObjectID: "kaltura_player_1559751114",

@@ -426,7 +426,7 @@ exports.getResultSetMinDate = function(facets) {
 exports.formatSearchTerms = function(queryString) {
 
   // Remove non-alphanumeric characters, except for control characters '*', '"'
-  queryString = queryString.toLowerCase().replace(/[^a-z0-9*\s"]/gi, '') || "";
+  queryString = queryString.toLowerCase().replace(/[^a-z0-9*\s'"]/gi, '') || "";
 
   // Remove stop words if the terms are not enclosed in quotation marks
   if(queryString.match(/"|\*/g) == null) {

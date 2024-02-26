@@ -22,31 +22,62 @@
  * npm elasticsearch client
  */
 
-'use strict'
+ 'use strict'
 
-const config = require('../config/' + process.env.CONFIGURATION_FILE);
-const elasticsearch = require('elasticsearch');
-
-let esLogType = config.nodeEnv == 'devlogelastic' ? 'trace' : 'warning';
-const client = new elasticsearch.Client({
-  host: config.elasticsearchHost + ':' + config.elasticsearchPort,
-  log: esLogType,
-  apiVersion: '_default'  // use the same version of your Elasticsearch instance
-});
-
-client.cluster.health({},function(err,resp,status) {  
-	if(err) {
-		console.log("Elastic connection error:", err);
-		console.log("Could not connect to Elastic cluster");
-	}
-	else if(status == 200 && resp) {
-		console.log("Connected to Elastic cluster: " + config.elasticsearchHost + ':' + config.elasticsearchPort);
-		console.log("Using Elastic index: " + config.elasticsearchPublicIndex);
-	}
-	else {
-		console.log("Error: Elastic connection status is: " + status + " while contacting index on " + config.elasticsearchHost + ':' + config.elasticsearchPort);
-		console.log("Could not connect to Elastic cluster");
-	}
-});
-
-module.exports = client;
+ const config = require('../config/' + process.env.CONFIGURATION_FILE);
+ //const elasticsearch = require('elasticsearch');
+ const { Client } = require('@elastic/elasticsearch');
+ 
+ // let esLogType = config.nodeEnv == 'devlogelastic' ? 'trace' : 'warning';
+ // const client = new elasticsearch.Client({
+ //   host: config.elasticsearchHost + ':' + config.elasticsearchPort,
+ //   log: esLogType,
+ //   apiVersion: '_default'  // use the same version of your Elasticsearch instance
+ // });
+ 
+ // client.cluster.health({},function(err,resp,status) {  
+ // 	if(err) {
+ // 		console.log("Elastic connection error:", err);
+ // 		console.log("Could not connect to Elastic cluster");
+ // 	}
+ // 	else if(status == 200 && resp) {
+ // 		console.log("Connected to Elastic cluster: " + config.elasticsearchHost + ':' + config.elasticsearchPort);
+ // 		console.log("Using Elastic index: " + config.elasticsearchPublicIndex);
+ // 	}
+ // 	else {
+ // 		console.log("Error: Elastic connection status is: " + status + " while contacting index on " + config.elasticsearchHost + ':' + config.elasticsearchPort);
+ // 		console.log("Could not connect to Elastic cluster");
+ // 	}
+ // });
+ 
+ let elastic_client;
+ let elasticDomain = `${config.elasticsearchHost}:${config.elasticsearchPort}`;
+ 
+ try {
+     elastic_client = new Client({
+         node: elasticDomain
+     });
+     console.log(`Connected to Elastic cluster: ${elastic_client.name} at ${elasticDomain}`);
+ }
+ catch (error) {
+     console.error(`Could not connect to Elastic cluster at ${elasticDomain}. Error: ${error}`);
+ }
+ 
+//  elastic_client.cluster.health({},function(err,resp,status) {  
+//    if(err) {
+//      console.log("Elastic connection error:", err);
+//      console.log("Could not connect to Elastic cluster");
+//    }
+//    else if(status == 200 && resp) {
+//      console.log("Connected to Elastic cluster: " + config.elasticsearchHost + ':' + config.elasticsearchPort);
+//      console.log("Using Elastic index: " + config.elasticsearchPublicIndex);
+//    }
+//    else {
+//      console.log("Error: Elastic connection status is: " + status + " while contacting index on " + config.elasticsearchHost + ':' + config.elasticsearchPort);
+//      console.log("Could not connect to Elastic cluster");
+//    }
+//  });
+ 
+ //module.exports = client;
+ module.exports = elastic_client;
+ 

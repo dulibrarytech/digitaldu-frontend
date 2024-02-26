@@ -332,28 +332,22 @@ addCacheItem = async function(objectID, cacheName, updateExisting=false) {
 }
 exports.addCacheItem = addCacheItem;
 
-fetchObjectByPid = function(index, pid, callback) {
-  es.search({
-      index: index,
-      body: {
-        query: {
-          "bool": {
-            "filter": [
-              {"match_phrase": {"pid": pid}}
-            ]
-          }
-        }
-      }
-  }, function (error, response) {
-      if(error) {
-        callback(error, null);
-      }
-      else if(response.hits.total.value > 0) {
-        callback(null, response.hits.hits[0]._source);
-      }
-      else {
-        callback(null, null);
-      }
+fetchObjectByPid = async function(index, pid, callback) {
+  es.get({id: pid, index}).then(function (response) {
+    if(response) {
+      callback(null, response._source);
+    }
+    else {
+      callback(null, null);
+    }
+    
+  }, function (error) {
+    if(error.meta.statusCode == 404) {
+      callback(null, null);
+    }
+    else {
+      callback(error, null);
+    }
   });
 }
 exports.fetchObjectByPid = fetchObjectByPid;
@@ -504,7 +498,7 @@ getDatastream = function(indexName, objectID, datastreamID, part, authKey, callb
             // Get the settings for the object by object type
             let typeSettings = config.objectDatastreams.object.type;
 
-            // Check for file type specific settings for this boject type (e.g. 'jpg' settings for image type, etc)
+            // Check for file type specific settings for this object type (e.g. 'jpg' settings for image type, etc)
             if(typeSettings[type] && typeSettings[type].file_type) {
               settings = typeSettings[type].file_type[extension] || null;
             }
@@ -965,7 +959,7 @@ getTopLevelCollections = function(page=1, callback) {
           }
         });
       }
-  });
+  })
 }
 exports.getTopLevelCollections = getTopLevelCollections;
 
