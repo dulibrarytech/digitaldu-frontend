@@ -368,8 +368,10 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
             filterObj.term[field.matchField + ".keyword"] = field.matchTerm;
             data[field.path + ".keyword"] = {
               "order": sort.order || "asc",
-              "nested_path": field.path.substring(0,field.path.lastIndexOf(".")),
-              "nested_filter": filterObj
+              "nested": {
+                "path": field.path.substring(0,field.path.lastIndexOf(".")),
+                "filter": filterObj
+              }
             }
           }
         }
@@ -385,7 +387,6 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
     // Create elastic search request data object
     var data = {  
       index: config.elasticsearchPublicIndex,
-      // type: config.searchIndexType,
       body: {
         from : (pageNum - 1) * pageSize, 
         size : pageSize,
@@ -398,11 +399,8 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
     if(config.nodeEnv == "devlogsearch") {console.log("Search query object:", util.inspect(data, {showHidden: false, depth: null}));}
 
     // Query the index
-    es.search(data, function (error, response, status) {
-      if (error || typeof response == 'undefined') {
-        callback(error, {});
-      }
-      else {
+    es.search(data).then(function (response) {
+      if(response) {
         // Remove selected facet from the facet panel list.  The list should not show a facet option if the facet has already been selected
         Helper.removeSelectedFacets(facets, response);
 
@@ -452,5 +450,11 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
           callback(error, {});
         }
       }
+      else {
+        callback("Null search response from Elastic", {});
+      }
+      
+    }, function (error) {
+      callback(error, {});
     });
 }

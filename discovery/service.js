@@ -339,6 +339,7 @@ fetchObjectByPid = async function(index, pid, callback) {
     }
     else {
       callback(null, null);
+
     }
     
   }, function (error) {
