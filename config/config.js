@@ -325,7 +325,7 @@ module.exports = {
             "type": {
                 "still image": {
                     "source": "iiif",
-                    "cache": true
+                    "cache": false
                 },
                 "audio": {
                     "source": "kaltura",
@@ -362,7 +362,7 @@ module.exports = {
             "type": {
                 "still image": {
                     "source": "repository",
-                    "cache": true,
+                    "cache": false,
                     "file_type": {
                         "jpg": {
                             "source": "iiif",

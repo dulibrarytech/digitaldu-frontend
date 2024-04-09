@@ -57,7 +57,8 @@ module.exports = function () {
         defaultSrc: ["'self'", config.webSocketDomain, (config.webSocketDomain+":"+config.webSocketPort), config.IIIFServerDomain, config.IIIFDomain, config.repositoryDomain, 'www.google-analytics.com', 'cdnapisec.kaltura.com', 'data:', 'blob:', 'www.du.edu', 'fonts.gstatic.com', 'use.fontawesome.com', 'http://jwpltx.com'],
         styleSrc: ["'self'", "'unsafe-inline'", 'maxcdn.bootstrapcdn.com', 'use.fontawesome.com', 'vjs.zencdn.net', 'code.jquery.com', 'fonts.googleapis.com'],
         scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'www.google-analytics.com', 'vjs.zencdn.net', 'use.fontawesome.com', 'code.jquery.com', 'http://p.jwpcdn.com', 'www.googletagmanager.com'],
-        fontSrc: ["'self'", 'data:', 'fonts.gstatic.com', 'use.fontawesome.com']
+        fontSrc: ["'self'", 'data:', 'fonts.gstatic.com', 'use.fontawesome.com'],
+        imgSrc: ["'self'", 'data:']
       }
     }));
     app.disable('x-powered-by');
