@@ -282,7 +282,7 @@ class CustomDelegate
     puts "http_resource_info() Object ID: ".concat(pid)
     puts "http_resource_info() Request uri: ".concat(request_uri)
     key = ''
-    str = '{app domain/datastream/}'
+    str = '{digitaldu app domain/datastream/}'
 
     # remove filename
     if pid.include? '___'
