@@ -1,5 +1,5 @@
 # Digital Collections Frontend - digitaldu
-# Release 1.4.21
+# Release 1.5.0
 
 ## Table of Contents
 
@@ -78,7 +78,7 @@ All other content is released under [CC-BY-4.0](https://creativecommons.org/lice
 
     7. Setup a local instance of Cantaloupe image server and update the CANTALOUPE_URL field in .env. Update and add the config files "cantaloupe.properties" and "delegates.rb" (located in the "cantaloupe-files" folder) and place them in the cantaloupe folder, after the clone is complete. The two existing files should be replaced.
 
-    8. Clone an instance of the UniversalViewer from . into "/public/libs"
+    8. Clone an instance of the UniversalViewer (target v3.1.4) from . into "/public/libs"
 
     9. Update the settings file in /public/confog/configuration.js
 
@@ -258,7 +258,7 @@ To serve jp2 files, Cantaloupe must be configured to use a jp2 codec such as Kak
 
 #### Steps
 
-1. Clone or download folder from github (https://github.com/dulibrarytech/universalviewer.git) into {project root}/public/libs
+1. Clone or download folder from github (https://github.com/dulibrarytech/universalviewer.git) into {projectroot}/public/libs (target v3.1.4)
 
 2. Cd into the folder (universalviewer) and run "npm install"
 
@@ -266,9 +266,11 @@ To serve jp2 files, Cantaloupe must be configured to use a jp2 codec such as Kak
 
 4. Copy uv_helpers.js (in project folder root) into the "universalviewer/src/" folder, and *rename it to 'helpers.js'*
 
-5. Install grunt (npm) if it is not installed. 'npm install -g grunt' for global install, 'npm install grunt --save-dev' to install it to the universalviewer app
+5. Copy uv-config.json (in project folder root) into the "universalviewer" folder 
 
-6. Run the command 'npm run build' (from the universalviewer folder) to build the application
+6. Install grunt (npm) if it is not installed. 'npm install -g grunt' for global install, 'npm install grunt --save-dev' to install it to the universalviewer app
+
+7. Run the command 'npm run build' (from the universalviewer folder) to build the application
 
 Instructions to install/configure Universalviewer: https://universalviewer.io/
 

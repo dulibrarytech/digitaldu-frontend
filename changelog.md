@@ -71,4 +71,23 @@ Added configuration setting to enable/disable search term highlighting #144
 
 ### v1.4.21
 
- Fixed bug that prevented 'contains' queries from being combined with 'is' queries #144
+Fixed bug that prevented 'contains' queries from being combined with 'is' queries #144
+
+### v1.5.0
+
+Limited advanced search queries to 6, displaying a feedback message when the maximum number of queries has been added to the form, Added the search field and search type (contains/is) to the advanced search results page label
+
+Search hit highlighting
+
+Added a protected api endpoint to allow fetch of object data from the digitaldu index
+
+Added click feedback to text copy icons, updated icon images to fix layout issues
+
+Completed code updates for elastic v8.3.3 upgrade
+
+Completed updates for redhat v8/node v20
+
+
+
+
+
