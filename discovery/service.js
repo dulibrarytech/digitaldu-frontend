@@ -559,7 +559,7 @@ getDatastream = function(indexName, objectID, datastreamID, part, authKey, callb
 exports.getDatastream = getDatastream;
 
 getFacets = function (collection=null, callback) {
-    var field, matchFacetFields = [], restrictions = [];
+    var matchFacetFields = [], restrictions = [];
     var aggs = AppHelper.getFacetAggregationObject(config.facets);
 
     var searchObj = {
@@ -795,9 +795,6 @@ getObjectsInCollection = function(collectionId, page=1, facets=null, sort=null, 
           count: 0
         };
 
-        // Get facets for this collection
-        var facetAggregations = AppHelper.getFacetAggregationObject(config.facets);
-
         // Validate repository response
         if(response && response.length > 0) {
           collection.count = response.list.length;
@@ -817,13 +814,14 @@ getObjectsInCollection = function(collectionId, page=1, facets=null, sort=null, 
 
           pageSize = pageSize || config.defaultCollectionsPerPage || 10;
           var from = (page - 1) * pageSize;
+
           Search.searchIndex(queryData, facets, collectionId, page, pageSize, daterange, sort, null, function(error, response) {
             if(error) {
               callback(error, null);
             }
             else {
-              var responseData = {};
               response = response.elasticResponse;
+              
               if (error){
                 callback(error, null);
               }
