@@ -58,7 +58,7 @@ module.exports = function () {
         styleSrc: ["'self'", "'unsafe-inline'", 'maxcdn.bootstrapcdn.com', 'use.fontawesome.com', 'vjs.zencdn.net', 'code.jquery.com', 'fonts.googleapis.com'],
         scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'www.google-analytics.com', 'vjs.zencdn.net', 'use.fontawesome.com', 'code.jquery.com', 'http://p.jwpcdn.com', 'www.googletagmanager.com'],
         fontSrc: ["'self'", 'data:', 'fonts.gstatic.com', 'use.fontawesome.com'],
-        imgSrc: ["'self'", 'data:']
+        imgSrc: ["'self'", 'data:', "specialcollections.du.edu", "www.du.edu"]
       }
     }));
     app.disable('x-powered-by');
