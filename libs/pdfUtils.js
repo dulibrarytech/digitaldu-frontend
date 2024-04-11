@@ -24,23 +24,13 @@
 
 'use strict';
 
-const fs = require('fs'),
-	 	pdf = require('pdf-page-counter'),
-	 	deasync = require('deasync');
+const fs = require('fs');
+const {PdfCounter} = require('page-count');
 
-exports.getPageCountSync = function(pdfPath) {
-  var numPages = null;
-  let dataBuffer = fs.readFileSync(pdfPath);
+exports.getPageCountSync = async function(pdfPath) {
+        var numPages = null;
+        const dataBuffer =fs.readFileSync(pdfPath);
+        numPages = await PdfCounter.count(dataBuffer, "pdf");
+        return numPages;
+  }
 
-  pdf(dataBuffer).then(function(data) {
-		numPages = data.numpages;
-	}, function(error) {
-		console.log(error);
-		numPages = 0;
-	});
-	while(numPages === null) {
-		deasync.runLoopOnce();
-	}
-
-  return numPages;
-}
