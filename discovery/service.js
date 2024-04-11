@@ -332,24 +332,30 @@ addCacheItem = async function(objectID, cacheName, updateExisting=false) {
 }
 exports.addCacheItem = addCacheItem;
 
-fetchObjectByPid = async function(index, pid, callback) {
-  es.get({id: pid, index}).then(function (response) {
+fetchObjectByPid = async function(index, pid, callback = () => {}) {
+  let response;
+
+  try {
+    response = await es.get({id: pid, index});
+
     if(response) {
       callback(null, response._source);
+      return response._source;
     }
     else {
       callback(null, null);
-
+      return null;
     }
-    
-  }, function (error) {
+  }
+  catch(error) {
     if(error.meta.statusCode == 404) {
       callback(null, null);
     }
     else {
       callback(error, null);
+      throw error;
     }
-  });
+  }
 }
 exports.fetchObjectByPid = fetchObjectByPid;
 
@@ -591,7 +597,7 @@ getFacets = function (collection=null, callback) {
 }
 exports.getFacets = getFacets;
 
-getManifestObject = function(pid, index, page, apikey, callback) {
+getManifestObject = async function(pid, index, page, apikey, callback) {
   var object = {}, children = [], part = null;
 
   if(pid.indexOf(config.compoundObjectPartID) > 0) {
@@ -599,176 +605,175 @@ getManifestObject = function(pid, index, page, apikey, callback) {
     pid = pid.substr(0, pid.indexOf(config.compoundObjectPartID));
   }
 
-  fetchObjectByPid(index, pid, function(error, object) {
-    if(error) {
-      callback(error, JSON.stringify({}));
+  try {
+    object = await fetchObjectByPid(index, pid);
+  }
+  catch (error) {
+    callback(error, JSON.stringify({}));
+  }
+
+  if(object) {
+    var container = null,
+        metadata = {},
+
+    metadata = Metadata.getMetadataFieldValues(object, "universalviewer");
+    if(metadata["License"]) {
+      AppHelper.addHyperlinks(metadata["License"]);
     }
-    else if(object) {
-      var container = null,
-          parts = [],
-          metadata = {},
-          resourceUrl;
+    
+    if(part) {
+      let partData = AppHelper.getCompoundObjectPart(object, part);
+      if(partData) {
+        let partObj = {};
+        partObj.pid = pid + config.compoundObjectPartID + part;
+        partObj.title = partData.title || "No Title";
+        partObj.abstract = partData.caption || object.abstract || "";
+        partObj.mime_type = partData.type || null;
 
-      metadata = Metadata.getMetadataFieldValues(object, "universalviewer");
-      if(metadata["License"]) {
-        AppHelper.addHyperlinks(metadata["License"]);
-      }
-      
-      if(part) {
-        let partData = AppHelper.getCompoundObjectPart(object, part);
-        if(partData) {
-          let partObj = {};
-          partObj.pid = pid + config.compoundObjectPartID + part;
-          partObj.title = partData.title || "No Title";
-          partObj.abstract = partData.caption || object.abstract || "";
-          partObj.mime_type = partData.type || null;
-
-          container = {
-            resourceID: partObj.pid,
-            downloadFileName: partObj.pid,
-            title: object.title,
-            metadata: metadata,
-            protocol: /https/.test(config.IIIFUrl) ? "https" : "http",
-            objectType: AppHelper.getDsType(object.mime_type),
-            isCompound: false
-          };
-
-          object = partObj;
-        }
-      }
-      else {
         container = {
-          resourceID: object.pid,
-          downloadFileName: object.pid,
+          resourceID: partObj.pid,
+          downloadFileName: partObj.pid,
           title: object.title,
           metadata: metadata,
           protocol: /https/.test(config.IIIFUrl) ? "https" : "http",
           objectType: AppHelper.getDsType(object.mime_type),
-          isCompound: AppHelper.isParentObject(object)
+          isCompound: false
         };
+
+        object = partObj;
       }
+    }
+    else {
+      container = {
+        resourceID: object.pid,
+        downloadFileName: object.pid,
+        title: object.title,
+        metadata: metadata,
+        protocol: /https/.test(config.IIIFUrl) ? "https" : "http",
+        objectType: AppHelper.getDsType(object.mime_type),
+        isCompound: AppHelper.isParentObject(object)
+      };
+    }
 
-      if(!container) {
-        callback(null, null);
-      }
+    if(!container) {
+      callback(null, null);
+    }
 
-      // Compound objects
-      else if(container.isCompound) {
-        let parts = AppHelper.getCompoundObjectPart(object, -1) || [];
+    // Compound objects
+    else if(container.isCompound) {
+      let parts = AppHelper.getCompoundObjectPart(object, -1) || [];
 
-        if(config.IIIFManifestPageSize && page && page > 0) {
-          let size = config.IIIFManifestPageSize || 10,
-              offset = (page-1) * size;
-          if(parts.length > offset+size) {
-            parts = parts.slice(offset, offset+size);
-          }
-          else {
-            parts = parts.slice(offset, parts.length);
-          }
+      if(config.IIIFManifestPageSize && page && page > 0) {
+        let size = config.IIIFManifestPageSize || 10,
+            offset = (page-1) * size;
+        if(parts.length > offset+size) {
+          parts = parts.slice(offset, offset+size);
         }
-
-        for(var key in parts) {
-          let pageCount = null,
-              filename = "";
-
-          if(config.IIIFUseLocalFilesource) {
-            let path = AppHelper.getDuracloudFilenameFromObjectPath(parts[key]);
-            filename = path ? config.IIIFFilesourceImageFilenamePrefix + path : "";
-          }
-
-          // Get pdf page count
-          if(config.IIIFEnablePdfPaging && AppHelper.getDsType(parts[key].type) == "pdf") {
-            let objectID = object.pid + (parts[key].order ? ("_" + parts[key].order) : ""),
-                cacheFileName = objectID + ".pdf",
-                cacheFilePath = config.objectDerivativeCacheLocation;
-
-            if(Cache.exists("object", objectID, "pdf")) {
-              pageCount = Pdf.getPageCountSync(cacheFilePath + "/" + cacheFileName);
-            }
-            else {
-              console.log(`${cacheFileName} not found in cache. Generating single page pdf manifest`);
-            }
-          }
-
-          
-          children.push({
-            label: parts[key].title,
-            sequence: parts[key].order || key,
-            description: parts[key].caption,
-            format: Helper.getIIIFFormat(parts[key].type),
-            type: Helper.getIIIFObjectType(parts[key].type) || "",
-            resourceID: object.pid + config.compoundObjectPartID + (parts[key].order || ""),
-            downloadFileName: parts[key].title,
-            resourceUrl: config.rootUrl + "/datastream/" + object.pid + "/" + AppHelper.getFileExtensionFromFilePath(parts[key].object || "undefined") + "/" + parts[key].order,
-            thumbnailUrl: config.rootUrl + "/datastream/" + object.pid + "/tn/" + parts[key].order,
-            pageCount: pageCount,
-            extension: AppHelper.getFileExtensionFromFilePath(parts[key].object),
-            filename: filename
-          });
+        else {
+          parts = parts.slice(offset, parts.length);
         }
-
-        IIIF.getManifest(container, children, apikey, function(error, manifest) {
-          if(error) {
-            callback(error, []);
-          }
-          else {
-            callback(null, manifest);
-          }
-        });
       }
 
-      // Single objects
-      else {
+      for(var key in parts) {
         let pageCount = null,
             filename = "";
 
         if(config.IIIFUseLocalFilesource) {
-          let path = AppHelper.getDuracloudFilenameFromObjectPath(object);
+          let path = AppHelper.getDuracloudFilenameFromObjectPath(parts[key]);
           filename = path ? config.IIIFFilesourceImageFilenamePrefix + path : "";
         }
 
-        // pdf page count
-        if(AppHelper.getDsType(object.mime_type) == "pdf" && config.IIIFEnablePdfPaging) {
-          let objectID = object.pid,
+        // Get pdf page count
+        if(config.IIIFEnablePdfPaging && AppHelper.getDsType(parts[key].type) == "pdf") {
+          let objectID = object.pid + (parts[key].order ? ("_" + parts[key].order) : ""),
               cacheFileName = objectID + ".pdf",
               cacheFilePath = config.objectDerivativeCacheLocation;
 
           if(Cache.exists("object", objectID, "pdf")) {
-            pageCount = Pdf.getPageCountSync(cacheFilePath + "/" + cacheFileName);
+            pageCount = await Pdf.getPageCountSync(cacheFilePath + "/" + cacheFileName);
           }
           else {
             console.log(`${cacheFileName} not found in cache. Generating single page pdf manifest`);
           }
         }
-
+        
         children.push({
-          label: object.title,
-          sequence: "1",
-          description: object.abstract,
-          format: Helper.getIIIFFormat(object.mime_type),
-          type: Helper.getIIIFObjectType(object.mime_type) || "",
-          resourceID: object.pid,
-          resourceUrl: config.rootUrl + "/datastream/" + object.pid + "/" + AppHelper.getDsType(object.mime_type),
-          thumbnailUrl: config.rootUrl + "/datastream/" + object.pid + "/tn",
+          label: parts[key].title,
+          sequence: parts[key].order || key,
+          description: parts[key].caption,
+          format: Helper.getIIIFFormat(parts[key].type),
+          type: Helper.getIIIFObjectType(parts[key].type) || "",
+          resourceID: object.pid + config.compoundObjectPartID + (parts[key].order || ""),
+          downloadFileName: parts[key].title,
+          resourceUrl: config.rootUrl + "/datastream/" + object.pid + "/" + AppHelper.getFileExtensionFromFilePath(parts[key].object || "undefined") + "/" + parts[key].order,
+          thumbnailUrl: config.rootUrl + "/datastream/" + object.pid + "/tn/" + parts[key].order,
           pageCount: pageCount,
-          extension: AppHelper.getFileExtensionFromFilePath(object.object),
+          extension: AppHelper.getFileExtensionFromFilePath(parts[key].object),
           filename: filename
         });
-
-        IIIF.getManifest(container, children, apikey, function(error, manifest) {
-          if(error) {
-            callback(error, []);
-          }
-          else {
-            callback(null, manifest);
-          }
-        });
       }
+
+      IIIF.getManifest(container, children, apikey, function(error, manifest) {
+        if(error) {
+          callback(error, []);
+        }
+        else {
+          callback(null, manifest);
+        }
+      });
     }
+
+    // Single objects
     else {
-      callback(null, null);
+      let pageCount = null,
+          filename = "";
+
+      if(config.IIIFUseLocalFilesource) {
+        let path = AppHelper.getDuracloudFilenameFromObjectPath(object);
+        filename = path ? config.IIIFFilesourceImageFilenamePrefix + path : "";
+      }
+
+      // pdf page count
+      if(AppHelper.getDsType(object.mime_type) == "pdf" && config.IIIFEnablePdfPaging) {
+        let objectID = object.pid,
+            cacheFileName = objectID + ".pdf",
+            cacheFilePath = config.objectDerivativeCacheLocation;
+
+        if(Cache.exists("object", objectID, "pdf")) {
+          pageCount = await Pdf.getPageCountSync(cacheFilePath + "/" + cacheFileName);
+        }
+        else {
+          console.log(`${cacheFileName} not found in cache. Generating single page pdf manifest`);
+        }
+      }
+
+      children.push({
+        label: object.title,
+        sequence: "1",
+        description: object.abstract,
+        format: Helper.getIIIFFormat(object.mime_type),
+        type: Helper.getIIIFObjectType(object.mime_type) || "",
+        resourceID: object.pid,
+        resourceUrl: config.rootUrl + "/datastream/" + object.pid + "/" + AppHelper.getDsType(object.mime_type),
+        thumbnailUrl: config.rootUrl + "/datastream/" + object.pid + "/tn",
+        pageCount: pageCount,
+        extension: AppHelper.getFileExtensionFromFilePath(object.object),
+        filename: filename
+      });
+
+      IIIF.getManifest(container, children, apikey, function(error, manifest) {
+        if(error) {
+          callback(error, []);
+        }
+        else {
+          callback(null, manifest);
+        }
+      });
     }
-  });
+  }
+  else {
+    callback(null, null);
+  }
 }
 exports.getManifestObject = getManifestObject;
 
