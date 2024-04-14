@@ -32,13 +32,20 @@ exports.cacheDatastream = function(cacheName, objectID, stream, extension, callb
 	}
 
 	if(stream && typeof stream == 'object') {
-		try {
-			stream.pipe(fs.createWriteStream(filepath)).on('close', function() {
+		let file = fs.createWriteStream(filepath);
+
+		file.on('error', function(err) {
+			console.log(err);
+			file.end();
+		});
+
+		if(file) {
+			stream.pipe(file).on('close', function() {
 				callback(null);
 			});
 		}
-		catch(e) {
-			callback(e);
+		else {
+			callback("Error writing to the cache. Cache folder does not exist or is inaccessible.");
 		}
 	}
 	else {
