@@ -370,29 +370,30 @@ getAutocompleteData = function(callback) {
 exports.getAutocompleteData = getAutocompleteData;
 
 getCollectionChildren = function(collectionId, index, callback) {
-  es.search({
-      index: index,
-      _source: ["pid"],
-      body: {
-        "query": {
-          "match_phrase": {
-            "is_member_of_collection": collectionId
-          }
-        },
-        "size": 10000
-      }
-  }, function (error, response) {
-      if(error) {
-        callback(error, null);
-      }
-      else {
-        let results = response.hits.hits || [], pids = [];
-        for(let i in results) {
-          pids.push(results[i]._source.pid);
+  let data = {
+    index: index,
+    _source: ["pid"],
+    body: {
+      query: {
+        match_phrase: {
+          "is_member_of_collection": collectionId
         }
+      },
+      size: 10000
+    }
+  }
 
-        callback(null, pids);
-      }
+  es.search(data).then(function (response) {
+    let results = response.hits.hits || [], pids = [];
+
+    for(let i in results) {
+      pids.push(results[i]._source.pid);
+    }
+
+    callback(null, pids);
+
+  }, function (error) {
+    callback(error, null);
   });
 }
 
@@ -407,31 +408,33 @@ getCollectionHeirarchy = function(pid, callback) {
 exports.getCollectionHeirarchy = getCollectionHeirarchy;
 
 getCollectionList = function(callback) {
-  es.search({
-      index: config.elasticsearchPublicIndex,
-      _source: ["pid"],
-      body: {
-        "query": {
-          "match_phrase": {
-            "object_type": "collection"
-          }
-        },
-        "size": 1000
-      }
-  }, function (error, response) {
-      if(error) {
-        callback(error, null);
-      }
-      else {
-        let results = response.hits.hits || [], pids = [], titles = [];
-        for(let i in results) {
-          pids.push(results[i]._source.pid);
+  let data = {
+    index: config.elasticsearchPublicIndex,
+    _source: ["pid"],
+    body: {
+      query: {
+        match_phrase: {
+          "object_type": "collection"
         }
+      },
+      size: 1000
+    }
+  }
 
-        getTitleString(pids, [], function(error, response) {
-          callback(null, response);
-        });
+  es.search(data).then(function (response) {
+    if(response) {
+      let results = response.hits.hits || [], pids = [];
+
+      for(let i in results) {
+        pids.push(results[i]._source.pid);
       }
+
+      getTitleString(pids, [], function(error, response) {
+        callback(null, response);
+      });
+    }
+  }, function (error) {
+    callback(error, {});
   });
 }
 
