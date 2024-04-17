@@ -40,9 +40,6 @@ const async = require('async'),
 var webSocketServer = require("../libs/socket.js");
 webSocketServer.startServer(config.webSocketPort || 9007);
 
-
-
-
 /**
  * Renders the front page
  * Retrieves all objects in the root collection
@@ -566,8 +563,7 @@ exports.getObjectViewer = function(req, res) {
 }
 
 exports.downloadObjectFile = function(req, res) {
-	var pid = req.params.pid || "",
-		clientHost = req.hostname || "";
+	var pid = req.params.pid || "";
 
 	Service.fetchObjectByPid(config.elasticsearchPublicIndex, pid, function(error, object) {
 		if(error) {
@@ -581,6 +577,7 @@ exports.downloadObjectFile = function(req, res) {
 		else {
 			if(AppHelper.isParentObject(object) == true) {
 					let webSocketClient = webSocketServer.getLastClient();
+
 					if(webSocketClient) {
 						console.log("Client connected to socket server. Downloading object files for", object.pid)
 						let msg = {

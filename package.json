@@ -32,6 +32,7 @@
     "express-template-cache": "^0.1.0",
     "file-download": "^0.1.2",
     "helmet": "^3.22.0",
+    "https": "^1.0.0",
     "linkify-html": "^4.0.2",
     "linkifyjs": "^4.0.2",
     "nocache": "^2.1.0",
@@ -40,7 +41,7 @@
     "sanitize-html": "^2.4.0",
     "stopword": "^2.0.1",
     "stringify-object": "^3.3.0",
-    "ws": "^7.3.1",
+    "ws": "^8.16.0",
     "xmlhttprequest": "^1.8.0",
     "zip-a-folder": "0.0.12"
   },

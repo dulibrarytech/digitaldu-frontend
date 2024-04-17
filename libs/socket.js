@@ -16,31 +16,35 @@
 
 "use strict";
 
-const WebSocket = require("ws");
+const WebSocketServer = require('ws');
 
-const WebSocketServer = (function () {
+module.exports = (function () {
 	let object = {};
 
 	var config = require('../config/' + process.env.CONFIGURATION_FILE),
     	http = require("http"),
     	express = require("express"),
     	app = express(),
-    	webSocketServer = null,
     	clientConnections = [];
 
     object.startServer = function(port) {
-    	let server = http.createServer(app);
-    	webSocketServer = new WebSocket.Server({ server });
+		const server = http.createServer(app);
+		const wss = new WebSocketServer.Server({ server });
 
-    	server.listen(port, () => {
-		    console.log("Websocket server started on port " + port);
+		server.listen(port, () => {
+			console.log("Websocket server started on port " + port);
 		});
 
-		webSocketServer.on('connection', (webSocketClient, req) => {
-			// Add the new connection to the client connection array
-			clientConnections.push(webSocketClient);
+		wss.on('connection', function connection(ws) {
+			clientConnections.push(ws);
 
-			webSocketClient.on('close', (webSocketClient) => {
+			ws.on('error', console.error);
+
+			ws.on('message', function message(data) {
+				console.log('received: %s', data);
+			});
+
+			ws.on('close', (webSocketClient) => {
 				console.log("Websocket client closed");
 			});
 		});
@@ -56,4 +60,3 @@ const WebSocketServer = (function () {
 
 	return object
 }());
-module.exports = WebSocketServer;
