@@ -87,6 +87,9 @@ Completed code updates for elastic v8.3.3 upgrade
 
 Completed updates for redhat v8/node v20
 
+### v1.5.1
+
+Updated websocket module and npm package to current version, fixed broken .zip file downloader (compound object downloads)
 
 
 
