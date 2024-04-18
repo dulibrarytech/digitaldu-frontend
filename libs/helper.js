@@ -17,7 +17,6 @@
 const config = require('../config/' + process.env.CONFIGURATION_FILE);
 const Kaltura = require('../libs/kaltura');
 const sanitizeHtml = require('sanitize-html');
-// const linkifyHtml = require('linkifyjs/html');
 const linkifyHtml = require('linkify-html');
 
 /*
@@ -65,12 +64,31 @@ exports.isObjectEmpty = function(object) {
 /*
  *
  */
-exports.removeHtmlEntities = function(string) {
-	return string.replace(/&amp;/g, "").replace(/&lt;/g, "").replace(/&gt;/g, "").replace(/&quot;/g, "");
+var removeHtmlEntities = function(string) { // TODO convert to single pattern replace, all listed chars
+	return string
+	.replace(/&amp;/g, "")
+	.replace(/&lt;/g, "")
+	.replace(/&gt;/g, "")
+	.replace(/&quot;/g, "")
+	.replace(/&lowbar;/g, "")
+	.replace(/&sol;/g, "")
+	.replace(/&equals;/g, "")
+	.replace(/&/g, "")
+	.replace(/</g, "")
+	.replace(/>/g, "")
+	.replace(/'/g, "")
+	.replace(/_/g, "")
+	.replace(/\//g, "")
+	.replace(/=/g, "");
+}
+exports.removeHtmlEntities = removeHtmlEntities;
+
+exports.stripHtmlTagsString = function(string) {
+	return sanitizeHtml(string);
 }
 
 /*
- *
+ * removes '<{element}>'
  */
 var stripHtmlTags = function(data) {
 	if(typeof data == "string") {
@@ -95,16 +113,20 @@ exports.stripHtmlTags = stripHtmlTags;
  *
  */
 exports.sanitizeHttpParamsObject = function(object) {
+	console.log("TEST sanitizing object:", object)
 	for(var key in object) {
+		console.log("TEST key:", key)
 		if(typeof object[key] == 'object') {
 			for(index in object[key]) {
 				if(key == "f") {
 					for(facet in object[key][index]) {
 						object[key][index][facet] = sanitizeHtml(object[key][index][facet]);
+						object[key][index][facet] = removeHtmlEntities(object[key][index][facet]);
 					}
 				}
 				else {
 					object[key][index] = sanitizeHtml(object[key][index]);
+					object[key][index] = removeHtmlEntities(object[key][index]);
 				}
 			}
 		}
