@@ -113,9 +113,7 @@ exports.stripHtmlTags = stripHtmlTags;
  *
  */
 exports.sanitizeHttpParamsObject = function(object) {
-	console.log("TEST sanitizing object:", object)
 	for(var key in object) {
-		console.log("TEST key:", key)
 		if(typeof object[key] == 'object') {
 			for(index in object[key]) {
 				if(key == "f") {
