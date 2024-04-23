@@ -77,6 +77,10 @@ module.exports = function () {
                 "font-src": ["'self'", 'data:', 'fonts.gstatic.com', 'use.fontawesome.com'],
                 "img-src": ["'self'", 'data:', "specialcollections.du.edu", "www.du.edu"]
             }
+          },
+
+          strictTransportSecurity: {
+              maxAge: 31536000
           }
         })
     );
