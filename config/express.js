@@ -50,34 +50,38 @@ module.exports = function () {
         extended: true
     }));
     app.use(bodyParser.json());
-    app.use(helmet());
     app.use(noCache());
-    app.use(helmet.contentSecurityPolicy({
-      directives: {
-        defaultSrc: [
-            "'self'", 
-            config.webSocketDomain, 
-            (config.webSocketDomain+":"+config.webSocketPort), 
-            config.IIIFServerDomain, 
-            config.IIIFDomain, 
-            config.repositoryDomain, 
-            'www.google-analytics.com', 
-            'cdnapisec.kaltura.com', 
-            'data:', 
-            'blob:', 
-            'www.du.edu', 
-            'fonts.gstatic.com', 
-            'use.fontawesome.com', 
-            'http://jwpltx.com'],
+    
+    app.use(
+        helmet({
+          contentSecurityPolicy: {
+            directives: {
+                "default-src": [
+                    "'self'", 
+                    config.webSocketDomain, 
+                    (config.webSocketDomain+":"+config.webSocketPort), 
+                    config.IIIFServerDomain, 
+                    config.IIIFDomain, 
+                    config.repositoryDomain, 
+                    'www.google-analytics.com', 
+                    'cdnapisec.kaltura.com', 
+                    'data:', 
+                    'blob:', 
+                    'www.du.edu', 
+                    'fonts.gstatic.com', 
+                    'use.fontawesome.com', 
+                    'http://jwpltx.com'],
+        
+                "style-src": ["'self'", "'unsafe-inline'", 'maxcdn.bootstrapcdn.com', 'use.fontawesome.com', 'vjs.zencdn.net', 'code.jquery.com', 'fonts.googleapis.com'],
+                "script-src": ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'www.google-analytics.com', 'vjs.zencdn.net', 'use.fontawesome.com', 'code.jquery.com', 'http://p.jwpcdn.com', 'www.googletagmanager.com'],
+                "font-src": ["'self'", 'data:', 'fonts.gstatic.com', 'use.fontawesome.com'],
+                "img-src": ["'self'", 'data:', "specialcollections.du.edu", "www.du.edu"]
+            }
+          }
+        })
+    );
 
-        styleSrc: ["'self'", "'unsafe-inline'", 'maxcdn.bootstrapcdn.com', 'use.fontawesome.com', 'vjs.zencdn.net', 'code.jquery.com', 'fonts.googleapis.com'],
-        scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'www.google-analytics.com', 'vjs.zencdn.net', 'use.fontawesome.com', 'code.jquery.com', 'http://p.jwpcdn.com', 'www.googletagmanager.com'],
-        fontSrc: ["'self'", 'data:', 'fonts.gstatic.com', 'use.fontawesome.com'],
-        imgSrc: ["'self'", 'data:', "specialcollections.du.edu", "www.du.edu"]
-      }
-    }));
     app.disable('x-powered-by');
-
     app.use(express.static('./public'));
     app.set('views', './views');
     app.set('view engine', 'ejs');
