@@ -91,6 +91,12 @@ Completed updates for redhat v8/node v20
 
 Updated websocket module and npm package to current version, fixed broken .zip file downloader (compound object downloads)
 
+### v1.5.12
+
+Updated helmet lib to current stable version
+Added sanitization to search url 'f' (facets) parameter text (removes html characters and entities) to fix XSS vulnerability
+Updated jquery to 3.5.0
+
 
 
 
