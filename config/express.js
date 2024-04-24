@@ -74,6 +74,7 @@ module.exports = function () {
         
                 "style-src": ["'self'", "'unsafe-inline'", 'maxcdn.bootstrapcdn.com', 'use.fontawesome.com', 'vjs.zencdn.net', 'code.jquery.com', 'fonts.googleapis.com'],
                 "script-src": ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'www.google-analytics.com', 'vjs.zencdn.net', 'use.fontawesome.com', 'code.jquery.com', 'http://p.jwpcdn.com', 'www.googletagmanager.com'],
+                "script-src-attr": ["'self'", "'unsafe-inline'"],
                 "font-src": ["'self'", 'data:', 'fonts.gstatic.com', 'use.fontawesome.com'],
                 "img-src": ["'self'", 'data:', "specialcollections.du.edu", "www.du.edu"]
             }
