@@ -21,7 +21,7 @@ export const Configuration = (function () {
 		 * Url to the websocket connector
 		 * Required for compound object and other batch file downloads
 		 */
-		wsUrl : "ws://localhost:9007",
+		wsUrl : "ws://localhost:8010",
 
 		 /*
 		 * Delay in ms after the batch download is initiated from the client, and the connect request is sent to the server websocket

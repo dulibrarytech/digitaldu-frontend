@@ -99,6 +99,9 @@ export const Downloader = (function () {
 
 			submitLinkRequest(downloadUrl, "");
 		};
+		socket.onerror = function(error) {
+			console.error(error);
+		}
 	}
 
 	var cancelDownload = function(socket) {
