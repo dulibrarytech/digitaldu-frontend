@@ -77,7 +77,8 @@ module.exports = function () {
                 "script-src-attr": ["'self'", "'unsafe-inline'"],
                 "font-src": ["'self'", 'data:', 'fonts.gstatic.com', 'use.fontawesome.com'],
                 "img-src": ["'self'", 'data:', "specialcollections.du.edu", "www.du.edu"],
-                "frame-ancestors": null
+                "frame-ancestors": null,
+                "form-action": null
             }
           },
 
