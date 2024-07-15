@@ -98,6 +98,7 @@ exports.search = function(req, res) {
 	}
 	
 	let sortBy = Helper.getSortDataArray(sort);
+	console.log("TEST qdata: q/field/type/bool/facets:", query, field, type, bool, facets)
 	let queryData = Helper.getSearchQueryDataObject(query, field, type, bool, true);
 	Service.searchIndex(queryData, facets, collection, page, pageSize, daterange, sortBy, advancedSearch, function(error, response) {
 		if(error) {
@@ -143,3 +144,23 @@ exports.search = function(req, res) {
 		}
 	});
 } 
+
+exports.luceneSearch = function(req, res) {
+	var query = req.query.q || [""],
+		field = req.query.field || ["all"], 
+		type = req.query.type || ["contains"],
+		bool = req.query.bool || ["or"],
+		facets = req.query.f || null;
+
+	let queryData = Helper.getSearchQueryDataObject(query, field, type, bool, true);
+
+	Service.searchIndex(queryData, facets, null, 1, 10, null, null, null, function(error, response) {
+		if(error) {
+			console.error(error);
+			res.sendStatus(500);
+		}
+		else {
+			res.send(response.results);
+		}
+	});
+}

@@ -43,4 +43,7 @@ module.exports = function (app) {
 
     app.route('/search')
         .get(Search.search)
+
+    app.route('/repository/search')
+        .get(Search.luceneSearch)
 };
