@@ -98,7 +98,6 @@ exports.search = function(req, res) {
 	}
 	
 	let sortBy = Helper.getSortDataArray(sort);
-	console.log("TEST qdata: q/field/type/bool/facets:", query, field, type, bool, facets)
 	let queryData = Helper.getSearchQueryDataObject(query, field, type, bool, true);
 	Service.searchIndex(queryData, facets, collection, page, pageSize, daterange, sortBy, advancedSearch, function(error, response) {
 		if(error) {
@@ -150,11 +149,14 @@ exports.luceneSearch = function(req, res) {
 		field = req.query.field || ["all"], 
 		type = req.query.type || ["contains"],
 		bool = req.query.bool || ["or"],
-		facets = req.query.f || null;
+		facets = req.query.f || null,
+		page = Math.abs(parseInt(req.query.page)) || 1,
+		pageSize = Math.abs(parseInt(req.query.pageSize)) || parseInt(config.maxResultsPerPage),
+		sort = req.query.sort || null;
 
 	let queryData = Helper.getSearchQueryDataObject(query, field, type, bool, true);
 
-	Service.searchIndex(queryData, facets, null, 1, 10, null, null, null, function(error, response) {
+	Service.searchIndex(queryData, facets, null, page, pageSize, null, sort, null, function(error, response) {
 		if(error) {
 			console.error(error);
 			res.sendStatus(500);

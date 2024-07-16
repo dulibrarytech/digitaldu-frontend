@@ -67,7 +67,6 @@ const es = require('../config/index'),
  * @param {Array.<searchResults>|null} Search results object, Null if error
  */
 exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=1, pageSize=10, daterange=null, sort=null, isAdvanced=false, callback) {
-    console.log("TEST DDU svc::search() queryData in:", queryData)
       var queryFields = [],
           fuzzQueryFields = [],
           results = [], 
