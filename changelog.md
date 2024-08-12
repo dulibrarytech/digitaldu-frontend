@@ -97,6 +97,12 @@ Updated helmet lib to current stable version
 Added sanitization to search url 'f' (facets) parameter text (removes html characters and entities) to fix XSS vulnerability
 Updated jquery to 3.5.0
 
+### v1.5.13
+
+Added a simple search route to allow search by lucene querystring, returns an array of search results
+
+Updated search result sorting to display the collections in a search result set before the standard object results
+
 
 
 
