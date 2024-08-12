@@ -352,8 +352,12 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
 
     var facetAggregations = AppHelper.getFacetAggregationObject(config.facets);
 
-    // Build sort query
     let sortArr = [];
+
+    // Sort by object type ascending to place 'collection' types at the top of the result set, so they appear on the results page before the standard object results. (object_type possible values: 'collection', 'object')
+    sortArr.push({"object_type.keyword": {"order": "asc"}});
+
+    // Build user sort options query object
     if(sort) {
       let data = {},
           field = config.searchSortFields[sort.field] || null;
