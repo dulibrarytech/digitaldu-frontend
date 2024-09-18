@@ -33,6 +33,8 @@ const domain = config.repositoryDomain,
 	  uname = config.repositoryUser,
 	  pword = config.repositoryPassword;
 
+const Logger = require('./log4js');
+
 /**
  * No Duraspace api for this function
  *
@@ -116,13 +118,15 @@ exports.streamData = function(object, dsid, callback) {
 			url += ("/" + object.object);
 		}
 
-		if(config.nodeEnv == "devlog") {console.log("Repository data request from url:", url)}
+		if(config.nodeEnv == "devlog") {
+			Logger.module().info('INFO: ' + `Repository data request from url: ${url}`);
+		}
 		HttpRequest.get_stream(url, {}, function(error, status, data) {
 			if(error) {
 				callback("Could not open datastream. " + error + " Check connection to repository", null);
 			}
 			else if(status != 200) {
-				console.log("Request to repository received status", status);
+				Logger.module().error('ERROR: ' + `Request to repository received status: ${status}`);
 				callback(null, null);
 			}
 			else {
@@ -148,7 +152,6 @@ exports.getStreamStatus = function(object, dsid, callback) {
 		}
 		else {url += ("/" + object.object)}
 		
-		console.log("Repository fetch head url:", url);
 		HttpRequest.head(url, function(error, status, data) {
 			if(error) {
 				callback(error, 500);

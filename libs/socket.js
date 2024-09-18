@@ -18,11 +18,12 @@
 
 const WebSocketServer = require('ws');
 
+const Logger = require('./log4js');
+
 module.exports = (function () {
 	let object = {};
 
-	var config = require('../config/' + process.env.CONFIGURATION_FILE),
-    	http = require("http"),
+	var http = require("http"),
     	express = require("express"),
     	app = express(),
     	clientConnections = [];
@@ -32,20 +33,23 @@ module.exports = (function () {
 		const wss = new WebSocketServer.Server({ server });
 
 		server.listen(port, () => {
-			console.log("Websocket server started on port " + port);
+			Logger.module().info('INFO: ' + `Websocket server started on port ${port}`);
 		});
 
 		wss.on('connection', function connection(ws) {
 			clientConnections.push(ws);
 
-			ws.on('error', console.error);
+			//ws.on('error', console.error);
+			ws.on('error', function (error) {
+				Logger.module().info('INFO: ' + `Websocket error: ${error}`);
+			});
 
 			ws.on('message', function message(data) {
-				console.log('received: %s', data);
+				Logger.module().info('INFO: ' + `Websocket received data: ${data}`);
 			});
 
 			ws.on('close', (webSocketClient) => {
-				console.log("Websocket client closed");
+				Logger.module().info('INFO: ' + "Websocket client closed");
 			});
 		});
     }
