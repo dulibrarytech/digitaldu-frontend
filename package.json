@@ -35,6 +35,7 @@
     "https": "^1.0.0",
     "linkify-html": "^4.0.2",
     "linkifyjs": "^4.0.2",
+    "log4js": "^6.9.1",
     "nocache": "^2.1.0",
     "page-count": "^0.0.4",
     "pluralize": "^8.0.0",

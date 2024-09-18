@@ -25,6 +25,8 @@
 var config = require('../config/' + process.env.CONFIGURATION_FILE),
     AppHelper = require('../libs/helper');
 
+const Logger = require('../libs/log4js');
+
 /**
  * Create array of 'view data' objects, one for each result item in the input object array
  *
@@ -48,13 +50,10 @@ var config = require('../config/' + process.env.CONFIGURATION_FILE),
     }
 
     pid = object.pid || "";
-    if(!pid) {
-      console.log("Error: Object " + object + " has no pid value");
-    }
     tn = config.rootUrl + "/datastream/" + object.pid + "/tn";
 
     if(!object.object_type) {
-      console.log("Error: Object " + object + " has no object_type value");
+      Logger.module().error('ERROR: ' + `Object ${object} has no object_type value`);
     }
     path = "/object";
 
@@ -366,10 +365,12 @@ exports.getFileDownloadLinks = function(object, part=null) {
         links.push(link);
       }
     }
-    else {console.log("Can not determine download file type(s) for object " + pid)}
+    else {
+      Logger.module().error('ERROR: ' + `Can not determine download file type(s) for object: ${pid}`);
+    }
   }
   else {
-    console.log("Can not create download links for object " + pid + ", object path does not exist");
+    Logger.module().error('ERROR: ' + `Can not create download links for object ${pid}, object path does not exist`);
   }
   return links;
 }

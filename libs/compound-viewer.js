@@ -28,6 +28,8 @@ const 	config = require('../config/' + process.env.CONFIGURATION_FILE),
 		Viewer = require('./viewer'),
     	AppHelper = require("../libs/helper");
 
+const Logger = require('./log4js');
+
 /**
  * Get compound object viewer html 
  *
@@ -44,18 +46,17 @@ exports.getCompoundObjectViewer = function(object, page, apikey=null) {
 
  	apikey = apikey ? ("?key=" + apikey) : "";
  	if(AppHelper.validateCompoundObject(object)) {
- 		//page = page ? page : "1";
 	 	switch(config.compoundObjectViewer) {
 	 		case "universalviewer":
 	 			viewer = Viewer.getIIIFObjectViewer(object, page, embedKaltura, apikey);
 	 			break;
 	 		default:
-	 			console.log("Viewer error: No compound viewer found.  Please check viewer configuration.");
+				Logger.module().error('ERROR: ' + "Viewer error: No compound viewer found.  Please check viewer configuration.");
 	 			break;
 	 	}
  	}
  	else {
- 		console.log("Viewer error: Invalid compound object part(s). Pid: " + object.pid);
+		Logger.module().error('ERROR: ' + `Viewer error: Invalid compound object part(s). Pid: ${object.pid}`);
  	}
 
  	return viewer;

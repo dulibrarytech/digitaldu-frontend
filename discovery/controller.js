@@ -37,6 +37,8 @@ const async = require('async'),
     Download = require("../libs/download"),
     File = require("../libs/file");
 
+const Logger = require('../libs/log4js');
+
 var webSocketServer = require("../libs/socket.js");
 webSocketServer.startServer(config.webSocketPort || 9007);
 
@@ -159,13 +161,13 @@ var renderCollection = function(req, res) {
 		Service.getObjectsInCollection(pid, page, reqFacets, sortBy, pageSize, daterange, function(error, response) {
 			if(error) {
 				if(response) {
-					console.log(error);
+					Logger.module().error('ERROR: ' + error);
 					data.error = "Could not open collection: " + error;
 					data["logMsg"] = error;
 					return res.render('error', data);
 				}
 				else {
-					console.log(error);
+					Logger.module().error('ERROR: ' + error);
 					data.error = "Could not open collection: " + error;
 					data["logMsg"] = error;
 					return res.render('page-not-found', data);
@@ -219,7 +221,7 @@ exports.renderCollection = renderCollection;
 exports.getCollectionList = function(req, res) {
 	Service.getAutocompleteData(function(error, list) {
 		if(error) {
-			console.log(error);
+			Logger.module().error('ERROR: ' + error);
 			res.send([]);
 		}
 		else {
@@ -258,7 +260,7 @@ exports.renderObjectView = function(req, res) {
 		if(error) {
 			let msg = error + ". Pid: " + pid;
 			data["logMsg"] = msg;
-			console.error(msg);
+			Logger.module().error('ERROR: ' + msg);
 			res.status(500);
 			res.render('error', {
 				error: config.viewerErrorMessage,
@@ -268,7 +270,7 @@ exports.renderObjectView = function(req, res) {
 		}
 		else if(response == null) {
 			let msg = "Object not found";
-			console.log(msg + ". Pid: " + pid);
+			Logger.module().error('ERROR: ' + msg + ". Pid: " + pid);
 			res.status(404);
 			res.render('page-not-found', {
 				error: msg,
@@ -295,7 +297,7 @@ exports.renderObjectView = function(req, res) {
 
 				if(data.viewer == null) {
 					let msg = "Viewer error: Can not retrieve viewer content. Pid: " + pid;
-					console.log(msg);
+					Logger.module().error('ERROR: ' + msg);
 					res.status(500);
 					res.render('error', {
 						error: config.viewerErrorMessage,
@@ -354,11 +356,11 @@ exports.getDatastream = function(req, res) {
 
 	Service.getDatastream(index, pid, ds, part, key, function(error, stream, contentType=null) {
 		if(error) {
-			console.log(error);
+			Logger.module().error('ERROR: ' + error);
 			res.sendStatus(500);
 		}
 		else if(!stream) {
-			console.log("Object or datastream source not found. Pid: " + pid + " Part ID: " + part);
+			Logger.module().error('ERROR: ' + "Object or datastream source not found. Pid: " + pid + " Part ID: " + part);
 			res.sendStatus(404);
 		}
 		else {
@@ -396,7 +398,7 @@ exports.getIIIFManifest = function(req, res) {
 
 	Service.getManifestObject(pid, index, page, key, function(error, manifest) {
 		if(error) {
-			console.log(error);
+			Logger.module().error('ERROR: ' + error);
 			res.sendStatus(500);
 		}
 		else if(manifest){
@@ -431,11 +433,11 @@ exports.getKalturaViewer = function(req, res) {
 
 	Service.fetchObjectByPid(index, pid, function(error, object) {
 		if(error) {
-			console.log(error, pid);
+			Logger.module().error('ERROR: ' + error + " Pid: " + pid);
 			res.send("<h4>Error loading viewer");
 		}
 		else if(object == null) {
-			console.log("Object not found", pid);
+			Logger.module().error('ERROR: ' + "Object not found" + " Pid: " + pid);
 			res.send("<h4>Error loading viewer, object not found");
 		}
 		else {
@@ -459,7 +461,7 @@ exports.getKalturaViewer = function(req, res) {
 exports.advancedSearch = function(req, res) {
 	Service.getAutocompleteData(function(error, acData) {
 		if(error) {
-			console.log(error);
+			Logger.module().error('ERROR: ' + error);
 		}
 		
 		var data = {
@@ -521,7 +523,7 @@ exports.getObjectViewer = function(req, res) {
 			else {
 				if(page != "1") {
 					let msg = "Object not found: " + pid;
-					console.log(msg)
+					Logger.module().error('ERROR: ' + msg);
 					errors = msg;
 				}
 				else {
@@ -542,7 +544,8 @@ exports.getObjectViewer = function(req, res) {
 		}
 
 		if(errors) {
-			console.log(errors + ". Pid: " + pid)
+			Logger.module().error('ERROR: ' + errors + ". Pid: " + pid);
+			
 			res.render('error', {
 				error: config.viewerErrorMessage,
 				root_url: config.rootUrl,
@@ -567,11 +570,11 @@ exports.downloadObjectFile = function(req, res) {
 
 	Service.fetchObjectByPid(config.elasticsearchPublicIndex, pid, function(error, object) {
 		if(error) {
-			console.error(error + ". Pid: " + pid);
+			Logger.module().error('ERROR: ' + error + ". Pid: " + pid);
 			res.sendStatus(500);
 		}
 		else if(object == null) {
-			console.log("Object not found. Pid: " + pid);
+			Logger.module().error('ERROR: ' + "Object not found. Pid: " + pid);
 			res.sendStatus(404);
 		}
 		else {
@@ -579,7 +582,7 @@ exports.downloadObjectFile = function(req, res) {
 					let webSocketClient = webSocketServer.getLastClient();
 
 					if(webSocketClient) {
-						console.log("Client connected to socket server. Downloading object files for", object.pid)
+						Logger.module().info('INFO: ' + "Client connected to socket server. Downloading object files for object (pid): " + object.pid);
 						let msg = {
 						  status: "1",
 						  message: "Client connected",
@@ -590,7 +593,7 @@ exports.downloadObjectFile = function(req, res) {
 						// Handle messages from the client
 						webSocketClient.on('message', function incoming(data) {
 				  			if(JSON.parse(data).abort == true) {
-				  				console.log("File download aborted by client");
+								Logger.module().info('INFO: ' + "File download aborted by client");
 				  				webSocketClient["abort"] = true;
 				  			}
 						});
@@ -598,7 +601,7 @@ exports.downloadObjectFile = function(req, res) {
 						Download.downloadCompoundObjectFiles(object, function(error, filepath) {
 							if(error) {
 								let errorMsg = "Error downloading object files: " + error;
-								console.log(errorMsg);
+								Logger.module().error('ERROR: ' + errorMsg);
 								let msg = {
 								  status: "5",
 								  message: errorMsg
@@ -619,8 +622,7 @@ exports.downloadObjectFile = function(req, res) {
 								if(res._headerSent == false) {
 									res.download(filepath, function(error) { 
 										if(typeof error != 'undefined' && error) {
-											let err = "Error sending file to client: " + error + " Filepath: " + filepath;
-											console.log(err);
+											Logger.module().error('ERROR: ' + err);
 											let msg = {
 											  status: "5",
 											  message: err
@@ -643,7 +645,7 @@ exports.downloadObjectFile = function(req, res) {
 						}, webSocketClient);
 					}
 					else {
-						console.log("Error establishing connection to websocket")
+						Logger.module().error('ERROR: ' + "Error establishing connection to websocket");
 						res.sendStatus(500);
 					}
 			}
@@ -708,7 +710,7 @@ exports.cacheAddItem = async function(req, res) {
 		if(pid && Helper.validateCacheName(cacheName)) {
 			let error = await Service.addCacheItem(pid, cacheName, updateExisting);
 			if(error) {
-				console.log(error);
+				Logger.module().error('ERROR: ' + error);
 			}
 			res.send("Complete");
 		}
@@ -727,11 +729,11 @@ exports.getObjectData = function(req, res) {
 	if(req.query.key && req.query.key == config.apiKey) {
 		Service.fetchObjectByPid(config.elasticsearchPublicIndex, pid, function(error, object) {
 			if(error) {
-				console.error(error);
+				Logger.module().error('ERROR: ' + error);
 				res.sendStatus(500);
 			}
 			else if(object == null) {
-				console.log("Object not found", pid);
+				Logger.module().error('ERROR: ' + "Object not found. Pid: " + pid);
 				res.sendStatus(404);
 			}
 			else {

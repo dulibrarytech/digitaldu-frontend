@@ -31,6 +31,8 @@ const async = require('async'),
     Helper = require('./helper.js'),
     Format = require("../libs/format");
 
+const Logger = require('../libs/log4js');
+
 /**
  * Renders the search results view
  * Performs search with request parameters and application settings
@@ -101,7 +103,8 @@ exports.search = function(req, res) {
 	let queryData = Helper.getSearchQueryDataObject(query, field, type, bool, true);
 	Service.searchIndex(queryData, facets, collection, page, pageSize, daterange, sortBy, advancedSearch, function(error, response) {
 		if(error) {
-			console.error(error);
+			Logger.module().error('ERROR: ' + error);
+
 			data.error = "Error: There was a problem performing your search";
 			data["logMsg"] = error;
 			return res.render('error', data);
@@ -158,7 +161,8 @@ exports.luceneSearch = function(req, res) {
 
 	Service.searchIndex(queryData, facets, null, page, pageSize, null, sort, null, function(error, response) {
 		if(error) {
-			console.error(error);
+			Logger.module().error('ERROR: ' + error);
+
 			res.sendStatus(500);
 		}
 		else {

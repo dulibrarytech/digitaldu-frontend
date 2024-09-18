@@ -25,9 +25,10 @@
 'use strict';
 
 const config = require('../config/' + process.env.CONFIGURATION_FILE),
-	 Repository = require('./repository'),
 	 Kaltura = require('./kaltura'),
 	 AppHelper = require("../libs/helper");
+
+const Logger = require('./log4js');
 
 /**
  * Get object viewer html 
@@ -40,7 +41,7 @@ exports.getObjectViewer = function(object, mimeType="", apikey=null) {
  	apikey = apikey ? ("?key=" + apikey) : "";
 
  	if(object == null) {
- 		console.log("Null object, viewer can not render");
+		Logger.module().error('ERROR: ' + "Null object, viewer can not render");
  		return viewer;
  	}
 
@@ -74,7 +75,7 @@ exports.getObjectViewer = function(object, mimeType="", apikey=null) {
  			break;
 
  		default:
- 			console.log("Viewer error: invalid mimetype:", mimeType, "for pid:", object.pid);
+			Logger.module().error('ERROR: ' + `Viewer error: invalid mimetype: ${mimeType} for object: ${object.pid}`);
  			break;
  	}
 

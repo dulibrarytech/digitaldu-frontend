@@ -26,11 +26,13 @@
 
  const config = require('../config/' + process.env.CONFIGURATION_FILE);
  const { Client } = require('@elastic/elasticsearch');
+
+ const Logger = require('../libs/log4js');
  
  let elastic_client = null;
  let elasticDomain = `${config.elasticsearchHost}:${config.elasticsearchPort}`;
 
- console.log(`Connecting to Elastic server at domain: ${elasticDomain}...`);
+ Logger.module().info('INFO: ' + `Connecting to Elastic server at domain: ${elasticDomain}...`);
  
  try {
      elastic_client = new Client({
@@ -38,20 +40,20 @@
      });
  }
  catch (error) {
-     console.error(`Could not connect to Elastic server. Error: ${error}`);
+     Logger.module().error('ERROR: ' + `Could not connect to Elastic server. Error: ${error}`);
  }
 
  if(elastic_client) {
 
     elastic_client.info().then(function (response) {
-      console.log(`Connected to Elastic server. Server info:`, response)
+      Logger.module().info('INFO: ' + `Connected to Elastic server. Server info: ${response}`);
 
     }, function (error) {
-      console.error(`Could not connect to Elastic server. Error: ${error}`);
+      Logger.module().error('ERROR: ' + `Could not connect to Elastic server. Error: ${error}`);
     });
  }
  else {
-    console.log(`Cound not connect to Elastic server. No error report available`);
+    Logger.module().error('ERROR: ' + "Cound not connect to Elastic server");
  }
  
  module.exports = elastic_client;

@@ -29,6 +29,8 @@ const es = require('../config/index'),
       AppHelper = require("../libs/helper.js"),
       Metadata = require('../libs/metadata');
 
+const Logger = require('../libs/log4js');
+
 /**
  * Search the index
  * Perform a search with query data and search specifications
@@ -400,7 +402,10 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
       }
     }
 
-    if(config.nodeEnv == "devlogsearch") {console.log("Search query object:", util.inspect(data, {showHidden: false, depth: null}));}
+    if(config.nodeEnv == "devlogsearch") {
+      let objectStructure = util.inspect(data, {showHidden: false, depth: null});
+      Logger.module().info('INFO: ' + `Search query object: ${objectStructure}`);
+    }
 
     // Query the index
     es.search(data).then(function (response) {

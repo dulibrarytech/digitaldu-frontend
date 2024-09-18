@@ -29,6 +29,8 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
   Kaltura = require('../libs/kaltura'),
   IIIF = require('../libs/IIIF');
 
+const Logger = require('./log4js');
+
 /**
  * Get a datastream for an object
  * Return a placeholder image if the requested datastream is not available (thumbnail datastreams only)
@@ -89,24 +91,26 @@ exports.getDatastream = function(object, datastreamID, callback, apikey=null) {
             uri = object.thumbnail || null;
             break;
           default:
-            console.log("Invalid source setting, could not determine uri");
+            Logger.module().error('ERROR: ' + `Invalid source setting, could not determine uri. Source: ${source} Object: ${pid}`);
             break;
         }
       }
 
       // Fetch the stream
       if(uri == null || uri == "") {
-        console.log(`Could not construct uri for datastream request. uri field is null. Check object source fields. Stream option: ${(settings.source || "null")} Pid: ${object.pid}`);
+        Logger.module().info('INFO: ' + `Uri not available for datastream request. Check object source fields. Stream option: ${(settings.source || "null")} Pid: ${object.pid}`);
         streamDefaultThumbnail(object, callback);
       }
       else {
-        if(config.nodeEnv == "devlog") {console.log("Thumbnail image stream uri:", uri)}
+        if(config.nodeEnv == "devlog") {
+          Logger.module().info('INFO: ' + `Thumbnail image stream uri: ${uri}`);
+        }
 
         // Stream from repository
         if(source == "repository") {
           Repository.streamData(object, "tn", function(error, stream) {
             if(error) {
-              console.log(`Repository fetch error: ${error} Object: ${object.pid}`);
+              Logger.module().error('ERROR: ' + `Repository fetch error: ${error} Object: ${object.pid}`);
               streamDefaultThumbnail(object, callback);
             }
             else {
@@ -114,7 +118,7 @@ exports.getDatastream = function(object, datastreamID, callback, apikey=null) {
                 callback(null, stream, object);
               }
               else {
-                console.log(`Repository fetch error: Stream not available. Object: ${object.pid}`)
+                Logger.module().info('INFO: ' + `Repository thumbnail stream not available. Object: ${object.pid} Using default thumbnail`);
                 streamDefaultThumbnail(object, callback);
               }
             }
@@ -125,11 +129,11 @@ exports.getDatastream = function(object, datastreamID, callback, apikey=null) {
         else {
           streamRemoteData(uri, function(error, status, stream) {
             if(error) {
-              console.log(`Remote stream error: ${error} Object: ${object.pid}. Source: ${source}`);
+              Logger.module().error('ERROR: ' + `Remote stream error: ${error} Object: ${object.pid}. Source: ${source}`);
               streamDefaultThumbnail(object, callback);
             }
             else if(stream == null) {
-              console.log(`Remote stream error: Stream not available. Object: ${object.pid}. Source: ${source}`);
+              Logger.module().error('ERROR: ' + `Remote stream error: Remote stream unavailable or not found. Object: ${object.pid}, Uri: ${uri}`);
               streamDefaultThumbnail(object, callback);
             }
             else {
@@ -137,7 +141,7 @@ exports.getDatastream = function(object, datastreamID, callback, apikey=null) {
                 callback(null, stream, object);
               }
               else {
-                console.log(`Remote stream error: Response status: ${status} Object: ${object.pid}. Source: ${source}`);
+                Logger.module().error('ERROR: ' + `Remote stream error: Response status: ${status} Object: ${object.pid}. Source: ${source}`);
                 streamDefaultThumbnail(object, callback);
               }
             }
@@ -146,7 +150,7 @@ exports.getDatastream = function(object, datastreamID, callback, apikey=null) {
       }
     }
     else {
-      console.log(`Could not determine datastream settings for object ${object.pid}. Check configuration or object source data. Object path: ${object.object || "null"}. Mime type: ${object.mime_type || "null"}`);
+      Logger.module().error('ERROR: ' + `Could not determine datastream settings for object ${object.pid}. Check configuration or object source data. Object path: ${object.object || "null"}. Mime type: ${object.mime_type || "null"}`);
       streamDefaultThumbnail(object, callback);
     }
   }
@@ -155,7 +159,9 @@ exports.getDatastream = function(object, datastreamID, callback, apikey=null) {
    * Object datastreams
    */
   else {
-    if(!object.object) {console.log(`Object path is null for object: ${object.pid}`)}
+    if(!object.object) {
+      Logger.module().error('ERROR: ' + `Object path is null for object: ${object.pid}`);
+    }
 
     let objectType = Helper.getObjectType(object) || "",
         sourceOption = "repository";
@@ -196,21 +202,26 @@ exports.getDatastream = function(object, datastreamID, callback, apikey=null) {
         case "kaltura":
           let viewerId = object.entry_id || object.kaltura_id || null;
           uri = viewerId ? Kaltura.getStreamingMediaUrl(viewerId, extension) : null;
-          if(!viewerId) {console.log("Null kaltura ID field")}
+          if(!viewerId) {
+            Logger.module().info('INFO: ' + `Null kaltura ID field. Object: ${object.pid}`);
+          }
           break;
         case "repository":
           uri = object.object;
           break;
         default:
-          console.log("Invalid source setting, could not determine uri");
+          Logger.module().error('ERROR: ' + `Datastream error: Invalid source setting. Could not determine datastream source uri. Source option: ${sourceOption} Object: ${object.pid}`);
           break;
       }
 
       if(uri == null || uri == "") {
-        callback(`Could not construct uri for datastream request. uri field is null. Check object source fields. Stream option: ${(settings.source || "null")} Pid: ${object.pid}`, null, object);
+        Logger.module().info('INFO: ' + `Uri not available for datastream request. Check object source fields. Stream option: ${(settings.source || "null")} Pid: ${object.pid}`)
+        callback(null, null, object);
       }
       else {
-        if(config.nodeEnv == "devlog") {console.log("Object image stream uri:", uri)}
+        if(config.nodeEnv == "devlog") {
+          Logger.module().info('INFO: ' + `Object image stream uri: ${uri}`);
+        }
 
         // Stream from repository
         if(sourceOption == "repository") {
@@ -223,7 +234,7 @@ exports.getDatastream = function(object, datastreamID, callback, apikey=null) {
                 callback(null, stream, object);
               }
               else {
-                console.log(`Repository fetch error: Source not available. Object: ${object.pid}`);
+                Logger.module().error('ERROR: ' + `Repository stream error: Source not available, null stream received from repository. Object: ${object.pid}`);
                 callback(null, null, object);
               }
             }
@@ -237,7 +248,7 @@ exports.getDatastream = function(object, datastreamID, callback, apikey=null) {
               callback(`Remote stream error: ${error} Object: ${object.pid}`, null, object);
             }
             else if(stream == null) {
-              console.log(`Remote stream error: Source not available. Object: ${object.pid}`);
+              Logger.module().error('ERROR: ' + `Remote stream error: Null stream received. Object: ${object.pid} Uri: ${uri}`);
               callback(null, null, object);
             }
             else {
@@ -245,7 +256,7 @@ exports.getDatastream = function(object, datastreamID, callback, apikey=null) {
                 callback(null, stream, object);
               }
               else {
-                console.log(`Remote stream error: Response status: ${status} Object: ${object.pid}`);
+                Logger.module().error('ERROR: ' + `Remote stream error: response status: ${status} Object: ${object.pid} Uri: ${uri}`);
                 callback(null, null, object);
               }
             }
@@ -311,7 +322,7 @@ var streamRemoteData = function(uri, callback) {
         callback("HTTP request error: " + error, null, null);
       }
       else if(status != 200) {
-        console.log("Request for data received status", status);
+        Logger.module().error('ERROR: ' + `Request for data received status ${status}`);
         callback(null, status, null);
       }
       else {
@@ -336,7 +347,8 @@ var streamRemoteData = function(uri, callback) {
  * @return {undefined}
  */
 var streamDefaultThumbnail = function(object, callback) {
-  console.log(`Streaming default thumbnail for object ${object.pid}`);
+  Logger.module().info('INFO: ' + `Streaming default thumbnail for object ${object.pid}`);
+
   let path = config.thumbnailDefaultImagePath + config.defaultThumbnailImage;
 
   // Check for an object specific default thumbnail image.  If found, use it

@@ -35,8 +35,8 @@ exports.cacheDatastream = function(cacheName, objectID, stream, extension, callb
 		let file = fs.createWriteStream(filepath);
 
 		file.on('error', function(err) {
-			console.log(err);
 			file.end();
+			callback(`Error creating file: ${err}`);
 		});
 
 		if(file) {

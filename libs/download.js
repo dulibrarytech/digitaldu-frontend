@@ -31,6 +31,8 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
       Metadata = require('./metadata.js'),
       File = require('./file.js');
 
+const Logger = require('./log4js');
+
 /*
  *
  */
@@ -118,7 +120,8 @@ var fetchResourceFiles = async function(path, files, callback, websocket=null) {
         websocket.send(JSON.stringify(msg));
       }
     }
-    console.log("Fetching resource file: uri", fileUri, "Saving to file", filename);
+    Logger.module().info('INFO: ' + `Fetching resource file: uri ${fileUri}, saving to file: ${filename}`);
+    
     response = await File.downloadToFileSync(fileUri, path, filename);
   }
 
@@ -142,10 +145,11 @@ exports.createMetadataFiles = createMetadataFiles;
 
 exports.removeDownloadTempFolder = function(filepath) {
   let folderPath = filepath.substring(0, filepath.lastIndexOf("/"));
-  console.log("Removing temp folder " + folderPath + "...");
+  Logger.module().info('INFO: ' + `Removing temp folder ${folderPath}...`);
+
   File.removeDir(folderPath, function(error) {
     if(error) {
-      console.log("Error removing temp folder: ", error);
+      Logger.module().error('ERROR: ' + `Error removing temp folder: ${error}`);
     }
   });
 }

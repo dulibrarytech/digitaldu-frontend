@@ -26,6 +26,8 @@
 const config = require('../config/' + process.env.CONFIGURATION_FILE),
 	  domain = config.kalturaDomain || "https://cdnapisec.kaltura.com";
 
+const Logger = require('./log4js');
+
 /**
  * 
  *
@@ -50,7 +52,9 @@ exports.getViewerContent = function(object) {
  	html += "<iframe id='kaltura_player_1559861164' src='" + domain + "/p/" + partner_id + "/sp/" + partner_id + '00' + "/embedIframeJs/uiconf_id/" + uiconf_id + "/partner_id/" + partner_id + "?iframeembed=true&playerId=" + unique_object_id + "&entry_id=" + entry_id + "&flashvars[leadWithHTML5]=true' width='" + width + "' height='" + height + "' allowfullscreen webkitallowfullscreen mozAllowFullScreen allow='autoplay *; fullscreen *; encrypted-media *' frameborder='0'></iframe>";
  	html += "</div>";
 
- 	if(entry_id == "NULL") {console.log("Null Kaltura ID for object " + object.pid)}
+ 	if(entry_id == "NULL") {
+		Logger.module().error('ERROR: ' + `Null Kaltura ID for object, pid: ${object.pid}`);
+	}
 
  	return html;
 }
