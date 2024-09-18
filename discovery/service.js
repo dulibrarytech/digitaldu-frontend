@@ -355,7 +355,7 @@ fetchObjectByPid = async function(index, pid, callback = () => {}) {
     }
   }
   catch(error) {
-    if(error.meta.statusCode == 404) {
+    if(error.meta?.statusCode == 404) {
       callback(null, null);
     }
     else {

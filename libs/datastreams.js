@@ -29,6 +29,8 @@ const config = require('../config/' + process.env.CONFIGURATION_FILE),
   Kaltura = require('../libs/kaltura'),
   IIIF = require('../libs/IIIF');
 
+const Logger = require('./log4js');
+
 /**
  * Get a datastream for an object
  * Return a placeholder image if the requested datastream is not available (thumbnail datastreams only)
