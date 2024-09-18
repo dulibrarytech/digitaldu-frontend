@@ -11,6 +11,8 @@ const download = require('file-download');
 const path = require("path");
 const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
+const Logger = require('./log4js');
+
 exports.fetchFile = function(type, url, async=true, body=null, callback=null) {
   var xhttp = new XMLHttpRequest();
 
@@ -83,7 +85,7 @@ exports.downloadToFileSync = async function(uri, filepath, filename) {
     try {
       download(uri, options, function(error, filename) {
         if(error) {
-          console.log("Error downloading file: " + uri + " Error: " + error);
+          Logger.module().error('ERROR: ' + `Error downloading file: ${uri} Error: ${error}`);
           resolve(error);
         }
         else {
@@ -91,7 +93,7 @@ exports.downloadToFileSync = async function(uri, filepath, filename) {
         }
       });
     } catch (e) {
-      console.log("Error downloading file: " + uri + " Error: " + e)
+      Logger.module().error('ERROR: ' + `Error downloading file: ${uri} Error: ${e}`);
     }
   });
 

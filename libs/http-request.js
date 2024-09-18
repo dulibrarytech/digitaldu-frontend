@@ -20,12 +20,14 @@
 
 const axios = require('axios');
 
+const Logger = require('./log4js');
+
 exports.head = async function(url, callback) {
     axios.head(url).then(function(response) {
         callback(null, response.status, response.headers)
     }).catch(function(error) {
         if(error.response) {
-            console.log("HTTP Response status text:", error.response.statusText);
+            Logger.module().error('ERROR: ' + `Http request error: ${error} Status text: ${error.response.statusText}`);
             if(error.response.status == 500) {
                 callback(error.response.statusText, 500, null);
             }
@@ -44,7 +46,7 @@ exports.get = function(url, data, callback) {
         callback(null, response.status, response.data, response.headers)
     }).catch(function(error) {
         if(error.response) {
-            console.log("HTTP Response status text:", error.response.statusText);
+            Logger.module().error('ERROR: ' + `Http request error: ${error} Status text: ${error.response.statusText}`);
             if(error.response.status == 500) {
                 callback(error.response.statusText, 500, null);
             }
@@ -86,7 +88,7 @@ exports.get_stream = function(url, data, callback) {
         
     }).catch(function (error) {
         if(error.response) {
-            console.log("HTTP Response status text:", error.response.statusText);
+            Logger.module().error('ERROR: ' + `Http request error: ${error} Status text: ${error.response.statusText}`);
             if(error.response.status == 500) {
                 callback(error.response.statusText, 500, null);
             }

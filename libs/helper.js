@@ -19,6 +19,8 @@ const Kaltura = require('../libs/kaltura');
 const sanitizeHtml = require('sanitize-html');
 const linkifyHtml = require('linkify-html');
 
+const Logger = require('./log4js');
+
 /*
  *
  */
@@ -201,7 +203,7 @@ var validateCompoundObject = function(object) {
 		isValid = validateCompoundObjectParts(parts || [], ["still image"]);
 	}
 	else {
-		console.log("Invalid compound object mime type");
+		Logger.module().error('ERROR: ' + "Invalid compound object mime type");
 	}
 
 	return isValid;
@@ -398,7 +400,7 @@ var getContentType = function(datastream, object, part) {
     }
   }
   else {
-  	console.log("Missing or invalid object path. Object ID: " + pid)
+	  Logger.module().error('ERROR: ' + `Missing or invalid object path. Object ID: ${pid}`);
   }
   return contentType;
 }
