@@ -98,7 +98,7 @@ exports.getDatastream = function(object, datastreamID, callback, apikey=null) {
 
       // Fetch the stream
       if(uri == null || uri == "") {
-        Logger.module().error('ERROR: ' + `Could not construct uri for datastream request. uri field is null. Check object source fields. Stream option: ${(settings.source || "null")} Pid: ${object.pid}`);
+        Logger.module().info('INFO: ' + `Uri not available for datastream request. Check object source fields. Stream option: ${(settings.source || "null")} Pid: ${object.pid}`);
         streamDefaultThumbnail(object, callback);
       }
       else {
@@ -215,7 +215,8 @@ exports.getDatastream = function(object, datastreamID, callback, apikey=null) {
       }
 
       if(uri == null || uri == "") {
-        callback(`Could not construct uri for datastream request. uri field is null. Check object source fields. Stream option: ${(settings.source || "null")} Pid: ${object.pid}`, null, object);
+        Logger.module().info('INFO: ' + `Uri not available for datastream request. Check object source fields. Stream option: ${(settings.source || "null")} Pid: ${object.pid}`)
+        callback(null, null, object);
       }
       else {
         if(config.nodeEnv == "devlog") {
