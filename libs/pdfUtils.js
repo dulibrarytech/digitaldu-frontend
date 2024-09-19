@@ -27,10 +27,19 @@
 const fs = require('fs');
 const {PdfCounter} = require('page-count');
 
+const Logger = require('./log4js');
+
 exports.getPageCountSync = async function(pdfPath) {
-        var numPages = null;
+        var numPages = 1;
         const dataBuffer =fs.readFileSync(pdfPath);
-        numPages = await PdfCounter.count(dataBuffer, "pdf");
+
+		try {
+			numPages = await PdfCounter.count(dataBuffer, "pdf");
+		}
+        catch(error) {
+			Logger.module().error('ERROR: ' + `PdfCounter error (pdfUtils): ${error.message}`);
+		}
+	
         return numPages;
   }
 
