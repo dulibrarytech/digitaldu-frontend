@@ -36,13 +36,15 @@ exports.cacheDatastream = function(cacheName, objectID, stream, extension, callb
 
 		file.on('error', function(err) {
 			file.end();
-			callback(`Error creating file: ${err}`);
+			callback(`Cache error: error creating file: ${err}`);
+		});
+
+		file.on('ready', function() {
+			callback(null);
 		});
 
 		if(file) {
-			stream.pipe(file).on('close', function() {
-				callback(null);
-			});
+			stream.pipe(file);
 		}
 		else {
 			callback("Error writing to the cache. Cache folder does not exist or is inaccessible.");
