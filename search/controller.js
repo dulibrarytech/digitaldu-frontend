@@ -148,10 +148,11 @@ exports.search = function(req, res) {
 } 
 
 exports.luceneSearch = function(req, res) {
-	var query = req.query.q || [""],
-		field = req.query.field || ["all"], 
-		type = req.query.type || ["contains"],
-		bool = req.query.bool || ["or"],
+	var query = req.query.q ? [req.query.q] : [""],
+		field = req.query.field ? [req.query.field] : ["all"], 
+		type = req.query.type ? [req.query.type] : ["contains"],
+		bool = req.query.bool ? [req.query.bool] : ["or"],
+
 		facets = req.query.f || null,
 		page = Math.abs(parseInt(req.query.page)) || 1,
 		pageSize = Math.abs(parseInt(req.query.pageSize)) || parseInt(config.maxResultsPerPage),
