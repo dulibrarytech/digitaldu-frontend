@@ -744,3 +744,24 @@ exports.getObjectData = function(req, res) {
 	else res.sendStatus(403);
 }
 
+exports.getObjectDataKaltura = function(req, res) {
+	let id = req.params.id || "";
+
+	if(req.query.key && req.query.key == config.apiKey) {
+		Service.fetchObjectByKalturaId(config.elasticsearchPublicIndex, id, function(error, object) {
+			if(error) {
+				Logger.module().error('ERROR: ' + error);
+				res.sendStatus(500);
+			}
+			else if(object == null) {
+				Logger.module().error('ERROR: ' + "Object not found. Kaltura entry_id: " + id);
+				res.sendStatus(404);
+			}
+			else {
+				res.send(object);
+			}
+		});
+	}
+	else res.sendStatus(403);
+}
+

@@ -62,6 +62,18 @@ var addCacheItem = async function(objectID, cacheName, updateExisting=false) {}
 var fetchObjectByPid = function(index, pid, callback) {}
 
 /**
+ * Get the index data for an object
+ *
+ * @param {String} index - Elastic index from which to retrieve object data
+ * @param {String} kalturaId - kalturaId (kaltura 'entry_id')
+ *
+ * @callback callback
+ * @param {String|null} Error message or null
+ * @param {Object|null} Elastic result data for the Object (index document source data) Null if error
+ */
+var fetchObjectByKalturaId = function(index, kalturaId, callback) {}
+
+/**
  * Returns an array of collection titles including all collections in the repository
  * 
  * @callback callback
@@ -365,6 +377,40 @@ fetchObjectByPid = async function(index, pid, callback = () => {}) {
   }
 }
 exports.fetchObjectByPid = fetchObjectByPid;
+
+fetchObjectByKalturaId = async function(index, kalturaId, callback = () => {}) {
+  let response;
+
+  try {
+    response = await es.search({
+      index,
+      body: {
+        query: {
+          match: {
+            "entry_id": kalturaId
+          }
+        }
+      }
+    });
+
+    if(response && response.hits?.hits.length > 0) {
+      let object = response.hits.hits[0]._source;
+      callback(null, object);
+    }
+    else {
+      callback(null, null);
+    }
+  }
+  catch(error) {
+    if(error.meta?.statusCode == 404) {
+      callback(null, null);
+    }
+    else {
+      callback(error, null);
+    }
+  }
+}
+exports.fetchObjectByKalturaId = fetchObjectByKalturaId;
 
 getAutocompleteData = function(callback) {
   var data = {};

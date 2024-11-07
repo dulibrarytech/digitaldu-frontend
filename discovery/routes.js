@@ -94,5 +94,8 @@ module.exports = function (app) {
 
     app.route('/repository/data/:pid')
         .get(Discovery.getObjectData)
+
+    app.route('/repository/data/kalturaId/:id')
+        .get(Discovery.getObjectDataKaltura)
 };
 
