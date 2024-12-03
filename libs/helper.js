@@ -66,19 +66,17 @@ exports.isObjectEmpty = function(object) {
 /*
  *
  */
-var removeHtmlEntities = function(string) { // TODO convert to single pattern replace, all listed chars
+var removeHtmlEntities = function(string) {
 	return string
 	.replace(/&amp;/g, "")
 	.replace(/&lt;/g, "")
 	.replace(/&gt;/g, "")
-	.replace(/&quot;/g, "")
 	.replace(/&lowbar;/g, "")
 	.replace(/&sol;/g, "")
 	.replace(/&equals;/g, "")
 	.replace(/&/g, "")
 	.replace(/</g, "")
 	.replace(/>/g, "")
-	.replace(/'/g, "")
 	.replace(/_/g, "")
 	.replace(/\//g, "")
 	.replace(/=/g, "");
