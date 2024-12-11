@@ -85,6 +85,8 @@
            strictTransportSecurity: {
                maxAge: 31536000
            },
+
+           crossOriginResourcePolicy: false,
  
            xFrameOptions: false
          })
