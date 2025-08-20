@@ -97,5 +97,8 @@ module.exports = function (app) {
 
     app.route('/repository/data/kalturaId/:id')
         .get(Discovery.getObjectDataKaltura)
+
+    app.route('/repository/data/field/:field_name')
+        .get(Discovery.getFieldValues)
 };
 

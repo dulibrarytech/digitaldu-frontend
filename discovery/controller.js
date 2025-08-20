@@ -765,3 +765,22 @@ exports.getObjectDataKaltura = function(req, res) {
 	else res.sendStatus(403);
 }
 
+/**
+ * Gets an array of all collection names
+ *
+ * @return {undefined}
+ */
+exports.getFieldValues = function(req, res) {
+	let field = req.params.field_name || "";
+
+	Service.getFieldValues(field, function(error, values) {
+		if(error) {
+			Logger.module().error('ERROR: ' + error);
+			res.send([]);
+		}
+		else {
+			res.send(values);
+		}
+	});
+}
+

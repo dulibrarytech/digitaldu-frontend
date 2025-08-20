@@ -226,6 +226,8 @@ var purgeCache = function(cacheName, refresh=false) {}
  */
 var removeCacheItem = function(objectID, cacheName, callback) {}
 
+var getFieldValues = function(field, callback) {}
+
 /*
  * Implementation
  */
@@ -1174,3 +1176,43 @@ removeCacheItem = function(objectID, cacheName, callback) {
   return false;
 }
 exports.removeCacheItem = removeCacheItem;
+
+getFieldValues = function(fieldName, callback) {
+
+  let {field} = config.searchAllFields.find(({id}) =>{
+    return id == fieldName;
+  });
+  
+  let data = {
+    index: config.elasticsearchPublicIndex,
+    _source: [field],
+    
+    body: {
+      query: {
+        match_all: {}
+      },
+      aggs: {
+        [fieldName]: {
+          "terms": {
+            "field": `${field}.keyword`,
+            "size": 10000
+          }
+        }
+      },
+      size: 10000
+    }
+  }
+
+  es.search(data).then(function ({aggregations}) {
+
+    let values = aggregations[fieldName].buckets.map(({key}) => {
+      return key.trim();
+    }).sort()
+
+    callback(null, values);
+
+  }, function (error) {
+    callback(error, null);
+  });
+}
+exports.getFieldValues = getFieldValues;
