@@ -773,14 +773,17 @@ exports.getObjectDataKaltura = function(req, res) {
 exports.getFieldValues = function(req, res) {
 	let field = req.params.field_name || "";
 
-	Service.getFieldValues(field, function(error, values) {
-		if(error) {
-			Logger.module().error('ERROR: ' + error);
-			res.send([]);
-		}
-		else {
-			res.send(values);
-		}
-	});
+	if(req.query.key && req.query.key == config.apiKey) {
+		Service.getFieldValues(field, function(error, values) {
+			if(error) {
+				Logger.module().error('ERROR: ' + error);
+				res.send([]);
+			}
+			else {
+				res.send(values);
+			}
+		});
+	}
+	else res.sendStatus(403);
 }
 
