@@ -1533,6 +1533,11 @@ div#transcript-view {
   white-space: initial !important;
 }
 
+#audio-viewer .uv-icon-fullscreen,
+#video-viewer .uv-icon-fullscreen {
+  display: none;
+}
+
 .text-highlight {
   background: #FAF799;
 }
