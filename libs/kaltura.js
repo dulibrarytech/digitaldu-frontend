@@ -41,16 +41,29 @@ exports.getViewerContent = function(object) {
 		unique_object_id = config.kalturaUniqueObjectID,
 		title = object.title;
 
-	const cache_st = "1559751114",
- 		height = config.kalturaPlayerHeight,
- 		width = config.kalturaPlayerWidth;
+ 	const height = config.kalturaPlayerHeight;
+ 	const width = config.kalturaPlayerWidth;
 
  	var html = "<div class='kaltura-viewer'>";
  	if(title && title != "" && config.showTitle == "true") {
  		html += "<h3>" + title + "</h3>";
  	}
- 	html += "<iframe id='kaltura_player_1559861164' src='" + domain + "/p/" + partner_id + "/sp/" + partner_id + '00' + "/embedIframeJs/uiconf_id/" + uiconf_id + "/partner_id/" + partner_id + "?iframeembed=true&playerId=" + unique_object_id + "&entry_id=" + entry_id + "&flashvars[leadWithHTML5]=true' width='" + width + "' height='" + height + "' allowfullscreen webkitallowfullscreen mozAllowFullScreen allow='autoplay *; fullscreen *; encrypted-media *' frameborder='0'></iframe>";
- 	html += "</div>";
+
+	html = `
+		<iframe id=${unique_object_id} 
+		type="text/javascript" title="${title}" 
+		src="${domain}/p/${partner_id}/embedPlaykitJs/uiconf_id/${uiconf_id}?iframeembed=true&entry_id=${entry_id}" 
+		width="${width}" 
+		height="${height}" 
+		allowfullscreen 
+		webkitallowfullscreen 
+		mozAllowFullScreen 
+		allow="autoplay *; fullscreen *; encrypted-media *" 
+		frameborder="0">
+		</iframe>
+	`;
+
+	html += "</div>";
 
  	if(entry_id == "NULL") {
 		Logger.module().error('ERROR: ' + `Null Kaltura ID for object, pid: ${object.pid}`);

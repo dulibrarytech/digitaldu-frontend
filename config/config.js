@@ -243,10 +243,11 @@ module.exports = {
      * Kaltura viewer settings
      */
     kalturaDomain: "https://cdnapisec.kaltura.com",
-    kalturaUI_ID: "44058172",
+    //kalturaUI_ID: "44058172",
+    kalturaUI_ID: "56664262",
     kalturaPartnerID: "2357732",
     kalturaUniqueObjectID: "kaltura_player_1559751114",
-    kalturaPlayerHeight: "923px",  // Height without the transcript player
+    kalturaPlayerHeight: "687px",
     kalturaPlayerWidth: "100%",
     showKalturaTitle: false,
     kalturaThumbnailWidth: "200",
