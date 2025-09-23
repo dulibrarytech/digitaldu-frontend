@@ -250,10 +250,6 @@
   div#viewer {
     height: 600px;
   }
-
-  div.openseadragon-canvas canvas {
-    bottom: 50px;
-  }
 }
 
 @media (min-width: 576px) and (max-width: 767px) {
