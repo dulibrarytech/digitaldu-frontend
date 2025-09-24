@@ -16,20 +16,6 @@
     <div id="object-view" class="col-md-12">
       <%- viewer %>
     </div>
-
-    <div id="transcript-view-wrapper" style="display: none">
-      <div id="transcript-view">
-        <% if(transcript && transcript.length > 0) { %>
-          <% for (var i in transcript) { %>
-            <% if(i == 0) { %>
-              <div class="transcript" data-transcript-page="1"><%= transcript[i] %></div>
-            <% } else { %>
-              <div class="transcript" data-transcript-page="<%= parseInt(i)+1 %>" style="display: none"><%= transcript[i] %></div>
-            <% } %>
-          <% } %>
-        <% } %>
-      </div>
-    </div>
   </div>
 </div>
 
@@ -73,10 +59,6 @@
                 <% } %>
               </span>
             </div>
-          <% } %>
-
-          <% if(transcript.length > 0) { %>
-            <button id="view-transcript" alt="View Transcript" type="button">View Transcript</button>
           <% } %>
         </span>
     </div>

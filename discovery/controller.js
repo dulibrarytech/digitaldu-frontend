@@ -284,6 +284,7 @@ exports.renderObjectView = function(req, res) {
 			}
 			else {
 				var object = response;
+
 				if(AppHelper.isParentObject(object)) {
 					let viewerContent = CompoundViewer.getCompoundObjectViewer(object, page);
 					if(viewerContent) { 

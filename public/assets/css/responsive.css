@@ -191,10 +191,6 @@
     bottom: 60px;
   }
 
-  div.openseadragon-canvas canvas {
-    bottom: 120px;
-  }
-
   div#metadata-section .container {
     width: 95%;
   }
@@ -249,10 +245,6 @@
 
   div#viewer {
     height: 600px;
-  }
-
-  div.openseadragon-canvas canvas {
-    bottom: 50px;
   }
 }
 

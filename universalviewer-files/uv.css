@@ -23,17 +23,17 @@
 /*
  * Begin DU styles
  */
- #uv {
+#uv {
   width: 100%;
-  height: 800px;
+  height: 52vw;
+}
+
+#uv #mep_0 {
+  height: 100% !important;
 }
 
 .uv {
   overflow: hidden;
-}
-
-#object-view .uv {
-  min-height: 800px;
 }
 
 .uv .rightPanel .top .title {
