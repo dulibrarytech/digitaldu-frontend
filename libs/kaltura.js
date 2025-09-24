@@ -35,14 +35,17 @@ const Logger = require('./log4js');
  * @return 
  */
 exports.getViewerContent = function(object) {
-	const partner_id = config.kalturaPartnerID,
-		uiconf_id = config.kalturaUI_ID,
-		entry_id = object.entry_id || object.kaltura_id || "NULL",
-		unique_object_id = config.kalturaUniqueObjectID,
-		title = object.title;
-
- 	const height = config.kalturaPlayerHeight;
+	const height = config.kalturaPlayerHeight;
  	const width = config.kalturaPlayerWidth;
+
+	let partner_id = config.kalturaPartnerID,
+			uiconf_id = config.kalturaUI_ID,
+			unique_object_id = config.kalturaUniqueObjectID,
+			title = object.title;
+
+	let entry_id = null;
+	let [part = null] = object.display_record?.parts || [];
+	if(part) entry_id = part.entry_id || part.kaltura_id || null;
 
  	var html = "<div class='kaltura-viewer'>";
  	if(title && title != "" && config.showTitle == "true") {
@@ -52,7 +55,7 @@ exports.getViewerContent = function(object) {
 	html = `
 		<iframe id=${unique_object_id} 
 		type="text/javascript" title="${title}" 
-		src="${domain}/p/${partner_id}/embedPlaykitJs/uiconf_id/${uiconf_id}?iframeembed=true&entry_id=${entry_id}" 
+		src="${domain}/p/${partner_id}/embedPlaykitJs/uiconf_id/${uiconf_id}?iframeembed=true&entry_id=${entry_id || "NULL"}" 
 		width="${width}" 
 		height="${height}" 
 		allowfullscreen 
@@ -65,7 +68,7 @@ exports.getViewerContent = function(object) {
 
 	html += "</div>";
 
- 	if(entry_id == "NULL") {
+ 	if(!entry_id) {
 		Logger.module().error('ERROR: ' + `Null Kaltura ID for object, pid: ${object.pid}`);
 	}
 
