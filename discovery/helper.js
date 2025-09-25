@@ -337,6 +337,7 @@ exports.getFileDownloadLinks = function(object, part=null) {
 
   if(object.object) {
     let extension = null;
+
     if(object.object) {
       extension = AppHelper.getFileExtensionFromFilePath(object.object);
     }
@@ -365,6 +366,33 @@ exports.getFileDownloadLinks = function(object, part=null) {
         links.push(link);
       }
     }
+
+    else if(isKalturaObject(object)) {
+        let link = null;
+
+        if(object.mime_type?.includes("audio")) {
+          link = {
+            uri: config.rootUrl + "/datastream/" + pid + "/mp3/" + part + "/" + pid + ".mp3",
+            filename: pid + ".mp3",
+            extension: "mp3",
+            label: "mp3",
+            isBatch: false
+          };
+        }
+
+        else if(object.mime_type?.includes("video")) {
+          link = {
+            uri: config.rootUrl + "/datastream/" + pid + "/mp4/" + part + "/" + pid + ".mp4",
+            filename: pid + ".mp4",
+            extension: "mp4",
+            label: "mp4",
+            isBatch: false
+          };
+        }
+
+        if(link) links.push(link);
+    }
+
     else {
       Logger.module().error('ERROR: ' + `Can not determine download file type(s) for object: ${pid}`);
     }
@@ -420,6 +448,15 @@ exports.getTranscriptData = function(object) {
   }
 
   return transcriptData;
+}
+
+const isKalturaObject = function(object) {
+	return (
+		object.entry_id || 
+		object.display_record.parts[0].entry_id || 
+		object.display_record.parts[0].kaltura_id
+	)
+	? true : false;
 }
 
 
