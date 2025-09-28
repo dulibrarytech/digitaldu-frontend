@@ -41,11 +41,13 @@ exports.getViewerContent = function(object) {
 	let partner_id = config.kalturaPartnerID,
 			uiconf_id = config.kalturaUI_ID,
 			unique_object_id = config.kalturaUniqueObjectID,
-			title = object.title;
+			title = object.title,
+			entry_id = object.entry_id || object.kaltura_id || null;
 
-	let entry_id = null;
-	let [part = null] = object.display_record?.parts || [];
-	if(part) entry_id = part.entry_id || part.kaltura_id || null;
+	if(!entry_id) {
+		let [part = null] = object.display_record?.parts || [];
+		if(part) entry_id = part.entry_id || part.kaltura_id || null;
+	}
 
  	var html = "<div class='kaltura-viewer'>";
  	if(title && title != "" && config.showTitle == "true") {
