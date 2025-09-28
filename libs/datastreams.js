@@ -196,11 +196,17 @@
        // Set the source uri
        switch(sourceOption) {
          case "iiif":
-           let pid = object.order ? `${object.pid}_${object.order}` : object.pid; // Append the part id to the object pid
+           let pid = object.order ? `${object.pid}_${object.order}` : object.pid; 
            uri = IIIF.getResourceUri(pid, apikey);
            break;
          case "kaltura":
            let viewerId = object.entry_id || object.kaltura_id || null;
+
+          if(!viewerId) {
+        		let [part = null] = object.display_record?.parts || [];
+        		if(part) viewerId = part.entry_id || part.kaltura_id || null;
+        	}
+
            uri = viewerId ? Kaltura.getStreamingMediaUrl(viewerId, extension) : null;
            if(!viewerId) {
              Logger.module().info('INFO: ' + `Null kaltura ID field. Object: ${object.pid}`);
