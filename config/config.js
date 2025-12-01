@@ -324,7 +324,7 @@ module.exports = {
         "object": {
             "type": {
                 "still image": {
-                    "source": "iiif",
+                    "source": "repository",
                     "cache": false
                 },
                 "audio": {
@@ -365,7 +365,7 @@ module.exports = {
                     "cache": false,
                     "file_type": {
                         "jpg": {
-                            "source": "iiif",
+                            "source": "repository",
                             "cache": true
                         }
                     }
