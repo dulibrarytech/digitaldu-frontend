@@ -300,7 +300,7 @@ class CustomDelegate
       str.concat(pid)
     end
 
-    str.concat('/object')
+    str.concat('/jpg')
     str.concat(key)
     puts "http_resource_info() derived resource url: ".concat(str)
     return str
