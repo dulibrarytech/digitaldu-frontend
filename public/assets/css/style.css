@@ -815,6 +815,8 @@ div.facets .static-facets {
 
 .facet-name {
   width: 88%;
+  display: flex;
+  align-items: center;
 }
 
 .facet-name a {
@@ -828,6 +830,9 @@ div.facets .static-facets {
   width: 16px;
   vertical-align: top;
   text-align: right;
+  display: flex;
+  align-items: center;
+  justify-content: right;
 }
 
 .fixed-facets .facet-count {
