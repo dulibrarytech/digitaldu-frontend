@@ -187,18 +187,10 @@
            }
          }
        }
- 
-       // Prevent infinite loop. The 'object' datastream route is reserved for the image server requests. If a iiif source is requested using the 'object' datastream, stream from the repository.
-       if(sourceOption == "iiif" && datastreamID == "object") {
-         sourceOption = "repository";
-       }
      
        // Set the source uri
        switch(sourceOption) {
-         case "iiif":
-           let pid = object.order ? `${object.pid}_${object.order}` : object.pid; 
-           uri = IIIF.getResourceUri(pid, apikey);
-           break;
+
          case "kaltura":
            let viewerId = object.entry_id || object.kaltura_id || null;
 
@@ -212,12 +204,15 @@
              Logger.module().info('INFO: ' + `Null kaltura ID field. Object: ${object.pid}`);
            }
            break;
+
          case "repository":
            uri = object.object;
            break;
+           
          default:
            Logger.module().error('ERROR: ' + `Datastream error: Invalid source setting. Could not determine datastream source uri. Source option: ${sourceOption} Object: ${object.pid}`);
            break;
+
        }
  
        if(uri == null || uri == "") {

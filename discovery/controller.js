@@ -361,7 +361,7 @@ exports.getDatastream = function(req, res) {
 			res.sendStatus(500);
 		}
 		else if(!stream) {
-			Logger.module().error('ERROR: ' + "Object or datastream source not found. Pid: " + pid + " Part ID: " + part);
+			Logger.module().error('ERROR: ' + "No datastream available. Pid: " + pid + " Part ID: " + part);
 			res.sendStatus(404);
 		}
 		else {

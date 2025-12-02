@@ -576,44 +576,48 @@ getDatastream = function(indexName, objectID, datastreamID, part, authKey, callb
         // If settings object is null, cache will default to disabled (cacheEnabled == false)
         if(settings) {
           cacheEnabled = settings.cache;
-        }
 
-        // Stream data from the cache, if the cache is enabled and a cache item is present
-        if(cacheEnabled && Cache.exists(cacheName, objectID, extension) == true) {
-          if(config.nodeEnv == "devlog") {
-            Logger.module().info('INFO: ' + `Loading object resource from cache source: ${objectID || 'null'}`);
-          }
-          Cache.getFileStream(cacheName, objectID, extension, function(error, stream) {
-            if(error) {callback(error, null)}
-            else {callback(null, stream, contentType)}
-          });
-        }
-
-        // Fetch datastream
-        else {
-          if(config.nodeEnv == "devlog") {
-            Logger.module().info('INFO: ' + `Datastream source: ${objectID || 'null'}`);
-          }
-          Datastreams.getDatastream(object, datastreamID, function(error, stream, objectData, isPlaceholder=false) { 
-            if(error) {
-              callback(error, null);
+          // Stream data from the cache, if the cache is enabled and a cache item is present
+          if(cacheEnabled && Cache.exists(cacheName, objectID, extension) == true) {
+            if(config.nodeEnv == "devlog") {
+              Logger.module().info('INFO: ' + `Loading object resource from cache source: ${objectID || 'null'}`);
             }
-            else {
-              if(isPlaceholder == false) {
-                if(cacheEnabled && Cache.exists(cacheName, objectID, extension) == false) {
-                  Cache.cacheDatastream(cacheName, objectID, stream, extension, function(error) {
-                    if(error) { 
-                      Logger.module().error('ERROR: ' + `Could not create object file for ${objectID}. Error: ${error}`);
-                    }
-                    else { 
-                      Logger.module().info('INFO: ' + `Added object ${objectID} to ${cacheName} cache`);
-                    }
-                  });
-                }
+            Cache.getFileStream(cacheName, objectID, extension, function(error, stream) {
+              if(error) {callback(error, null)}
+              else {callback(null, stream, contentType)}
+            });
+          }
+
+          // Fetch datastream
+          else {
+            if(config.nodeEnv == "devlog") {
+              Logger.module().info('INFO: ' + `Datastream source: ${objectID || 'null'}`);
+            }
+            Datastreams.getDatastream(object, datastreamID, function(error, stream, objectData, isPlaceholder=false) { 
+              if(error) {
+                callback(error, null);
               }
-              callback(null, stream, contentType);
-            }
-          }, authKey);
+              else {
+                if(isPlaceholder == false) {
+                  if(cacheEnabled && Cache.exists(cacheName, objectID, extension) == false) {
+                    Cache.cacheDatastream(cacheName, objectID, stream, extension, function(error) {
+                      if(error) { 
+                        Logger.module().error('ERROR: ' + `Could not create object file for ${objectID}. Error: ${error}`);
+                      }
+                      else { 
+                        Logger.module().info('INFO: ' + `Added object ${objectID} to ${cacheName} cache`);
+                      }
+                    });
+                  }
+                }
+                callback(null, stream, contentType);
+              }
+            }, authKey);
+          }
+        }
+        else {
+          Logger.module().error('ERROR: ' + `No configuration available for datastream "${datastreamID}" streaming "${extension}" file. Object id: ${objectID}.`);
+          callback(null, null);
         }
       }
     }
