@@ -319,17 +319,17 @@ module.exports = {
     thumbnailDatastreams: {
         "collection": {
             "source": "auto",
-            "cache": true
+            "cache": false
         },
         "object": {
             "type": {
                 "still image": {
-                    "source": "repository",
-                    "cache": false
+                    "source": "auto",
+                    "cache": true
                 },
                 "audio": {
                     "source": "kaltura",
-                    "cache": true
+                    "cache": false
                 },
                 "video": {
                     "source": "kaltura",
