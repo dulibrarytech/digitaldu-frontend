@@ -347,9 +347,8 @@ module.exports = {
      *  Object datastream settings
      *
      *  source: [repository|iiif|kaltura|external]:
-     *  1. iiif: Get thumbnail derivative from Cantaloupe image server using IIIF api
-     *  2. kaltura: Source thumbnail from Kaltura using Kaltura api
-     *  3. repository: Source from DuraCloud
+     *  1. kaltura: Source thumbnail from Kaltura using Kaltura api
+     *  2. repository: Source from DuraCloud
      *
      *  file_type: File type level settings
      */
@@ -380,7 +379,7 @@ module.exports = {
                 },
                 "pdf": {
                     "source": "repository",
-                    "cache": true
+                    "cache": true,
                 }
             }
         }
@@ -602,11 +601,6 @@ module.exports = {
         "Format": {
             "path": "type",
         },
-        // "Date": {
-        //     "path": "display_record.dates.expression",
-        //     "matchField": "display_record.dates.label",
-        //     "matchTerm": "creation"
-        // },
         "Collection": {
             "path": "is_member_of_collection"
         },
@@ -659,7 +653,6 @@ module.exports = {
             "Map": "assets/img/map-TN.png",
             "Mixed Material": "assets/img/pdf2-icon-TN.png",
             "3D Object": "assets/img/objects-icon-TN.png",
-            "Collection": "assets/img/filebox-icon-TN.png"
         }
     },
 
@@ -678,7 +671,6 @@ module.exports = {
             "Mixed Material": ["mixed material", "application/pdf", "mixed materials"],
             "3D Object": ["three dimensional object", "three dimensional object,[object Object]"],
             "Unknown": ["[object Object]"],
-            "Collection": ["collection"]
         }
     },
 
