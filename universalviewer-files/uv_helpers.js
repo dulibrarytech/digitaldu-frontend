@@ -1,5 +1,6 @@
 function createUV(selector, data, dataProvider) {
     var uv;
+    var hasError = false;
     var isFullScreen = false;
     var $container = $(selector);
     $container.empty();
@@ -21,6 +22,32 @@ function createUV(selector, data, dataProvider) {
         }
     }
 
+    /**
+     * removes the spinner, hides loading message, displays message in box
+     * 
+     * @param {*} parentElement - dom element to append message box 
+     * @param {*} messageText - the message html
+     */
+    function showMessageBox(parentElement, messageText) {
+        let messageBox = $('.timeout-msg');
+        if(messageBox) messageBox.remove();
+        parentElement.append(`<div class='timeout-msg' style='display: none'><h6>${messageText}</h6></div>`);
+
+        setTimeout(function(){      
+            $(".spinner").css("backgroundImage", "none");
+            $(".loading-msg").css("display", "none");
+            $(".timeout-msg").css("display", "block");
+            $(".spinner").css("background-color", "black");
+            $(".spinner").css("background-image", "none !important");
+        }, 1500);
+    }
+
+    function clearMessages() {
+        $(".loading-msg").remove();
+        $(".timeout-msg").remove();
+        isMessageBoxVisible = false;
+    }
+
     window.addEventListener('resize', function() {
         resize();
     });
@@ -29,6 +56,16 @@ function createUV(selector, data, dataProvider) {
         target: $uv[0],
         data: data
     });
+
+    /* JR 12/2025 this will catch any non-200 status on requesting the remote resource */
+    window.addEventListener('error', function(error) {
+        if(hasError === false) {
+            let message = "We're sorry, this image could not be loaded. To report this problem, please contact <a href='mailto:archives@du.edu'>archives@du.edu</a>";
+            showMessageBox($(".spinner"), message);
+            hasError = true; // toggle the error message boolean to display the message box for first error if multiple errors are caught
+        }
+        
+    }, true);
 
     uv.on('create', function(obj) {
         /*
@@ -39,12 +76,13 @@ function createUV(selector, data, dataProvider) {
              * Append a spinner and and a hidden error message, to appear after a time interval that indicates the object is not loading correctly
              */
             $(".spinner").append('<div class="loading-msg">Loading, please wait...</div>');
-            $(".spinner").append("<div class='timeout-msg' style='display: none'><h6>We're sorry, this is taking longer than expected. To report any problems with accessing this resource, please contact <a href='mailto:archives@du.edu'>archives@du.edu</a></h6></div>")
+
             setTimeout(function(){  
-                $(".loading-msg").css("display", "none");
-                $(".timeout-msg").css("display", "block");
-                $(".spinner").css("background-color", "black");
-                $(".spinner").css("background-image", "none !important");
+                if(hasError === false) {
+                    /* JR 12/2025 moved code to external function showMessageBox() */
+                    let message = "We're sorry, this is taking longer than expected. To report any problems with accessing this resource, please contact <a href='mailto:archives@du.edu'>archives@du.edu</a>";
+                    showMessageBox($(".spinner"), message);
+                }
             }, 45000);
 
             /* 
@@ -162,8 +200,7 @@ function createUV(selector, data, dataProvider) {
         /*
          * DU implementation
          */
-        $(".loading-msg").remove();
-        $(".timeout-msg").remove();
+        clearMessages();
         $(".spinner").css("background-color", "initial");
 
         if($("#uv").hasClass("pdf-object") == false &&
@@ -193,8 +230,7 @@ function createUV(selector, data, dataProvider) {
         /*
          * DU implementation
          */
-        $(".loading-msg").remove();
-        $(".timeout-msg").remove();
+        clearMessages();
         $(".spinner").css("background-color", "initial")
         /*
          * End DU implementation
@@ -235,6 +271,7 @@ function createUV(selector, data, dataProvider) {
     }, false);
 
     uv.on('error', function(message) {
+        console.log("TEST UV error:", error)
         console.error(message);
     }, false);
 
