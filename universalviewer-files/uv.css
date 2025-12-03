@@ -172,18 +172,31 @@
 }
 
 .outer-spinner .timeout-msg,
-.uv .centerPanel .content .spinner .timeout-msg {
-  margin-top:100px;
+.uv .centerPanel .content .timeout-msg {
+  position: absolute;
+  z-index: 2;
+  height: 100%;
+  width: 100%;
+  background: black;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.outer-spinner .timeout-msg a,
+.uv .centerPanel .content .timeout-msg a {
+  color: blue;
+  text-decoration: underline;
+}
+
+.uv .centerPanel .content .timeout-msg > div {
+  width: 50%;
   color: black;
   background: #e5e3e1;
   padding: 25px;
   line-height: 1.5em;
-}
-
-.outer-spinner .timeout-msg a,
-.uv .centerPanel .content .spinner .timeout-msg a {
-  color: blue;
-  text-decoration: underline;
 }
 
 .uv-preload-text {

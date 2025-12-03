@@ -31,21 +31,25 @@ function createUV(selector, data, dataProvider) {
     function showMessageBox(parentElement, messageText) {
         let messageBox = $('.timeout-msg');
         if(messageBox) messageBox.remove();
-        parentElement.append(`<div class='timeout-msg' style='display: none'><h6>${messageText}</h6></div>`);
+        parentElement.append(`
+            <div class='timeout-msg' style='display: none'>
+                <div>
+                    <h6>${messageText}</h6>
+                </div>
+            </div>`);
 
         setTimeout(function(){      
-            $(".spinner").css("backgroundImage", "none");
             $(".loading-msg").css("display", "none");
-            $(".timeout-msg").css("display", "block");
+            $(".timeout-msg").css("display", "flex");
             $(".spinner").css("background-color", "black");
-            $(".spinner").css("background-image", "none !important");
+            $(".uv .centerPanel .content .spinner").css("background-image", "none !important");
         }, 1500);
     }
 
     function clearMessages() {
         $(".loading-msg").remove();
         $(".timeout-msg").remove();
-        isMessageBoxVisible = false;
+        hasError = false;
     }
 
     window.addEventListener('resize', function() {
@@ -57,12 +61,15 @@ function createUV(selector, data, dataProvider) {
         data: data
     });
 
-    /* JR 12/2025 this will catch any non-200 status on requesting the remote resource */
+    /* this will catch any non-200 status event on requesting the remote resource */
     window.addEventListener('error', function(error) {
-        if(hasError === false) {
-            let message = "We're sorry, this image could not be loaded. To report this problem, please contact <a href='mailto:archives@du.edu'>archives@du.edu</a>";
-            showMessageBox($(".spinner"), message);
-            hasError = true; // toggle the error message boolean to display the message box for first error if multiple errors are caught
+        /* only catch the error if it is an instance of the window, 
+         * which is the case when the event originated from the UV instance.  
+         * errors originating from the thumbnails are standard event objects. don't add the error message for thumbnail load errors, only the main viewer source */
+        if(error.target instanceof Window && hasError === false) {
+            let message = "We're sorry, this image could not be loaded.<br>To report the problem, please contact <a href='mailto:archives@du.edu'>archives@du.edu</a>";
+            showMessageBox($(".mainPanel .content"), message);
+            hasError = true;
         }
         
     }, true);
@@ -79,9 +86,8 @@ function createUV(selector, data, dataProvider) {
 
             setTimeout(function(){  
                 if(hasError === false) {
-                    /* JR 12/2025 moved code to external function showMessageBox() */
                     let message = "We're sorry, this is taking longer than expected. To report any problems with accessing this resource, please contact <a href='mailto:archives@du.edu'>archives@du.edu</a>";
-                    showMessageBox($(".spinner"), message);
+                    showMessageBox($(".mainPanel .content"), message);
                 }
             }, 45000);
 
@@ -271,7 +277,6 @@ function createUV(selector, data, dataProvider) {
     }, false);
 
     uv.on('error', function(message) {
-        console.log("TEST UV error:", error)
         console.error(message);
     }, false);
 
