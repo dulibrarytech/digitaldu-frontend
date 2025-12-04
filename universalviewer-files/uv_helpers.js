@@ -77,7 +77,7 @@ function createUV(selector, data, dataProvider) {
         const canvasIndex = dataProvider.get('cv') || 0;
 
         if (elementIndex == canvasIndex) {
-            const message = "We're sorry, this image could not be loaded.<br>To report the problem, please contact <a href='mailto:archives@du.edu'>archives@du.edu</a>";
+            const message = "We're sorry, there was a problem loading the image.<br>To report the problem, please contact <a href='mailto:archives@du.edu'>archives@du.edu</a>";
             showMessageBox($(".mainPanel .content"), message);
             hasError = true;
         }
