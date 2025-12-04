@@ -12,3 +12,5 @@ public/config/configuration.js
 views/partials/header.ejs
 public/libs/universalviewer/
 public/views/*
+storage/
+logs/
