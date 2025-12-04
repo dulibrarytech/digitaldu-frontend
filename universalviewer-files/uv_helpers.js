@@ -23,6 +23,8 @@ function createUV(selector, data, dataProvider) {
     }
 
     /**
+     * DU implementation
+     * 
      * removes the spinner, hides loading message, displays message in box
      * 
      * @param {*} parentElement - dom element to append message box 
@@ -50,7 +52,9 @@ function createUV(selector, data, dataProvider) {
         $(".loading-msg").remove();
         $(".timeout-msg").remove();
         hasError = false;
-    }
+    }/*
+     * end DU implementation
+     */
 
     window.addEventListener('resize', function() {
         resize();
@@ -61,18 +65,27 @@ function createUV(selector, data, dataProvider) {
         data: data
     });
 
-    /* this will catch any non-200 status event on requesting the remote resource */
+    /* 
+     * DU implementation
+     *
+     * detect any error accessing a resource and display a message box. 
+     * the errors include any non-200 status events while loading the thumbnail images 
+     * display message if the current canvas index matches the index of the originator of the event (e.g. the thumbnail img element)
+    */
     window.addEventListener('error', function(error) {
-        /* only catch the error if it is an instance of the window, 
-         * which is the case when the event originated from the UV instance.  
-         * errors originating from the thumbnails are standard event objects. don't add the error message for thumbnail load errors, only the main viewer source */
-        if(error.target instanceof Window && hasError === false) {
-            let message = "We're sorry, this image could not be loaded.<br>To report the problem, please contact <a href='mailto:archives@du.edu'>archives@du.edu</a>";
+        const elementIndex = error.target?.parentElement?.parentElement?.getAttribute("data-index") || null;
+        const canvasIndex = dataProvider.get('cv') || 0;
+
+        if (elementIndex && elementIndex == canvasIndex) {
+            const message = "We're sorry, this image could not be loaded.<br>To report the problem, please contact <a href='mailto:archives@du.edu'>archives@du.edu</a>";
             showMessageBox($(".mainPanel .content"), message);
             hasError = true;
         }
         
     }, true);
+    /*
+     * end DU implementation
+     */
 
     uv.on('create', function(obj) {
         /*
@@ -83,7 +96,6 @@ function createUV(selector, data, dataProvider) {
              * Append a spinner and and a hidden error message, to appear after a time interval that indicates the object is not loading correctly
              */
             $(".spinner").append('<div class="loading-msg">Loading, please wait...</div>');
-
             setTimeout(function(){  
                 if(hasError === false) {
                     let message = "We're sorry, this is taking longer than expected. To report any problems with accessing this resource, please contact <a href='mailto:archives@du.edu'>archives@du.edu</a>";
@@ -157,7 +169,7 @@ function createUV(selector, data, dataProvider) {
     }, false);
 
     uv.on('created', function(obj) {
-        /*
+9        /*
          * DU implementation
          */
         $(".uv-preload-msg").remove();
