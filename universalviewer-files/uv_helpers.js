@@ -73,10 +73,11 @@ function createUV(selector, data, dataProvider) {
      * display message if the current canvas index matches the index of the originator of the event (e.g. the thumbnail img element)
     */
     window.addEventListener('error', function(error) {
-        const elementIndex = error.target?.parentElement?.parentElement?.getAttribute("data-index") || null;
+        const elementIndex = error.target?.parentElement?.parentElement?.getAttribute("data-index") || 0;
         const canvasIndex = dataProvider.get('cv') || 0;
 
-        if (elementIndex && elementIndex == canvasIndex) {
+        if (elementIndex == canvasIndex) {
+            console.log("A")
             const message = "We're sorry, this image could not be loaded.<br>To report the problem, please contact <a href='mailto:archives@du.edu'>archives@du.edu</a>";
             showMessageBox($(".mainPanel .content"), message);
             hasError = true;
