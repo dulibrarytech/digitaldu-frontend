@@ -1,6 +1,7 @@
 function createUV(selector, data, dataProvider) {
     var uv;
     var hasError = false;
+    var isImageLoaded = false;
     var isFullScreen = false;
     var $container = $(selector);
     $container.empty();
@@ -95,13 +96,15 @@ function createUV(selector, data, dataProvider) {
             /*
              * Append a spinner and and a hidden error message, to appear after a time interval that indicates the object is not loading correctly
              */
-            $(".spinner").append('<div class="loading-msg">Loading, please wait...</div>');
-            setTimeout(function(){  
-                if(hasError === false) {
-                    let message = "We're sorry, this is taking longer than expected. To report any problems with accessing this resource, please contact <a href='mailto:archives@du.edu'>archives@du.edu</a>";
-                    showMessageBox($(".mainPanel .content"), message);
-                }
-            }, 45000);
+            if(hasError === false) {
+                $(".spinner").append('<div class="loading-msg">Loading, please wait...</div>');
+                setTimeout(function(){  
+                    if(isImageLoaded === false) {
+                        let message = "We're sorry, this is taking longer than expected. To report any problems with accessing this resource, please contact <a href='mailto:archives@du.edu'>archives@du.edu</a>";
+                        showMessageBox($(".mainPanel .content"), message);
+                    }
+                }, 45000);
+            }
 
             /* 
              * PDF only: need to update the thumbnail link urls with the pdf page number ('page' param appended to IIIF request uri)
@@ -244,7 +247,7 @@ function createUV(selector, data, dataProvider) {
     }, false);
 
     uv.on('openseadragonExtension.currentViewUri', function(data) {
-        //console.log('openseadragonExtension.currentViewUri', obj);
+        isImageLoaded = true;
         /*
          * DU implementation
          */
