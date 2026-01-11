@@ -199,12 +199,13 @@ module.exports = {
     enableCompoundObjectBatchDownload: true, // Requires a websocket service. The websocket address is set in /public/config/configuration.js
     batchFileDownloadTemporaryFolder: "./cache/download/temporary-download",
     downloadFiletypes: {
-        "jpg": [{extension: "jpg", label: "jpeg"}],
-        "jp2": [{extension: "jpg", label: "jpeg"}, {extension: "tif", label: "tiff"}, {extension: "jp2", label: "jp2"}],
-        "mp3": [{extension: "mp3", label: "mp3"}],
-        "mp4": [{extension: "mp4", label: "mp4"}],
-        "pdf": [{extension: "pdf", label: "pdf"}],
-        "tif": [{extension: "jpg", label: "jpeg"}, {extension: "tif", label: "tiff"}]
+        // ALL "download by file extension" options are depreciated in digitaldu v1. Only the download of the object file, or specified derivative (e.g. jpg for tiff files) is available (1/8/26)
+        // "jpg": [{extension: "jpg", label: "jpeg"}],
+        // "jp2": [{extension: "jpg", label: "jpeg"}],
+        // "mp3": [{extension: "mp3", label: "mp3"}],
+        // "mp4": [{extension: "mp4", label: "mp4"}],
+        // "pdf": [{extension: "pdf", label: "pdf"}],
+        "tif": [{extension: "jpg", label: "jpg"}]
     },
 
     /*
@@ -366,6 +367,11 @@ module.exports = {
                         "jpg": {
                             "source": "repository",
                             "cache": true
+                        },
+                        "tif": {
+                            "source": "local",
+                            "extension": "jpg",
+                            "cache": false
                         }
                     }
                 },

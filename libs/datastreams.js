@@ -27,7 +27,8 @@
    Repository = require('../libs/repository'),
    Helper = require('../libs/helper'),
    Kaltura = require('../libs/kaltura'),
-   IIIF = require('../libs/IIIF');
+   IIIF = require('../libs/IIIF'),
+   LocalStorage = require('../libs/localStorage');
  
  const Logger = require('./log4js');
  
@@ -208,11 +209,15 @@
          case "repository":
            uri = object.object;
            break;
+
+         case "local": 
+           let path = object.object;
+           uri = path.substring( path.lastIndexOf('/')+1, path.lastIndexOf('.')+1 ).concat( settings.file_type[extension].extension )
+           break;
            
          default:
            Logger.module().error('ERROR: ' + `Datastream error: Invalid source setting. Could not determine datastream source uri. Source option: ${sourceOption} Object: ${object.pid}`);
            break;
-
        }
  
        if(uri == null || uri == "") {
@@ -241,6 +246,24 @@
              }
            });
          }
+
+        // stream from local storage (1/8/26) 
+        else if(sourceOption == "local") {
+          LocalStorage.streamFile(uri, function(error, stream) {
+            if(error) {
+               callback(`Local storage stream error: ${error} Object: ${object.pid}`, null, object);
+             }
+             else {
+               if(stream) {
+                 callback(null, stream, object);
+               }
+               else {
+                 Logger.module().error('ERROR: ' + `Local storage file stream error: file not found. Object: ${object.pid}`);
+                 callback(null, null, object);
+               }
+             }
+          })
+        }
  
          // Stream from remote source
          else {

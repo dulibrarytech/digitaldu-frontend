@@ -346,7 +346,9 @@ exports.getFileDownloadLinks = function(object, part=null) {
       if(config.downloadFiletypes[extension]) {
         for(var filetype of config.downloadFiletypes[extension]) {
           let link = {
-            uri: config.rootUrl + "/datastream/" + pid + "/" + filetype.extension + "/" + part + "/" + pid + "." + filetype.extension,
+            // removed file extension datastream option, replaced with "object". 
+            // ALL "download by file extension" options are depreciated in digitaldu v1. Only the download of the object file, or specified derivative (e.g. jpg for tiff files) is available (1/8/26)
+            uri: config.rootUrl + "/datastream/" + pid + "/object/" + part + "/" + pid + "." + filetype.extension,
             filename: pid + "." + filetype.extension,
             extension: filetype.extension,
             label: filetype.label,
@@ -357,7 +359,9 @@ exports.getFileDownloadLinks = function(object, part=null) {
       }
       else {
         let link = {
-          uri: config.rootUrl + "/datastream/" + pid + "/" + extension + "/" + part + "/" + pid + "." + extension,
+          // removed file extension datastream option, replaced with "object". 
+          // ALL "download by file extension" options are depreciated in digitaldu v1. Only the download of the object file, or specified derivative (e.g. jpg for tiff files) is available (1/8/26)
+          uri: config.rootUrl + "/datastream/" + pid + "/object/" + part + "/" + pid + "." + extension,
           filename: pid + "." + extension,
           extension: extension,
           label: extension,

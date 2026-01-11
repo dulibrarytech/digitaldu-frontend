@@ -566,6 +566,7 @@ getDatastream = function(indexName, objectID, datastreamID, part, authKey, callb
             // Check for file type specific settings for this object type (e.g. 'jpg' settings for image type, etc)
             if(typeSettings[type] && typeSettings[type].file_type) {
               settings = typeSettings[type].file_type[extension] || null;
+              if(settings?.extension) contentType = config.mimeTypes[settings.extension];
             }
             else {
               settings = typeSettings[type] || null;

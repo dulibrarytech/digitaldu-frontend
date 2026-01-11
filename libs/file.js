@@ -103,9 +103,17 @@ exports.downloadToFileSync = async function(uri, filepath, filename) {
 
 exports.getFileStream = function(path, callback) {
     let stream = fs.createReadStream(path);
+
     stream.on('error', function(error) {
-      callback(error, null)
+      if(error.code == "ENOENT") {
+        Logger.module().error(`File not found: ${error.path}`)
+        callback(null, null)
+      }
+      else {
+        callback(error, null)
+      }
     });
+
     stream.on('open', function() {
       callback(null, stream);
     });
