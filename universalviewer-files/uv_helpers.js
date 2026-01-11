@@ -99,7 +99,8 @@ function createUV(selector, data, dataProvider) {
             if(hasError === false) {
                 $(".spinner").append('<div class="loading-msg">Loading, please wait...</div>');
                 setTimeout(function(){  
-                    if(isImageLoaded === false) {
+                    let isContentEmbedded = document.querySelector(".uv .mainPanel .centerPanel .content > .container") ? true : false;
+                    if(isImageLoaded === false && isContentEmbedded == false) {
                         let message = "We're sorry, this is taking longer than expected. To report any problems with accessing this resource, please contact <a href='mailto:archives@du.edu'>archives@du.edu</a>";
                         showMessageBox($(".mainPanel .content"), message);
                     }
