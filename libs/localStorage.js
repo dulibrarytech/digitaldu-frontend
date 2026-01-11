@@ -1,10 +1,12 @@
 File = require('./file');
 
-const LOCAL_STORAGE_PATH = "storage";
+const config = require('../config/' + process.env.CONFIGURATION_FILE);
+
+// const LOCAL_STORAGE_PATH = "storage";
 
 exports.streamFile = function(fileName, callback) { 
 
-  const file = `${LOCAL_STORAGE_PATH}/${fileName}`;
+  const file = `${config.localStorageFolder}/${fileName}`;
 
   File.getFileStream(file, function(error, stream) {
     if(error) {

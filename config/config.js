@@ -46,6 +46,7 @@ module.exports = {
     rootUrl: process.env.CLIENT_HOST + process.env.CLIENT_PATH,
     webSocketDomain: process.env.WEB_SOCKET_DOMAIN,
     webSocketPort: process.env.WEB_SOCKET_PORT,
+    localStorageFolder: process.env.LOCAL_STORAGE_FOLDER,
 
     /*
      * External services
