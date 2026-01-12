@@ -718,7 +718,7 @@ getManifestObject = async function(pid, index, page, apikey, callback) {
       container = {
         resourceID: object.pid,
         downloadFileName: object.pid,
-        title: object.title,
+        title: object.display_record.title,
         metadata: metadata,
         protocol: /https/.test(config.IIIFUrl) ? "https" : "http",
         objectType: AppHelper.getDsType(object.mime_type),
@@ -819,7 +819,7 @@ getManifestObject = async function(pid, index, page, apikey, callback) {
       }
 
       children.push({
-        label: object.title,
+        label: object.display_record.title,
         sequence: "1",
         description: object.abstract,
         format: Helper.getIIIFFormat(object.mime_type),
@@ -871,7 +871,7 @@ getObjectsInCollection = function(collectionId, page=1, facets=null, sort=null, 
           collection.count = response.list.length;
           collection.list = Helper.getObjectLinkDisplayList(JSON.parse(response.list));
           collection.facets = response.facets || {};
-          collection.title = response.title || "";
+          collection.title = response.display_record?.title || "";
           callback(null, collection);
         }
         else {
@@ -922,7 +922,7 @@ getObjectsInCollection = function(collectionId, page=1, facets=null, sort=null, 
                       callback("Invalid collection. Pid: " + collectionId, []);
                     }
                     else {
-                      collection.title = object.title || "No Title";
+                      collection.title = object.display_record.title || "No Title";
                       collection.abstract = (object.abstract && typeof object.abstract == "object") ? object.abstract[0] : object.abstract || "";
                       callback(null, collection);
                     }
@@ -953,11 +953,11 @@ getParentTrace = function(pid, collections, callback) {
         callback("Object not found:", pid, null);
       }
       else {
-        if(typeof response.title == "object") {
-          title = response.title[0];
+        if(typeof response.display_record.title == "object") {
+          title = response.display_record.title[0];
         }
         else {
-          title = response.title || "Untitled Collection";
+          title = response.display_record.title || "Untitled Collection";
         }
         collections.push({pid: response.pid, name: title, url: url});
 
@@ -991,7 +991,7 @@ getTitleString = function(pids, titles, callback) {
     }
     else {
       titles.push({
-          name: response ? response.title : pid,
+          name: response ? response.display_record.title : pid,
           pid: pid
       });
 

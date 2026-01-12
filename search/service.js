@@ -425,7 +425,7 @@ exports.searchIndex = function(queryData, facets=null, collection=null, pageNum=
           for(var result of response.hits.hits) {
             tn = config.rootUrl + "/datastream/" + result._source.pid.replace('_', ':') + "/tn";
             resultObj = {
-              title: result._source.title || "No Title",
+              title: result._source.display_record.title || "No Title",
               tn: tn,
               collection: result._source.is_member_of_collection || "",
               pid: result._source.pid,

@@ -44,7 +44,7 @@ const Logger = require('../libs/log4js');
   var objectList = [], tn, pid, title, path;
   for(var object of objects) {
 
-    title = object.title || null;
+    title = object.display_record.title || null;
     if(!title || title == "") {
       title = config.noTitlePlaceholder;
     }
@@ -109,29 +109,6 @@ exports.normalizeLabel = function(field, label) {
     }
   }
   return label;
-}
-
- /**
- * Not in use
- */
-exports.sortSearchResultObjects = function(objects) {
-  var titles = [], sorted = [];
-
-  // Sort the titles alphabetically
-  for(var object of objects) {
-    titles.push(object.title[0]);
-  }
-  titles.sort();
-  
-  // Sort the objects based on the sorted titles.
-  for(var title of titles) {
-    for(object of objects) {
-      if(object.title[0] == title) {
-        sorted.push(object);
-      }
-    }
-  }
-  return sorted;
 }
 
  /**
@@ -236,7 +213,7 @@ exports.getCitations = function(object)  {
 
   if(object && object.display_record) {
     citations = [];
-    let title = (object.title) || "Untitled",
+    let title = (object.display_record.title) || "Untitled",
         creator = object.creator || title,
         date = (object.display_record.dates && object.display_record.dates[0]) ? (object.display_record.dates[0].expression || "n.d.") : "n.d.",
         accessDate = curDate,
