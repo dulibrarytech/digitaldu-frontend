@@ -289,9 +289,9 @@ module.exports = {
     thumbnailFileExtension: "jpg",
     defaultThumbnailImage: "tn-placeholder.jpg",
     thumbnailImageCacheEnabled: false,
-    thumbnailImageCacheLocation: "cache/thumbnail",
+    thumbnailImageCacheLocation: process.env.THUMBNAIL_IMAGE_CACHE_LOCATION,
     objectDerivativeCacheEnabled: true,
-    objectDerivativeCacheLocation: "cache/object",
+    objectDerivativeCacheLocation: process.env.OBJECT_DERIVATIVE_CACHE_LOCATION,
 
     /*
      * Object specific default thumbnail images
