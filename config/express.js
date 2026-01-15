@@ -70,7 +70,9 @@
                      'www.du.edu', 
                      'fonts.gstatic.com', 
                      'use.fontawesome.com', 
-                     'http://jwpltx.com'],
+                     'http://jwpltx.com',
+                     'analytics.google.com',
+                    ],
          
                  "style-src": ["'self'", "'unsafe-inline'", 'maxcdn.bootstrapcdn.com', 'use.fontawesome.com', 'vjs.zencdn.net', 'code.jquery.com', 'fonts.googleapis.com'],
                  "script-src": ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'www.google-analytics.com', 'vjs.zencdn.net', 'use.fontawesome.com', 'code.jquery.com', 'http://p.jwpcdn.com', 'www.googletagmanager.com'],
