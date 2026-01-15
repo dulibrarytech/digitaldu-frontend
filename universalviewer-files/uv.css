@@ -243,6 +243,10 @@
   display: none;
 }
 
+.uv .leftPanel .views .thumbsView .thumbs .thumb.oneCol .info {
+  width: 100% !important;
+}
+
 @media screen and (max-width: 800px) {
   #sidebar-nav-buttons {
     display: none !important;
