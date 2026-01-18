@@ -1558,7 +1558,7 @@ div#transcript-view {
   height: 100%;
 }
 
-footer {
+footer.digitaldu-footer {
   background: #8b2332;
   padding: 50px 0 25px 0;
   overflow: hidden;
