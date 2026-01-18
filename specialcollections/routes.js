@@ -28,11 +28,6 @@ var data = {
 };
 
 module.exports = function (app) {
-    app.route('/about/contact')
-    .get(function(req, res) {
-    	return res.render('static/contact', data)
-    });
-
     app.route('/content/copyright-information')
     .get(function(req, res) {
     	return res.render('static/copyright-information', data)

@@ -1588,6 +1588,10 @@ footer a {
   font-weight: normal;
 }
 
+footer a:hover {
+  text-decoration: underline;
+}
+
 footer label {
   font-weight: bold;
   text-transform: uppercase;
