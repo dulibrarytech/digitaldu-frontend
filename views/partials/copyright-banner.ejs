@@ -1,5 +1,7 @@
 <div class="copyright">
-  Copyright ©2026 | All Rights Reserved | The University of Denver is an equal opportunity institution
+  <span>Copyright ©2026 | All Rights Reserved | </span>
+  <a href="https://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License Version 2.0</a>
+  <span> | The University of Denver is an equal opportunity institution</span>
 </div>
 
 <style>
@@ -11,5 +13,10 @@
     padding: 1.5rem;
     font-family: neue-haas-unica, sans-serif;
     margin-bottom: 0;
+  }
+
+  .copyright a {
+    color: inherit;
+    text-decoration: underline;
   }
 </style>
