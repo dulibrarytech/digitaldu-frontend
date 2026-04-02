@@ -392,25 +392,48 @@ exports.getIIIFManifest = function(req, res) {
 		index = config.elasticsearchPublicIndex,
 		key = null;
 
+	let version = req.query.version || "2";
+
 	if(req.query.key && req.query.key == config.apiKey) {
 		index = config.elasticsearchPrivateIndex;
 		key = req.query.key;
 	}
 
-	Service.getManifestObject(pid, index, page, key, function(error, manifest) {
-		if(error) {
-			Logger.module().error('ERROR: ' + error);
-			res.sendStatus(500);
-		}
-		else if(manifest){
-			res.setHeader('Content-Type', 'application/json');
-			res.setHeader('Access-Control-Allow-Origin', '*');
-			res.send(JSON.stringify(manifest));
-		}
-		else {
-			res.status(404).send("Item not found");
-		}
-	});
+	if(version == "2") {	
+		Service.getManifestObject(pid, index, page, key, function(error, manifest) {
+			if(error) {
+				Logger.module().error('ERROR: ' + error);
+				res.sendStatus(500);
+			}
+			else if(manifest){
+				res.setHeader('Content-Type', 'application/json');
+				res.setHeader('Access-Control-Allow-Origin', '*');
+				res.send(JSON.stringify(manifest));
+			}
+			else {
+				res.status(404).send("Item not found");
+			}
+		});
+	}
+	else if(version == "3") {
+		Service.getManifestObject3(pid, index, page, key, function(error, manifest) {
+			if(error) {
+				Logger.module().error('ERROR: ' + error);
+				res.sendStatus(500);
+			}
+			else if(manifest){
+				res.setHeader('Content-Type', 'application/json');
+				res.setHeader('Access-Control-Allow-Origin', '*');
+				res.send(JSON.stringify(manifest));
+			}
+			else {
+				res.status(404).send("Item not found");
+			}
+		});
+	}
+	else {
+		res.status(400).send("Invalid IIIF version requested");
+	}
 }
 
 /**

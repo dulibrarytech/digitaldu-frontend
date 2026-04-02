@@ -31,6 +31,7 @@ const AppHelper = require("../libs/helper");
 const Datastreams = require("../libs/datastreams");
 const Kaltura = require('../libs/kaltura');
 const IIIF = require("../libs/IIIF");
+const IIIF3 = require("../libs/iiif_3");
 const util = require('util');
 const Search = require("../search/service");
 const Cache = require('../libs/cache');
@@ -38,6 +39,7 @@ const Pdf = require("../libs/pdfUtils");
 const Metadata = require("../libs/metadata");
 
 const Logger = require('../libs/log4js');
+const { title } = require('process');
 
 /**
  * Will write a cache item to store an object's data in local filesystem. 
@@ -146,6 +148,7 @@ var getFacets = function (collection=null, callback) {}
  * @param {Object|null} Manifest object (JSON) Null if error
  */
 var getManifestObject = function(pid, index, page, apikey, callback) {}
+var getManifestObject3 = function(pid, index, page, apikey, callback) {}
 
 /**
  * Get all objects in a collection, including facet data for collection members
@@ -847,6 +850,123 @@ getManifestObject = async function(pid, index, page, apikey, callback) {
   }
 }
 exports.getManifestObject = getManifestObject;
+
+getManifestObject3 = async function(pid, index, page, apikey, callback) {
+
+  const [objectId, part = null] = pid.split(config.compoundObjectPartID);
+
+  let object = null;
+
+  try {
+    object = await fetchObjectByPid(index, objectId);
+  }
+  catch (error) {
+    callback(error, JSON.stringify({}));
+  }
+
+  if(object) {
+    let container = {}, children = [];
+
+    /* get values for manifest container fields */
+    const id            = objectId;
+    const title         = object.display_record.title || "";
+    const description   = object.abstract || "";
+    const manifestUrl   = config.rootUrl + "/iiif/" + objectId + "/manifest";
+    const objectPage    = config.rootUrl + "/object/" + objectId;
+
+    /* get metadata for manifest container */
+    let metadata = [], metadataFieldValues = Metadata.getMetadataFieldValues(object, "universalviewer");
+    Object.keys(metadataFieldValues).forEach(key => {
+      metadata.push({
+        label: key,
+        values: metadataFieldValues[key]
+      });
+    });
+
+    /* get rights statement for manifest container */
+    let rights = "";
+    if(metadataFieldValues["Rights and Usage Statement"]) {
+      rights = metadataFieldValues["Rights and Usage Statement"].join(" ");
+    }
+
+    /* create manifest container object */
+    container = {
+      id, 
+      title, 
+      description, 
+      manifestUrl, 
+      objectPage,
+      metadata,
+      rights,
+    }
+
+    /* create manifest child object (compound object with part specified, use the part) */
+    if(part) {
+      let partData = AppHelper.getCompoundObjectPart(object, part);
+
+      if(partData) {
+        const partObjectId = `${objectId}${config.compoundObjectPartID}${part}`;
+
+        children.push({
+          id:           partObjectId,
+          title:        partData.title || "No Title",
+          description:  partData.caption || object.abstract || "",
+          mime_type:    partData.type || object.mime_type || null,
+          resourceUrl:  `${config.rootUrl}/datastream/${partObjectId}/object`,
+          thumbnailUrl: `${config.rootUrl}/datastream/${partObjectId}/tn`,
+        })
+      }
+    }
+
+    /* create manifest child objects (compound object with no part specified, use all parts) */
+    else if(AppHelper.isParentObject(object)) {
+      let parts = AppHelper.getCompoundObjectPart(object, -1) || [];
+
+      children = parts.map((part, index) => {
+        const partObjectId = `${objectId}${config.compoundObjectPartID}${part.order || index}`;
+
+        return {
+          id:           partObjectId,
+          title:        part.title || "No Title",
+          description:  part.caption || object.abstract || "",
+          mime_type:    part.type || object.mime_type || null,
+          resourceUrl:  `${config.rootUrl}/datastream/${partObjectId}/object`,
+          thumbnailUrl: `${config.rootUrl}/datastream/${partObjectId}/tn`,
+        }
+      });
+    }
+
+    /* create manifest child object (single object) */
+    else {
+      children.push({
+        id:           objectId,
+        title:        object.display_record.title,
+        description:  object.abstract || "",
+        mime_type:    object.mime_type || null,
+        resourceUrl:  `${config.rootUrl}/datastream/${objectId}/object`,
+        thumbnailUrl: `${config.rootUrl}/datastream/${objectId}/tn`,
+      });
+    }
+
+    // UPDATE
+    IIIF3.createManifest(container, children, function(error, manifest) {
+      if(error) {
+        callback(error, []);
+      }
+      else {
+        callback(null, manifest);
+      }
+    });
+
+    // DEV
+    // callback(null, {});
+  }
+  else {
+    // object not found
+    callback(null, null);
+  }
+}
+exports.getManifestObject3 = getManifestObject3;
 
 getObjectsInCollection = function(collectionId, page=1, facets=null, sort=null, pageSize=10, daterange=null, callback) {
   let maxPages = config.maxElasticSearchResultCount / pageSize;

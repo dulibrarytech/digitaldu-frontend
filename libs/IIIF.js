@@ -23,8 +23,7 @@
 
 'use strict';
 
-const 	config = require('../config/' + process.env.CONFIGURATION_FILE),
-		IIIF = require('../libs/IIIF');
+const config = require('../config/' + process.env.CONFIGURATION_FILE);
 
 exports.getManifest = function(container, objects, apikey, callback) {
 	if(config.IIIFEnablePdfPaging && container.objectType == "pdf" && container.isCompound) {
