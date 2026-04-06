@@ -869,6 +869,7 @@ getManifestObject3 = async function(pid, index, page, apikey, callback) {
 
     /* get values for manifest container fields */
     const id            = objectId;
+    const mimeType      = object.mime_type || null;
     const title         = object.display_record.title || "";
     const description   = object.abstract || "";
     const manifestUrl   = config.rootUrl + "/iiif/" + objectId + "/manifest";
@@ -894,6 +895,7 @@ getManifestObject3 = async function(pid, index, page, apikey, callback) {
       id, 
       title, 
       description, 
+      mimeType,
       manifestUrl, 
       objectPage,
       metadata,
@@ -911,7 +913,7 @@ getManifestObject3 = async function(pid, index, page, apikey, callback) {
           id:           partObjectId,
           title:        partData.title || "No Title",
           description:  partData.caption || object.abstract || "",
-          mime_type:    partData.type || object.mime_type || null,
+          mimeType:    partData.type || object.mime_type || null,
           resourceUrl:  `${config.rootUrl}/datastream/${partObjectId}/object`,
           thumbnailUrl: `${config.rootUrl}/datastream/${partObjectId}/tn`,
         })
@@ -929,7 +931,7 @@ getManifestObject3 = async function(pid, index, page, apikey, callback) {
           id:           partObjectId,
           title:        part.title || "No Title",
           description:  part.caption || object.abstract || "",
-          mime_type:    part.type || object.mime_type || null,
+          mimeType:    part.type || object.mime_type || null,
           resourceUrl:  `${config.rootUrl}/datastream/${partObjectId}/object`,
           thumbnailUrl: `${config.rootUrl}/datastream/${partObjectId}/tn`,
         }
@@ -942,7 +944,7 @@ getManifestObject3 = async function(pid, index, page, apikey, callback) {
         id:           objectId,
         title:        object.display_record.title,
         description:  object.abstract || "",
-        mime_type:    object.mime_type || null,
+        mimeType:    object.mime_type || null,
         resourceUrl:  `${config.rootUrl}/datastream/${objectId}/object`,
         thumbnailUrl: `${config.rootUrl}/datastream/${objectId}/tn`,
       });
