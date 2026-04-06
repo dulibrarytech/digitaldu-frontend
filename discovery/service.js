@@ -948,7 +948,6 @@ getManifestObject3 = async function(pid, index, page, apikey, callback) {
       });
     }
 
-    // UPDATE
     IIIF3.createManifest(container, children, function(error, manifest) {
       if(error) {
         callback(error, []);
@@ -957,9 +956,6 @@ getManifestObject3 = async function(pid, index, page, apikey, callback) {
         callback(null, manifest);
       }
     });
-
-    // DEV
-    // callback(null, {});
   }
   else {
     // object not found
