@@ -158,7 +158,7 @@ exports.createManifest = async (objectContainer = {}, objectItems = [], callback
         break;
 
       case IIIF_MEDIA_TYPES.TEXT:
-        // canvas = getTextCanvas(objectContainer, item);
+        canvas = await getTextCanvas(objectContainer, item);
         break;
 
       default:
@@ -166,6 +166,9 @@ exports.createManifest = async (objectContainer = {}, objectItems = [], callback
         console.warn(`Unknown media type for item ${item.id}: ${item.mimeType}`);
     }
 
+    // TODO: partOf collection?
+
+    console.log("test: pushing canvas for item:", item.id, canvas);
     items.push(canvas);
   }));
   manifest.setItems(items);
@@ -182,18 +185,19 @@ const getManifestThumbnail = (manifest, thumbnailItem) => {
   const iiifType = getIiifType(thumbnailItem.mime_type); // Returns 'Image'
 
   if(iiifType === IIIF_MEDIA_TYPES.IMAGE) {
-    // use the thumbnail object from the first canvas (baseItem) for manifest thumbnail (eliminates nbeed to fetch image data again for the 'getImageThumbnail' function
+    // use the thumbnail object from the first canvas for the manifest thumbnail (eliminates need to fetch image data again for the 'getImageThumbnail' function
     thumbnail = manifest.items[0].thumbnail; 
   }
   else if(iiifType === IIIF_MEDIA_TYPES.AUDIO || iiifType === IIIF_MEDIA_TYPES.VIDEO) {
-    // manifest.thumbnail = getAudioVideoPlaceholderCanvas(objectContainer, baseItem);
+    thumbnail = getAudioVideoThumbnail(thumbnailItem);
   }
   else if(iiifType === IIIF_MEDIA_TYPES.TEXT) {
-    // manifest.thumbnail = getTextThumbnail(objectContainer, baseItem);
+    thumbnail = getTextThumbnail(thumbnailItem);
   }
   else {
     // Handle unknown media types or set a default thumbnail
     console.warn(`Unknown media type for thumbnail of item ${thumbnailItem.id}: ${thumbnailItem.mimeType}`);
+    // TODO: set default thumbnail
   }
 
   return thumbnail;
@@ -237,13 +241,14 @@ const getImageThumbnail = (objectData, imageData) => {
 
 /* construct the placeholderCanvas data object including annotation image object with a service that points to the datastream thumbnail url for the item (if available) or a default placeholder image if no thumbnailUrl is provided for the item. the placeholder image can be a generic audio or video icon to represent the content in the manifest thumbnail. */
 const getAudioVideoThumbnail = (objectData, itemData) => {
-  // utilize image annotation heirarchy generation once it is implemented (same as what is used to get the item annotation images)
+  
 }
 
 /* construct the thumbnail object using the 'thumbnailUrl' from the item data (which is a datastream thumbnail url) or use a default placeholder image if no thumbnailUrl is provided for the item. the placeholder image can be a generic audio or video icon to represent the content in the manifest thumbnail. */
-const getTextThumbnail = (objectData, itemData) => {
+const getTextThumbnail = (itemData) => {
+  console.log("getTextThumbnail: itemData:", itemData);
   let thumbnail = {
-    "id":     objectData.thumbnailUrl || `${config.appUrl}/images/default-placeholder.png`, // use a default placeholder image if no thumbnailUrl is provided for the item
+    "id":     itemData.thumbnailUrl || `${config.appUrl}/images/default-placeholder.png`, // use a default placeholder image if no thumbnailUrl is provided for the item
     "type":   IIIF_MEDIA_TYPES.IMAGE,
     "format": THUMBNAIL_IMAGE_MIME_TYPE,
   };
@@ -309,12 +314,54 @@ const getImageCanvas = async (objectContainer, item) => {
   return canvas;
 }
 
-const getAudioVideoCanvas = (objectContainer, itemData) => {
+const getAudioVideoCanvas = async (objectContainer, itemData) => {
   // construct and return a canvas object for an audio item based on the object container and item data
 }
 
-const getTextCanvas = (objectContainer, itemData) => {
-  // construct and return a canvas object for a text item based on the object container and item data
+const getTextCanvas = async (objectContainer, item) => {
+  const label = item.title ? {
+    "en": [item.title]
+  } : {
+    "none": ["-"] // placeholder if no title
+  };
+
+  const canvas = new Canvas(`${IIIFUrl}/${item.id}/canvas`, label);
+  canvas.setThumbnail(getTextThumbnail(item));
+
+  const textLabel = item.title ? {
+    "en": [item.title]
+  } : {
+    "none": ["Untitled"] // placeholder if no title
+  };
+
+  const text = {
+    "id": item.resourceUrl, 
+    "type": IIIF_MEDIA_TYPES.TEXT,
+    "format": item.mimeType || "application/pdf",
+    "label": textLabel,
+    "metadata": [
+      {
+        "label": {
+          "en": ["Description"]
+        },
+        "value": {
+          "none": [item.description || "No description available."]
+        }
+      }
+    ]
+  }
+
+  const annotationPage = new AnnotationPage(
+    `${IIIFUrl}/${item.id}/supplementing`
+  );
+  annotationPage.setItems({
+    body: text,
+  });
+
+  canvas.setAnnotations(annotationPage);
+
+  console.log("test: getTextCanvas:", canvas);
+  return canvas;
 }
 
 /**
