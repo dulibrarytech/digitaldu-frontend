@@ -72,6 +72,12 @@ module.exports = function (app) {
     app.route('/iiif/:pid/manifest.json')
         .get(Discovery.getIIIFManifest)
 
+    app.route('/presentation/v3/:pid/:page?')
+        .get(function(req, res) {
+            req.query.version = "3";
+            Discovery.getIIIFManifest(req, res);
+        });
+
     app.route('/advanced-search')
         .get(Discovery.advancedSearch)
 
