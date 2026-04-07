@@ -23,8 +23,8 @@
  *     description: "is compound: from compound.part, standard: from display_record or abstract",
  *     mimeType: "is compound: from compound.part, standard: from parent mimeType field",
  *     resourceUrl: "https://specialcollections.du.edu/datastream/{id}/object", // datastream (is compound, id has part)
- *     thumbnailUrl: "https://specialcollections.du.edu/datastream/{id}/thumbnail" // datastream thumbnail
-
+ *     thumbnailUrl: "https://specialcollections.du.edu/datastream/{id}/thumbnail", // datastream thumbnail
+ *     order: 1 // for ordering parts in manifest
  *   },
  *   {
  *     id: "cf143816-b08f-4caa-a82d-814e337d0304_2",
@@ -32,7 +32,8 @@
  *     description: "This is the second part of the example object.",
  *     mimeType: "image/jpeg",
  *     resourceUrl: "https://specialcollections.du.edu/datastream/{id}/object", // datastream
- *     thumbnailUrl: "https://specialcollections.du.edu/datastream/{id}/thumbnail" // datastream thumbnail
+ *     thumbnailUrl: "https://specialcollections.du.edu/datastream/{id}/thumbnail", // datastream thumbnail
+ *     order: 2 // for ordering parts in manifest
  *   }
  * ]
  *
@@ -48,7 +49,6 @@ const {
   AnnotationPage, 
   Annotation, 
   Image, 
-  Service
 } = require('@archival-iiif/presentation-builder');
 
 /* 
@@ -128,8 +128,10 @@ exports.createManifest = async (objectContainer = {}, objectItems = [], callback
       "id": OBJECT_PAGE_URL,
       "type": "Text",
       "label": {
-        "en": ["View Object Page"]
-      }
+        "en": ["View Object Page"] // use object title?
+      },
+      "format": "text/html",
+      "language": ["en"]
     }
   ];
 
@@ -142,6 +144,11 @@ exports.createManifest = async (objectContainer = {}, objectItems = [], callback
       "en": md.values
     }
   })));
+
+  /* rights -------------------------------------------------------------------- */
+  manifest.setRights(RIGHTS);
+
+  console.log("test: objectItems in manifest creation function", objectItems);
 
   /* items (canvases) -------------------------------------------------------------------- */
   let items = [], canvas = [];
@@ -168,6 +175,7 @@ exports.createManifest = async (objectContainer = {}, objectItems = [], callback
 
     // TODO: partOf collection?
 
+    console.log("test: pushing canvas:", canvas);  
     items.push(canvas);
   }));
   manifest.setItems(items);
@@ -225,14 +233,15 @@ const getImageThumbnail = (objectData, imageData=null) => {
       sizes
     } = imageData;
 
-    thumbnail.service = [{
-      "@id": id,
-      "@type": type,
-      "profile": profile,
-      "width": width,
-      "height": height,
-      "sizes": sizes
-    }];
+    thumbnail.service = {
+      "@context": "http://iiif.io/api/image/3/context.json",
+      id,
+      type,
+      profile,
+      width,
+      height,
+      sizes
+    };
   }
 
   return thumbnail;
@@ -285,6 +294,7 @@ const getTextThumbnail = (itemData) => {
 }
 
 const getImageCanvas = async (objectContainer, itemData, index=1) => {
+  console.log("test: getImageCanvas called with index/itemData:", index, itemData);
   const imageDataUrl = `${IIIFServerUrl}${IIIF_ENDPOINT}/${itemData.id}/info.json`;
 
   const response  = await fetch(imageDataUrl);
@@ -302,17 +312,17 @@ const getImageCanvas = async (objectContainer, itemData, index=1) => {
     "none": ["-"] // placeholder if no title
   };
 
-  const canvas = new Canvas(`${IIIFUrl}/${itemData.id}/canvas/${index}`, label, imageData.width, imageData.height);
+  const canvas = new Canvas(`${IIIFUrl}/${itemData.id}/canvas/${index}`, label, width, height);
   canvas.setThumbnail(getImageThumbnail(objectContainer, imageData));
 
-  const service = new Service(
-    `${IIIFServerUrl}${IIIF_ENDPOINT}/${itemData.id}`, 
-    "ImageService3", 
-    "level2"
-  );
-  service.width = imageData.width;
-  service.height = imageData.height;
-  service.sizes = imageData.sizes;
+  const service = {
+    "@context": "http://iiif.io/api/image/3/context.json",
+    id: `${IIIFServerUrl}${IIIF_ENDPOINT}/${itemData.id}`,
+    type: "ImageService3",
+    profile: "level2",
+    width: imageData.width,
+    height: imageData.height,
+  };
 
   const image = new Image(
     `${IIIFServerUrl}${IIIF_ENDPOINT}/${itemData.id}/full/${largestSize.width},${largestSize.height}/0/default.jpg`, 
@@ -324,14 +334,14 @@ const getImageCanvas = async (objectContainer, itemData, index=1) => {
   image.setService(service);
 
   const annotation = new Annotation(
-    `${IIIFUrl}/${itemData.id}/annotation`, 
+    `${IIIFUrl}/${itemData.id}/canvas/${index}/page/image`, 
     image, 
     "painting"
   );
-  annotation.target = `${IIIFUrl}/${itemData.id}/canvas`;
+  annotation.target = `${IIIFUrl}/${itemData.id}/canvas/${index}`;
 
   const annotationPage = new AnnotationPage(
-    `${IIIFUrl}/${itemData.id}/painting`, 
+    `${IIIFUrl}/${itemData.id}/canvas/${index}/page`, 
     [annotation]
   );
   annotationPage.setItems(annotation);
