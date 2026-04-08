@@ -373,6 +373,11 @@ module.exports = {
                             "source": "local",
                             "extension": "jpg",
                             "cache": false
+                        },
+                        "jp2": {
+                            "source": "local",
+                            "extension": "jpg",
+                            "cache": false
                         }
                     }
                 },
