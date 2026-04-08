@@ -205,7 +205,7 @@ exports.createManifest = async (objectContainer = {}, objectItems = [], callback
   callback(null, manifest);
 };
 
-const getImageThumbnail = (objectData, imageData=null) => {
+const getImageThumbnail = (itemData, imageData=null) => {
   let thumbnail = {
       "id":     DEFAULT_THUMBNAIL_IMAGE_URL, 
       "type":   IIIF_MEDIA_TYPES.IMAGE,
@@ -222,7 +222,7 @@ const getImageThumbnail = (objectData, imageData=null) => {
   if(imageData) {
     var {width, height} = imageData.sizes[1];
 
-    thumbnail.id = `${IIIFServerUrl}${IIIF_ENDPOINT}/${objectData.id}/full/${width},${height}/0/default.jpg`;
+    thumbnail.id = `${IIIFServerUrl}${IIIF_ENDPOINT}/${itemData.id}/full/${width},${height}/0/default.jpg`;
     thumbnail.width = width;
     thumbnail.height = height;
 
@@ -296,7 +296,7 @@ const getTextThumbnail = (itemData) => {
 }
 
 const getImageCanvas = async (objectContainer, itemData, index=1) => {
-  
+
   const label = itemData.title ? {
     "en": [itemData.title]
   } : {
@@ -310,7 +310,7 @@ const getImageCanvas = async (objectContainer, itemData, index=1) => {
   const response  = await fetch(imageDataUrl);
   if(!response.ok) {
     console.error(`Failed to fetch image data for item ${itemData.id} at ${imageDataUrl}: ${response.status} ${response.statusText}`);
-    canvas.setThumbnail(getImageThumbnail(objectContainer, null));
+    canvas.setThumbnail(getImageThumbnail(itemData, null));
     return canvas;
   }
 
@@ -332,7 +332,7 @@ const getImageCanvas = async (objectContainer, itemData, index=1) => {
   canvas.setWidth(width);
   canvas.setHeight(height);
 
-  canvas.setThumbnail(getImageThumbnail(objectContainer, imageData));
+  canvas.setThumbnail(getImageThumbnail(itemData, imageData));
 
   const service = {
     "@context": "http://iiif.io/api/image/3/context.json",
