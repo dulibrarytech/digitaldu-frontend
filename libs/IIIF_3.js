@@ -466,7 +466,7 @@ const getTextCanvas = async (objectContainer, itemData, index=1) => {
   );
   annotationPage.setItems(annotation)
 
-  canvas.setAnnotations(annotationPage);
+  canvas.setItems(annotationPage);
 
   return canvas;
 }
