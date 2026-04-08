@@ -24,7 +24,6 @@
  *     mimeType: "is compound: from compound.part, standard: from parent mimeType field",
  *     resourceUrl: "https://specialcollections.du.edu/datastream/{id}/object", // datastream (is compound, id has part)
  *     thumbnailUrl: "https://specialcollections.du.edu/datastream/{id}/thumbnail", // datastream thumbnail
- *     order: 1 // for ordering parts in manifest
  *   },
  *   {
  *     id: "cf143816-b08f-4caa-a82d-814e337d0304_2",
@@ -33,7 +32,6 @@
  *     mimeType: "image/jpeg",
  *     resourceUrl: "https://specialcollections.du.edu/datastream/{id}/object", // datastream
  *     thumbnailUrl: "https://specialcollections.du.edu/datastream/{id}/thumbnail", // datastream thumbnail
- *     order: 2 // for ordering parts in manifest
  *   }
  * ]
  *
@@ -78,7 +76,6 @@ const {
   IIIFUrl,        // iiifPresentationUrl ddu2
 } = config;
 
-
 /* local settings */
 const IIIF_ENDPOINT = "/iiif/3"; // for server info.json and image access urls, e.g. /iiif/3/{id} for info.json and /iiif/3/{id}/full/1024,768/0/default.jpg for image access
 /* ------------------------------------------------------------------------------
@@ -94,8 +91,10 @@ const IIIF_MEDIA_TYPES = {
 
 const THUMBNAIL_IMAGE_MIME_TYPE = "image/jpeg";
 const AV_PLACEHOLDER_IMAGE_LABEL = "Poster Image";
+const AV_PLACEHOLDER_IMAGE_TYPE = "image/jpeg";
 const AV_PLACEHOLDER_CANVAS_LABEL = "Poster Image Canvas";
 const DEFAULT_RIGHTS_STATEMENT = "http://creativecommons.org/licenses/by/4.0/";
+const DEFAULT_THUMBNAIL_IMAGE_URL = "default-thumbnail.jpg";
 
 exports.createManifest = async (objectContainer = {}, objectItems = [], callback) => {
 
@@ -104,8 +103,8 @@ exports.createManifest = async (objectContainer = {}, objectItems = [], callback
   const DESCRIPTION     = objectContainer.description || "This is an example description for the object.";
   const RIGHTS          = objectContainer.rights || DEFAULT_RIGHTS_STATEMENT; 
   const METADATA        = objectContainer.metadata || [];
-  const OBJECT_PAGE_URL = objectContainer.objectPage || `${config.appUrl}/object/${ID}`; 
-  const MANIFEST_URL    = objectContainer.manifestUrl || `${IIIFUrl}/${ID}/manifest`;
+  const OBJECT_PAGE_URL = objectContainer.objectPage || MANIFEST_URL; 
+  const MANIFEST_URL    = objectContainer.manifestUrl || `${IIIFUrl}/presentation/v3/${ID}`;
 
   const label = TITLE ? {
     "en": [TITLE]
@@ -148,35 +147,31 @@ exports.createManifest = async (objectContainer = {}, objectItems = [], callback
   /* rights -------------------------------------------------------------------- */
   manifest.setRights(RIGHTS);
 
-  console.log("test: objectItems in manifest creation function", objectItems);
-
   /* items (canvases) -------------------------------------------------------------------- */
+  // items = await getCanvases(objectContainer, objectItems); 
   let items = [], canvas = [];
   await Promise.all(objectItems.map(async (item, index) => {
 
     switch(getIiifType(item.mimeType)) {
 
       case IIIF_MEDIA_TYPES.IMAGE:
-        canvas = await getImageCanvas(objectContainer, item, ++index);
+        canvas = await getImageCanvas(objectContainer, item, index+1);
         break;
 
       case IIIF_MEDIA_TYPES.AUDIO:
       case IIIF_MEDIA_TYPES.VIDEO:
-        canvas = await getAudioVideoCanvas(objectContainer, item, ++index);
+        canvas = await getAudioVideoCanvas(objectContainer, item, index+1);
         break;
 
       case IIIF_MEDIA_TYPES.TEXT:
-        canvas = await getTextCanvas(objectContainer, item, ++index);
+        canvas = await getTextCanvas(objectContainer, item, index+1);
         break;
 
       default:
         console.warn(`Unknown media type for item ${item.id}: ${item.mimeType}`);
     }
 
-    // TODO: partOf collection?
-
-    console.log("test: pushing canvas:", canvas);  
-    items.push(canvas);
+    items[index] = canvas;
   }));
   manifest.setItems(items);
 
@@ -195,26 +190,33 @@ exports.createManifest = async (objectContainer = {}, objectItems = [], callback
       break;
 
     case IIIF_MEDIA_TYPES.TEXT:
-      manifest.setThumbnail(getTextThumbnail(objectContainer));
+      manifest.setThumbnail(getTextThumbnail({
+        ...objectContainer,
+        thumbnailUrl: objectItems[0].thumbnailUrl
+      }));
       break;
 
     default:
       console.warn(`Unknown media type for thumbnail of object ${objectContainer.id}: ${objectContainer.mimeType}`);
   }
 
+  // TODO: partOf collection?
+
   callback(null, manifest);
 };
 
 const getImageThumbnail = (objectData, imageData=null) => {
   let thumbnail = {
-      "id":     `${IIIFServerUrl}${IIIF_ENDPOINT}/${objectData.id}/full/!200,200/0/default.jpg`, 
+      "id":     DEFAULT_THUMBNAIL_IMAGE_URL, 
       "type":   IIIF_MEDIA_TYPES.IMAGE,
       "format": THUMBNAIL_IMAGE_MIME_TYPE,
   };
 
   if(!imageData) {
-    // fetch, assign. then remove if(imageData) below
-    // catch fetch error and return thumbnail here (as-is)
+    return {
+      "id":     DEFAULT_THUMBNAIL_IMAGE_URL, 
+      ...thumbnail
+    };
   }
 
   if(imageData) {
@@ -250,7 +252,7 @@ const getImageThumbnail = (objectData, imageData=null) => {
 /* construct the placeholderCanvas data object including annotation image object with a service that points to the datastream thumbnail url for the item (if available) or a default placeholder image if no thumbnailUrl is provided for the item. the placeholder image can be a generic audio or video icon to represent the content in the manifest thumbnail. */
 const getAudioVideoThumbnail = (itemData) => {
   const label = {
-    "en": AV_PLACEHOLDER_CANVAS_LABEL
+    "en": [AV_PLACEHOLDER_CANVAS_LABEL]
   };
 
   const canvas = new Canvas(`${IIIFUrl}/${itemData.id}/canvas/poster`, label);
@@ -259,20 +261,20 @@ const getAudioVideoThumbnail = (itemData) => {
     itemData.thumbnailUrl || `${config.appUrl}/images/default-placeholder.png`, // use a default placeholder image if no thumbnailUrl is provided for the item
   );
   image.type = IIIF_MEDIA_TYPES.IMAGE;
-  image.format = itemData.mimeType || "Unknown";
+  image.format = AV_PLACEHOLDER_IMAGE_TYPE;
   image.setLabel({
-    "en": AV_PLACEHOLDER_IMAGE_LABEL
+    "en": [AV_PLACEHOLDER_IMAGE_LABEL]
   });
 
   const annotation = new Annotation(
-    `${IIIFUrl}/${itemData.id}/annotation`, 
+    `${IIIFUrl}/${itemData.id}/canvas/poster/page/image`, 
     image, 
     "painting"
   );
-  annotation.target = `${IIIFUrl}/${itemData.id}/painting`;
+  annotation.target = `${IIIFUrl}/${itemData.id}/canvas/poster`;
 
   const annotationPage = new AnnotationPage(
-    `${IIIFUrl}/${itemData.id}/painting`, 
+    `${IIIFUrl}/${itemData.id}/canvas/poster/page`, 
     [annotation]
   );
   annotationPage.setItems(annotation);
@@ -285,7 +287,7 @@ const getAudioVideoThumbnail = (itemData) => {
 /* construct the thumbnail object using the 'thumbnailUrl' from the item data (which is a datastream thumbnail url) or use a default placeholder image if no thumbnailUrl is provided for the item. the placeholder image can be a generic audio or video icon to represent the content in the manifest thumbnail. */
 const getTextThumbnail = (itemData) => {
   let thumbnail = {
-    "id":     itemData.thumbnailUrl || `${config.appUrl}/images/default-placeholder.png`, // use a default placeholder image if no thumbnailUrl is provided for the item
+    "id":     itemData.thumbnailUrl || "",
     "type":   IIIF_MEDIA_TYPES.IMAGE,
     "format": THUMBNAIL_IMAGE_MIME_TYPE,
   };
@@ -294,25 +296,42 @@ const getTextThumbnail = (itemData) => {
 }
 
 const getImageCanvas = async (objectContainer, itemData, index=1) => {
-  console.log("test: getImageCanvas called with index/itemData:", index, itemData);
-  const imageDataUrl = `${IIIFServerUrl}${IIIF_ENDPOINT}/${itemData.id}/info.json`;
-
-  const response  = await fetch(imageDataUrl);
-  const imageData = await response.json();
   
-  const width         = imageData.width;
-  const height        = imageData.height;
-  const sizes         = imageData.sizes;
-  const largestSize   = sizes[sizes.length - 1];
-  const smallestSize  = sizes[0];
-
   const label = itemData.title ? {
     "en": [itemData.title]
   } : {
     "none": ["-"] // placeholder if no title
   };
 
-  const canvas = new Canvas(`${IIIFUrl}/${itemData.id}/canvas/${index}`, label, width, height);
+  const canvas = new Canvas(`${IIIFUrl}/${itemData.id}/canvas/${index}`, label);
+
+  /* get the image data from the IIIF server info.json endpoint to get the width, height, and sizes for the image service */
+  const imageDataUrl = `${IIIFServerUrl}${IIIF_ENDPOINT}/${itemData.id}/info.json`;
+  const response  = await fetch(imageDataUrl);
+  if(!response.ok) {
+    console.error(`Failed to fetch image data for item ${itemData.id} at ${imageDataUrl}: ${response.status} ${response.statusText}`);
+    canvas.setThumbnail(getImageThumbnail(objectContainer, null));
+    return canvas;
+  }
+
+  const imageData = await response.json();
+  
+  const width         = imageData.width || 0;
+  const height        = imageData.height || 0;
+  const sizes         = imageData.sizes || [];
+
+  if(sizes.length > 0) {
+    var largestSize = sizes.reduce((largest, size) => {
+      if(size.width > largest.width) {
+        return size;
+      }
+      return largest;
+    }, sizes[0]);
+  }
+
+  canvas.setWidth(width);
+  canvas.setHeight(height);
+
   canvas.setThumbnail(getImageThumbnail(objectContainer, imageData));
 
   const service = {
@@ -325,7 +344,7 @@ const getImageCanvas = async (objectContainer, itemData, index=1) => {
   };
 
   const image = new Image(
-    `${IIIFServerUrl}${IIIF_ENDPOINT}/${itemData.id}/full/${largestSize.width},${largestSize.height}/0/default.jpg`, 
+    `${IIIFServerUrl}${IIIF_ENDPOINT}/${itemData.id}/full/${largestSize?.width || width},${largestSize?.height || height}/0/default.jpg`, 
     imageData.width, 
     imageData.height
   );
@@ -366,7 +385,7 @@ const getAudioVideoCanvas = async (objectContainer, itemData, index=1) => {
   if(iiifType === IIIF_MEDIA_TYPES.AUDIO) {
     media = {
       "id": itemData.resourceUrl,
-      "type": IIIF_MEDIA_TYPES.SOUND,
+      "type": IIIF_MEDIA_TYPES.AUDIO,
       "format": itemData.mimeType || "Unknown",
       "label": {
         "en": [itemData.title || "Audio Resource"]
@@ -387,14 +406,14 @@ const getAudioVideoCanvas = async (objectContainer, itemData, index=1) => {
   canvas.setRendering(media);
 
   const annotation = new Annotation(
-    `${IIIFUrl}/${itemData.id}/annotation`, 
+    `${IIIFUrl}/${itemData.id}/canvas/${index}/page/image`, 
     media, 
     "painting"
   );
-  annotation.target = `${IIIFUrl}/${itemData.id}/canvas`;
+  annotation.target = `${IIIFUrl}/${itemData.id}/canvas/${index}`;
 
   const annotationPage = new AnnotationPage(
-    `${IIIFUrl}/${itemData.id}/painting`, 
+    `${IIIFUrl}/${itemData.id}/canvas/${index}/page`, 
     [annotation]
   );
   annotationPage.setItems(annotation);
@@ -435,12 +454,17 @@ const getTextCanvas = async (objectContainer, itemData, index=1) => {
     ]
   }
 
-  const annotationPage = new AnnotationPage(
-    `${IIIFUrl}/${itemData.id}/supplementing`
+  const annotation = new Annotation(
+    `${IIIFUrl}/${itemData.id}/canvas/${index}/supplementing/pdf`, 
+    text, 
+    "supplementing"
   );
-  annotationPage.setItems({
-    body: text,
-  });
+  annotation.target = `${IIIFUrl}/${itemData.id}/canvas/${index}`;
+
+  const annotationPage = new AnnotationPage(
+    `${IIIFUrl}/${itemData.id}/canvas/${index}/supplementing`
+  );
+  annotationPage.setItems(annotation)
 
   canvas.setAnnotations(annotationPage);
 
