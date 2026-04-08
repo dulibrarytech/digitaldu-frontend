@@ -913,7 +913,7 @@ getManifestObject3 = async function(pid, index, page, apikey, callback) {
           id:           partObjectId,
           title:        partData.title || "No Title",
           description:  partData.caption || object.abstract || "",
-          mimeType:    partData.type || object.mime_type || null,
+          mimeType:     partData.type || object.mime_type || null,
           resourceUrl:  `${config.rootUrl}/datastream/${partObjectId}/object`,
           thumbnailUrl: `${config.rootUrl}/datastream/${partObjectId}/tn`,
         })
@@ -931,7 +931,7 @@ getManifestObject3 = async function(pid, index, page, apikey, callback) {
           id:           partObjectId,
           title:        part.title || "No Title",
           description:  part.caption || object.abstract || "",
-          mimeType:    part.type || object.mime_type || null,
+          mimeType:     part.type || object.mime_type || null,
           resourceUrl:  `${config.rootUrl}/datastream/${partObjectId}/object`,
           thumbnailUrl: `${config.rootUrl}/datastream/${partObjectId}/tn`,
         }
@@ -944,7 +944,7 @@ getManifestObject3 = async function(pid, index, page, apikey, callback) {
         id:           objectId,
         title:        object.display_record.title,
         description:  object.abstract || "",
-        mimeType:    object.mime_type || null,
+        mimeType:     object.mime_type || null,
         resourceUrl:  `${config.rootUrl}/datastream/${objectId}/object`,
         thumbnailUrl: `${config.rootUrl}/datastream/${objectId}/tn`,
       });
