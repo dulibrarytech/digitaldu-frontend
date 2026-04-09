@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha test/index.js --color true",
     "dev": "nodemon discovery.js",
-    "prod": "node discovery.js"
+    "start": "node discovery.js"
   },
   "keywords": [
     "library",
@@ -15,7 +15,7 @@
     "digital"
   ],
   "author": "jeff.rynhart@du.edu",
-  "license": "MIT",
+  "license": "http://www.apache.org/licenses/LICENSE-2.0",
   "dependencies": {
     "@archival-iiif/presentation-builder": "^1.5.3",
     "@elastic/elasticsearch": "^8.12.2",
