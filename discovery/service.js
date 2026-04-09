@@ -864,7 +864,7 @@ getManifestObject3 = async function(pid, index, page, apikey, callback) {
     callback(error, JSON.stringify({}));
   }
 
-  if(object) {
+  if(object && object.object_type === "object") {
     let container = {}, children = [];
 
     /* get values for manifest container fields */
