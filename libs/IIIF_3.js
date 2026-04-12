@@ -168,7 +168,7 @@ exports.createManifest = async (objectContainer = {}, objectItems = [], callback
         break;
 
       default:
-        console.warn(`Unknown media type for item ${item.id}: ${item.mimeType}`);
+        console.warn(`Unknown media type for item ${item.id}: ${item.mimeType}, skipping canvas creation`);
     }
 
     items[index] = canvas;
@@ -477,16 +477,30 @@ const getTextCanvas = async (objectContainer, itemData, index=1) => {
  * @param {string} mimeType - The MIME type (e.g., 'image/jpeg', 'video/mp4')
  * @returns {string} The IIIF Type ('Image', 'Video', 'Sound') or 'Dataset'
  */
-const getIiifType = (mimeType = "") => {
-  if (mimeType.startsWith('image/')) {
-    return 'Image';
-  } else if (mimeType.startsWith('video/')) {
-    return 'Video';
-  } else if (mimeType.startsWith('audio/')) {
-    return 'Sound';
-  } else if (mimeType === 'application/pdf') {
-    return 'Text';
+const getIiifType = (mimeType) => {
+
+  if(!mimeType) {
+    console.warn(`No MIME type provided, defaulting to 'Dataset'`);
+    return IIIF_MEDIA_TYPES.DATASET; 
   }
-  // Default for documents, text, or others
-  return 'Dataset';
+
+  let iiifType = '';
+
+  if (mimeType.startsWith('image/')) {
+    iiifType = IIIF_MEDIA_TYPES.IMAGE;
+  } 
+  else if (mimeType.startsWith('video/')) {
+    iiifType = IIIF_MEDIA_TYPES.VIDEO;
+  } 
+  else if (mimeType.startsWith('audio/')) {
+    iiifType = IIIF_MEDIA_TYPES.AUDIO;
+  } 
+  else if (mimeType === 'application/pdf') {
+    iiifType = IIIF_MEDIA_TYPES.TEXT;
+  }
+  else {
+    iiifType = IIIF_MEDIA_TYPES.DATASET; // default to Dataset for unknown MIME types
+  }
+
+  return iiifType;
 }
