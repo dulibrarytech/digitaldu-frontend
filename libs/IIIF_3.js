@@ -307,10 +307,14 @@ const getImageCanvas = async (objectContainer, itemData, index=1) => {
 
   /* get the image data from the IIIF server info.json endpoint to get the width, height, and sizes for the image service */
   const imageDataUrl = `${IIIFServerUrl}${IIIF_ENDPOINT}/${itemData.id}/info.json`;
-  const response  = await fetch(imageDataUrl);
-  if(!response.ok) {
-    console.error(`Failed to fetch image data for item ${itemData.id} at ${imageDataUrl}: ${response.status} ${response.statusText}`);
+  try {
+    var response = await fetch(imageDataUrl);
+    if(!response.ok) throw new Error(`Failed to fetch image data for item ${itemData.id} at ${imageDataUrl}: ${response.status} ${response.statusText}`);
+  }
+  catch(error) {
+    console.error(`Error fetching image data for item ${itemData.id} at ${imageDataUrl}: ${error}`);
     canvas.setThumbnail(getImageThumbnail(itemData, null));
+    canvas.setItems([]);
     return canvas;
   }
 
