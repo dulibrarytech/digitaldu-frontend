@@ -872,7 +872,7 @@ getManifestObject3 = async function(pid, index, page, apikey, callback) {
     const mimeType      = object.mime_type || null;
     const title         = object.display_record.title || "";
     const description   = object.abstract || "";
-    const manifestUrl   = config.rootUrl + "/iiif/" + objectId + "/manifest";
+    const manifestUrl   = config.IIIFV3Url + "/" + objectId + (part ? (config.compoundObjectPartID + part) : "");
     const objectPage    = config.rootUrl + "/object/" + objectId;
 
     /* get metadata for manifest container */

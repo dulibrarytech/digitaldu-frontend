@@ -216,6 +216,7 @@ module.exports = {
     IIIFServerDomain: process.env.IIIF_IMAGE_SERVER_URL,
     IIIFDomain: process.env.IIIF_DOMAIN,
     IIIFUrl: process.env.IIIF_DOMAIN + process.env.IIIF_PATH,
+    IIIFV3Url: process.env.IIIF_DOMAIN + process.env.IIIF_V3_PATH,
     IIIFAPiKeyPrefix: "__",
     IIIFManifestPageSize: null,
     IIIFUseGenericImageData: true,
