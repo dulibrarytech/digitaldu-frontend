@@ -178,19 +178,23 @@ exports.createManifest = async (objectContainer = {}, objectItems = [], callback
   /* thumbnail --------------------------------------------------------------------------------- */
   switch(getIiifType(objectContainer.mimeType)) {
     case IIIF_MEDIA_TYPES.IMAGE:
-      manifest.setThumbnail(manifest.items[0].thumbnail);
+      manifest.setThumbnail(manifest.items[0].thumbnail); // getImageCanvas() set the thumbnail using image data from the IIIF server, so we can use the thumbnail from the first canvas for the manifest thumbnail
       break;
 
     case IIIF_MEDIA_TYPES.AUDIO:
     case IIIF_MEDIA_TYPES.VIDEO:
-      manifest.setPlaceholderCanvas(getAudioVideoThumbnail({
+      manifest.setPlaceholderCanvas( getAudioVideoPlaceholderCanvas({
+        ...objectContainer,
+        thumbnailUrl: objectItems[0].thumbnailUrl
+      }));
+      manifest.setThumbnail( getThumbnailObject({
         ...objectContainer,
         thumbnailUrl: objectItems[0].thumbnailUrl
       }));
       break;
 
     case IIIF_MEDIA_TYPES.TEXT:
-      manifest.setThumbnail(getTextThumbnail({
+      manifest.setThumbnail( getThumbnailObject({
         ...objectContainer,
         thumbnailUrl: objectItems[0].thumbnailUrl
       }));
@@ -250,7 +254,7 @@ const getImageThumbnail = (itemData, imageData=null) => {
 }
 
 /* construct the placeholderCanvas data object including annotation image object with a service that points to the datastream thumbnail url for the item (if available) or a default placeholder image if no thumbnailUrl is provided for the item. the placeholder image can be a generic audio or video icon to represent the content in the manifest thumbnail. */
-const getAudioVideoThumbnail = (itemData) => {
+const getAudioVideoPlaceholderCanvas = (itemData) => {
   const label = {
     "en": [AV_PLACEHOLDER_CANVAS_LABEL]
   };
@@ -285,7 +289,7 @@ const getAudioVideoThumbnail = (itemData) => {
 }
 
 /* construct the thumbnail object using the 'thumbnailUrl' from the item data (which is a datastream thumbnail url) or use a default placeholder image if no thumbnailUrl is provided for the item. the placeholder image can be a generic audio or video icon to represent the content in the manifest thumbnail. */
-const getTextThumbnail = (itemData) => {
+const getThumbnailObject = (itemData) => {
   let thumbnail = {
     "id":     itemData.thumbnailUrl || "",
     "type":   IIIF_MEDIA_TYPES.IMAGE,
@@ -407,6 +411,8 @@ const getAudioVideoCanvas = async (objectContainer, itemData, index=1) => {
     }
   }
 
+  canvas.setThumbnail( getThumbnailObject(itemData) );
+
   canvas.setRendering(media);
 
   const annotation = new Annotation(
@@ -433,7 +439,7 @@ const getTextCanvas = async (objectContainer, itemData, index=1) => {
   };
 
   const canvas = new Canvas(`${IIIFUrl}/${itemData.id}/canvas/${index}`, label);
-  canvas.setThumbnail(getTextThumbnail(itemData));
+  canvas.setThumbnail( getThumbnailObject(itemData) );
 
   const textLabel = itemData.title ? {
     "en": [itemData.title]
