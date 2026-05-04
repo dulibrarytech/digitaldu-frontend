@@ -148,7 +148,6 @@ exports.createManifest = async (objectContainer = {}, objectItems = [], callback
   manifest.setRights(RIGHTS);
 
   /* items (canvases) -------------------------------------------------------------------- */
-  // items = await getCanvases(objectContainer, objectItems); 
   let items = [], canvas = [];
   await Promise.all(objectItems.map(async (item, index) => {
 
@@ -357,7 +356,8 @@ const getImageCanvas = async (objectContainer, itemData, index=1) => {
     imageData.height
   );
   image.type = IIIF_MEDIA_TYPES.IMAGE;
-  image.format = itemData.mimeType || "Unknown";
+  image.format = "image/jpeg";
+
   image.setService(service);
 
   const annotation = new Annotation(
@@ -394,7 +394,7 @@ const getAudioVideoCanvas = async (objectContainer, itemData, index=1) => {
     media = {
       "id": itemData.resourceUrl,
       "type": IIIF_MEDIA_TYPES.AUDIO,
-      "format": itemData.mimeType || "Unknown",
+      "format": "audio/wav",
       "label": {
         "en": [itemData.title || "Audio Resource"]
       }
@@ -404,7 +404,7 @@ const getAudioVideoCanvas = async (objectContainer, itemData, index=1) => {
     media = {
       "id": itemData.resourceUrl,
       "type": IIIF_MEDIA_TYPES.VIDEO,
-      "format": itemData.mimeType || "Unknown",
+      "format": "video/mp4",
       "label": {
         "en": [itemData.title || "Video Resource"]
       }
@@ -412,7 +412,6 @@ const getAudioVideoCanvas = async (objectContainer, itemData, index=1) => {
   }
 
   canvas.setThumbnail( getThumbnailObject(itemData) );
-
   canvas.setRendering(media);
 
   const annotation = new Annotation(
@@ -452,13 +451,28 @@ const getTextCanvas = async (objectContainer, itemData, index=1) => {
     "type": IIIF_MEDIA_TYPES.TEXT,
     "format": itemData.mimeType || "application/pdf",
     "label": textLabel,
+  }
+  canvas.setRendering(text);
+
+  const image = {
+    "id": `${IIIFServerUrl}${IIIF_ENDPOINT}/${itemData.id}/full/max/0/default.jpg`, 
+    "type": IIIF_MEDIA_TYPES.IMAGE,
+    "format": "image/jpeg",
     "metadata": [
+      {
+        "label": {
+          "en": ["Title"]
+        },
+        "value": {
+          "none": [itemData.title || "Untitled"]
+        }
+      },
       {
         "label": {
           "en": ["Description"]
         },
         "value": {
-          "none": [itemData.description || "No description available."]
+          "none": [itemData.description || "No description available"]
         }
       }
     ]
@@ -466,7 +480,7 @@ const getTextCanvas = async (objectContainer, itemData, index=1) => {
 
   const annotation = new Annotation(
     `${IIIFUrl}/${itemData.id}/canvas/${index}/supplementing/pdf`, 
-    text, 
+    image, 
     "supplementing"
   );
   annotation.target = `${IIIFUrl}/${itemData.id}/canvas/${index}`;
