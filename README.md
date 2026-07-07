@@ -13,7 +13,7 @@
 
 ### Background
 
-The frontend of the University of Denver's Digital Collections repository, https://specialcollections.du.edu.
+The discovery layer application for the University of Denver's digital collections repository (https://digitalcollections.du.edu)
 
 ### Contributing
 
