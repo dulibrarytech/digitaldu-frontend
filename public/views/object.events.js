@@ -57,3 +57,15 @@ $( document ).ready(function() {
 		}, 2000);
 	});
 });
+
+$("#view-citations").click(function(event) {
+	let citations = $(".citations");
+	if(citations.hasClass("panel-collapsed")) {
+		citations.removeClass("panel-collapsed");
+		$("#view-citations").html("Hide Citations");
+	}
+	else {
+		citations.addClass("panel-collapsed");
+		$("#view-citations").html("Cite This Item");
+	}
+});
