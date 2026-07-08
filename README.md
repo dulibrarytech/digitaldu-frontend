@@ -1,4 +1,4 @@
-# Digital Collections Frontend - digitaldu
+# Digital DU discovery layer application
 # Release 1.5.13
 
 ## Table of Contents
@@ -13,7 +13,7 @@
 
 ### Background
 
-The discovery layer application for the University of Denver's digital collections repository (https://digitalcollections.du.edu)
+The discovery layer application for the University of Denver's digital archives repository (https://digitalarchives.du.edu)
 
 ### Contributing
 
@@ -36,7 +36,7 @@ All other content is released under [CC-BY-4.0](https://creativecommons.org/lice
 
 ### Local Setup and Configuration
 
- - Steps to configure Digital Collections app locally...
+ - Steps to configure the app locally...
     1. Clone the application files from Git repository(https://github.com/dulibrarytech/digitaldu-frontend.git")
 
     2. Run "sudo npm install" from the root folder to install dependencies
@@ -324,15 +324,15 @@ Ex. [project domain]/cache/purgeInvalidItems/object?key={api key}
 
 * [v.1.0.0-beta pre release Repository Demo](https://youtu.be/1LGOQYEfz5I)
 * [Documentation - Digital Repository Object Lifecycle Structure](https://docs.google.com/document/d/1lQcEt3_slGvSKYmw3hKKGtm9HiLsLEytdbC7oEI0xVo/edit?usp=sharing) - document that describes the different supported object types and their structure - Last Updated: 2019 July
-* [Digital Collections BETA Architecture](https://drive.google.com/open?id=1J-06znPbHNQkKQ9gOB22Vtv7Rj8xDExX) - diagram that shows how our ecosystem, the repository frontend and backend is a component of this system - Last Updated: 2019 May
-* [Digital Collections Use Cases](https://docs.google.com/spreadsheets/d/1EpKlDTfdVN2T460gfSVKJ5L_QNAFh70Nl9litHS7src/edit?usp=sharing) - use cases for the repository sofware and the ecosystem, frequently updated - Last Updated: August 2019
+* [Digital Archives BETA Architecture](https://drive.google.com/open?id=1J-06znPbHNQkKQ9gOB22Vtv7Rj8xDExX) - diagram that shows how our ecosystem, the repository frontend and backend is a component of this system - Last Updated: 2019 May
+* [Digital Archives Use Cases](https://docs.google.com/spreadsheets/d/1EpKlDTfdVN2T460gfSVKJ5L_QNAFh70Nl9litHS7src/edit?usp=sharing) - use cases for the repository sofware and the ecosystem, frequently updated - Last Updated: August 2019
 * [3 month release plan](https://docs.google.com/spreadsheets/d/1gAAGtfTig8HF6JJMafKCSzNeyyfqGQ8tKea8GrZqKts/edit?usp=sharing) - release plan from May to August 2019 - Last Updated: August 2019
-* [Digital Collections Ecosystem Functional Requirements](https://docs.google.com/document/d/17aMJRY1mhag4lYREDVoLbjaJq0f3TmwapSGMsEOFkHg/edit?usp=sharing) - high level requirements for the ecosystem - Last Updated: September 2018
-* [Digital Collections Personas](https://docs.google.com/document/d/10nZ6QcqcqOu4JY6fSlTAcem8Wvp1izpc5K3tXIAKijw/edit?usp=sharing) - personas for the ecosystem and repository software - Last Updated - December 2018
-* [Digital Collections Content Interoperability Map](https://docs.google.com/spreadsheets/d/1C4NeajjkkLNidkGFQmCc5YPQvY_VTYXXvJUnvpQE5f8/edit?usp=sharing) - system inteoperability and where content resides - Last Upated: January 2019
-* Survey for Requirements for Search in the DU Digital Collections Repository - anonymized responses available on request - Last Updated: April 2019
+* [Digital Archives Ecosystem Functional Requirements](https://docs.google.com/document/d/17aMJRY1mhag4lYREDVoLbjaJq0f3TmwapSGMsEOFkHg/edit?usp=sharing) - high level requirements for the ecosystem - Last Updated: September 2018
+* [Digital Archives Personas](https://docs.google.com/document/d/10nZ6QcqcqOu4JY6fSlTAcem8Wvp1izpc5K3tXIAKijw/edit?usp=sharing) - personas for the ecosystem and repository software - Last Updated - December 2018
+* [Digital Archives Content Interoperability Map](https://docs.google.com/spreadsheets/d/1C4NeajjkkLNidkGFQmCc5YPQvY_VTYXXvJUnvpQE5f8/edit?usp=sharing) - system inteoperability and where content resides - Last Upated: January 2019
+* Survey for Requirements for Search in the DU Digital Archives Repository - anonymized responses available on request - Last Updated: April 2019
 * Survey for Requirements for Streaming Media Player Requirements in the Digital Repository - anonymized responses available on request - Last Updated: May 2019
-* Survey for Requirements for Digital Collections Repository Use Survey - anonymized responses available on request - Last Updated: January 2019
+* Survey for Requirements for Digital Archives Repository Use Survey - anonymized responses available on request - Last Updated: January 2019
 * [Presentation, Open Repositories - Building a connected digital collections ecosystem](https://docs.google.com/presentation/d/1UI1K6LbjuAYsbGPSMQaxaSXElUd-uud2g71Gv3TygaI/edit?usp=sharing) - Last Updated: August 2019
 
 
