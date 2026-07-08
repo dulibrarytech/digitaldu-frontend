@@ -340,5 +340,5 @@ Ex. [project domain]/cache/purgeInvalidItems/object?key={api key}
 
 Ways to get in touch:
 
-* Kim Pham (IT Librarian at University of Denver) - kim.pham60@du.edu
+* Contact the University Libraries software development team: libdev@du.edu
 * Create an issue in this repository
