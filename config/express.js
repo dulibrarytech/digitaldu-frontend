@@ -78,7 +78,7 @@
                  "script-src": ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'www.google-analytics.com', 'vjs.zencdn.net', 'use.fontawesome.com', 'code.jquery.com', 'http://p.jwpcdn.com', 'www.googletagmanager.com'],
                  "script-src-attr": ["'self'", "'unsafe-inline'"],
                  "font-src": ["'self'", 'data:', 'fonts.gstatic.com', 'use.fontawesome.com'],
-                 "img-src": ["'self'", config.baseUrl, 'data:', "specialcollections.du.edu", "www.du.edu", config.IIIFServerDomain],
+                 "img-src": ["'self'", config.baseUrl, 'data:', "digitalarchives.du.edu", "www.du.edu", config.IIIFServerDomain],
                  "frame-ancestors": null,
                  "form-action": null
              }
@@ -101,7 +101,7 @@
  
      require('../discovery/routes.js')(app);
      require('../search/routes.js')(app);
-     require('../specialcollections/routes.js')(app);
+     require('../static/routes.js')(app);
      require('express-template-cache');
  
      app.route('/')

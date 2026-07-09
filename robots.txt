@@ -10,4 +10,4 @@ Disallow: /search/
 User-agent: *
 Disallow: /datastream/
 
-sitemap: https://specialcollections.du.edu/sitemap.xml
+sitemap: https://digitalarchives.du.edu/sitemap.xml

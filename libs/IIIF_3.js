@@ -11,8 +11,8 @@
  *     { label: "Creator", values: ["John Doe", "Jane Doe"] },
  *     { label: "Date", values: ["2024-01-01"] }
  *   ],
- *   manifestUrl: "https://specialcollections.du.edu/iiif/{id}/manifest",
- *   objectPage: "https://specialcollections.du.edu/object/{id}"
+ *   manifestUrl: "https://digitalarchives.du.edu/iiif/{id}/manifest",
+ *   objectPage: "https://digitalarchives.du.edu/object/{id}"
  * }
  *
  * * (ddu2 will use typescript, define as type)
@@ -22,16 +22,16 @@
  *     title: "is compound: from compound.part, standard: from display_record",
  *     description: "is compound: from compound.part, standard: from display_record or abstract",
  *     mimeType: "is compound: from compound.part, standard: from parent mimeType field",
- *     resourceUrl: "https://specialcollections.du.edu/datastream/{id}/object", // datastream (is compound, id has part)
- *     thumbnailUrl: "https://specialcollections.du.edu/datastream/{id}/thumbnail", // datastream thumbnail
+ *     resourceUrl: "https://digitalarchives.du.edu/datastream/{id}/object", // datastream (is compound, id has part)
+ *     thumbnailUrl: "https://digitalarchives.du.edu/datastream/{id}/thumbnail", // datastream thumbnail
  *   },
  *   {
  *     id: "cf143816-b08f-4caa-a82d-814e337d0304_2",
  *     title: "Example Part 2",
  *     description: "This is the second part of the example object.",
  *     mimeType: "image/jpeg",
- *     resourceUrl: "https://specialcollections.du.edu/datastream/{id}/object", // datastream
- *     thumbnailUrl: "https://specialcollections.du.edu/datastream/{id}/thumbnail", // datastream thumbnail
+ *     resourceUrl: "https://digitalarchives.du.edu/datastream/{id}/object", // datastream
+ *     thumbnailUrl: "https://digitalarchives.du.edu/datastream/{id}/thumbnail", // datastream thumbnail
  *   }
  * ]
  *

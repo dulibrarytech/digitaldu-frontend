@@ -17,8 +17,7 @@
  /**
  * @file 
  *
- * Specialcollections module router
- *
+ * routes to static pages
  */
 
 var config = require('../config/' + process.env.CONFIGURATION_FILE);
