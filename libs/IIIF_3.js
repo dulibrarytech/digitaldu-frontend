@@ -308,11 +308,24 @@ const getPDFPageCanvases = (objectContainer, itemData) => {
   const pageCount = itemData.pageCount || 1;
 
   for(let page = 1; page <= pageCount; page++) {
-    console.log("page", page)
 
     const canvas = new Canvas(`${IIIFUrl}/${itemData.id}/canvas/${page}`);
     canvas.setWidth(PDF_PAGE_IMAGE_WIDTH);
     canvas.setHeight(PDF_PAGE_IMAGE_HEIGHT);
+
+    const textLabel = itemData.title ? {
+      "en": [itemData.title]
+    } : {
+      "none": ["Download PDF"]
+    };
+
+    const text = {
+      "id": itemData.resourceUrl, 
+      "type": IIIF_MEDIA_TYPES.TEXT,
+      "format": "application/pdf",
+      "label": textLabel,
+    }
+    canvas.setRendering(text);
 
     let pageId = `${itemData.id};${page}`;
 
@@ -500,7 +513,7 @@ const getTextCanvas = async (objectContainer, itemData, index=1) => {
   const textLabel = itemData.title ? {
     "en": [itemData.title]
   } : {
-    "none": ["Untitled"] // placeholder if no title
+    "none": ["Download PDF"]
   };
 
   const text = {
