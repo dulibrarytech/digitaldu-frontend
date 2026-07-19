@@ -95,6 +95,8 @@ const AV_PLACEHOLDER_IMAGE_TYPE = "image/jpeg";
 const AV_PLACEHOLDER_CANVAS_LABEL = "Poster Image Canvas";
 const DEFAULT_RIGHTS_STATEMENT = "http://creativecommons.org/licenses/by/4.0/";
 const DEFAULT_THUMBNAIL_IMAGE_URL = "default-thumbnail.jpg";
+const PDF_PAGE_IMAGE_WIDTH=750;   // to 8.5
+const PDF_PAGE_IMAGE_HEIGHT=1000; // 11
 
 exports.createManifest = async (objectContainer = {}, objectItems = [], callback) => {
 
@@ -155,22 +157,25 @@ exports.createManifest = async (objectContainer = {}, objectItems = [], callback
 
       case IIIF_MEDIA_TYPES.IMAGE:
         canvas = await getImageCanvas(objectContainer, item, index+1);
+        items[index] = canvas;
         break;
 
       case IIIF_MEDIA_TYPES.AUDIO:
       case IIIF_MEDIA_TYPES.VIDEO:
         canvas = await getAudioVideoCanvas(objectContainer, item, index+1);
+        items[index] = canvas;
         break;
 
       case IIIF_MEDIA_TYPES.TEXT:
-        canvas = await getTextCanvas(objectContainer, item, index+1);
+        //canvas = await getTextCanvas(objectContainer, item, index+1);
+        items = await getPDFPageCanvases(objectContainer, item)
         break;
 
       default:
         console.warn(`Unknown media type for item ${item.id}: ${item.mimeType}, skipping canvas creation`);
     }
 
-    items[index] = canvas;
+    // items[index] = canvas;
   }));
   manifest.setItems(items);
 
@@ -296,6 +301,58 @@ const getThumbnailObject = (itemData) => {
   };
 
   return thumbnail;
+}
+
+const getPDFPageCanvases = (objectContainer, itemData) => {
+  let canvases = [];
+  const pageCount = itemData.pageCount || 1;
+
+  for(let page = 1; page <= pageCount; page++) {
+    console.log("page", page)
+
+    const canvas = new Canvas(`${IIIFUrl}/${itemData.id}/canvas/${page}`);
+    canvas.setWidth(PDF_PAGE_IMAGE_WIDTH);
+    canvas.setHeight(PDF_PAGE_IMAGE_HEIGHT);
+
+    let pageId = `${itemData.id};${page}`;
+
+    const service = {
+      "@context": "http://iiif.io/api/image/3/context.json",
+      id: `${IIIFServerUrl}${IIIF_ENDPOINT}/${pageId}`,
+      type: "ImageService3",
+      profile: "level2",
+      width: PDF_PAGE_IMAGE_WIDTH,
+      height: PDF_PAGE_IMAGE_HEIGHT,
+    };
+
+    const image = new Image(
+      `${IIIFServerUrl}${IIIF_ENDPOINT}/${pageId}/full/${PDF_PAGE_IMAGE_WIDTH},${PDF_PAGE_IMAGE_HEIGHT}/0/default.jpg`, 
+      PDF_PAGE_IMAGE_WIDTH, 
+      PDF_PAGE_IMAGE_HEIGHT,
+    );
+    image.type = IIIF_MEDIA_TYPES.IMAGE;
+    image.format = "image/jpeg";
+    image.setService(service);
+
+    const annotation = new Annotation(
+      `${IIIFUrl}/${itemData.id}/canvas/${page}/page/image`, 
+      image, 
+      "painting"
+    );
+    annotation.target = `${IIIFUrl}/${itemData.id}/canvas/${page}`;
+
+    const annotationPage = new AnnotationPage(
+      `${IIIFUrl}/${itemData.id}/canvas/${page}/page`, 
+      [annotation]
+    );
+    annotationPage.setItems(annotation);
+
+    canvas.setItems(annotationPage);
+
+    canvases.push(canvas);
+  }
+
+  return canvases;
 }
 
 const getImageCanvas = async (objectContainer, itemData, index=1) => {

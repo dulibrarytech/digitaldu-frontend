@@ -853,10 +853,9 @@ exports.getManifestObject = getManifestObject;
 
 getManifestObject3 = async function(pid, index, page, apikey, callback) {
 
-  const [objectId, part = null] = pid.split(config.compoundObjectPartID);
+  let [objectId, part = null] = pid.split(config.compoundObjectPartID);
 
   let object = null;
-
   try {
     object = await fetchObjectByPid(index, objectId);
   }
@@ -902,29 +901,11 @@ getManifestObject3 = async function(pid, index, page, apikey, callback) {
       rights,
     }
 
-    /* create manifest child object (compound object with part specified, use the part) */
-    if(part) {
-      let partData = AppHelper.getCompoundObjectPart(object, part);
-
-      if(partData) {
-        const partObjectId = `${objectId}${config.compoundObjectPartID}${part}`;
-
-        children.push({
-          id:           partObjectId,
-          title:        partData.title || "No Title",
-          description:  partData.caption || object.abstract || "",
-          mimeType:     partData.type || object.mime_type || null,
-          resourceUrl:  `${config.rootUrl}/datastream/${partObjectId}/object`,
-          thumbnailUrl: `${config.rootUrl}/datastream/${partObjectId}/tn`,
-        })
-      }
-    }
-
-    /* create manifest child objects (compound object with no part specified, use all parts) */
-    else if(AppHelper.isParentObject(object)) {
+    /* create children object from parts */
+    if(AppHelper.isParentObject(object)) {
       let parts = AppHelper.getCompoundObjectPart(object, -1) || [];
 
-      children = parts.map((part, index) => {
+      children = await Promise.all(parts.map((part, index) => {
         const partObjectId = `${objectId}${config.compoundObjectPartID}${part.order || index}`;
 
         return {
@@ -935,18 +916,53 @@ getManifestObject3 = async function(pid, index, page, apikey, callback) {
           resourceUrl:  `${config.rootUrl}/datastream/${partObjectId}/object`,
           thumbnailUrl: `${config.rootUrl}/datastream/${partObjectId}/tn`,
         }
-      });
+      }));
     }
 
-    /* create manifest child object (single object) */
     else {
+      let id, title, description, mimeType;
+      if(part) {
+        let partData = AppHelper.getCompoundObjectPart(object, part);
+
+        if(partData) {
+          const partObjectId = `${objectId}${config.compoundObjectPartID}${part}`;
+
+          id          = partObjectId;
+          title       = partData.title || "No Title";
+          description = partData.caption || object.abstract || "";
+          mimeType    = partData.type || object.mime_type || null;
+        }
+      }
+      else {
+        id            = objectId;
+        title         = object.display_record.title;
+        description   = object.abstract || "";
+        mimeType      = object.mime_type || null;
+      }
+
+      // get pdf page count if pdf document
+      let pageCount = null;
+      if(AppHelper.getDsType(mimeType) == "pdf") {
+        let cacheFileName = id + ".pdf",
+            cacheFilePath = config.objectDerivativeCacheLocation;
+
+        if(Cache.exists("object", objectId, "pdf")) {
+          pageCount = await Pdf.getPageCountSync(cacheFilePath + "/" + cacheFileName);
+        }
+        else {
+          Logger.module().info('INFO: ' + `${cacheFileName} not found in cache. Can not determine pdf document page count`);
+        }
+      }
+      // end get pdf page count if pdf document
+
       children.push({
-        id:           objectId,
-        title:        object.display_record.title,
-        description:  object.abstract || "",
-        mimeType:     object.mime_type || null,
+        id,
+        title,
+        description,
+        mimeType,
         resourceUrl:  `${config.rootUrl}/datastream/${objectId}/object`,
         thumbnailUrl: `${config.rootUrl}/datastream/${objectId}/tn`,
+        pageCount:    pageCount || undefined,
       });
     }
 
