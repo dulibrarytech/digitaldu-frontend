@@ -168,7 +168,7 @@ exports.createManifest = async (objectContainer = {}, objectItems = [], callback
 
       case IIIF_MEDIA_TYPES.TEXT:
         //canvas = await getTextCanvas(objectContainer, item, index+1);
-        items = await getPDFPageCanvases(objectContainer, item)
+        items = await getPDFPageCanvases(objectContainer, item, manifest)
         break;
 
       default:
@@ -303,29 +303,29 @@ const getThumbnailObject = (itemData) => {
   return thumbnail;
 }
 
-const getPDFPageCanvases = (objectContainer, itemData) => {
+const getPDFPageCanvases = (objectContainer, itemData, manifest) => {
   let canvases = [];
   const pageCount = itemData.pageCount || 1;
+
+  const textLabel = itemData.title ? {
+    "en": [itemData.title]
+  } : {
+    "none": ["Download PDF"]
+  };
+
+  const text = {
+    "id": itemData.resourceUrl, 
+    "type": IIIF_MEDIA_TYPES.TEXT,
+    "format": itemData.mimeType || "application/pdf",
+    "label": textLabel,
+  }
+  manifest.setRendering(text);
 
   for(let page = 1; page <= pageCount; page++) {
 
     const canvas = new Canvas(`${IIIFUrl}/${itemData.id}/canvas/${page}`);
     canvas.setWidth(PDF_PAGE_IMAGE_WIDTH);
     canvas.setHeight(PDF_PAGE_IMAGE_HEIGHT);
-
-    const textLabel = itemData.title ? {
-      "en": [itemData.title]
-    } : {
-      "none": ["Download PDF"]
-    };
-
-    const text = {
-      "id": itemData.resourceUrl, 
-      "type": IIIF_MEDIA_TYPES.TEXT,
-      "format": "application/pdf",
-      "label": textLabel,
-    }
-    canvas.setRendering(text);
 
     let pageId = `${itemData.id};${page}`;
 
