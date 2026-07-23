@@ -187,10 +187,6 @@ exports.createManifest = async (objectContainer = {}, objectItems = [], callback
 
     case IIIF_MEDIA_TYPES.AUDIO:
     case IIIF_MEDIA_TYPES.VIDEO:
-      manifest.setPlaceholderCanvas( getAudioVideoPlaceholderCanvas({
-        ...objectContainer,
-        thumbnailUrl: objectItems[0].thumbnailUrl
-      }));
       manifest.setThumbnail( getThumbnailObject({
         ...objectContainer,
         thumbnailUrl: objectItems[0].thumbnailUrl
@@ -452,7 +448,7 @@ const getAudioVideoCanvas = async (objectContainer, itemData, index=1) => {
   const iiifType = getIiifType(itemData.mimeType);
 
   const label = {
-    "none": ["-"] 
+    "none": ["-"]
   };
 
   const duration = null; // TODO: get duration from itemData (can get width, height also if needed for video thumbnail canvas)
@@ -482,10 +478,18 @@ const getAudioVideoCanvas = async (objectContainer, itemData, index=1) => {
   }
 
   canvas.setThumbnail( getThumbnailObject(itemData) );
-  canvas.setRendering(media);
+
+  //canvas.setDuration(0.0);
+
+  canvas.setPlaceholderCanvas( getAudioVideoPlaceholderCanvas({
+    ...objectContainer,
+    thumbnailUrl: itemData.thumbnailUrl,
+    width: 600,
+    height: 800,
+  }));
 
   const annotation = new Annotation(
-    `${IIIFUrl}/${itemData.id}/canvas/${index}/page/image`, 
+    `${IIIFUrl}/${itemData.id}/canvas/${index}/page/sound`, 
     media, 
     "painting"
   );
