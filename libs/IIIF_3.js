@@ -417,7 +417,7 @@ const getImageCanvas = async (objectContainer, itemData, index=1) => {
   };
 
   const image = new Image(
-    `${IIIFServerUrl}${IIIF_ENDPOINT}/${itemData.id}/full/${largestSize?.width || width},${largestSize?.height || height}/0/default.jpg`, 
+    `${IIIFServerUrl}${IIIF_ENDPOINT}/${itemData.id}/full/max/0/default.jpg`,
     imageData.width, 
     imageData.height
   );
