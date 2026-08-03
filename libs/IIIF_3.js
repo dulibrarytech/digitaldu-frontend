@@ -1,5 +1,5 @@
 /*
- * IIIF version 3.0 manifest creation function
+ * IIIF version 3.0 manifest generator
  *
  * (ddu2 will use typescript, define as type)
  * objectContainer: {
