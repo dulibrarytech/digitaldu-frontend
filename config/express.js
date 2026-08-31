@@ -72,6 +72,7 @@
                      'use.fontawesome.com', 
                      'http://jwpltx.com',
                      'analytics.google.com',
+                     "digitalarchives.du.edu",
                     ],
          
                  "style-src": ["'self'", "'unsafe-inline'", 'maxcdn.bootstrapcdn.com', 'use.fontawesome.com', 'vjs.zencdn.net', 'code.jquery.com', 'fonts.googleapis.com'],

@@ -60,7 +60,7 @@ exports.get = function(url, data, callback) {
     }); 
 }
 
-exports.get_stream = function(url, data, callback) {
+exports.get_stream = function(url, data, callback, headers) {
     if(Object.keys(data).length !== 0) {
         let qstring = "?", count = 0;
         for(var key in data) {
@@ -76,7 +76,8 @@ exports.get_stream = function(url, data, callback) {
     axios({
         method: 'get',
         url: url,
-        responseType: 'stream'
+        responseType: 'stream',
+        headers: headers || undefined,
     })
     .then(function (response) {
         if(response.status == 200) {

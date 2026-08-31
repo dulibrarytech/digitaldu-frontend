@@ -56,6 +56,8 @@ module.exports = {
     repositoryProtocol: process.env.REPOSITORY_PROTOCOL,
     repositoryUser: process.env.REPOSITORY_USER,
     repositoryPassword: process.env.REPOSITORY_PWD,
+    repositoryV2Url: process.env.REPOSITORY_V2_URL,
+    repositoryV2Key: process.env.REPOSITORY_V2_KEY,
     elasticsearchHost: process.env.ELASTICSEARCH_HOST,
     elasticsearchPort: process.env.ELASTICSEARCH_PORT,
     elasticsearchPublicIndex: process.env.ELASTICSEARCH_PUBLIC_INDEX,
@@ -371,12 +373,12 @@ module.exports = {
                             "cache": true
                         },
                         "tif": {
-                            "source": "local",
+                            "source": "repository_v2",
                             "extension": "jpg",
                             "cache": false
                         },
                         "jp2": {
-                            "source": "local",
+                            "source": "repository_v2",
                             "extension": "jpg",
                             "cache": false
                         }

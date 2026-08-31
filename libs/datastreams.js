@@ -49,6 +49,8 @@
   */
  exports.getDatastream = function(object, datastreamID, callback, apikey=null) {
    let settings = null;
+   let requestHeaders = null;
+
    datastreamID = datastreamID == "thumbnail" ? "tn" : datastreamID;
  
    /*
@@ -188,10 +190,10 @@
            }
          }
        }
-     
-       // Set the source uri
-       switch(sourceOption) {
 
+       // Set the source uri
+       let path = object.object;
+       switch(sourceOption) {
          case "kaltura":
            let viewerId = object.entry_id || object.kaltura_id || null;
 
@@ -211,9 +213,14 @@
            break;
 
          case "local": 
-           let path = object.object;
-           uri = path.substring( path.lastIndexOf('/')+1, path.lastIndexOf('.')+1 ).concat( settings.file_type[extension].extension )
+           uri = path.substring( path.lastIndexOf('/')+1, path.lastIndexOf('.')+1 ).concat( settings.file_type[extension].extension );
            break;
+
+         case "repository_v2":
+          let filename = path.substring( path.lastIndexOf('/')+1, path.lastIndexOf('.')+1 ).concat( settings.file_type[extension].extension );
+          uri = `${config.repositoryV2Url}/${filename}`;
+          requestHeaders = {'x-api-key': config.repositoryV2Key};
+          break;
            
          default:
            Logger.module().error('ERROR: ' + `Datastream error: Invalid source setting. Could not determine datastream source uri. Source option: ${sourceOption} Object: ${object.pid}`);
@@ -284,7 +291,7 @@
                  callback(null, null, object);
                }
              }
-           });
+           }, requestHeaders);
          }
        }
  
@@ -339,7 +346,7 @@
   *
   * @return {undefined}
   */
- var streamRemoteData = function(uri, callback) {
+ var streamRemoteData = function(uri, callback, headers) {
    if(uri) {
      HttpRequest.get_stream(uri, {}, function(error, status, data) {
        if(error) {
@@ -352,7 +359,7 @@
        else {
          callback(null, status, data);
        }
-     });
+     }, headers);
    }
    else {
       callback(null, 404, null);
