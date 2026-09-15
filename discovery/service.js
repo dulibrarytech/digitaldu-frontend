@@ -468,7 +468,7 @@ exports.getCollectionHeirarchy = getCollectionHeirarchy;
 getCollectionList = function(callback) {
   let data = {
     index: config.elasticsearchPublicIndex,
-    _source: ["pid"],
+    _source: ["pid", "title"],
     body: {
       query: {
         match_phrase: {
@@ -481,20 +481,22 @@ getCollectionList = function(callback) {
 
   es.search(data).then(function (response) {
     if(response) {
-      let results = response.hits.hits || [], pids = [];
+      let results = response.hits.hits || [];
 
-      for(let i in results) {
-        pids.push(results[i]._source.pid);
-      }
-
-      getTitleString(pids, [], function(error, response) {
-        callback(null, response);
+      let collectionList = results.map((result) => {
+        return {
+          pid: result._source.pid,
+          name: result._source.title,
+        }
       });
+
+      callback(null, collectionList);
     }
   }, function (error) {
     callback(error, {});
   });
 }
+exports.getCollectionList = getCollectionList;
 
 getDatastream = function(indexName, objectID, datastreamID, part, authKey, callback) {
   fetchObjectByPid(indexName, objectID, function(error, object) {

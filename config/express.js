@@ -103,6 +103,7 @@
      require('../discovery/routes.js')(app);
      require('../search/routes.js')(app);
      require('../static/routes.js')(app);
+     require('../dpla/routes.js')(app);
      require('express-template-cache');
  
      app.route('/')

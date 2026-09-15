@@ -63,6 +63,19 @@ module.exports = {
     elasticsearchPublicIndex: process.env.ELASTICSEARCH_PUBLIC_INDEX,
     elasticsearchPrivateIndex: process.env.ELASTICSEARCH_PRIVATE_INDEX,
 
+    /* 
+     * DPLA feed config
+     */
+    objectAccessDomain: process.env.CLIENT_HOST + process.env.CLIENT_PATH,
+    objectAccessPath: "/object",
+    objectAccessParams: "",
+    thumbnailAccessDomain: process.env.CLIENT_HOST + process.env.CLIENT_PATH,
+    thumbnailAccessPath: "/datastream",
+    thumbnailAccessParams: "/tn",
+    iiifAccessDomain: process.env.CLIENT_HOST + process.env.CLIENT_PATH,
+    iiifAccessPath: "/iiif",
+    iiifAccessParams: "/manifest",
+
     /*
      * Root collection
      */
